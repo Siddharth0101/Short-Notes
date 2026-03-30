@@ -255,7 +255,27 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * ========================================================================
- * 9. COMMON INTERVIEW PUZZLE (Promises vs Call Stack Sync)
+ * 9. QUEUE SYNONYMS & INTERVIEW TERMINOLOGY 🗣️
+ * ========================================================================
+ * Interviewers kabhi kabhi confusion paida karne ke liye in Queues ko alag alag naamon se pukaarte hain:
+ * 
+ * 1. MACROTASK QUEUE Ke Doosre Naam:
+ *    - Callback Queue
+ *    - Task Queue
+ *    - Message Queue
+ *    - Event Queue
+ * 
+ * 2. MICROTASK QUEUE Ke Doosre Naam:
+ *    - Job Queue (ECMAScript/JS Specifications mein generally isi naam se bulaya gaya hai)
+ *    - Promise Job Queue
+ * 
+ * (Tip: Yeh dono Event Loop ka hi hissa hain, bas priority ka difference hai. Microtask/Job Queue hamesha Macrotask/Callback Queue ko override karegi speed ke maamle me).
+ */
+
+
+/**
+ * ========================================================================
+ * 10. COMMON INTERVIEW PUZZLE (Promises vs Call Stack Sync)
  * ========================================================================
  * Interviewer apka logic test krte hue output guess karwane k lie logic deta hai. (Mixes of Event Loop priority concepts).
  */
