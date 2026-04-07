@@ -2,343 +2,601 @@
 
 /**
  * ========================================================================
- * 1. SYNCHRONOUS VS ASYNCHRONOUS (Basic Introduction)
+ * EVENT LOOP IN JAVASCRIPT — COMPLETE GUIDE
  * ========================================================================
  * NOTES:
- * - JavaScript ek "Single-Threaded" language hai. Iska matlab ye ek waqt pe sirf ek hi kaam kar sakti hai.
- * - Iske paas apna sirf ek "Call Stack" hota hai (Main thread).
+ * - JavaScript ek "SINGLE-THREADED" language hai — matlab ek waqt me sirf EK 
+ *   hi kaam kar sakti hai. Iske paas sirf EK Call Stack hai.
+ * - Par humein asynchronous kaam bhi karna padta hai (API calls, timers, file read).
+ * - To question ye hai: "Agar JS single-threaded hai to async kaam kaise handle hota hai?"
+ * - ANSWER: EVENT LOOP + Browser/Node.js Runtime ki madad se!
  * 
- * - SYNCHRONOUS: Code line-by-line execute hota hai. Jab tak ek kaam pura nahi hota, agla start nahi hota (Blocking).
- * - ASYNCHRONOUS: Code rukta nahi hai, background mein chala jata hai aur aage ka code chalta rehta hai (Non-Blocking).
- */
-
-console.log("1. Sync execution starts"); // Sync
-setTimeout(() => console.log("2. Async execution completed (Macrotask)"), 0); // Async
-Promise.resolve().then(() => console.log("3. Async execution completed (Microtask)")); // Async
-console.log("4. Sync execution ends"); // Sync
-
-// OUTPUT: 1, 4, 3, 2 (Reason aage samjhenge)
-
-
-/**
- * ========================================================================
- * 2. THE EVENT LOOP & JS ARCHITECTURE 
- * ========================================================================
- * INTERVIEW QUESTION: "How does JS handle Async tasks if it's Single Threaded?"
- * ANSWER: JS does it with the help of the "Browser" (or Node.js Runtime) environment!
- * 
- * 1. Call Stack: Yahan actual JS code run hota hai (LIFO - Last In First Out).
- * 2. Web APIs (or Node C++ APIs): setTimeout, DOM API, fetch, geolocation - JS inko browser/Node se udhaar (borrow) leta hai. Inka timer/kaam Call Stack ke bahar background me chalta hai.
- * 3. Task Queues: Jab Web APIs apna kaam poora kar leti hain, toh wo apna callback functions ek Queue me bhej deti hain.
- * 4. EVENT LOOP: Iska ek hi kaam hai - Constantly monitor Call Stack & Task Queues.
- *    - Agar Call Stack EMPTY hai, toh wo Queue me se naya task Call Stack me bhej deta hai.
+ * REAL LIFE ANALOGY:
+ * - Sochlo ek restaurant me SIRF EK chef hai (JS = single thread).
+ * - Chef ek ek order banata hai (Call Stack me code execute hota hai).
+ * - Par kuch orders me "oven me 10 min rakhna hai" (setTimeout = async kaam).
+ * - Chef oven me daal ke NEXT order shuru kar deta hai (non-blocking).
+ * - Jab oven ki timer bajti hai (callback ready), ek assistant (Event Loop) check 
+ *   karta hai ki chef free hai kya. Agar free hai to oven wala order chef ko de deta hai.
+ * - Chef = Call Stack, Oven = Web API, Assistant = Event Loop, Order slip queue = Task Queue.
  */
 
 
 /**
  * ========================================================================
- * 3. MACROTASK QUEUE vs MICROTASK QUEUE (The Priority Game)
+ * 1. SYNCHRONOUS vs ASYNCHRONOUS (Basic Difference)
  * ========================================================================
  * NOTES:
- * Do tarah ki queues hoti hain. Microtask ki priority jyada hoti hai.
  * 
- * A. MICROTASK QUEUE (High Priority VIP Queue) ⭐
- * - Yahan VIP kaam aate hain. 
- * - Examples: 
- *   1. Promises (.then / .catch / .finally)
- *   2. queueMicrotask()
- *   3. MutationObserver
- *   4. process.nextTick (Node.js - Iski sabse highest priority hoti hai Microtask me bhi!)
+ * SYNCHRONOUS (Blocking):
+ * - Code LINE BY LINE chalta hai. Jab tak ek kaam pura nahi hota, agla START nahi hota.
+ * - Agar ek kaam me 10 seconds lage → poora program 10 seconds RUKA rahega.
+ * - Problem: UI freeze ho jayega, user kuch kar hi nahi payega.
  * 
- * B. MACROTASK QUEUE (Also called Callback/Task Queue - Low Priority)
- * - Yahan normal async kaam aate hain.
- * - Examples:
- *   1. setTimeout()
- *   2. setInterval()
- *   3. setImmediate() (Node.js)
- *   4. DOM Events (click, load)
+ * ASYNCHRONOUS (Non-Blocking):
+ * - Kaam BACKGROUND me chala jata hai. Baaki code aage badhta rehta hai.
+ * - Jab background wala kaam complete hota hai, to result wapas aata hai.
+ * - User ko koi freeze nahi lagta!
  * 
- * RULE OF EVENT LOOP: 
- * 1. Pura Sync code chalao.
- * 2. Microtask Queue check karo -> Saare microtasks khatam karo.
- * 3. Macrotask Queue me se bas 1 macrotask uthao aur chalao.
- * 4. Phir wapas Microtask queue check karo! 
- * (Yani 1 macrotask chalne ke baad dobara microtasks check hote hain).
+ * EXAMPLES JO ASYNC HAIN:
+ * - setTimeout / setInterval (Timers)
+ * - fetch() / XMLHttpRequest (API calls)
+ * - DOM Events (click, scroll, keypress)
+ * - File reading (fs.readFile in Node.js)
+ * - Promises, async/await
  */
+
+// SYNC vs ASYNC — basic demo
+console.log("1. Sync Start");                                              // Sync
+
+setTimeout(() => console.log("2. Async (Macrotask - setTimeout)"), 0);     // Async
+
+Promise.resolve().then(() => console.log("3. Async (Microtask - Promise)")); // Async
+
+console.log("4. Sync End");                                               // Sync
+
+// OUTPUT: 1, 4, 3, 2
+// WHY? Aage detail me samjhenge!
 
 
 /**
  * ========================================================================
- * 4. NODE.JS SPECIFICS (process.nextTick vs setImmediate)
+ * 2. JS ARCHITECTURE — Event Loop kaise kaam karta hai?
  * ========================================================================
  * NOTES:
- * - Browser mein 'process.nextTick' nahi milta, ye Node.js backend ka feature hai.
+ * - JS akela async handle nahi karta! Browser (ya Node.js) ka ENVIRONMENT help karta hai.
+ * - 4 major components milke kaam karte hain:
  * 
- * 1. process.nextTick(): 
- *    - Iski priority sabse highest hai.
- *    - Event Loop ke kisi agle phase me jane se pehle, ye sabse pehle run hoga.
- *    - Promieses se bhi pehle chalta hai ye! (Microtask queue ke andar bhi VIP hai).
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │                    JS RUNTIME ENVIRONMENT                       │
+ * │                                                                 │
+ * │  ┌──────────────┐    ┌──────────────────────────────────────┐  │
+ * │  │  CALL STACK   │    │          WEB APIs (Browser)          │  │
+ * │  │              │    │  setTimeout, fetch, DOM Events,      │  │
+ * │  │  main()      │───>│  geolocation, etc.                   │  │
+ * │  │  fn1()       │    │  (Ye sab JS ke BAHAR chalte hain)    │  │
+ * │  │  fn2()       │    └──────────┬───────────────────────────┘  │
+ * │  └──────────────┘               │                              │
+ * │         ^                       │ (Callback ready hone pe)     │
+ * │         │                       ▼                              │
+ * │  ┌──────┴──────────────────────────────────────────────┐      │
+ * │  │              TASK QUEUES                             │      │
+ * │  │  ┌────────────────────┐  ┌────────────────────────┐ │      │
+ * │  │  │ MICROTASK QUEUE    │  │ MACROTASK QUEUE        │ │      │
+ * │  │  │ (Promises, nextTick)│  │ (setTimeout, Events)  │ │      │
+ * │  │  │ HIGH PRIORITY      │  │ LOW PRIORITY           │ │      │
+ * │  │  └────────────────────┘  └────────────────────────┘ │      │
+ * │  └─────────────────────────────────────────────────────┘      │
+ * │                       ^                                        │
+ * │                       │                                        │
+ * │              ┌────────┴────────┐                               │
+ * │              │   EVENT LOOP    │  (Constantly monitors)        │
+ * │              │  "Stack empty?  │                               │
+ * │              │   Queue me hai? │                               │
+ * │              │   → Stack pe do"│                               │
+ * │              └─────────────────┘                               │
+ * └─────────────────────────────────────────────────────────────────┘
  * 
- * 2. setImmediate():
- *    - Ye Macrotask hota hai, par ye Node.js ke EVENT LOOP PHASES se juda hai.
+ * COMPONENT-WISE EXPLANATION:
  * 
- *    🧠 NODE.JS EVENT LOOP PHASES (Simpified):
- *    Node.js ka Event Loop in phases me ghoomta hai (Top to Bottom):
- *      a) Timers Phase: yahan setTimeout aur setInterval ke callbacks chalte hain.
- *      b) Poll Phase (I/O): yahan socket network requests, file reading (fs.readFile) jaisi I/O operations ke callbacks chalte hain.
- *      c) Check Phase: YAHAN 'setImmediate' WALAY CALLBACKS chalte hain.
- *      d) Close Callbacks: jaise socket.on('close').
+ * 1) CALL STACK (Execution Stack):
+ *    - Yahan actual JS code execute hota hai.
+ *    - LIFO (Last In, First Out) — jo function baad me aaya wo pehle hatega.
+ *    - Ek time pe sirf EK function run hota hai (single-threaded).
+ *    - Jab function call hota hai → stack me PUSH. Jab return hota hai → POP.
  * 
- *    ❓ setTimeout(..., 0) vs setImmediate() ki Race Condition:
- *    - Agar aap in dono ko basic top-level code (global scope) me chalaoge, toh output
- *      UNPREDICTABLE hota hai (koi bhi pehle chal sakta hai). Kyun? Kyunki Machine 
- *      ki performance aur Timer ki minimal delay (Node me ~1ms) pe depend karta hai.
- *      Agar Timer set ho gaya Call Stack khali hone se pehle, to Timers Phase pehle chalega.
- *      Nahi hua toh sidha agla Event Loop ka phase (Check Phase) chal padega isliye setImmediate jeet jayega.
+ * 2) WEB APIs (Browser) / C++ APIs (Node.js):
+ *    - setTimeout, fetch, DOM events — ye JS ENGINE ke part NAHI hain!
+ *    - Browser inhe provide karta hai — ye BACKGROUND me chalte hain.
+ *    - Timer khatam / data aa gaya → callback ko QUEUE me bhej dete hain.
  * 
- *    ✅ LIKEN I/O CYCLES MEIN: (Example: fs.readFile me)
- *    - Jab aap 'fs.readFile' jaise I/O operation ke andar hote ho, tab File Read hoke aapke liye Poll phase me uska callback run ho raha hota hai.
- *    - Poll phase ke directly BAAD hamesha "Check Phase" aata hai!
- *    - Isliye I/O operation ke andar 'setImmediate' ka Check Phase turant mil jata hai, aur 'setTimeout' wale Time Phase ke liye usko ghoom  ke doosra aana padta hai. So yaha I/O me hamesha setImmediate jeetega.
+ * 3) TASK QUEUES (Microtask + Macrotask):
+ *    - Ready callbacks yahan WAIT karte hain ki Call Stack khali ho.
+ *    - 2 types ki queues hain (aage detail me).
+ * 
+ * 4) EVENT LOOP:
+ *    - Ye ek INFINITE LOOP hai jo constantly check karta hai:
+ *      "Kya Call Stack EMPTY hai? Agar haan, to Queue se next task utha ke Stack pe daal do."
+ *    - Ye BRIDGE hai Queue aur Call Stack ke beech.
  */
 
 
 /**
  * ========================================================================
- * 5. BROWSER SPECIFICS & ADVANCED CONCEPTS
+ * 3. CALL STACK — Step by Step Execution Samjho
  * ========================================================================
  * NOTES:
- * 1. requestAnimationFrame (rAF): (Browser Only)
- *    - Ye browser ko batata hai ki aap ek animation karna chahte ho.
- *    - Browser agli screen repaint/reflow karne se THEEK PEHLE is function ko chalata hai.
- *    - Priority: Saare Microtasks khatam hone ke TEHK BAAD, par Screen Paint karne se pehle ye chalta hai. 
+ * - Call Stack ko samjhna bahut zaroori hai! Ye JS ka 'brain' hai.
+ * - Jab bhi koi function CALL hota hai → Stack pe PUSH hota hai.
+ * - Jab function RETURN karta hai → Stack se POP ho jaata hai.
+ * - Stack LIFO (Last In First Out) hai — jo upar hai wo pehle nikalega.
+ */
+
+// EXAMPLE:
+function multiply(a, b) {
+    return a * b;       // Step 3: multiply() run hua, result return, POP
+}
+
+function square(n) {
+    return multiply(n, n); // Step 2: square() ne multiply() call kiya, PUSH
+}
+
+function printSquare(n) {
+    const result = square(n); // Step 1: printSquare() ne square() call kiya, PUSH
+    console.log(result);       // Step 4: console.log PUSH, print, POP
+}                              // Step 5: printSquare POP
+
+printSquare(4); // 16
+
+// CALL STACK VISUALIZATION:
+// ┌──────────────┐
+// │ multiply(4,4)│  ← Step 3 (TOP — pehle ye chalega)
+// │ square(4)    │  ← Step 2
+// │ printSquare(4)│ ← Step 1
+// │ main()       │  ← Global execution context
+// └──────────────┘
+
+// STACK OVERFLOW:
+// Agar function khud ko INFINITELY call kare → Stack full ho jayega → CRASH!
+// function infinite() { infinite(); } // RangeError: Maximum call stack size exceeded
+
+
+/**
+ * ========================================================================
+ * 4. MICROTASK QUEUE vs MACROTASK QUEUE (Priority Game!)
+ * ========================================================================
+ * NOTES:
+ * - 2 tarah ki queues hain. Microtask ki priority ZYADA hoti hai.
  * 
- * 2. queueMicrotask(fn):
- *    - Agar aapko koi function explicitly Microtask me daalna hai, toh Promise.resolve().then() ke
- *      bajaye aap `queueMicrotask(() => {})` use kar sakte ho. Ye standard aur clean approach hai.
+ * A) MICROTASK QUEUE (VIP Queue — HIGH Priority):
+ *    - Yahan VIP kaam aate hain. Ye PEHLE execute hote hain.
+ *    - Kya aata hai yahan:
+ *      1. Promise callbacks (.then / .catch / .finally)
+ *      2. queueMicrotask()
+ *      3. MutationObserver (DOM changes observe)
+ *      4. process.nextTick() (Node.js only — sabse highest priority!)
  * 
- * 3. async / await (Under the hood):
- *    - 'await' ke pehle tak ka code SYNCHRONOUSLY chalta hai.
- *    - Jaise hi JS engine 'await' dekhta hai, wo function udhar hi pause kar deta hai, aur function ka bacha 
- *      hua agla hissa ek ".then()" (Microtask Queue) ke roop me enqueue kar deta hai.
- *    - Call Stack block nahi hota, Event Loop aage ke kaam nikalne lagta hai.
+ * B) MACROTASK QUEUE (Normal Queue — LOW Priority):
+ *    - Yahan normal async kaam aate hain.
+ *    - Kya aata hai yahan:
+ *      1. setTimeout()
+ *      2. setInterval()
+ *      3. setImmediate() (Node.js only)
+ *      4. DOM Events (click, scroll, keypress, load)
+ *      5. I/O operations (file read in Node.js)
+ *      6. MessageChannel
  * 
- * 4. Web Workers / Worker Threads:
- *    - JS single-threaded hai, magar agar aapko bahut bhari computation karni ho toh aap background
- *      me naya thread (Web Worker / worker_thread) bana sakte ho.
- *    - In naye threads ka APNA khud ka bilkul alag Event Loop aur Call Stack hota hai! Main thread pr inka ko load nhi aata.
+ * EVENT LOOP KA RULE (Bahut Important — YAAD KARO!):
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  1. Pehle: Saara SYNC code chala lo (Call Stack empty karo).   │
+ * │  2. Phir:  SAARE Microtasks khatam karo (puri queue khali karo)│
+ * │  3. Phir:  SIRF 1 Macrotask uthao aur chalao.                 │
+ * │  4. Phir:  WAPAS Step 2 pe jao (Microtask check karo!)        │
+ * │  5. Repeat forever...                                          │
+ * └─────────────────────────────────────────────────────────────────┘
  * 
- * 5. requestIdleCallback() (Browser Only)
- *    - Ye macrotask se bhi LOW priority ka kaam karta hai.
- *    - Browser kehta hai "Jab main poora free huanga, Call Stack aur saari Queues khali hongi, tab aap jo 
- *      background analytic logs (low priority tasks) nikalna chahte ho wo chalaoonga".
- * 
- * 6. UI FREEZE KYUN HOTA HAI? (Important Interview Question!)
- *    - Agar aapka ek while(true) loop Call Stack me fans gaya (koi lamba Sync task), toh Event Loop wahan atak jata hai.
- *    - JS Event loop block hone ke kaaran Browser ka Rendering engine "Paint" phase me nahi ja pata (kyunki ek hi thread handle karta hai).
- *    - Nateeja (Result): Website bilkul freeze/hang ho jati hai, button click kaam kyu nahi karta? Kyunki DOM events naye Macrotasks banake Queue me jama karte rehte hain, magar Event Loop atka hua wait kar raha hota hai un tasks ko stack me uthane ke liye.
- * 
- * 7. MessageChannel Hack (React Fiber/Scheduler uses this!):
- *    - Browser me agar aap multiple baar andar-andar 'setTimeout(..., 0)' call karwaye, toh HTML5 spec ke tahat 
- *      browser automatically usko ~4ms ka minimum lag dedeta hai battery/CPU bachane ke liye.
- *    - React jaise libraries ko exactly "0ms delay" wala Macrotask start karna tha taaki screen yield ho sake fast-rendering ke liye bina lag ke.
- *    - Toh unhone hack nikaala: 'MessageChannel' (postMessage API)! Ye ek true '0 delayed' Macrotask queue banati hai browser environment me!
+ * IMPORTANT POINT:
+ * - Har 1 Macrotask ke BAAD, puri Microtask queue DRAIN hoti hai.
+ * - Agar Microtask ke andar naya Microtask bane → wo BHI abhi chalega!
+ * - Agar Microtask ke andar naya Macrotask bane → wo NEXT round me chalega.
  */
 
 
 /**
  * ========================================================================
- * 6. EXECUTION ORDER/PRIORITY (Ratta Maar Lo 🧠)
+ * 5. EXECUTION ORDER / PRIORITY (Ratta Maar Lo!)
  * ========================================================================
- * Sabse pehle kya chalega uski list:
+ * NOTES:
+ * - Sabse pehle kya chalega, ye yaad rakhna bahut zaroori hai:
  * 
- * 1. Synchronous Code (Call Stack)
- * 2. process.nextTick (Node.js only - Super VIP Microtask)
- * 3. Promises & queueMicrotask (Normal Microtasks)
- * 4. requestAnimationFrame (Browser only - Paint se pehle)
- * 5. setTimeout, setInterval (Macrotasks/Timers)
- * 6. setImmediate (Node.js Check phase)
- * 7. requestIdleCallback (Browser only - Lowest Priority when Idle)
+ * | Priority | Kya hai?                  | Examples                           |
+ * |----------|---------------------------|------------------------------------|
+ * | 1 (Max)  | Synchronous Code          | console.log, loops, calculations   |
+ * | 2        | process.nextTick          | Node.js only (Super VIP Microtask) |
+ * | 3        | Microtask Queue           | Promises (.then), queueMicrotask() |
+ * | 4        | requestAnimationFrame     | Browser only (paint se pehle)      |
+ * | 5        | Macrotask Queue           | setTimeout, setInterval, DOM Events|
+ * | 6        | setImmediate              | Node.js only (Check phase)         |
+ * | 7 (Min)  | requestIdleCallback       | Browser only (jab free ho)         |
+ * 
+ * SHORTCUT YAAD KARNE KA:
+ * Sync >>> nextTick >>> Promise >>> rAF >>> setTimeout >>> setImmediate >>> rIC
  */
 
 
 /**
  * ========================================================================
- * 7. EXAMPLES FOR PRACTICE (Interview Puzzles)
+ * 6. NODE.JS EVENT LOOP PHASES (Backend Specific)
  * ========================================================================
- * In examples ko console me run karne se pehle khud guess karo!
+ * NOTES:
+ * - Browser aur Node.js ka Event Loop structure ALAG hai.
+ * - Node.js ka Event Loop PHASES me ghoomta hai (top to bottom, circular):
+ * 
+ * ┌───────────────────────────┐
+ * │    TIMERS PHASE           │  → setTimeout, setInterval callbacks
+ * ├───────────────────────────┤
+ * │    PENDING CALLBACKS      │  → System-level callbacks (TCP errors etc.)
+ * ├───────────────────────────┤
+ * │    IDLE, PREPARE          │  → Internal use only
+ * ├───────────────────────────┤
+ * │    POLL PHASE (I/O)       │  → fs.readFile, network requests, etc.
+ * ├───────────────────────────┤
+ * │    CHECK PHASE            │  → setImmediate() callbacks
+ * ├───────────────────────────┤
+ * │    CLOSE CALLBACKS        │  → socket.on('close') etc.
+ * └───────────────────────────┘
+ *         ↑___________________↓  (Loop ghoomta rehta hai)
+ * 
+ * IMPORTANT: Har phase ke BEECH me Microtask queue drain hoti hai!
+ * 
+ * A) process.nextTick():
+ *    - Sabse HIGHEST priority (Microtask me bhi VIP).
+ *    - Kisi bhi Event Loop phase ke AGLE phase me jaane se pehle ye run hota hai.
+ *    - Promise se bhi pehle!
+ * 
+ * B) setTimeout(..., 0) vs setImmediate() — THE RACE:
+ *    - Top-level code me: OUTPUT UNPREDICTABLE hai! (Machine speed pe depend)
+ *    - I/O cycle (fs.readFile) ke ANDAR: setImmediate HAMESHA JEETEGA!
+ *      Kyunki: Poll Phase → seedha Check Phase (setImmediate) → phir pura loop 
+ *      ghoom ke Timers Phase (setTimeout). Isliye I/O me setImmediate pehle aata hai.
  */
 
-// ---------------------------------------------------------
-// EXERCISE 1: Sync, Microtask, Macrotask (Basic)
-// ---------------------------------------------------------
-console.log("\n--- EXERCISE 1 ---");
-console.log("A");
+// Node.js Example (Uncomment in Node.js to test):
+/*
+const fs = require('fs');
 
-setTimeout(() => {
-    console.log("B"); // Macrotask
-}, 0);
+// TOP-LEVEL: Unpredictable (koi bhi jeet sakta hai)
+setTimeout(() => console.log("Top: setTimeout"), 0);
+setImmediate(() => console.log("Top: setImmediate"));
 
-Promise.resolve().then(() => {
-    console.log("C"); // Microtask
+// I/O CYCLE: setImmediate ALWAYS wins
+fs.readFile(__filename, () => {
+    setTimeout(() => console.log("I/O: setTimeout"));
+    setImmediate(() => console.log("I/O: setImmediate")); // Ye PEHLE aayega!
 });
 
-console.log("D");
-
-// GUESS EX1: A, D, C, B
-// WHY: 
-// 1. Sync: A
-// 2. setTimeout goes to Web API.
-// 3. Promise goes to Microtask.
-// 4. Sync: D
-// 5. Stack Empty -> Event Loop checks Microtask -> C
-// 6. Microtask Empty -> Event Loop takes from Macrotask -> B
+// process.nextTick — Sabse pehle
+process.nextTick(() => console.log("nextTick — VIP!"));
+Promise.resolve().then(() => console.log("Promise — Normal Microtask"));
+*/
 
 
-// ---------------------------------------------------------
-// EXERCISE 2: Nested Promises & Timers 
-// ---------------------------------------------------------
+/**
+ * ========================================================================
+ * 7. BROWSER-SPECIFIC CONCEPTS
+ * ========================================================================
+ * NOTES:
+ * 
+ * A) requestAnimationFrame (rAF):
+ *    - Browser ko bolta hai: "Main animation update karna chahta hu."
+ *    - Browser NEXT SCREEN REPAINT se THODA PEHLE is callback ko chalata hai.
+ *    - Priority: Microtasks ke BAAD, par Paint se PEHLE.
+ *    - ~60fps = har ~16.67ms me ek baar call hoga.
+ *    - Smooth animations ke liye setTimeout NAHI, rAF use karo!
+ * 
+ * B) queueMicrotask(fn):
+ *    - Explicitly koi function Microtask queue me daalna ho to ye use karo.
+ *    - Promise.resolve().then() se zyada CLEAN approach hai.
+ * 
+ * C) requestIdleCallback (rIC):
+ *    - SABSE LOW priority ka kaam.
+ *    - Browser kehta hai: "Jab main BILKUL free ho jaunga (koi task nahi), 
+ *      tab ye chalega."
+ *    - Use: Analytics logs, lazy loading, non-critical background tasks.
+ * 
+ * D) MessageChannel (React Scheduler uses this!):
+ *    - setTimeout(..., 0) me browser 4ms minimum delay lagata hai (HTML5 spec).
+ *    - React ko 0ms delay ka macrotask chahiye tha fast rendering ke liye.
+ *    - Isliye React ne MessageChannel postMessage API use kiya — TRUE 0ms macrotask!
+ */
+
+
+/**
+ * ========================================================================
+ * 8. async/await — EVENT LOOP KE CONTEXT ME
+ * ========================================================================
+ * NOTES:
+ * - async/await Promises ka hi "syntactic sugar" hai.
+ * - Event Loop ke context me samjho:
+ * 
+ *   1. 'await' se PEHLE ka code: SYNCHRONOUS chalta hai (Call Stack me).
+ *   2. 'await' ke baad ka code: MICROTASK QUEUE me chala jaata hai.
+ *   3. Function PAUSE ho jaata hai (yield), but Call Stack BLOCK nahi hota!
+ *   4. Event Loop baaki kaam karta hai, jab await ka result aa jaye → resume.
+ * 
+ * UNDER THE HOOD 'await' kya karta hai:
+ *   async function foo() {
+ *     console.log("A");      // Sync
+ *     await somePromise;     // Yahan function pause
+ *     console.log("B");      // Ye secretly .then() ban jaata hai (Microtask)
+ *   }
+ *   
+ *   Ye internally aisa hai:
+ *   function foo() {
+ *     console.log("A");
+ *     somePromise.then(() => {
+ *       console.log("B");    // Microtask queue me
+ *     });
+ *   }
+ */
+
+// EXAMPLE:
+console.log("Start");
+
+async function asyncDemo() {
+    console.log("Inside Async: Before await (SYNC)");
+    await Promise.resolve();  // Function yahan PAUSE hota hai
+    console.log("Inside Async: After await (MICROTASK)");
+}
+
+asyncDemo();
+console.log("End");
+
+// OUTPUT: Start → Inside Async: Before await (SYNC) → End → Inside Async: After await (MICROTASK)
+// WHY:
+// 1. "Start" — sync
+// 2. asyncDemo() call → "Before await" — sync (await se pehle sync hota hai!)
+// 3. await mila → function PAUSE, baaki code microtask queue me gaya
+// 4. "End" — sync (main thread aage gaya)
+// 5. Stack empty → Microtask queue se → "After await"
+
+
+/**
+ * ========================================================================
+ * 9. UI FREEZE KYUN HOTA HAI? (Important Interview Question!)
+ * ========================================================================
+ * NOTES:
+ * - Agar koi LAMBA synchronous kaam Call Stack me fans jaaye (jaise while(true) 
+ *   loop ya heavy computation), to:
+ * 
+ *   1. Event Loop BLOCK ho jaata hai (Stack empty nahi ho raha!).
+ *   2. Queue me pending tasks WAIT karte rehte hain.
+ *   3. Browser ka rendering engine PAINT nahi kar paata.
+ *   4. DOM Events (click, scroll) handle nahi hote — QUEUE me pada rehta hai.
+ *   5. Result: Website FREEZE ho jaati hai!
+ * 
+ * SOLUTION:
+ * - Heavy kaam ko chhote chunks me todo (setTimeout ya requestIdleCallback se).
+ * - Web Workers use karo (alag thread me heavy computation chalao).
+ * - React me: React Fiber / Concurrent Mode isi problem ko solve karta hai 
+ *   (rendering ko chunks me todta hai).
+ */
+
+
+/**
+ * ========================================================================
+ * 10. WEB WORKERS (Multi-Threading in JS!)
+ * ========================================================================
+ * NOTES:
+ * - JS single-threaded hai, par agar bahut HEAVY computation karni ho to?
+ * - WEB WORKERS: Ek naya background thread bana sakte ho!
+ * - Is thread ka APNA alag Call Stack aur Event Loop hota hai.
+ * - Main thread pe koi load nahi aata — UI smooth chalti hai!
+ * 
+ * RULES:
+ * - Worker DOM access NAHI kar sakta (no document, no window).
+ * - Main thread aur worker postMessage() se baat karte hain.
+ * - Data COPY hoke jaata hai (by value, not reference).
+ * 
+ * Node.js me: worker_threads module use hota hai (same concept).
+ */
+
+
+/**
+ * ========================================================================
+ * 11. EVENT LOOP STARVATION (Microtask Trap!)
+ * ========================================================================
+ * NOTES:
+ * - Agar Microtask ke andar naya Microtask banta rahe → Event Loop WAHI FASA RAHEGA!
+ * - Macrotasks (setTimeout) KABHI nahi chalenge kyunki Microtask queue kabhi 
+ *   EMPTY hi nahi hogi!
+ * - Isko "Event Loop Starvation" kehte hain.
+ * - Ye ek DANGEROUS pattern hai — avoid karo!
+ */
+
+// EXAMPLE — Starvation demo (safe version with limit):
+function starvationDemo() {
+    let count = 0;
+    const loop = () => {
+        if (count === 5) return;   // Safety limit
+        count++;
+        console.log("Microtask:", count);
+        Promise.resolve().then(loop); // Naya microtask bana diya!
+    };
+    
+    setTimeout(() => console.log("Macrotask: Main ye tab tak NAHI chalega jab tak microtasks khatam nahi!"), 0);
+    loop();
+}
+// starvationDemo(); // Uncomment to test
+
+
+/**
+ * ========================================================================
+ * 12. INTERVIEW EXERCISES — Output Guess Karo!
+ * ========================================================================
+ * NOTES:
+ * - Ye exercises run karne se PEHLE khud guess karo. 
+ * - Phir check karo. Galat ho to dobara section 4 padho.
+ */
+
+// ---- EXERCISE 1: Basic Priority ----
+console.log("\n--- EXERCISE 1 ---");
+console.log("A");                                                // Sync
+setTimeout(() => console.log("B"), 0);                           // Macrotask
+Promise.resolve().then(() => console.log("C"));                  // Microtask
+console.log("D");                                                // Sync
+
+// ANSWER: A, D, C, B
+// WHY: Sync pehle (A, D) → Microtask (C) → Macrotask (B)
+
+
+// ---- EXERCISE 2: Nested Promises & Timers ----
 console.log("\n--- EXERCISE 2 ---");
 
 setTimeout(() => {
     console.log("1 (Macrotask)");
     Promise.resolve().then(() => {
-        console.log("2 (Microtask created inside Macrotask)");
+        console.log("2 (Microtask inside Macrotask)");
     });
 }, 0);
 
 Promise.resolve().then(() => {
     console.log("3 (Microtask)");
     setTimeout(() => {
-        console.log("4 (Macrotask created inside Microtask)");
+        console.log("4 (Macrotask inside Microtask)");
     }, 0);
 });
 
-// GUESS EX2: 3, 1, 2, 4
+// ANSWER: 3, 1, 2, 4
 // WHY:
-// - Round 1: Sync empty. 3 goes to Micro, 1 goes to Macro.
-// - Event Loop runs Microtask queue -> prints 3. Abhi ek naya setTimeout(4) call hua jo Macro queue k end me lag gaya.
-// - Queue status: Macro=[1, 4], Micro=[]
-// - Event Loop picks 1 Macrotask -> prints 1. Isne ek naya Promise banaya jo Micro me gaya.
-// - RULE: Macrotask k baad Microtask check karo.
-// - Queue status: Macro=[4], Micro=[2] -> runs 2. prints 2.
-// - Micro empty, Macro se nikalta hai 4 -> prints 4.
+// Sync done → Microtask: 3 (aur naya setTimeout(4) macrotask me gaya)
+// → Macrotask se 1 liya → uske andar naya microtask(2) bana
+// → Macrotask ke baad microtask check: 2
+// → Next macrotask: 4
 
 
-// ---------------------------------------------------------
-// EXERCISE 3: process.nextTick vs Promise (Node JS Interview Favorite)
-// Note: Agar aap isko browser me chalaoge toh process.nextTick pe error aayega. 
-// Ye mainly Node JS environments ke liye hai.
-// ---------------------------------------------------------
-console.log("\n--- EXERCISE 3 (Node.js Environment) ---");
-/* Uncomment and run in Node.js to see:
-Promise.resolve().then(() => console.log("Promise 1"));
-process.nextTick(() => console.log("nextTick 1"));
-setTimeout(() => console.log("setTimeout 1"), 0);
-process.nextTick(() => console.log("nextTick 2"));
-Promise.resolve().then(() => console.log("Promise 2"));
+// ---- EXERCISE 3: Promise Executor is SYNC! ----
+console.log("\n--- EXERCISE 3 ---");
 
-// GUESS EX3: nextTick 1, nextTick 2, Promise 1, Promise 2, setTimeout 1
-// WHY: nextTick VIP hai! Uski queue Promises ki microtask queue se bhi upar hoti hai Node me.
-*/
-console.log("Check Source Code for Code Example of process.nextTick");
-
-
-// ---------------------------------------------------------
-// EXERCISE 4: Infinite Microtask loop (Starving Macrotasks)
-// ---------------------------------------------------------
-console.log("\n--- EXERCISE 4 (Starvation Concept) ---");
-// DHYAN DEIN: Agar microtasks ek dusre ko continuously banate rahein, 
-// toh Event Loop wahi fasa rahega aur Macrotask (setTimeout) kabhi nahi chalega!
-// Isko "Event Loop Starvation" kehte hain.
-
-function runInfiniteMicrotasks() {
-    let count = 0;
-    const loop = () => {
-        if(count === 10) return; // Safey ke liye 10 pe rok diya, varna infinite ho jayega
-        // console.log("Microtask Executed:", count);
-        count++;
-        Promise.resolve().then(loop); 
-    }
-    loop();
-}
-
-/** 
-setTimeout(() => console.log("Main Timeout - Intezaar kar raha hoon!"), 0);
-runInfiniteMicrotasks(); 
-// Ye setTimeout tab tak nahi chalega jab tak saare microtasks (10 baar) khatam nahi ho jate.
-*/
-console.log("Starvation example logic is in code comments.");
-
-
-// ---------------------------------------------------------
-// EXERCISE 5: setTimeout vs setImmediate race in I/O (Node.js) 🤯
-// ---------------------------------------------------------
-console.log("\n--- EXERCISE 5 (Node Event Loop Phases) ---");
-/* Uncomment and run in Node.js to see:
-const fs = require('fs');
-
-// Scenario 1: Top Level (UNPREDICTABLE / RACE)
-// Yaha koi bhi jeet sakta hai
-setTimeout(() => console.log("Top Level: setTimeout"));
-setImmediate(() => console.log("Top Level: setImmediate"));
-
-// Scenario 2: Inside I/O Cycle (ALWAYS PREDICTABLE)
-fs.readFile(__filename, () => {
-    // Ye code Poll phase me chal raha hai.
-    setTimeout(() => console.log("Inside I/O: setTimeout"));
-    setImmediate(() => console.log("Inside I/O: setImmediate"));
-});
-
-// EXPLANATION:
-// readFile callback Node.js Event Loop ke "Poll Phase" me execute hota hai.
-// Poll Phase khatam hone ke theek baad hamesha "Check Phase" aata hai jismein setImmediate chalta hai.
-// Aur "Timers Phase" ko chalne ke liye loop ko pura circle kaat kar vapas top par jana hoga.
-// Isliye "Inside I/O: setImmediate" hamesha pehle aata hai!
-*/
-console.log("Check Source Code for setTimeout vs setImmediate in I/O phase concept");
-
-
-// ---------------------------------------------------------
-// EXERCISE 6: Async/Await Under the hood (Microtask Queue)
-// ---------------------------------------------------------
-console.log("\n--- EXERCISE 6 (Async/Await) ---");
 console.log("Start");
 
-async function asyncFunc() {
-    console.log("Inside Async: Aadhi line (Sync)");
-    // Yahan function PAUSE hoga, aur agla part Microtask me jayega
-    await Promise.resolve(); 
-    console.log("Inside Async: 'await' ke baad (Microtask)");
-}
+const myPromise = new Promise((resolve) => {
+    console.log("Inside Promise Executor");  // Ye SYNC hai!
+    resolve("Data");
+});
 
-asyncFunc();
+myPromise.then((res) => console.log("Then:", res));  // Microtask
+
 console.log("End");
 
-// GUESS EX6: Start, Inside Async: Aadhi line (Sync), End, Inside Async: 'await' ke baad (Microtask)
-// WHY: 
-// 1. "Start" print hua.
-// 2. asyncFunc() call hua. Iske andar ka pehla print Synchronous hota hai, so "Aadhi line (Sync)" print hua.
-// 3. Jaise hi `await` mila, function yield (pause) hua aur bacha hua code Microtask queue me gaya.
-// 4. Thread bahar aagaya aur "End" print hua.
-// 5. Call stack empty -> Event Loop goes to Microtask Queue -> prints "await ke baad".
+// ANSWER: Start, Inside Promise Executor, End, Then: Data
+// WHY:
+// - new Promise() ka executor function SYNCHRONOUSLY chalta hai!
+// - resolve() call → .then() ko Microtask queue me bhej diya
+// - "End" sync hai, pehle chala
+// - Stack empty → Microtask → "Then: Data"
+
+
+// ---- EXERCISE 4: async/await + setTimeout Mix ----
+console.log("\n--- EXERCISE 4 ---");
+
+async function asyncExample() {
+    console.log("Async: 1");
+    await Promise.resolve();
+    console.log("Async: 2");
+}
+
+console.log("Main: A");
+setTimeout(() => console.log("Timeout: B"), 0);
+asyncExample();
+console.log("Main: C");
+
+// ANSWER: Main: A, Async: 1, Main: C, Async: 2, Timeout: B
+// WHY:
+// "Main: A" — sync
+// asyncExample() call → "Async: 1" — sync (await se pehle)
+// await → function pause, "Async: 2" microtask queue me
+// "Main: C" — sync
+// Stack empty → Microtask: "Async: 2"
+// → Macrotask: "Timeout: B"
+
+
+// ---- EXERCISE 5: Multiple Microtasks inside Macrotask ----
+console.log("\n--- EXERCISE 5 ---");
+
+setTimeout(() => {
+    console.log("T1");
+    Promise.resolve().then(() => console.log("P1"));
+    Promise.resolve().then(() => console.log("P2"));
+}, 0);
+
+setTimeout(() => {
+    console.log("T2");
+    Promise.resolve().then(() => console.log("P3"));
+}, 0);
+
+// ANSWER: T1, P1, P2, T2, P3
+// WHY:
+// Macrotask 1 (T1) chala → 2 microtasks bane (P1, P2)
+// Macrotask ke baad microtask drain: P1, P2
+// Macrotask 2 (T2) chala → 1 microtask bana (P3)
+// Macrotask ke baad microtask drain: P3
 
 
 /**
  * ========================================================================
- * FINAL REVISION TABLE 📝
+ * 13. QUEUE NAMES — INTERVIEW TERMINOLOGY
  * ========================================================================
- * | Queue/Task       | Examples                                  | Priority (1 = Highest) |
- * |------------------|-------------------------------------------|-------------------------|
- * | Sync Call Stack  | normal code (console.log, loops)          | 1 (Blocks everything)   |
- * | nextTick Queue   | process.nextTick() (Node.js only)         | 2 (VIP Microtask)       |
- * | Microtask Queue  | Promises (.then/.catch), queueMicrotask   | 3 (Normal Microtask)    |
- * | Animation Frame  | requestAnimationFrame (Browser)           | 4 (Before Repaint)      |
- * | Macrotask Queue  | setTimeout, setInterval, DOM Events       | 5 (Callback Queue)      |
- * | Check Phase      | setImmediate (Node.js only)               | 6 (Runs after polling)  |
- * | Idle Callback    | requestIdleCallback (Browser)             | 7 (Lowest priority)     |
- * ========================================================================
+ * NOTES:
+ * - Interviewers ALAG-ALAG naamon se puchte hain. Ye sab SAME cheez hain:
+ * 
+ * MACROTASK QUEUE ke doosre naam:
+ * - Callback Queue
+ * - Task Queue
+ * - Message Queue
+ * - Event Queue
+ * 
+ * MICROTASK QUEUE ke doosre naam:
+ * - Job Queue (ECMAScript spec me ye naam use hota hai)
+ * - Promise Job Queue
+ * 
+ * (Dono Event Loop ka hi hissa hain — bas PRIORITY ka farak hai.
+ *  Microtask/Job Queue HAMESHA Macrotask/Callback Queue se pehle chalti hai.)
  */
 
-// Ek final mast trick yaad rakhne ke liye:
-// Sync >>> nextTick >>> Promise >>> rAF (Browser) >>> setTimeout/setInterval/setImmediate >>> rIC (Idle)
+
+/*
+========================================================================
+FINAL REVISION TABLE — EVENT LOOP CHEAT SHEET
+========================================================================
+
+| Component         | Kya hai?                                               |
+|-------------------|--------------------------------------------------------|
+| Call Stack        | Jahan JS code execute hota hai (LIFO, single thread)   |
+| Web APIs          | setTimeout, fetch, DOM events (browser provide karta)  |
+| Microtask Queue   | Promises, queueMicrotask, nextTick (HIGH priority)     |
+| Macrotask Queue   | setTimeout, setInterval, DOM events (LOW priority)     |
+| Event Loop        | Bridge — Queue se Stack pe tasks bhejta hai jab empty  |
+
+| Rule              | Detail                                                 |
+|-------------------|--------------------------------------------------------|
+| Step 1            | Saara SYNC code pehle chalao                           |
+| Step 2            | PURI Microtask Queue drain karo                        |
+| Step 3            | SIRF 1 Macrotask uthao                                 |
+| Step 4            | Wapas Step 2 (Microtask check repeat)                  |
+
+| Priority          | Kya?                           | Type                |
+|-------------------|--------------------------------|---------------------|
+| 1 (Highest)       | Sync Code                      | Call Stack          |
+| 2                 | process.nextTick (Node.js)     | Super VIP Microtask |
+| 3                 | Promise .then / queueMicrotask | Microtask           |
+| 4                 | requestAnimationFrame          | Before Paint        |
+| 5                 | setTimeout / setInterval       | Macrotask           |
+| 6                 | setImmediate (Node.js)         | Check Phase         |
+| 7 (Lowest)        | requestIdleCallback            | Idle time           |
+
+========================================================================
+SHORTCUT:
+Sync >>> nextTick >>> Promise >>> rAF >>> setTimeout >>> setImmediate >>> rIC
+========================================================================
+*/
