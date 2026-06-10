@@ -117,33 +117,88 @@ function nestedDifferentInputs(arr1, arr2) {
 
 /**
  * ========================================================================
- * 4. SPACE COMPLEXITY
+ * 4. SUM FROM 1 TO N FORMULA
  * ========================================================================
  * NOTES:
- * - Space complexity = input ke alawa extra memory kitni lag rahi hai.
- * - Primitive values: O(1)
- * - String/array/object copy: usually O(n)
- * - Recursion: call stack memory count hoti hai.
+ * - 1 + 2 + 3 + ... + n ka direct formula:
+ *   n * (n + 1) / 2
+ * - Isse loop ke bina sum mil jaata hai, so calculation O(1) hoti hai.
+ *
+ * HOW FORMULA AAYA?
+ * - Example: 1 + 2 + 3 + 4 + 5 + 6
+ * - Ends se pair banao:
+ *   1 + 6 = 7
+ *   2 + 5 = 7
+ *   3 + 4 = 7
+ * - Har pair ka sum n + 1 hota hai.
+ * - Total numbers n hain, so pairs n / 2 hain.
+ * - Sum = number of pairs * value of each pair
+ * - Sum = (n / 2) * (n + 1)
+ * - Same thing: n * (n + 1) / 2
  */
 
-// O(1) space - sirf ek variable
+function sumOneToN(n) {
+    return n * (n + 1) / 2;
+}
+
+console.log(sumOneToN(6)); // 21
+
+
+/**
+ * ========================================================================
+ * 5. SPACE COMPLEXITY
+ * ========================================================================
+ * NOTES:
+ * - Space complexity = input badhne par memory usage kaise grow hota hai.
+ * - Interviews me mostly "auxiliary space" count karte hain.
+ * - Auxiliary space = input ke alawa algorithm kitni extra memory use karta hai.
+ *
+ * COLT STEELE STYLE RULES OF THUMB:
+ * - Most primitives O(1) space hote hain:
+ *   number, boolean, null, undefined
+ * - String O(n) space leti hai:
+ *   n = string length, because characters badhte hain.
+ * - Arrays and objects usually O(n) space lete hain:
+ *   n = array length ya object keys count.
+ * - Fixed variables use ho rahe hain -> O(1) space.
+ * - New array/object/string ban raha hai with n items -> O(n) space.
+ * - Recursion me call stack bhi memory count hoti hai.
+ */
+
+// O(1) auxiliary space - sirf ek extra variable
 function sumArraySpaceOne(arr) {
     let total = 0;
     for (const num of arr) total += num;
     return total;
 }
 
-// O(n) space - n size ka new array
+// O(n) auxiliary space - n size ka new array ban raha hai
 function doubleArray(arr) {
     const result = [];
     for (const num of arr) result.push(num * 2);
     return result;
 }
 
+// O(n) space - input string jitni badi, copy bhi utni badi
+function copyString(str) {
+    return str.slice();
+}
+
+// O(k) space - k unique keys object me store hongi
+function countValues(arr) {
+    const counts = {};
+
+    for (const item of arr) {
+        counts[item] = (counts[item] || 0) + 1;
+    }
+
+    return counts;
+}
+
 
 /**
  * ========================================================================
- * 5. LOGARITHMS - WHY O(log n) FAST HOTA HAI?
+ * 6. LOGARITHMS - WHY O(log n) FAST HOTA HAI?
  * ========================================================================
  * NOTES:
  * - log ka simple meaning: kitni baar divide karna padega.
@@ -167,7 +222,7 @@ console.log(countHalves(16)); // 4: 16 -> 8 -> 4 -> 2 -> 1
 
 /**
  * ========================================================================
- * 6. BEST, AVERAGE, WORST CASE
+ * 7. BEST, AVERAGE, WORST CASE
  * ========================================================================
  * NOTES:
  * - Best case: easiest input.
@@ -190,7 +245,7 @@ function linearSearchExample(arr, target) {
 
 /**
  * ========================================================================
- * 7. QUICK CHEAT TABLE
+ * 8. QUICK CHEAT TABLE
  * ========================================================================
  *
  * Access array by index              O(1)
