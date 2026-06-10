@@ -7,20 +7,20 @@ short Hinglish explanations, important rules, and compact JavaScript examples.
 
 ## Suggested Reading Order
 
-1. `COURSE_OVERVIEW/Jonas_Node_Course_Map.js`
-2. `NODE_FOUNDATIONS/Node_NPM_Core_Modules.js`
-3. `BACKEND_FOUNDATIONS/Web_Backend_Fundamentals.js`
-4. `NODE_INTERNALS/Node_Internals_Event_Loop_Streams.js`
-5. `ASYNC/Promises_Async_Await_Node.js`
-6. `EXPRESS/Express_REST_API_Natours.js`
-7. `NO_SQL/MONGO_DB/MongoDB_Mongoose_Basics.js`
-8. `ERROR_HANDLING/Express_Error_Handling.js`
-9. `AUTH_SECURITY/Auth_Authorization_Security.js`
-10. `NO_SQL/MONGO_DB/Data_Modeling_Advanced_Mongoose.js`
-11. `SERVER_RENDERING/Pug_Server_Side_Rendering.js`
-12. `ADVANCED_FEATURES/Payments_Email_File_Uploads.js`
-13. `DEPLOYMENT/Git_Deployment_Production.js`
-14. `CHEATSHEETS/Node_Backend_Cheat_Sheet.js`
+1. `01_COURSE_OVERVIEW/Jonas_Node_Course_Map.js`
+2. `02_NODE_FOUNDATIONS/Node_NPM_Core_Modules.js`
+3. `03_BACKEND_FOUNDATIONS/Web_Backend_Fundamentals.js`
+4. `04_NODE_INTERNALS/Node_Internals_Event_Loop_Streams.js`
+5. `05_ASYNC/Promises_Async_Await_Node.js`
+6. `06_EXPRESS/Express_REST_API_Natours.js`
+7. `07_NO_SQL/01_MONGO_DB/01_DATABASE/MongoDB_Mongoose_Basics.js`
+8. `07_NO_SQL/01_MONGO_DB/02_ERROR_HANDLING/Express_Error_Handling.js`
+9. `07_NO_SQL/01_MONGO_DB/03_AUTH_SECURITY/Auth_Authorization_Security.js`
+10. `07_NO_SQL/01_MONGO_DB/04_ADVANCED_MONGOOSE/Data_Modeling_Advanced_Mongoose.js`
+11. `07_NO_SQL/01_MONGO_DB/05_SERVER_RENDERING/Pug_Server_Side_Rendering.js`
+12. `07_NO_SQL/01_MONGO_DB/06_ADVANCED_FEATURES/Payments_Email_File_Uploads.js`
+13. `08_DEPLOYMENT/Git_Deployment_Production.js`
+14. `09_CHEATSHEETS/Node_Backend_Cheat_Sheet.js`
 
 ## Main Coverage
 
