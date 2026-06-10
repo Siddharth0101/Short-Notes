@@ -13,10 +13,10 @@ short Hinglish explanations, important rules, and compact JavaScript examples.
 4. `NODE_INTERNALS/Node_Internals_Event_Loop_Streams.js`
 5. `ASYNC/Promises_Async_Await_Node.js`
 6. `EXPRESS/Express_REST_API_Natours.js`
-7. `DATABASE/MongoDB_Mongoose_Basics.js`
+7. `NO_SQL/MONGO_DB/MongoDB_Mongoose_Basics.js`
 8. `ERROR_HANDLING/Express_Error_Handling.js`
 9. `AUTH_SECURITY/Auth_Authorization_Security.js`
-10. `ADVANCED_MONGOOSE/Data_Modeling_Advanced_Mongoose.js`
+10. `NO_SQL/MONGO_DB/Data_Modeling_Advanced_Mongoose.js`
 11. `SERVER_RENDERING/Pug_Server_Side_Rendering.js`
 12. `ADVANCED_FEATURES/Payments_Email_File_Uploads.js`
 13. `DEPLOYMENT/Git_Deployment_Production.js`
@@ -29,7 +29,7 @@ short Hinglish explanations, important rules, and compact JavaScript examples.
 - Node architecture, V8, libuv, thread pool, event loop, streams, modules
 - Promises, async/await, Promise.all, async error handling
 - Express routing, middleware, REST, MVC structure, environment variables
-- MongoDB CRUD, Atlas, Compass, Mongoose schemas, models, validators
+- NoSQL basics, MongoDB CRUD, Atlas, Compass, Mongoose schemas, models, validators
 - API features: filtering, sorting, field limiting, pagination, aliases
 - Aggregation pipeline, virtuals, document/query/aggregation middleware
 - Global error handling, operational errors, unhandled rejections
