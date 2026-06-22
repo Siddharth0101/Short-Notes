@@ -26,6 +26,10 @@
  *
  * BAD HASH:
  * - Sab keys same index par bhej de -> collisions high.
+ *
+ * EXAMPLE - simpleHash:
+ * Input:  key = 'pink', arrayLength = 10
+ * Output: some fixed index between 0-9 (always same for 'pink')
  */
 
 function simpleHash(key, arrayLength) {
@@ -40,6 +44,15 @@ function simpleHash(key, arrayLength) {
 
     return total;
 }
+
+// Sample Input:  'pink', 10
+// Expected Output: some integer 0-9 (deterministic)
+console.log(simpleHash('pink', 10));   // e.g. 0
+console.log(simpleHash('orange', 10)); // e.g. 4
+console.log(simpleHash('cyan', 10));   // e.g. 3
+
+// Same input always gives same output:
+console.log(simpleHash('pink', 10) === simpleHash('pink', 10)); // true
 
 
 /**
@@ -69,6 +82,13 @@ function simpleHash(key, arrayLength) {
  *
  * WORST CASE:
  * - O(n), if many collisions.
+ *
+ * EXAMPLE:
+ * set('white', '#fff') -> set('black', '#000') -> set('red', '#f00')
+ * get('black') -> '#000'
+ * get('purple') -> undefined
+ * keys() -> ['white', 'black', 'red']  (order may vary)
+ * values() -> ['#fff', '#000', '#f00']  (order may vary)
  */
 
 class HashTable {
@@ -148,6 +168,41 @@ class HashTable {
     }
 }
 
+// Sample usage: HashTable operations
+const ht = new HashTable();
+
+// Sample Input:  set color names
+ht.set('white', '#fff');
+ht.set('black', '#000');
+ht.set('red', '#f00');
+ht.set('blue', '#00f');
+
+// Sample Input:  get('black')
+// Expected Output: '#000'
+console.log(ht.get('black'));  // '#000'
+
+// Sample Input:  get('white')
+// Expected Output: '#fff'
+console.log(ht.get('white'));  // '#fff'
+
+// Sample Input:  get('purple')
+// Expected Output: undefined  (not set)
+console.log(ht.get('purple')); // undefined
+
+// Sample Input:  keys()
+// Expected Output: ['white', 'black', 'red', 'blue'] (order may vary)
+console.log(ht.keys());   // e.g. ['white', 'black', 'red', 'blue']
+
+// Sample Input:  values()
+// Expected Output: ['#fff', '#000', '#f00', '#00f'] (order may vary)
+console.log(ht.values()); // e.g. ['#fff', '#000', '#f00', '#00f']
+
+// Update existing key test:
+// Sample Input:  set('white', '#ffffff')
+// Expected: get('white') now returns '#ffffff'
+ht.set('white', '#ffffff');
+console.log(ht.get('white')); // '#ffffff'
+
 
 /**
  * ========================================================================
@@ -163,6 +218,13 @@ class HashTable {
  * - Keys any type: object, array, number, string.
  * - Has size property.
  * - Better for frequent add/delete and arbitrary keys.
+ *
+ * EXAMPLE - twoSum:
+ * Input:  nums = [2, 7, 11, 15], target = 9
+ * Output: [0, 1]  (nums[0] + nums[1] = 2 + 7 = 9)
+ *
+ * Input:  nums = [3, 2, 4], target = 6
+ * Output: [1, 2]  (nums[1] + nums[2] = 2 + 4 = 6)
  */
 
 function twoSum(nums, target) {
@@ -181,6 +243,22 @@ function twoSum(nums, target) {
     return [];
 }
 
+// Sample Input:  [2, 7, 11, 15], target = 9
+// Expected Output: [0, 1]
+console.log(twoSum([2, 7, 11, 15], 9)); // [0, 1]
+
+// Sample Input:  [3, 2, 4], target = 6
+// Expected Output: [1, 2]
+console.log(twoSum([3, 2, 4], 6)); // [1, 2]
+
+// Sample Input:  [3, 3], target = 6
+// Expected Output: [0, 1]
+console.log(twoSum([3, 3], 6)); // [0, 1]
+
+// Sample Input:  [1, 2, 3], target = 100
+// Expected Output: []  (no valid pair)
+console.log(twoSum([1, 2, 3], 100)); // []
+
 
 /**
  * ========================================================================
@@ -189,6 +267,13 @@ function twoSum(nums, target) {
  * NOTES:
  * - Set membership check average O(1).
  * - Duplicate, visited, intersection problems me useful.
+ *
+ * EXAMPLE - intersection:
+ * Input:  arr1 = [1, 2, 3, 4], arr2 = [3, 4, 5, 6]
+ * Output: [3, 4]  (common elements)
+ *
+ * Input:  arr1 = [1, 2], arr2 = [3, 4]
+ * Output: []  (no common elements)
  */
 
 function intersection(arr1, arr2) {
@@ -204,6 +289,18 @@ function intersection(arr1, arr2) {
 
     return result;
 }
+
+// Sample Input:  [1, 2, 3, 4], [3, 4, 5, 6]
+// Expected Output: [3, 4]
+console.log(intersection([1, 2, 3, 4], [3, 4, 5, 6])); // [3, 4]
+
+// Sample Input:  [1, 2, 3], [4, 5, 6]
+// Expected Output: []
+console.log(intersection([1, 2, 3], [4, 5, 6])); // []
+
+// Sample Input:  [1, 1, 2, 3], [1, 2]  (duplicates in arr1)
+// Expected Output: [1, 2]  (each intersection element once)
+console.log(intersection([1, 1, 2, 3], [1, 2])); // [1, 2]
 
 
 /**

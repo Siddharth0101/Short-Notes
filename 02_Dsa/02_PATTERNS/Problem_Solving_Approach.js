@@ -37,13 +37,13 @@
  * - Simple examples lo.
  * - Edge cases lo.
  * - Empty input, one item, duplicates, negative numbers, sorted/unsorted.
+ *
+ * Problem: Write function that returns char count for a string.
+ * Examples:
+ * Input:  'hello'  -> Output: { h: 1, e: 1, l: 2, o: 1 }
+ * Input:  ''       -> Output: {}
+ * Input:  'Hi hi!' -> should case matter? Should symbols count?
  */
-
-// Problem: Write function that returns char count for a string.
-// Examples:
-// charCount("hello") -> { h: 1, e: 1, l: 2, o: 1 }
-// charCount("") -> {}
-// charCount("Hi hi!") -> should case matter? Should symbols count?
 
 
 /**
@@ -53,6 +53,11 @@
  * NOTES:
  * - Code likhne se pehle steps comments me likho.
  * - Ye half battle jeet leta hai.
+ *
+ * EXAMPLE - charCount:
+ * Input:  'Hello World'
+ * Output: { h: 1, e: 1, l: 3, o: 2, w: 1, r: 1, d: 1 }
+ *         (lowercase, only alphanumeric, spaces ignored)
  */
 
 function charCount(str) {
@@ -72,6 +77,22 @@ function charCount(str) {
 
     return result;
 }
+
+// Sample Input:  'hello'
+// Expected Output: { h: 1, e: 1, l: 2, o: 1 }
+console.log(charCount('hello')); // { h: 1, e: 1, l: 2, o: 1 }
+
+// Sample Input:  'Hi hi!'
+// Expected Output: { h: 2, i: 2 }  (uppercase H -> lowercase h, '!' ignored)
+console.log(charCount('Hi hi!')); // { h: 2, i: 2 }
+
+// Sample Input:  ''
+// Expected Output: {}
+console.log(charCount('')); // {}
+
+// Sample Input:  'abc123'
+// Expected Output: { a: 1, b: 1, c: 1, 1: 1, 2: 1, 3: 1 }
+console.log(charCount('abc123')); // { a: 1, b: 1, c: 1, '1': 1, '2': 1, '3': 1 }
 
 
 /**
@@ -101,6 +122,10 @@ function charCount(str) {
  * - Kya space complexity improve ho sakti hai?
  * - Kya edge cases pass ho rahe hain?
  * - Kya variable names meaningful hain?
+ *
+ * EXAMPLE - charCountRefactored:
+ * Input:  'Hello World'
+ * Output: { h: 1, e: 1, l: 3, o: 2, w: 1, r: 1, d: 1 }
  */
 
 function charCountRefactored(str) {
@@ -125,6 +150,14 @@ function isAlphaNumeric(char) {
 
     return false;
 }
+
+// Sample Input:  'Hello World'
+// Expected Output: { h: 1, e: 1, l: 3, o: 2, w: 1, r: 1, d: 1 }
+console.log(charCountRefactored('Hello World')); // { h: 1, e: 1, l: 3, o: 2, w: 1, r: 1, d: 1 }
+
+// Sample Input:  '2fast2furious'
+// Expected Output: { 2: 2, f: 2, a: 1, s: 1, t: 1, u: 2, r: 1, i: 1, o: 1 }
+console.log(charCountRefactored('2fast2furious')); // { '2': 2, f: 2, a: 1, s: 1, t: 1, u: 2, r: 1, i: 1, o: 1 }
 
 
 /**

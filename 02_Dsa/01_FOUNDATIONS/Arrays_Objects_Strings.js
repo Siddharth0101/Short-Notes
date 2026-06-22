@@ -25,6 +25,10 @@
  * - Access: O(1)
  * - Search value: O(n)
  * - Object.keys / values / entries: O(n)
+ *
+ * EXAMPLE:
+ * Input:  userScore = { sidd: 10, colt: 20, max: 30 }
+ * Output: userScore.sidd => 10, userScore.raj => 40 after insert
  */
 
 const userScore = {
@@ -33,9 +37,11 @@ const userScore = {
     max: 30
 };
 
-console.log(userScore.sidd); // O(1)
-userScore.raj = 40;          // O(1)
-delete userScore.max;        // O(1)
+console.log(userScore.sidd); // 10  (O(1) access)
+userScore.raj = 40;          // O(1) insert
+delete userScore.max;        // O(1) delete
+console.log(Object.keys(userScore));   // [ 'sidd', 'colt', 'raj' ]
+console.log(Object.values(userScore)); // [ 10, 20, 40 ]
 
 
 /**
@@ -57,14 +63,27 @@ delete userScore.max;        // O(1)
  * - concat: O(n + m)
  * - sort: O(n log n) usually
  * - forEach/map/filter/reduce: O(n)
+ *
+ * EXAMPLE:
+ * Input:  [10, 20, 30]
+ * Output: after push(40) => [10, 20, 30, 40]
+ *         after pop()    => [10, 20, 30]
+ *         after unshift(5) => [5, 10, 20, 30]
  */
 
 const nums = [10, 20, 30];
 
-nums.push(40);     // fast
-nums.pop();        // fast
-nums.unshift(5);   // slow for large arrays
-nums.shift();      // slow for large arrays
+nums.push(40);
+console.log(nums); // [ 10, 20, 30, 40 ]
+
+nums.pop();
+console.log(nums); // [ 10, 20, 30 ]
+
+nums.unshift(5);
+console.log(nums); // [ 5, 10, 20, 30 ]
+
+nums.shift();
+console.log(nums); // [ 10, 20, 30 ]
 
 
 /**
@@ -75,14 +94,18 @@ nums.shift();      // slow for large arrays
  * - Strings immutable hoti hain.
  * - Iska matlab original string change nahi hoti; new string banti hai.
  * - Character access O(1), but slicing/copying O(n) ho sakta hai.
+ *
+ * EXAMPLE:
+ * Input:  'algorithm'
+ * Output: word[0] => 'a', word.slice(0, 4) => 'algo'
  */
 
 const word = 'algorithm';
 
 console.log(word[0]);          // 'a'
-console.log(word.slice(0, 4)); // 'algo' - new string
+console.log(word.slice(0, 4)); // 'algo'
 
-// Many string concatenations can become costly.
+// Efficient string building using array + join
 function buildString(arr) {
     const pieces = [];
 
@@ -93,6 +116,10 @@ function buildString(arr) {
     return pieces.join('');
 }
 
+// Sample Input:  ['h', 'e', 'l', 'l', 'o']
+// Expected Output: 'hello'
+console.log(buildString(['h', 'e', 'l', 'l', 'o'])); // 'hello'
+
 
 /**
  * ========================================================================
@@ -102,6 +129,10 @@ function buildString(arr) {
  * - Map bhi key-value store hai, but keys kisi bhi type ki ho sakti hain.
  * - Object ki prototype keys wali tension nahi hoti.
  * - Frequency counter, graph adjacency list, cache ke liye useful.
+ *
+ * EXAMPLE:
+ * Input:  set('a', 1), set('b', 2)
+ * Output: get('a') => 1, has('c') => false
  */
 
 const freqMap = new Map();
@@ -109,6 +140,7 @@ freqMap.set('a', 1);
 freqMap.set('b', 2);
 console.log(freqMap.get('a')); // 1
 console.log(freqMap.has('c')); // false
+console.log(freqMap.size);     // 2
 
 
 /**
@@ -118,6 +150,10 @@ console.log(freqMap.has('c')); // false
  * NOTES:
  * - Set unique values store karta hai.
  * - Duplicate remove karne, visited track karne, membership check ke liye useful.
+ *
+ * EXAMPLE:
+ * Input:  [1, 2, 2, 3, 3, 3]
+ * Output: [1, 2, 3]
  */
 
 const uniqueNums = new Set([1, 2, 2, 3, 3, 3]);
@@ -126,6 +162,14 @@ console.log([...uniqueNums]); // [1, 2, 3]
 function hasDuplicate(arr) {
     return new Set(arr).size !== arr.length;
 }
+
+// Sample Input:  [1, 2, 3, 2]
+// Expected Output: true
+console.log(hasDuplicate([1, 2, 3, 2])); // true
+
+// Sample Input:  [1, 2, 3, 4]
+// Expected Output: false
+console.log(hasDuplicate([1, 2, 3, 4])); // false
 
 
 /**
@@ -136,6 +180,10 @@ function hasDuplicate(arr) {
  * - Mutation: original data change hota hai.
  * - Copy: new data structure banta hai.
  * - DSA me mutation memory bachata hai, copy safer hoti hai.
+ *
+ * EXAMPLE:
+ * Input:  original = [1, 2, 3], copied = original.slice()
+ * Output: original.push(4) => original=[1,2,3,4], copied=[1,2,3]
  */
 
 const original = [1, 2, 3];

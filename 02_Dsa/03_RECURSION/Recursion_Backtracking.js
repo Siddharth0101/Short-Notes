@@ -21,6 +21,10 @@
  * - Function call hota hai -> stack me push.
  * - Function return hota hai -> stack se pop.
  * - Base case missing hua to stack overflow.
+ *
+ * EXAMPLE - countDown:
+ * Input:  3
+ * Output: 3  2  1  'All done'
  */
 
 function countDown(num) {
@@ -33,11 +37,31 @@ function countDown(num) {
     countDown(num - 1);
 }
 
+// Sample Input:  3
+// Expected Output: 3, 2, 1, 'All done'
+countDown(3); // 3, 2, 1, All done
+
+// Sample Input:  0
+// Expected Output: 'All done'  (base case immediately)
+countDown(0); // All done
+
 
 /**
  * ========================================================================
  * 2. BASIC RECURSION EXAMPLES
  * ========================================================================
+ *
+ * EXAMPLE - factorial:
+ * Input:  5
+ * Output: 120  (5 * 4 * 3 * 2 * 1)
+ *
+ * EXAMPLE - sumRange:
+ * Input:  4
+ * Output: 10  (4 + 3 + 2 + 1)
+ *
+ * EXAMPLE - power:
+ * Input:  base=2, exponent=3
+ * Output: 8  (2 * 2 * 2)
  */
 
 function factorial(num) {
@@ -45,15 +69,47 @@ function factorial(num) {
     return num * factorial(num - 1);
 }
 
+// Sample Input:  5
+// Expected Output: 120
+console.log(factorial(5)); // 120
+
+// Sample Input:  0
+// Expected Output: 1  (0! = 1 by definition)
+console.log(factorial(0)); // 1
+
+// Sample Input:  1
+// Expected Output: 1
+console.log(factorial(1)); // 1
+
 function sumRange(num) {
     if (num === 1) return 1;
     return num + sumRange(num - 1);
 }
 
+// Sample Input:  4
+// Expected Output: 10  (4+3+2+1)
+console.log(sumRange(4)); // 10
+
+// Sample Input:  6
+// Expected Output: 21  (6+5+4+3+2+1)
+console.log(sumRange(6)); // 21
+
 function power(base, exponent) {
     if (exponent === 0) return 1;
     return base * power(base, exponent - 1);
 }
+
+// Sample Input:  base=2, exponent=3
+// Expected Output: 8
+console.log(power(2, 3)); // 8
+
+// Sample Input:  base=5, exponent=0
+// Expected Output: 1
+console.log(power(5, 0)); // 1
+
+// Sample Input:  base=3, exponent=4
+// Expected Output: 81
+console.log(power(3, 4)); // 81
 
 
 /**
@@ -76,6 +132,10 @@ function power(base, exponent) {
  * - Outer function result variable banata hai.
  * - Inner helper recursive kaam karta hai.
  * - Jab result collect karna ho, ye style easy hota hai.
+ *
+ * EXAMPLE - collectOddValues:
+ * Input:  [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ * Output: [1, 3, 5, 7, 9]
  */
 
 function collectOddValues(arr) {
@@ -95,6 +155,14 @@ function collectOddValues(arr) {
     return result;
 }
 
+// Sample Input:  [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// Expected Output: [1, 3, 5, 7, 9]
+console.log(collectOddValues([1, 2, 3, 4, 5, 6, 7, 8, 9])); // [1, 3, 5, 7, 9]
+
+// Sample Input:  [2, 4, 6, 8]
+// Expected Output: []  (no odd values)
+console.log(collectOddValues([2, 4, 6, 8])); // []
+
 
 /**
  * ========================================================================
@@ -104,6 +172,10 @@ function collectOddValues(arr) {
  * - Helper array nahi, function return values combine karta hai.
  * - Arrays ke saath slice/spread/concat useful hote hain.
  * - Space zyada lag sakti hai because new arrays bante hain.
+ *
+ * EXAMPLE - collectOddValuesPure:
+ * Input:  [1, 2, 3, 4, 5]
+ * Output: [1, 3, 5]
  */
 
 function collectOddValuesPure(arr) {
@@ -119,11 +191,33 @@ function collectOddValuesPure(arr) {
     return newArr;
 }
 
+// Sample Input:  [1, 2, 3, 4, 5]
+// Expected Output: [1, 3, 5]
+console.log(collectOddValuesPure([1, 2, 3, 4, 5])); // [1, 3, 5]
+
+// Sample Input:  [4, 6, 8]
+// Expected Output: []
+console.log(collectOddValuesPure([4, 6, 8])); // []
+
 
 /**
  * ========================================================================
  * 6. RECURSION WITH ARRAYS/STRINGS
  * ========================================================================
+ *
+ * EXAMPLE - productOfArray:
+ * Input:  [1, 2, 3, 4]
+ * Output: 24  (1 * 2 * 3 * 4)
+ *
+ * EXAMPLE - reverseString:
+ * Input:  'hello'
+ * Output: 'olleh'
+ *
+ * EXAMPLE - isPalindrome:
+ * Input:  'racecar'
+ * Output: true
+ * Input:  'hello'
+ * Output: false
  */
 
 function productOfArray(arr) {
@@ -131,16 +225,44 @@ function productOfArray(arr) {
     return arr[0] * productOfArray(arr.slice(1));
 }
 
+// Sample Input:  [1, 2, 3, 4]
+// Expected Output: 24
+console.log(productOfArray([1, 2, 3, 4])); // 24
+
+// Sample Input:  [2, 5, 3]
+// Expected Output: 30
+console.log(productOfArray([2, 5, 3])); // 30
+
 function reverseString(str) {
     if (str.length <= 1) return str;
     return reverseString(str.slice(1)) + str[0];
 }
+
+// Sample Input:  'hello'
+// Expected Output: 'olleh'
+console.log(reverseString('hello')); // 'olleh'
+
+// Sample Input:  'abcde'
+// Expected Output: 'edcba'
+console.log(reverseString('abcde')); // 'edcba'
 
 function isPalindrome(str) {
     if (str.length <= 1) return true;
     if (str[0] !== str[str.length - 1]) return false;
     return isPalindrome(str.slice(1, -1));
 }
+
+// Sample Input:  'racecar'
+// Expected Output: true
+console.log(isPalindrome('racecar')); // true
+
+// Sample Input:  'hello'
+// Expected Output: false
+console.log(isPalindrome('hello')); // false
+
+// Sample Input:  'a'
+// Expected Output: true  (single char is palindrome)
+console.log(isPalindrome('a')); // true
 
 
 /**
@@ -151,6 +273,14 @@ function isPalindrome(str) {
  * - Backtracking = choice lo, explore karo, undo karo.
  * - Useful for permutations, combinations, subsets, maze, N-Queens, Sudoku.
  * - Brute force hota hai but pruning se optimized ho sakta hai.
+ *
+ * EXAMPLE - getPermutations:
+ * Input:  [1, 2, 3]
+ * Output: [ [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1] ]  (6 = 3! permutations)
+ *
+ * EXAMPLE - getSubsets:
+ * Input:  [1, 2, 3]
+ * Output: [ [], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3] ]  (8 = 2^3 subsets)
  */
 
 function getPermutations(nums) {
@@ -180,6 +310,15 @@ function getPermutations(nums) {
     return result;
 }
 
+// Sample Input:  [1, 2, 3]
+// Expected Output: 6 permutations
+console.log(getPermutations([1, 2, 3]));
+// [ [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1] ]
+
+// Sample Input:  [1, 2]
+// Expected Output: 2 permutations: [ [1,2], [2,1] ]
+console.log(getPermutations([1, 2])); // [ [1, 2], [2, 1] ]
+
 function getSubsets(nums) {
     const result = [];
 
@@ -196,6 +335,15 @@ function getSubsets(nums) {
     backtrack(0, []);
     return result;
 }
+
+// Sample Input:  [1, 2, 3]
+// Expected Output: 8 subsets (2^3)
+console.log(getSubsets([1, 2, 3]));
+// [ [], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3] ]
+
+// Sample Input:  [1, 2]
+// Expected Output: 4 subsets: [ [], [1], [1,2], [2] ]
+console.log(getSubsets([1, 2])); // [ [], [1], [1, 2], [2] ]
 
 
 /**

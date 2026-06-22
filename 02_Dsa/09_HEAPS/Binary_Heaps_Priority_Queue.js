@@ -23,6 +23,13 @@
  * - Left child: 2i + 1
  * - Right child: 2i + 2
  * - Parent: Math.floor((i - 1) / 2)
+ *
+ * EXAMPLE:
+ * Array: [100, 19, 36, 17, 12, 25, 5]
+ * Index:   0    1   2   3   4   5  6
+ * - Node at index 0 (100): left = index 1 (19), right = index 2 (36)
+ * - Node at index 1 (19):  parent = index 0 (100)
+ * - Node at index 2 (36):  left = index 5 (25), right = index 6 (5)
  */
 
 
@@ -34,6 +41,18 @@
  * - Insert: O(log n)
  * - Extract max: O(log n)
  * - Search: O(n)
+ *
+ * EXAMPLE - insert:
+ * Insert 41 -> 39 -> 33 -> 18 -> 27 -> 12
+ * Heap array after all inserts: [41, 39, 33, 18, 27, 12]
+ *
+ * Insert 55 -> bubbles up past 12, 33, 41
+ * Heap array: [55, 39, 41, 18, 27, 12, 33]
+ *
+ * EXAMPLE - extractMax:
+ * Extract from [55, 39, 41, 18, 27, 12, 33]
+ * Returns 55, then sinks 33 down
+ * Result: [41, 39, 33, 18, 27, 12]
  */
 
 class MaxBinaryHeap {
@@ -111,6 +130,38 @@ class MaxBinaryHeap {
     }
 }
 
+// Sample usage: MaxBinaryHeap
+const maxHeap = new MaxBinaryHeap();
+
+// Sample Input:  insert 41, 39, 33, 18, 27, 12
+// Expected: max is always at index 0
+maxHeap.insert(41).insert(39).insert(33).insert(18).insert(27).insert(12);
+console.log(maxHeap.values); // [41, 39, 33, 18, 27, 12]
+console.log(maxHeap.values[0]); // 41  (max at root)
+
+// Sample Input:  insert 55  (should bubble up to become new root)
+// Expected: 55 becomes new root
+maxHeap.insert(55);
+console.log(maxHeap.values[0]); // 55  (55 > 41, bubbles to top)
+console.log(maxHeap.values);    // [55, 39, 41, 18, 27, 12, 33]
+
+// Sample Input:  extractMax()
+// Expected Output: 55 (current max), heap restructures
+console.log(maxHeap.extractMax()); // 55
+console.log(maxHeap.values[0]);    // 41  (new max after 55 removed)
+
+// Sample Input:  extractMax() again
+// Expected Output: 41
+console.log(maxHeap.extractMax()); // 41
+
+// Edge case - single element:
+const singleHeap = new MaxBinaryHeap();
+singleHeap.insert(10);
+// Sample Input:  extractMax() on single element heap
+// Expected Output: 10
+console.log(singleHeap.extractMax()); // 10
+console.log(singleHeap.values);       // []
+
 
 /**
  * ========================================================================
@@ -120,6 +171,14 @@ class MaxBinaryHeap {
  * - Queue jisme lower/higher priority item pehle nikalta hai.
  * - Hospital ER, scheduler, Dijkstra algorithm me useful.
  * - Here: lower priority number = more important.
+ *
+ * EXAMPLE:
+ * Enqueue: ('flu shot', 3) -> ('critical patient', 1) -> ('regular checkup', 5) -> ('surgery', 2)
+ * Dequeue order (lowest priority number first):
+ *   1st: 'critical patient' (priority 1)
+ *   2nd: 'surgery' (priority 2)
+ *   3rd: 'flu shot' (priority 3)
+ *   4th: 'regular checkup' (priority 5)
  */
 
 class PriorityNode {
@@ -205,6 +264,31 @@ class PriorityQueue {
         }
     }
 }
+
+// Sample usage: PriorityQueue (min-heap by priority number)
+const pq = new PriorityQueue();
+
+// Sample Input:  enqueue hospital tasks with priorities
+pq.enqueue('flu shot', 3);
+pq.enqueue('critical patient', 1);
+pq.enqueue('regular checkup', 5);
+pq.enqueue('surgery', 2);
+
+// Sample Input:  dequeue()
+// Expected Output: 'critical patient' (priority 1 = most urgent)
+console.log(pq.dequeue().value); // 'critical patient'
+
+// Sample Input:  dequeue()
+// Expected Output: 'surgery' (priority 2)
+console.log(pq.dequeue().value); // 'surgery'
+
+// Sample Input:  dequeue()
+// Expected Output: 'flu shot' (priority 3)
+console.log(pq.dequeue().value); // 'flu shot'
+
+// Sample Input:  dequeue()
+// Expected Output: 'regular checkup' (priority 5)
+console.log(pq.dequeue().value); // 'regular checkup'
 
 
 /**

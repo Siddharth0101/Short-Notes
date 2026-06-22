@@ -56,6 +56,16 @@
  * - Har vertex ke neighbours ki list.
  * - Space: O(V + E)
  * - Sparse graphs ke liye best.
+ *
+ * EXAMPLE - Graph operations:
+ * addVertex('A'), addVertex('B'), addVertex('C'), addVertex('D')
+ * addEdge('A', 'B'), addEdge('A', 'C'), addEdge('B', 'D'), addEdge('C', 'D')
+ *
+ * adjacencyList:
+ * { A: ['B', 'C'], B: ['A', 'D'], C: ['A', 'D'], D: ['B', 'C'] }
+ *
+ * DFS from 'A': ['A', 'B', 'D', 'C'] or similar (order may vary)
+ * BFS from 'A': ['A', 'B', 'C', 'D']  (level by level)
  */
 
 class Graph {
@@ -157,6 +167,54 @@ class Graph {
     }
 }
 
+// Sample usage: Build Graph and test traversals
+const g = new Graph();
+
+// Sample Input:  Build graph A-B-C-D-E-F
+//        A
+//       / \
+//      B   C
+//      |   |
+//      D   E
+//       \ /
+//        F
+g.addEdge('A', 'B');
+g.addEdge('A', 'C');
+g.addEdge('B', 'D');
+g.addEdge('C', 'E');
+g.addEdge('D', 'F');
+g.addEdge('E', 'F');
+
+// Sample Input:  adjacencyList of 'A'
+// Expected Output: ['B', 'C']
+console.log(g.adjacencyList['A']); // ['B', 'C']
+
+// Sample Input:  depthFirstRecursive('A')
+// Expected Output: starts with A, visits all 6 vertices
+console.log(g.depthFirstRecursive('A')); // e.g. ['A', 'B', 'D', 'F', 'E', 'C']
+
+// Sample Input:  depthFirstIterative('A')
+// Expected Output: starts with A, visits all 6 vertices (order may differ from recursive)
+console.log(g.depthFirstIterative('A')); // e.g. ['A', 'C', 'E', 'F', 'D', 'B']
+
+// Sample Input:  breadthFirst('A')
+// Expected Output: ['A', 'B', 'C', 'D', 'E', 'F']  (level order)
+console.log(g.breadthFirst('A')); // ['A', 'B', 'C', 'D', 'E', 'F']
+
+// removeEdge test:
+// Sample Input:  removeEdge('A', 'B')
+// Expected: 'B' no longer in A's list, 'A' no longer in B's list
+g.removeEdge('A', 'B');
+console.log(g.adjacencyList['A']); // ['C']
+console.log(g.adjacencyList['B']); // ['D']
+
+// removeVertex test:
+// Sample Input:  removeVertex('C')
+// Expected: 'C' key removed, 'A' and 'E' no longer have 'C' in their list
+g.removeVertex('C');
+console.log(g.adjacencyList['C']); // undefined
+console.log(g.adjacencyList['A']); // []  (A had only C left after B removed)
+
 
 /**
  * ========================================================================
@@ -185,6 +243,13 @@ class Graph {
  *
  * TIME:
  * - With binary heap: O((V + E) log V)
+ *
+ * EXAMPLE:
+ * Graph:  A -4-> B, A -2-> C, B -3-> D, C -1-> B, C -5-> D, D -1-> F
+ *
+ * dijkstra('A', 'F'):
+ * Shortest path: A -> C -> B -> D -> F  (cost: 2+1+3+1 = 7)
+ * Output: ['A', 'C', 'B', 'D', 'F']
  */
 
 class SimplePriorityQueue {
@@ -268,6 +333,34 @@ class WeightedGraph {
     }
 }
 
+// Sample usage: WeightedGraph with Dijkstra
+const wg = new WeightedGraph();
+
+// Build graph:
+//  A ---4--- B
+//  |         |
+//  2         3
+//  |         |
+//  C ---1--- B  (C->B weight 1)
+//  |
+//  5
+//  |
+//  D ---1--- F
+wg.addEdge('A', 'B', 4);
+wg.addEdge('A', 'C', 2);
+wg.addEdge('B', 'D', 3);
+wg.addEdge('C', 'B', 1);
+wg.addEdge('C', 'D', 5);
+wg.addEdge('D', 'F', 1);
+
+// Sample Input:  dijkstra('A', 'F')
+// Expected Output: ['A', 'C', 'B', 'D', 'F']  (shortest: cost = 2+1+3+1 = 7)
+console.log(wg.dijkstra('A', 'F')); // ['A', 'C', 'B', 'D', 'F']
+
+// Sample Input:  dijkstra('A', 'D')
+// Expected Output: ['A', 'C', 'B', 'D']  (cost = 2+1+3 = 6)
+console.log(wg.dijkstra('A', 'D')); // ['A', 'C', 'B', 'D']
+
 
 /**
  * ========================================================================
@@ -293,6 +386,13 @@ class WeightedGraph {
  * Union Find / Disjoint Set:
  * - Components merge/find karne ke liye.
  * - Kruskal and cycle detection me useful.
+ *
+ * EXAMPLE - UnionFind:
+ * Size 5 (nodes: 0,1,2,3,4)
+ * union(0,1) -> 0 and 1 in same component
+ * union(1,2) -> 0,1,2 in same component
+ * find(0) === find(2) -> true  (same root)
+ * find(3) === find(0) -> false  (3 not yet connected)
  */
 
 class UnionFind {
@@ -327,3 +427,34 @@ class UnionFind {
         return true;
     }
 }
+
+// Sample usage: UnionFind
+const uf = new UnionFind(5);
+
+// Sample Input:  union(0, 1), union(1, 2)
+// Expected: 0, 1, 2 are in same component
+uf.union(0, 1);
+uf.union(1, 2);
+
+// Sample Input:  find(0) === find(2)
+// Expected Output: true  (same component)
+console.log(uf.find(0) === uf.find(2)); // true
+
+// Sample Input:  find(3) === find(0)
+// Expected Output: false  (3 not connected to 0)
+console.log(uf.find(3) === uf.find(0)); // false
+
+// Sample Input:  union(3, 4), then find(3) === find(4)
+uf.union(3, 4);
+console.log(uf.find(3) === uf.find(4)); // true
+
+// Sample Input:  union(2, 3) - merges {0,1,2} with {3,4}
+const mergedNew = uf.union(2, 3);
+// Expected Output: true (they were in different components)
+console.log(mergedNew); // true
+
+// Now all 5 nodes in same component:
+console.log(uf.find(0) === uf.find(4)); // true
+
+// union of already-connected nodes returns false:
+console.log(uf.union(0, 4)); // false  (already connected)

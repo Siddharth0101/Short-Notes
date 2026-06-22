@@ -44,6 +44,24 @@
  * BIG O:
  * - Insert/search average: O(log n)
  * - Insert/search worst: O(n) if tree becomes a line.
+ *
+ * EXAMPLE - insert + find:
+ * Input:  insert(10), insert(6), insert(15), insert(3), insert(8)
+ * Tree:
+ *          10
+ *         /  \
+ *        6    15
+ *       / \
+ *      3   8
+ *
+ * find(6)  -> true
+ * find(99) -> false
+ *
+ * EXAMPLE - traversals:
+ * BFS order:       [10, 6, 15, 3, 8]
+ * DFS PreOrder:    [10, 6, 3, 8, 15]
+ * DFS InOrder:     [3, 6, 8, 10, 15]  (sorted!)
+ * DFS PostOrder:   [3, 8, 6, 15, 10]
  */
 
 class BSTNode {
@@ -161,6 +179,51 @@ class BinarySearchTree {
     }
 }
 
+// Sample usage: Build BST and test operations
+const bst = new BinarySearchTree();
+
+// Sample Input:  insert 10, 6, 15, 3, 8, 20
+// Expected Tree:
+//         10
+//        /  \
+//       6    15
+//      / \     \
+//     3   8    20
+bst.insert(10).insert(6).insert(15).insert(3).insert(8).insert(20);
+
+// Sample Input:  find(6)
+// Expected Output: true
+console.log(bst.find(6));  // true
+
+// Sample Input:  find(99)
+// Expected Output: false
+console.log(bst.find(99)); // false
+
+// Sample Input:  find(20)
+// Expected Output: true
+console.log(bst.find(20)); // true
+
+// Sample Input:  bfs()
+// Expected Output: [10, 6, 15, 3, 8, 20]  (level by level)
+console.log(bst.bfs()); // [10, 6, 15, 3, 8, 20]
+
+// Sample Input:  dfsPreOrder()
+// Expected Output: [10, 6, 3, 8, 15, 20]  (node, left, right)
+console.log(bst.dfsPreOrder()); // [10, 6, 3, 8, 15, 20]
+
+// Sample Input:  dfsInOrder()
+// Expected Output: [3, 6, 8, 10, 15, 20]  (sorted - left, node, right)
+console.log(bst.dfsInOrder()); // [3, 6, 8, 10, 15, 20]
+
+// Sample Input:  dfsPostOrder()
+// Expected Output: [3, 8, 6, 20, 15, 10]  (left, right, node)
+console.log(bst.dfsPostOrder()); // [3, 8, 6, 20, 15, 10]
+
+// Duplicate insert test:
+// Sample Input:  insert(10) again (duplicate)
+// Expected Output: undefined  (duplicates not allowed)
+console.log(bst.insert(10)); // undefined
+
 
 /**
  * ========================================================================
@@ -210,6 +273,14 @@ class BinarySearchTree {
  *
  * TIME:
  * - Insert/search: O(k), k = word length.
+ *
+ * EXAMPLE:
+ * Insert: 'apple', 'app', 'apply', 'bat'
+ * search('app')    -> true
+ * search('ap')     -> false  ('ap' not a complete word)
+ * startsWith('ap') -> true   ('ap' is a valid prefix)
+ * search('bat')    -> true
+ * search('batman') -> false
  */
 
 class TrieNode {
@@ -260,3 +331,42 @@ class Trie {
         return true;
     }
 }
+
+// Sample usage: Build Trie and test search/prefix
+const trie = new Trie();
+trie.insert('apple');
+trie.insert('app');
+trie.insert('apply');
+trie.insert('bat');
+
+// Sample Input:  search('app')
+// Expected Output: true  ('app' was inserted as a complete word)
+console.log(trie.search('app'));   // true
+
+// Sample Input:  search('ap')
+// Expected Output: false  ('ap' prefix only, not a complete word)
+console.log(trie.search('ap'));    // false
+
+// Sample Input:  search('apple')
+// Expected Output: true
+console.log(trie.search('apple')); // true
+
+// Sample Input:  search('apples')
+// Expected Output: false  (not inserted)
+console.log(trie.search('apples')); // false
+
+// Sample Input:  startsWith('ap')
+// Expected Output: true  ('ap' is prefix of 'apple', 'app', 'apply')
+console.log(trie.startsWith('ap'));  // true
+
+// Sample Input:  startsWith('cat')
+// Expected Output: false
+console.log(trie.startsWith('cat')); // false
+
+// Sample Input:  search('bat')
+// Expected Output: true
+console.log(trie.search('bat'));     // true
+
+// Sample Input:  search('batman')
+// Expected Output: false
+console.log(trie.search('batman'));  // false

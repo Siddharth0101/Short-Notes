@@ -8,10 +8,16 @@
  * - Sorting = data ko order me arrange karna.
  * - Sorting ke baad searching, duplicate handling, two pointers easy ho jaate hain.
  * - JavaScript default sort values ko string bana kar sort karta hai, so comparator use karo.
+ *
+ * EXAMPLE - JS default vs custom sort:
+ * Input:  [10, 2, 5, 1]
+ * Default sort output: [1, 10, 2, 5]  (string comparison - WRONG for numbers!)
+ * Correct sort output: [1, 2, 5, 10]  (with comparator)
  */
 
 const sortExample = [10, 2, 5, 1];
-sortExample.sort((a, b) => a - b); // [1, 2, 5, 10]
+sortExample.sort((a, b) => a - b);
+console.log(sortExample); // [1, 2, 5, 10]
 
 
 /**
@@ -26,6 +32,10 @@ sortExample.sort((a, b) => a - b); // [1, 2, 5, 10]
  * TIME:
  * - Best with noSwap: O(n)
  * - Average/Worst: O(n^2)
+ *
+ * EXAMPLE:
+ * Input:  [64, 34, 25, 12, 22, 11, 90]
+ * Output: [11, 12, 22, 25, 34, 64, 90]
  */
 
 function bubbleSort(arr) {
@@ -47,6 +57,18 @@ function bubbleSort(arr) {
     return nums;
 }
 
+// Sample Input:  [64, 34, 25, 12, 22, 11, 90]
+// Expected Output: [11, 12, 22, 25, 34, 64, 90]
+console.log(bubbleSort([64, 34, 25, 12, 22, 11, 90])); // [11, 12, 22, 25, 34, 64, 90]
+
+// Sample Input:  [1, 2, 3, 4, 5]  (already sorted -> best case O(n))
+// Expected Output: [1, 2, 3, 4, 5]
+console.log(bubbleSort([1, 2, 3, 4, 5])); // [1, 2, 3, 4, 5]
+
+// Sample Input:  [5]
+// Expected Output: [5]
+console.log(bubbleSort([5])); // [5]
+
 
 /**
  * ========================================================================
@@ -55,6 +77,10 @@ function bubbleSort(arr) {
  * NOTES:
  * - Minimum item find karo, front me swap karo.
  * - Swaps kam hote hain, but comparisons O(n^2).
+ *
+ * EXAMPLE:
+ * Input:  [29, 10, 14, 37, 13]
+ * Output: [10, 13, 14, 29, 37]
  */
 
 function selectionSort(arr) {
@@ -75,6 +101,14 @@ function selectionSort(arr) {
     return nums;
 }
 
+// Sample Input:  [29, 10, 14, 37, 13]
+// Expected Output: [10, 13, 14, 29, 37]
+console.log(selectionSort([29, 10, 14, 37, 13])); // [10, 13, 14, 29, 37]
+
+// Sample Input:  [3, 2, 1]
+// Expected Output: [1, 2, 3]
+console.log(selectionSort([3, 2, 1])); // [1, 2, 3]
+
 
 /**
  * ========================================================================
@@ -84,6 +118,10 @@ function selectionSort(arr) {
  * - Left side sorted portion maintain hota hai.
  * - Nearly sorted data ke liye good.
  * - Online sorting me useful: data aata jaaye aur insert hota jaaye.
+ *
+ * EXAMPLE:
+ * Input:  [12, 11, 13, 5, 6]
+ * Output: [5, 6, 11, 12, 13]
  */
 
 function insertionSort(arr) {
@@ -104,6 +142,18 @@ function insertionSort(arr) {
     return nums;
 }
 
+// Sample Input:  [12, 11, 13, 5, 6]
+// Expected Output: [5, 6, 11, 12, 13]
+console.log(insertionSort([12, 11, 13, 5, 6])); // [5, 6, 11, 12, 13]
+
+// Sample Input:  [1, 2, 3, 4]  (already sorted -> best case O(n))
+// Expected Output: [1, 2, 3, 4]
+console.log(insertionSort([1, 2, 3, 4])); // [1, 2, 3, 4]
+
+// Sample Input:  [9, 7, 5, 3, 1]  (reverse sorted -> worst case O(n^2))
+// Expected Output: [1, 3, 5, 7, 9]
+console.log(insertionSort([9, 7, 5, 3, 1])); // [1, 3, 5, 7, 9]
+
 
 /**
  * ========================================================================
@@ -113,6 +163,10 @@ function insertionSort(arr) {
  * - Divide and conquer.
  * - Array half me split karo, recursively sort karo, merge karo.
  * - Time always O(n log n), space O(n).
+ *
+ * EXAMPLE:
+ * Input:  [38, 27, 43, 3, 9, 82, 10]
+ * Output: [3, 9, 10, 27, 38, 43, 82]
  */
 
 function merge(left, right) {
@@ -143,6 +197,23 @@ function mergeSort(arr) {
     return merge(left, right);
 }
 
+// Sample Input:  [38, 27, 43, 3, 9, 82, 10]
+// Expected Output: [3, 9, 10, 27, 38, 43, 82]
+console.log(mergeSort([38, 27, 43, 3, 9, 82, 10])); // [3, 9, 10, 27, 38, 43, 82]
+
+// Sample Input:  [1]
+// Expected Output: [1]
+console.log(mergeSort([1])); // [1]
+
+// Sample Input:  [5, 4, 3, 2, 1]
+// Expected Output: [1, 2, 3, 4, 5]
+console.log(mergeSort([5, 4, 3, 2, 1])); // [1, 2, 3, 4, 5]
+
+// merge() helper test:
+// Sample Input:  left=[1, 3, 5], right=[2, 4, 6]
+// Expected Output: [1, 2, 3, 4, 5, 6]
+console.log(merge([1, 3, 5], [2, 4, 6])); // [1, 2, 3, 4, 5, 6]
+
 
 /**
  * ========================================================================
@@ -153,6 +224,10 @@ function mergeSort(arr) {
  * - Smaller values left, larger values right.
  * - Average O(n log n), worst O(n^2) if pivot poor.
  * - Random pivot / median pivot worst case chance kam karta hai.
+ *
+ * EXAMPLE:
+ * Input:  [3, 6, 8, 10, 1, 2, 1]
+ * Output: [1, 1, 2, 3, 6, 8, 10]
  */
 
 function pivot(arr, start = 0, end = arr.length - 1) {
@@ -180,6 +255,18 @@ function quickSort(arr, left = 0, right = arr.length - 1) {
     return arr;
 }
 
+// Sample Input:  [3, 6, 8, 10, 1, 2, 1]
+// Expected Output: [1, 1, 2, 3, 6, 8, 10]
+console.log(quickSort([3, 6, 8, 10, 1, 2, 1])); // [1, 1, 2, 3, 6, 8, 10]
+
+// Sample Input:  [5, 3, 1, 4, 2]
+// Expected Output: [1, 2, 3, 4, 5]
+console.log(quickSort([5, 3, 1, 4, 2])); // [1, 2, 3, 4, 5]
+
+// Sample Input:  [1]
+// Expected Output: [1]
+console.log(quickSort([1])); // [1]
+
 
 /**
  * ========================================================================
@@ -189,6 +276,10 @@ function quickSort(arr, left = 0, right = arr.length - 1) {
  * - Comparison sort nahi hai.
  * - Integers ko digit by digit bucket me rakhta hai.
  * - Time: O(n * k), k = digits count.
+ *
+ * EXAMPLE:
+ * Input:  [170, 45, 75, 90, 802, 24, 2, 66]
+ * Output: [2, 24, 45, 66, 75, 90, 170, 802]
  */
 
 function getDigit(num, place) {
@@ -227,6 +318,27 @@ function radixSort(nums) {
 
     return result;
 }
+
+// Sample Input:  [170, 45, 75, 90, 802, 24, 2, 66]
+// Expected Output: [2, 24, 45, 66, 75, 90, 170, 802]
+console.log(radixSort([170, 45, 75, 90, 802, 24, 2, 66])); // [2, 24, 45, 66, 75, 90, 170, 802]
+
+// Sample Input:  [1, 100, 10, 1000]
+// Expected Output: [1, 10, 100, 1000]
+console.log(radixSort([1, 100, 10, 1000])); // [1, 10, 100, 1000]
+
+// Helper functions test:
+// Sample Input:  getDigit(7323, 2)
+// Expected Output: 3  (hundreds digit of 7323)
+console.log(getDigit(7323, 2)); // 3
+
+// Sample Input:  digitCount(12345)
+// Expected Output: 5
+console.log(digitCount(12345)); // 5
+
+// Sample Input:  mostDigits([23, 567, 89, 12234, 90])
+// Expected Output: 5  (12234 has most digits)
+console.log(mostDigits([23, 567, 89, 12234, 90])); // 5
 
 
 /**
