@@ -17,6 +17,11 @@
  * NOTES:
  * - Database -> collections -> documents.
  * - Document JSON-like BSON format me store hota hai.
+ * - BSON document ka maximum size 16 MB hota hai.
+ * - Agar size 16 MB se zyada bada ho, toh hum GridFS use kar sakte hain:
+ *   - GridFS file ko chunks me break/split/divide karta hai (typically 255 KB each).
+ *   - Chunks ko multiple documents ke across store karta hai.
+ *   - File retrieve karte time automatically unhe reassemble karta hai.
  * - Schema flexible hoti hai, but Mongoose se structure enforce karte hain.
  *
  * SQL vs MONGO:
