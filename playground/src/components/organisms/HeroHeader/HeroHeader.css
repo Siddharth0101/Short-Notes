@@ -1,0 +1,24 @@
+/* ─── HeroHeader ────────────────────────────────────────────────────────────
+ * ORGANISM: Page header with title and subtitle.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+.hero-header {
+  margin-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 32px;
+}
+
+.hero-header__title {
+  font-size: 36px;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-h);
+}
+
+.hero-header__subtitle {
+  font-size: 16px;
+  color: var(--text);
+  max-width: 700px;
+  line-height: 1.6;
+}

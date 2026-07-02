@@ -1,0 +1,9 @@
+/* ─── ScenarioGrid ──────────────────────────────────────────────────────────
+ * ORGANISM: A responsive grid that renders a list of ScenarioCards.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+}

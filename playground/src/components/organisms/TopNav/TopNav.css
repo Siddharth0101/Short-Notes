@@ -1,0 +1,14 @@
+/* ─── TopNav ────────────────────────────────────────────────────────────────
+ * ORGANISM: Sticky navigation bar with frosted glass effect.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+.top-nav {
+  width: 100%;
+  background: var(--bg-elevated);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}

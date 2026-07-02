@@ -1,0 +1,43 @@
+/* ─── LinkButton ────────────────────────────────────────────────────────────
+ * ATOM: A styled anchor/Link that looks like a button.
+ * Variants: "primary" (solid fill), "ghost" (text-only)
+ * Usage: <LinkButton to="/path" variant="primary">Run Sandbox</LinkButton>
+ * ────────────────────────────────────────────────────────────────────────── */
+
+.link-btn {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+}
+
+/* ─ Primary variant ─ */
+.link-btn--primary {
+  background: var(--text-h);
+  color: var(--bg);
+  padding: 12px 18px;
+  border: 1px solid transparent;
+}
+
+.link-btn--primary:hover {
+  opacity: 0.9;
+}
+
+/* ─ Ghost variant ─ */
+.link-btn--ghost {
+  background: none;
+  color: var(--text);
+  padding: 0;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.link-btn--ghost:hover {
+  color: var(--text-h);
+}

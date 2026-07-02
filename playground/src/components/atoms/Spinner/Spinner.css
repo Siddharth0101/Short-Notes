@@ -1,0 +1,28 @@
+/* ─── Spinner ───────────────────────────────────────────────────────────────
+ * ATOM: A minimal loading indicator.
+ * Usage: <Spinner /> or <Spinner label="Loading sandbox..." />
+ * ────────────────────────────────────────────────────────────────────────── */
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 60vh;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.spinner-ring {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border);
+  border-top-color: var(--text-h);
+  border-radius: 50%;
+  animation: spinner-rotate 0.7s linear infinite;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}

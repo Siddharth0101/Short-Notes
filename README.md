@@ -8,6 +8,7 @@ Numbered folders show the suggested learning order.
 2. `02_Dsa`
 3. `03_Frontend`
 4. `04_Backend`
+5. `05_Interview`
 
 ## Entry Points
 
@@ -15,7 +16,9 @@ Numbered folders show the suggested learning order.
 - `02_Dsa/README.md`
 - `03_Frontend/README.md`
 - `04_Backend/README.md`
+- `05_Interview/README.md`
 
 ## Note
 
 DSA can be studied in parallel after JavaScript basics. Backend currently has the Node.js track under `04_Backend/01_Node`.
+
