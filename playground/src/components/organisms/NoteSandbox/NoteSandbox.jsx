@@ -76,12 +76,14 @@ function parseNoteFile(rawText) {
   let cleanText = rawText.replace(/^\s*['"]use strict['"];?\s*/i, '');
 
   const sections = [];
-  const commentRegex = /\/\*\*([\s\S]*?)\*\//g;
+  const commentRegex = /\/\/\*([\s\S]*?)\*\//g; // standard JS comments parsing
+  const blockCommentRegex = /\/\*\*([\s\S]*?)\*\//g;
   
   let match;
   let lastIndex = 0;
   
-  while ((match = commentRegex.exec(cleanText)) !== null) {
+  // Use block comments regex to extract text explanations
+  while ((match = blockCommentRegex.exec(cleanText)) !== null) {
     const codeBefore = cleanText.substring(lastIndex, match.index).trim();
     if (codeBefore) {
       sections.push({ type: 'code', content: codeBefore });
@@ -90,7 +92,7 @@ function parseNoteFile(rawText) {
     const commentContent = match[1];
     sections.push({ type: 'text', content: cleanComment(commentContent) });
     
-    lastIndex = commentRegex.lastIndex;
+    lastIndex = blockCommentRegex.lastIndex;
   }
   
   const codeAfter = cleanText.substring(lastIndex).trim();
@@ -201,12 +203,12 @@ export default function NoteSandbox({ title, fetchFile }) {
   const getSimulatorsForFile = (scenId, topSlug) => {
     const sId = (scenId || '').toLowerCase();
     const tSlug = (topSlug || '').toLowerCase();
+    const isNoSql = splat.includes('/07-no-sql/') || splat.includes('/07_no_sql/');
 
-    // 1. Client-Server request / How the Web Works also has Time Complexity relevance
+    // 1. Client-Server request / How the Web Works
     if (sId === 'how-web-works' || sId === 'web-backend-fundamentals') {
       return [
-        { id: 'web', label: '🌐 How Web Works', component: <WebFundamentalsSimulator /> },
-        { id: 'bigo', label: '📈 Time Complexity (Big O)', component: <BigOVisualizer /> }
+        { id: 'web', label: '🌐 How Web Works', component: <WebFundamentalsSimulator /> }
       ];
     }
 
@@ -352,12 +354,8 @@ export default function NoteSandbox({ title, fetchFile }) {
 
     // 19. Mongoose & DB Basics
     if (
-      tSlug.includes('no-sql') ||
-      sId === 'mongodb-mongoose-basics' ||
-      sId === 'data-modeling-advanced-mongoose' ||
-      sId === 'auth-authorization-security' ||
-      sId === 'express-error-handling' ||
-      sId === 'pug-server-side-rendering'
+      isNoSql && 
+      (sId === 'mongodb-mongoose-basics' || sId === 'data-modeling-advanced-mongoose' || tSlug.includes('database') || tSlug.includes('mongoose'))
     ) {
       return [
         { id: 'mongoose', label: '🗄️ Mongoose Schemas', component: <MongooseMongoSimulator /> }
@@ -368,17 +366,29 @@ export default function NoteSandbox({ title, fetchFile }) {
     if (
       tSlug.includes('deployment') ||
       sId === 'git-deployment-production' ||
-      sId === 'payments-email-file-uploads' ||
-      sId === 'node-backend-cheat-sheet' ||
-      sId === 'jonas-node-course-map'
+      sId === 'jonas-node-course-map' ||
+      sId === 'node-backend-cheat-sheet'
     ) {
       return [
         { id: 'deployment', label: '🚀 CI/CD Deployments', component: <DeploymentSimulator /> }
       ];
     }
 
-    // 21. Express Pipeline
-    if (tSlug.includes('express') || sId === 'express-rest-api-natours') {
+    // 21. Express Pipeline (including error handlers, auth filters, Pug templates rendering)
+    if (
+      tSlug.includes('express') || 
+      sId === 'express-rest-api-natours' ||
+      (isNoSql && (
+        sId === 'express-error-handling' ||
+        sId === 'auth-authorization-security' ||
+        sId === 'pug-server-side-rendering' ||
+        sId === 'payments-email-file-uploads' ||
+        tSlug.includes('error-handling') ||
+        tSlug.includes('auth-security') ||
+        tSlug.includes('server-rendering') ||
+        tSlug.includes('advanced-features')
+      ))
+    ) {
       return [
         { id: 'express', label: '⬇️ Express Pipeline', component: <HttpRouteSimulator /> }
       ];
@@ -393,11 +403,52 @@ export default function NoteSandbox({ title, fetchFile }) {
   const simsList = getSimulatorsForFile(scenarioId, topicSlug);
   const currentSimObj = simsList.find((s) => s.id === selectedSim) || simsList[0];
 
+  // Auto-initialize visualizer tab based on notes category
   useEffect(() => {
-    if (simsList.length > 0) {
-      setSelectedSim(simsList[0].id);
+    const slug = (topicSlug || '').toLowerCase();
+    let defaultSim = '';
+    
+    if (domainId === 'javascript') {
+      if (slug.includes('regex')) defaultSim = 'regex';
+      else if (slug.includes('async') || scenarioId === 'promises' || scenarioId === 'eventloop') defaultSim = 'eventloop';
+      else defaultSim = 'scope';
+    } else if (domainId === 'dsa') {
+      if (slug.includes('sorting')) defaultSim = 'sorting';
+      else if (slug.includes('searching')) defaultSim = 'search';
+      else if (slug.includes('recursion')) defaultSim = 'recursion';
+      else if (slug.includes('trees')) defaultSim = 'trees';
+      else if (slug.includes('graphs')) defaultSim = 'graphs';
+      else if (slug.includes('dynamic-programming')) defaultSim = 'dp';
+      else if (slug.includes('linked-lists') || slug.includes('stacks-queues')) defaultSim = 'lists';
+      else if (slug.includes('patterns')) defaultSim = 'patterns';
+      else if (slug.includes('heaps')) defaultSim = 'heaps';
+      else if (slug.includes('hash-tables')) defaultSim = 'hash';
+      else defaultSim = 'bigo';
+    } else if (domainId === 'backend') {
+      const isNoSql = splat.includes('/07-no-sql/') || splat.includes('/07_no_sql/');
+      if (slug.includes('course-overview') || slug.includes('backend-foundations') || scenarioId === 'how-web-works') {
+        defaultSim = 'web';
+      } else if (slug.includes('node-foundations')) {
+        defaultSim = 'modules';
+      } else if (slug.includes('node-internals')) {
+        defaultSim = 'internals';
+      } else if (isNoSql) {
+        if (slug.includes('database') || slug.includes('mongoose')) {
+          defaultSim = 'mongoose';
+        } else {
+          defaultSim = 'express';
+        }
+      } else if (slug.includes('deployment') || slug.includes('cheatsheets')) {
+        defaultSim = 'deployment';
+      } else {
+        defaultSim = 'express';
+      }
+    } else if (domainId === 'frontend') {
+      defaultSim = 'css';
     }
-  }, [splat]);
+
+    setSelectedSim(defaultSim);
+  }, [splat, domainId]);
 
   useEffect(() => {
     let active = true;

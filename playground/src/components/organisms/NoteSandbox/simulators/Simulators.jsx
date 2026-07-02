@@ -1071,19 +1071,34 @@ export function EventLoopSimulator() {
  * 13. EXPRESS ROUTE PACKET PIPELINE (topic: node/express)
  * ========================================================================== */
 export function HttpRouteSimulator() {
+  const [activeTab, setActiveTab] = useState('pipeline'); // pipeline, mvc, postman, config
+  
+  // Tab 1: Middleware pipeline state
   const [activeIdx, setActiveIdx] = useState(-1);
-  const [log, setLog] = useState('Click Trigger Mock Request.');
+  const [log, setLog] = useState('Click Trigger Mock Request to watch middleware phases execution.');
   const [packet, setPacket] = useState({ headers: 'None', body: 'Empty' });
+  const nodes = ['CORS Checks', 'Logger (morgan)', 'Body Parser (express.json)', 'checkBody Validator', 'Route Controller'];
 
-  const nodes = ['CORS Checks', 'Logger', 'Body Parser', 'Auth JWT Guard', 'Route Controller'];
+  // Tab 2: MVC file state
+  const [mvcStep, setMvcStep] = useState(0);
+
+  // Tab 3: Postman mock state
+  const [postmanMethod, setPostmanMethod] = useState('GET');
+  const [postmanUrl, setPostmanUrl] = useState('/api/v1/tours');
+  const [postmanBody, setPostmanBody] = useState('{\n  "name": "The Desert Safari",\n  "price": 299\n}');
+  const [postmanResponse, setPostmanResponse] = useState('Send request to inspect Express HTTP server outputs.');
+  const [postmanStatus, setPostmanStatus] = useState(200);
+
+  // Tab 4: app vs server config checks
+  const [configFocus, setConfigFocus] = useState(0);
 
   const triggerMockRequest = async () => {
     const messages = [
-      'CORS Verified: Origin match accepted.',
-      'Logger: POST /v1/tours - Payload received.',
-      'BodyParser: req.body buffer parsed successfully.',
-      'AuthGuard: JWT verification succeeded. User verified.',
-      'Controller: tourController.createTour() saved document to MongoDB.'
+      'CORS Verified: Origin match accepted by cors() middleware.',
+      'Logger (morgan): POST /api/v1/tours - Morgan printed log to terminal stdout.',
+      'BodyParser: express.json() parsed buffer string into JSON req.body Object.',
+      'checkBody: Custom param validation middleware verified name & price fields exist.',
+      'Controller: tourController.createTour() saved document using Mongoose Model.'
     ];
 
     setPacket({ headers: 'Origin: localhost:5173', body: 'Raw Buffer Stream' });
@@ -1091,47 +1106,317 @@ export function HttpRouteSimulator() {
     for (let i = 0; i < nodes.length; i++) {
       setActiveIdx(i);
       setLog(messages[i]);
-      if (i === 2) setPacket({ headers: 'Origin: localhost:5173', body: '{ name: "Natours" }' });
-      if (i === 3) setPacket({ headers: 'Authorization: Bearer <JWT>', body: '{ name: "Natours" }' });
-      await new Promise(r => setTimeout(r, 1200));
+      if (i === 2) setPacket({ headers: 'Origin: localhost:5173', body: '{ name: "Natours", price: 397 }' });
+      if (i === 3) setPacket({ headers: 'Content-Type: application/json', body: '{ name: "Natours", price: 397 }' });
+      await new Promise(r => setTimeout(r, 1100));
     }
     setActiveIdx(-1);
-    setLog('Response: 201 Created sent to client browser.');
+    setLog('Response Sent: 201 Created payload returned to client browser successfully.');
     setPacket({ headers: 'None', body: 'Empty' });
   };
 
+  const executePostmanMock = () => {
+    if (postmanMethod === 'GET' && postmanUrl === '/api/v1/tours') {
+      setPostmanStatus(200);
+      setPostmanResponse(JSON.stringify({
+        status: 'success',
+        results: 2,
+        data: {
+          tours: [
+            { id: 1, name: 'The Forest Hiker', price: 497 },
+            { id: 2, name: 'The Sea Explorer', price: 897 }
+          ]
+        }
+      }, null, 2));
+    } else if (postmanMethod === 'POST' && postmanUrl === '/api/v1/tours') {
+      try {
+        const bodyObj = JSON.parse(postmanBody);
+        if (!bodyObj.name || !bodyObj.price) {
+          setPostmanStatus(400);
+          setPostmanResponse(JSON.stringify({
+            status: 'fail',
+            message: 'Validation failed: Missing name or price parameter!'
+          }, null, 2));
+        } else {
+          setPostmanStatus(201);
+          setPostmanResponse(JSON.stringify({
+            status: 'success',
+            data: {
+              tour: {
+                id: Math.floor(Math.random() * 100) + 3,
+                name: bodyObj.name,
+                price: Number(bodyObj.price)
+              }
+            }
+          }, null, 2));
+        }
+      } catch (e) {
+        setPostmanStatus(400);
+        setPostmanResponse(JSON.stringify({
+          status: 'fail',
+          message: 'Syntax Error: Invalid JSON body format.'
+        }, null, 2));
+      }
+    } else if (postmanMethod === 'DELETE') {
+      setPostmanStatus(204);
+      setPostmanResponse('204 No Content (Document deleted successfully from DB)');
+    } else {
+      setPostmanStatus(404);
+      setPostmanResponse(JSON.stringify({
+        status: 'fail',
+        message: `Route Handler not found for: ${postmanMethod} ${postmanUrl}`
+      }, null, 2));
+    }
+  };
+
   return (
-    <div className="sim-container">
+    <div className="sim-container" style={{ minHeight: '440px' }}>
       <div className="sim-header">
-        <h3 className="sim-title">Express Route Pipeline Simulator</h3>
-        <span className="sim-badge">Express Pipeline</span>
+        <h3 className="sim-title">Express REST API Engine</h3>
+        <span className="sim-badge">MVC & Routing</span>
       </div>
-      <div className="express-sim">
-        <div className="express-sim__pipeline">
-          {nodes.map((node, idx) => (
-            <React.Fragment key={idx}>
-              <div className={`express-sim__node ${activeIdx === idx ? 'express-sim__node--active' : ''}`}>{node}</div>
-              {idx < nodes.length - 1 && <span className="express-sim__arrow-down">⬇</span>}
-            </React.Fragment>
-          ))}
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', flexGrow: 1 }}>
-            <div className="note-block__console-title">Request Packet Context</div>
-            <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
-              <strong>Headers:</strong> {packet.headers} <br />
-              <strong>Body:</strong> {packet.body}
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
+        {['pipeline', 'mvc', 'postman', 'config'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`sim-btn ${activeTab === tab ? '' : 'sim-btn--secondary'}`}
+            style={{ flex: 1, fontSize: '10px', padding: '6px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          >
+            {tab === 'pipeline' && 'Middleware Pipeline'}
+            {tab === 'mvc' && 'MVC File Flow'}
+            {tab === 'postman' && 'Postman Client'}
+            {tab === 'config' && 'App vs Server'}
+          </button>
+        ))}
+      </div>
+
+      <div className="regex-sim" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        
+        {/* Tab 1: Middleware Pipeline */}
+        {activeTab === 'pipeline' && (
+          <div className="express-sim" style={{ width: '100%' }}>
+            <div className="express-sim__pipeline" style={{ minWidth: '150px' }}>
+              {nodes.map((node, idx) => (
+                <React.Fragment key={idx}>
+                  <div 
+                    className={`express-sim__node ${activeIdx === idx ? 'express-sim__node--active' : ''}`}
+                    style={{ fontSize: '10px', padding: '6px' }}
+                  >
+                    {node}
+                  </div>
+                  {idx < nodes.length - 1 && <span className="express-sim__arrow-down" style={{ fontSize: '10px', margin: '2px 0' }}>⬇</span>}
+                </React.Fragment>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flexGrow: 1 }}>
+              <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+                <div className="note-block__console-title">Request HTTP Packet State</div>
+                <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
+                  <strong>Headers:</strong> {packet.headers} <br />
+                  <strong>Body:</strong> {packet.body}
+                </div>
+              </div>
+              <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+                <div style={{ fontSize: '11px' }}>{log}</div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button onClick={triggerMockRequest} disabled={activeIdx !== -1} className="sim-btn">
+                  {activeIdx === -1 ? 'Trigger Mock Request ⚡' : 'Routing...'}
+                </button>
+              </div>
             </div>
           </div>
-          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
-            <div>{log}</div>
+        )}
+
+        {/* Tab 2: MVC File Flow */}
+        {activeTab === 'mvc' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: '1.5' }}>
+              Express apps organize files under the **Model-View-Controller (MVC)** standard. Click stages to trace:
+            </div>
+            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px' }}>
+              {[
+                { id: 1, name: '1. server.js', desc: 'Port listening & Database connection configs.' },
+                { id: 2, name: '2. app.js', desc: 'Middleware setup and route mappings.' },
+                { id: 3, name: '3. routes.js', desc: 'Maps route paths (e.g. /tours) to specific handlers.' },
+                { id: 4, name: '4. controllers.js', desc: 'Contains req/res logic and calls model schemas.' },
+                { id: 5, name: '5. model.js', desc: 'Defines Mongoose schema validations & connects to DB.' }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setMvcStep(item.id)}
+                  className={`thread-card ${mvcStep === item.id ? 'thread-card--active' : ''}`}
+                  style={{ flex: 1, minWidth: '110px', border: '1px solid var(--border)', textAlign: 'left', cursor: 'pointer' }}
+                >
+                  <div style={{ fontWeight: 'bold', fontSize: '11px' }}>{item.name}</div>
+                  <div style={{ fontSize: '9px', opacity: 0.8, marginTop: '4px' }}>{item.desc}</div>
+                </button>
+              ))}
+            </div>
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', minHeight: '90px' }}>
+              <div className="note-block__console-title">Directory Flow execution summary</div>
+              {mvcStep === 0 && <div style={{ fontSize: '11px', opacity: 0.6 }}>Click a file segment box above to track files execution chain.</div>}
+              {mvcStep === 1 && (
+                <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                  <strong>server.js (Main Bootstrap Entry point):</strong><br />
+                  - Loads configuration variables using dotenv <code>dotenv.config()</code>.<br />
+                  - Initiates database connection <code>mongoose.connect()</code>.<br />
+                  - Starts the listening port server listener <code>app.listen(port)</code>.
+                </div>
+              )}
+              {mvcStep === 2 && (
+                <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                  <strong>app.js (Express configuration module):</strong><br />
+                  - Instantiates Express application object: <code>const app = express()</code>.<br />
+                  - Mounts global middlewares: <code>app.use(express.json())</code>.<br />
+                  - Mounts domain routes: <code>app.use('/api/v1/tours', tourRouter)</code>.
+                </div>
+              )}
+              {mvcStep === 3 && (
+                <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                  <strong>tourRoutes.js (Routes mapping router):</strong><br />
+                  - Maps specific request pathways to their controller functions:<br />
+                  <code>router.route('/').get(tourController.getAllTours).post(tourController.createTour);</code>
+                </div>
+              )}
+              {mvcStep === 4 && (
+                <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                  <strong>tourController.js (Request & Response handler):</strong><br />
+                  - Communicates with model layers to query documents.<br />
+                  - Formats HTTP responses: <code>res.status(200).json(...)</code>.<br />
+                  - Handles errors or sends success payload back.
+                </div>
+              )}
+              {mvcStep === 5 && (
+                <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                  <strong>tourModel.js (Database document schema rules):</strong><br />
+                  - Configures data field rules (types, required validations, default values).<br />
+                  - E.g. <code>name: &#123; type: String, required: [true, 'A tour must have a name'] &#125;</code>.
+                </div>
+              )}
+            </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={triggerMockRequest} disabled={activeIdx !== -1} className="sim-btn">
-              {activeIdx === -1 ? 'Trigger Request' : 'Routing...'}
-            </button>
+        )}
+
+        {/* Tab 3: Postman Client */}
+        {activeTab === 'postman' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <select 
+                value={postmanMethod} 
+                onChange={(e) => {
+                  setPostmanMethod(e.target.value);
+                  if (e.target.value === 'POST') {
+                    setPostmanUrl('/api/v1/tours');
+                  } else if (e.target.value === 'DELETE') {
+                    setPostmanUrl('/api/v1/tours/5');
+                  } else {
+                    setPostmanUrl('/api/v1/tours');
+                  }
+                }}
+                className="sim-btn sim-btn--secondary"
+                style={{ width: '100px', padding: '6px' }}
+              >
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="DELETE">DELETE</option>
+              </select>
+
+              <input 
+                type="text" 
+                value={postmanUrl} 
+                onChange={(e) => setPostmanUrl(e.target.value)} 
+                style={{ flex: 1, padding: '6px 12px', border: '1px solid var(--border)', borderRadius: '6px', backgroundColor: 'var(--bg)', color: 'var(--text-h)', fontFamily: 'var(--mono)', fontSize: '12px' }}
+              />
+
+              <button onClick={executePostmanMock} className="sim-btn">Send 🚀</button>
+            </div>
+
+            {postmanMethod === 'POST' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 'bold' }}>JSON Request Body Payload:</span>
+                <textarea 
+                  value={postmanBody} 
+                  onChange={(e) => setPostmanBody(e.target.value)} 
+                  style={{ width: '100%', height: '80px', fontFamily: 'var(--mono)', fontSize: '11px', padding: '8px', border: '1px solid var(--border)', borderRadius: '6px', backgroundColor: 'var(--bg)', color: 'var(--text-h)' }}
+                />
+              </div>
+            )}
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', flexGrow: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginBottom: '8px' }}>
+                <span className="note-block__console-title">Mock API Response Output</span>
+                <span style={{ fontSize: '10px', fontWeight: 'bold', color: postmanStatus >= 400 ? '#ef4444' : '#10b981' }}>
+                  Status: {postmanStatus}
+                </span>
+              </div>
+              <pre style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--mono)', whiteSpace: 'pre-wrap' }}>
+                {postmanResponse}
+              </pre>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Tab 4: App vs Server Configuration */}
+        {activeTab === 'config' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: '1.5' }}>
+              Separation of concerns in clean environments: config decisions should split logically!
+            </div>
+            
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <button 
+                onClick={() => setConfigFocus(1)}
+                className={`thread-card ${configFocus === 1 ? 'thread-card--active' : ''}`}
+                style={{ flex: 1, border: '1px solid var(--border)', cursor: 'pointer', padding: '12px' }}
+              >
+                <h4 style={{ margin: '0 0 8px 0', fontSize: '12px' }}>🛠️ Inside app.js</h4>
+                <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '10px', textAlign: 'left', lineHeight: '1.4' }}>
+                  <li>Middleware configurations</li>
+                  <li>Router attachments</li>
+                  <li>CORS / JSON parser rules</li>
+                  <li>Global error handlers</li>
+                </ul>
+              </button>
+
+              <button 
+                onClick={() => setConfigFocus(2)}
+                className={`thread-card ${configFocus === 2 ? 'thread-card--active' : ''}`}
+                style={{ flex: 1, border: '1px solid var(--border)', cursor: 'pointer', padding: '12px' }}
+              >
+                <h4 style={{ margin: '0 0 8px 0', fontSize: '12px' }}>⚡ Inside server.js</h4>
+                <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '10px', textAlign: 'left', lineHeight: '1.4' }}>
+                  <li>dotenv environment loading</li>
+                  <li>Database instance connecting</li>
+                  <li>Main Server listen binding</li>
+                  <li>Unhandled Promise catchers</li>
+                </ul>
+              </button>
+            </div>
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', minHeight: '80px' }}>
+              <div className="note-block__console-title">Architectural Rationale</div>
+              {configFocus === 0 && <div style={{ fontSize: '11px', opacity: 0.6 }}>Click a box above to read separation rules.</div>}
+              {configFocus === 1 && (
+                <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                  <strong>Why isolate app.js?</strong><br />
+                  It decouples the API logic (middlewares, routing) from server runtime bindings. This allows you to test the API easily in automated environments (like Jest/Supertest) without opening active network listening sockets!
+                </div>
+              )}
+              {configFocus === 2 && (
+                <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+                  <strong>Why isolate server.js?</strong><br />
+                  It acts as the system bootstrap layer. It wraps DB connection failures or global node crash events (unhandled rejections) in one entry point, keeping the API routing logic completely clean.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
@@ -1431,137 +1716,625 @@ export function NodeFoundationsSimulator() {
  * 16. NODE INTERNALS EVENT LOOP & THREAD POOL (topic: node-internals)
  * ========================================================================== */
 export function NodeInternalsSimulator() {
+  const [activeTab, setActiveTab] = useState('pool'); // pool, loop, streams, require
+  
+  // Tab 1: Thread pool state
   const [activeThread, setActiveThread] = useState(-1);
-  const [log, setLog] = useState('Dispatch tasks to trace Thread Pool workers offloading.');
+  const [poolLog, setPoolLog] = useState('Dispatch tasks to trace Thread Pool workers offloading.');
+
+  // Tab 2: Event Loop Phases state
+  const [loopPhase, setLoopPhase] = useState(0); // 0: Timers, 1: Pending, 2: Poll, 3: Check, 4: Close
+  const [loopLogs, setLoopLogs] = useState([]);
+  
+  // Tab 3: Streams state
+  const [streamProgress, setStreamProgress] = useState(0);
+  const [streamLog, setStreamLog] = useState('Click "Simulate Pipe Stream" to begin streaming chunks.');
+  const [isSlowWritable, setIsSlowWritable] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+
+  // Tab 4: require() state
+  const [requireStep, setRequireStep] = useState(0);
 
   const runPoolTask = async (taskType) => {
     if (taskType === 'sync') {
-      setLog('Main Thread: Executing console.log("Direct add"). Instantly pops off call stack.');
+      setPoolLog('Main Thread: Executing console.log("Direct add"). Instantly pops off call stack.');
       return;
     }
 
     if (taskType === 'os') {
-      setLog('Event Loop: HTTP task offloaded directly to OS Kernel network threads. Freeing Call Stack.');
+      setPoolLog('Event Loop: HTTP task offloaded directly to OS Kernel network threads. Freeing Call Stack.');
       await new Promise(r => setTimeout(r, 1200));
-      setLog('OS Kernel: Packet returned. Event loop triggers HTTP callback.');
+      setPoolLog('OS Kernel: Packet returned. Event loop triggers HTTP callback.');
       return;
     }
 
     const threadIdx = Math.floor(Math.random() * 4);
     setActiveThread(threadIdx);
-    setLog(`Event Loop: Offloaded heavy ${taskType} task to worker Thread #${threadIdx + 1}`);
+    setPoolLog(`Event Loop: Offloaded heavy ${taskType} task to worker Thread #${threadIdx + 1}`);
     
     await new Promise(r => setTimeout(r, 1500));
     
     setActiveThread(-1);
-    setLog(`Thread #${threadIdx + 1}: Task finished! Pushes callback back to Callback queue.`);
+    setPoolLog(`Thread #${threadIdx + 1}: Task finished! Pushes callback back to Callback queue.`);
+  };
+
+  const advanceLoopPhase = () => {
+    const phases = [
+      { name: '1. Timers Phase', desc: 'setTimeout / setInterval callbacks execute.' },
+      { name: '2. Pending Callbacks', desc: 'Executes deferred I/O callbacks (like TCP connection failures).' },
+      { name: '3. Poll Phase', desc: 'Retrieved new I/O events. Executes file/network callbacks. Node will block here if no callbacks are pending.' },
+      { name: '4. Check Phase', desc: 'setImmediate callbacks run. (Runs right after Poll phase).' },
+      { name: '5. Close Callbacks', desc: 'Runs socket/file close event callbacks, e.g., socket.on("close").' }
+    ];
+    
+    setLoopPhase((prev) => {
+      const next = (prev + 1) % phases.length;
+      setLoopLogs((logs) => [
+        `🔄 Transition to: ${phases[next].name} - ${phases[next].desc}`,
+        ...logs.slice(0, 5)
+      ]);
+      return next;
+    });
+  };
+
+  const startStream = async () => {
+    if (isStreaming) return;
+    setIsStreaming(true);
+    setStreamProgress(0);
+    setStreamLog('Reading local source file chunks: [fs.createReadStream] initiated...');
+    
+    const chunks = ['Chunk #1 (16KB)', 'Chunk #2 (32KB)', 'Chunk #3 (48KB)', 'Chunk #4 (64KB)', 'Chunk #5 (80KB)'];
+    
+    for (let i = 0; i < chunks.length; i++) {
+      await new Promise((r) => setTimeout(r, 1000));
+      setStreamProgress(((i + 1) / chunks.length) * 100);
+      
+      if (isSlowWritable && i === 2) {
+        setStreamLog(`⚠️ Backpressure Encountered: Writable response buffer full! Pausing readStream flows at ${chunks[i]}...`);
+        await new Promise((r) => setTimeout(r, 2000));
+        setStreamLog(`✅ Drain Event Fired: Writable buffers emptied. Resuming readStream pipe...`);
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+      
+      setStreamLog(`Pipe Transfer: readableStream emitted data ➔ writing ${chunks[i]} to HTTP response...`);
+    }
+    
+    await new Promise((r) => setTimeout(r, 800));
+    setStreamLog('SUCCESS: readable.pipe(res) completed successfully. Streams closed.');
+    setIsStreaming(false);
   };
 
   return (
-    <div className="sim-container">
+    <div className="sim-container" style={{ minHeight: '440px' }}>
       <div className="sim-header">
-        <h3 className="sim-title">Libuv Thread Pool & Event Loop</h3>
-        <span className="sim-badge">Node Internals</span>
+        <h3 className="sim-title">Node Internals Execution Engine</h3>
+        <span className="sim-badge">V8 & libuv</span>
       </div>
-      <div className="regex-sim">
-        <div className="loop-sim">
-          <div className="loop-sim__lane" style={{ minHeight: '120px' }}>
-            <span className="loop-sim__lane-title">Main Call Stack</span>
-            <div className="loop-sim__item" style={{ backgroundColor: 'var(--accent)', color: '#fff' }}>Single Thread</div>
-          </div>
-          <div className="loop-sim__lane" style={{ minHeight: '120px' }}>
-            <span className="loop-sim__lane-title">Libuv Event Loop</span>
-            <div className="loop-sim__item" style={{ borderColor: 'var(--accent)' }}>Callback Check Loop</div>
-          </div>
-        </div>
 
-        <div>
-          <span className="loop-sim__lane-title" style={{ fontSize: '11px' }}>Worker Thread Pool (Default size = 4)</span>
-          <div className="threads-grid">
-            {[1, 2, 3, 4].map((t, idx) => (
-              <div key={idx} className={`thread-card ${activeThread === idx ? 'thread-card--active' : ''}`}>
-                Thread #{t} {activeThread === idx ? '[Active Worker]' : '[Idle]'}
+      {/* Selector Tabs */}
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
+        {['pool', 'loop', 'streams', 'require'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`sim-btn ${activeTab === tab ? '' : 'sim-btn--secondary'}`}
+            style={{ flex: 1, fontSize: '10px', padding: '6px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          >
+            {tab === 'pool' && 'Thread Pool'}
+            {tab === 'loop' && 'Event Loop'}
+            {tab === 'streams' && 'Streams'}
+            {tab === 'require' && 'require() Wrapper'}
+          </button>
+        ))}
+      </div>
+
+      <div className="regex-sim" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        
+        {/* Tab 1: Thread Pool */}
+        {activeTab === 'pool' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="loop-sim">
+              <div className="loop-sim__lane" style={{ minHeight: '90px' }}>
+                <span className="loop-sim__lane-title">Main Call Stack (Single Thread)</span>
+                <div className="loop-sim__item" style={{ backgroundColor: 'var(--accent)', color: '#fff' }}>JS Execution</div>
               </div>
-            ))}
+              <div className="loop-sim__lane" style={{ minHeight: '90px' }}>
+                <span className="loop-sim__lane-title">libuv Event Loop</span>
+                <div className="loop-sim__item" style={{ borderColor: 'var(--accent)' }}>Orchestrator</div>
+              </div>
+            </div>
+
+            <div>
+              <span className="loop-sim__lane-title" style={{ fontSize: '11px', marginBottom: '6px', display: 'block' }}>
+                Worker Thread Pool (Default size = 4, configurable via <code>UV_THREADPOOL_SIZE</code>)
+              </span>
+              <div className="threads-grid">
+                {[1, 2, 3, 4].map((t, idx) => (
+                  <div key={idx} className={`thread-card ${activeThread === idx ? 'thread-card--active' : ''}`}>
+                    Thread #{t} {activeThread === idx ? '[Offloaded Task]' : '[Idle]'}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+              <div className="note-block__console-title">libuv Console Logs</div>
+              <div>{poolLog}</div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+              <button onClick={() => runPoolTask('sync')} className="sim-btn sim-btn--secondary" style={{ fontSize: '11px', padding: '6px 12px' }}>console.log() (Sync)</button>
+              <button onClick={() => runPoolTask('os')} className="sim-btn sim-btn--secondary" style={{ fontSize: '11px', padding: '6px 12px' }}>HTTPS task (OS Kernel)</button>
+              <button onClick={() => runPoolTask('Crypto Hash')} className="sim-btn" style={{ fontSize: '11px', padding: '6px 12px' }}>pbkdf2 (Thread Pool)</button>
+              <button onClick={() => runPoolTask('File IO')} className="sim-btn" style={{ fontSize: '11px', padding: '6px 12px' }}>fs.readFile (Thread Pool)</button>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
-          <div className="note-block__console-title">Execution Engine Output</div>
-          <div>{log}</div>
-        </div>
+        {/* Tab 2: Event Loop Phases */}
+        {activeTab === 'loop' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <span className="loop-sim__lane-title" style={{ fontSize: '11px' }}>Event Loop Phase Pipeline</span>
+                {[
+                  '1. Timers (setTimeout)',
+                  '2. Pending Callbacks (I/O Errors)',
+                  '3. Poll (Execute FS, Network callbacks)',
+                  '4. Check (setImmediate)',
+                  '5. Close Callbacks (socket close)'
+                ].map((name, idx) => (
+                  <div
+                    key={idx}
+                    className={`loop-sim__item`}
+                    style={{
+                      borderColor: loopPhase === idx ? 'var(--accent)' : 'var(--border)',
+                      backgroundColor: loopPhase === idx ? 'var(--accent-bg)' : 'transparent',
+                      fontWeight: loopPhase === idx ? 'bold' : 'normal',
+                      padding: '8px',
+                      fontSize: '11px'
+                    }}
+                  >
+                    {name} {loopPhase === idx ? '◀ ACTIVE' : ''}
+                  </div>
+                ))}
+              </div>
 
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-          <button onClick={() => runPoolTask('sync')} className="sim-btn sim-btn--secondary">console.log() (Sync)</button>
-          <button onClick={() => runPoolTask('os')} className="sim-btn sim-btn--secondary">HTTPS request (OS kernel)</button>
-          <button onClick={() => runPoolTask('Crypto PBKDF2')} className="sim-btn">Crypto hash (Thread pool)</button>
-          <button onClick={() => runPoolTask('File System I/O')} className="sim-btn">FS readFile (Thread pool)</button>
-        </div>
+              <div style={{ width: '180px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ padding: '8px', border: '1px solid var(--border)', borderRadius: '6px', backgroundColor: 'var(--bg)' }}>
+                  <div style={{ fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', opacity: 0.7 }}>Microtasks: nextTick</div>
+                  <div style={{ fontSize: '10px', marginTop: '4px', fontFamily: 'var(--mono)', color: 'var(--accent)' }}>process.nextTick()</div>
+                </div>
+                <div style={{ padding: '8px', border: '1px solid var(--border)', borderRadius: '6px', backgroundColor: 'var(--bg)' }}>
+                  <div style={{ fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', opacity: 0.7 }}>Microtasks: Promises</div>
+                  <div style={{ fontSize: '10px', marginTop: '4px', fontFamily: 'var(--mono)', color: 'var(--accent)' }}>Promise.then()</div>
+                </div>
+                <div style={{ fontSize: '10px', opacity: 0.8, fontStyle: 'italic', lineHeight: '1.4' }}>
+                  Microtask queues execute completely before transitioning to the next phase!
+                </div>
+              </div>
+            </div>
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', minHeight: '90px' }}>
+              <div className="note-block__console-title">Tick Callback Outputs</div>
+              <pre style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--mono)', whiteSpace: 'pre-wrap' }}>
+                {loopLogs.join('\n') || 'Click "Advance Phase" to cycle the event loop.'}
+              </pre>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button onClick={advanceLoopPhase} className="sim-btn">
+                Advance Phase 🔄
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 3: Streams & Backpressure */}
+        {activeTab === 'streams' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: '1.5' }}>
+              <strong>Streams:</strong> Processes files chunk-by-chunk instead of loading the entire file buffer into RAM.
+            </div>
+            
+            <div style={{ border: '1px solid var(--border)', borderRadius: '6px', padding: '16px', backgroundColor: 'var(--bg)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>
+                <span>[fs.createReadStream]</span>
+                <span>[res.write / pipe]</span>
+                <span>[Client Browser]</span>
+              </div>
+              <div style={{ height: '10px', backgroundColor: 'var(--border)', borderRadius: '99px', overflow: 'hidden', position: 'relative' }}>
+                <div 
+                  style={{ 
+                    height: '100%', 
+                    width: `${streamProgress}%`, 
+                    backgroundColor: 'var(--accent)', 
+                    transition: 'width 0.4s ease' 
+                  }} 
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input 
+                type="checkbox" 
+                id="slowWritable" 
+                checked={isSlowWritable} 
+                onChange={(e) => setIsSlowWritable(e.target.checked)} 
+              />
+              <label htmlFor="slowWritable" style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-h)', cursor: 'pointer' }}>
+                Simulate Backpressure (Slow Writable Socket buffer limit)
+              </label>
+            </div>
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+              <div className="note-block__console-title">Buffer Stream pipe logs</div>
+              <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>{streamLog}</div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button onClick={startStream} disabled={isStreaming} className="sim-btn">
+                {isStreaming ? 'Streaming...' : 'Simulate Pipe Stream 🔗'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 4: How require() Works */}
+        {activeTab === 'require' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: '1.5' }}>
+              Every time you call <code>require()</code>, Node wraps and executes your code. Click steps to trace the engine workflow:
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px' }}>
+              {[
+                { step: 1, name: '1. Path Resolve', desc: 'Finds absolute filepath coordinates.' },
+                { step: 2, name: '2. Load File', desc: 'Reads source script content.' },
+                { step: 3, name: '3. Wrap Function', desc: 'Wraps code in Wrapper function.' },
+                { step: 4, name: '4. Execute Wrapper', desc: 'Runs function, injecting require and exports.' },
+                { step: 5, name: '5. Cache result', desc: 'Stores module in require.cache for reuse.' }
+              ].map((item) => (
+                <button
+                  key={item.step}
+                  onClick={() => setRequireStep(item.step)}
+                  className={`thread-card ${requireStep === item.step ? 'thread-card--active' : ''}`}
+                  style={{ flex: 1, minWidth: '110px', border: '1px solid var(--border)', textAlign: 'left', cursor: 'pointer' }}
+                >
+                  <div style={{ fontWeight: 'bold', fontSize: '11px' }}>{item.name}</div>
+                  <div style={{ fontSize: '9px', opacity: 0.8, marginTop: '4px' }}>{item.desc}</div>
+                </button>
+              ))}
+            </div>
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', minHeight: '90px' }}>
+              <div className="note-block__console-title">Wrapper Template & Memory cache lookup</div>
+              {requireStep === 0 && <div style={{ fontSize: '11px', opacity: 0.6 }}>Click a step box above to visualize Node wrapper bindings.</div>}
+              {requireStep === 1 && (
+                <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
+                  🔍 Absolute path mapping:<br />
+                  <code>require('./calculator') ➔ /Users/sidd/project/lib/calculator.js</code>
+                </div>
+              )}
+              {requireStep === 2 && (
+                <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
+                  📂 File Loader:<br />
+                  Reads calculator.js source text from filesystem block buffers into RAM memory modules.
+                </div>
+              )}
+              {requireStep === 3 && (
+                <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
+                  🛡️ Function Wrapper Code:<br />
+                  <pre style={{ margin: '8px 0', padding: '8px', backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: '4px', overflowX: 'auto' }}>
+{`(function(exports, require, module, __filename, __dirname) {
+  // Your calculator.js code lives here!
+  module.exports = { add: (a,b) => a+b };
+});`}
+                  </pre>
+                </div>
+              )}
+              {requireStep === 4 && (
+                <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
+                  ⚡ Code Execution:<br />
+                  Node calls the compiled wrapper function, injecting the parameters and executing V8 machine code.
+                </div>
+              )}
+              {requireStep === 5 && (
+                <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
+                  💾 require.cache mapping:<br />
+                  <code>require.cache['/Users/sidd/project/lib/calculator.js'] = module.exports</code><br />
+                  Next lookup is instantaneous!
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
 }
 
+
 /* ==========================================================================
  * 17. MONGOOSE SCHEMA VALIDATOR SIMULATOR (topic: no-sql)
  * ========================================================================== */
 export function MongooseMongoSimulator() {
+  const [activeTab, setActiveTab] = useState('validation'); // validation, gridfs, sql, compass
+  
+  // Tab 1: Validation state
   const [tourName, setTourName] = useState('');
   const [tourPrice, setTourPrice] = useState('');
   const [collections, setCollections] = useState([
     { _id: '507f1f77bcf86cd799439011', name: 'The Forest Hiker', price: 497 },
     { _id: '507f1f77bcf86cd799439012', name: 'The Sea Explorer', price: 897 }
   ]);
-  const [log, setLog] = useState('Enter values and click Insert to validate Mongoose models.');
+  const [validationLog, setValidationLog] = useState('Enter values and click Insert to validate Mongoose models.');
+
+  // Tab 2: GridFS state
+  const [fileSizeMB, setFileSizeMB] = useState(1.2);
+  const [gridfsLog, setGridfsLog] = useState('Enter file size and click "Upload to GridFS" to slice chunks.');
+  const [gridfsChunks, setGridfsChunks] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Tab 4: Compass state
+  const [activeCommand, setActiveCommand] = useState('db.tours.find()');
+  const [compassOutput, setCompassOutput] = useState([]);
+
+  useEffect(() => {
+    // Sync Compass outputs on mount or collection changes
+    runCompassQuery(activeCommand);
+  }, [collections, activeCommand]);
 
   const handleInsert = () => {
     if (!tourName) {
-      setLog('❌ Mongoose Validation Error: Tour Name is a required field!');
+      setValidationLog('❌ Mongoose Validation Error: Tour Name is a required field!');
       return;
     }
     if (!tourPrice || isNaN(tourPrice) || Number(tourPrice) <= 0) {
-      setLog('❌ Mongoose Validation Error: Tour Price must be a positive number!');
+      setValidationLog('❌ Mongoose Validation Error: Tour Price must be a positive number!');
       return;
     }
 
-    const docId = Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
+    const docId = Math.random().toString(16).substring(2, 14);
     const newDoc = { _id: docId, name: tourName, price: Number(tourPrice) };
 
     setCollections([...collections, newDoc]);
     setTourName('');
     setTourPrice('');
-    setLog(`✅ Tour document successfully validated and written to MongoDB Collection as BSON!`);
+    setValidationLog(`✅ Tour document successfully validated and written to MongoDB Collection as BSON!`);
+  };
+
+  const uploadToGridFS = async () => {
+    setIsUploading(true);
+    setGridfsChunks([]);
+    setGridfsLog(`Checking BSON limits: File size is ${fileSizeMB} MB...`);
+    
+    await new Promise(r => setTimeout(r, 800));
+
+    if (fileSizeMB <= 16) {
+      setGridfsLog(`ℹ️ Note: File size ${fileSizeMB} MB fits within the 16 MB BSON document limit. Direct BSON insert is supported, but storing as GridFS is recommended for large binary assets.`);
+    } else {
+      setGridfsLog(`⚠️ Warning: File size ${fileSizeMB} MB exceeds the 16 MB BSON limit! MongoDB WILL reject a single BSON document insert. Forcing GridFS chunking...`);
+    }
+
+    await new Promise(r => setTimeout(r, 1200));
+
+    const totalKBs = Math.round(fileSizeMB * 1024);
+    const chunkSizeKB = 255;
+    const numChunks = Math.ceil(totalKBs / chunkSizeKB);
+    
+    setGridfsLog(`Slicing Binary: Splitting ${totalKBs} KB file into chunks of ${chunkSizeKB} KB each...`);
+    
+    await new Promise(r => setTimeout(r, 1000));
+    
+    const chunksList = [];
+    for (let i = 1; i <= Math.min(numChunks, 8); i++) {
+      chunksList.push({ id: i, size: i === numChunks ? (totalKBs % chunkSizeKB || chunkSizeKB) : chunkSizeKB });
+    }
+    setGridfsChunks(chunksList);
+    
+    setGridfsLog(`SUCCESS: Uploaded ${numChunks} chunks to fs.chunks collection. File metadata saved in fs.files. Reassembled automatically on fetch!`);
+    setIsUploading(false);
+  };
+
+  const runCompassQuery = (cmd) => {
+    if (cmd === 'db.tours.find()') {
+      setCompassOutput(collections);
+    } else if (cmd === 'db.tours.find({ price: { $lte: 500 } })') {
+      setCompassOutput(collections.filter(c => c.price <= 500));
+    } else if (cmd === 'db.tours.find({ price: { $gt: 500 } })') {
+      setCompassOutput(collections.filter(c => c.price > 500));
+    }
   };
 
   return (
-    <div className="sim-container">
+    <div className="sim-container" style={{ minHeight: '440px' }}>
       <div className="sim-header">
-        <h3 className="sim-title">Mongoose Validation Schema Sandbox</h3>
-        <span className="sim-badge">MongoDB Collections</span>
+        <h3 className="sim-title">MongoDB & Mongoose Schema Engine</h3>
+        <span className="sim-badge">ODM Layer</span>
       </div>
-      <div className="css-sim">
-        <div className="css-sim__controls">
-          <div className="regex-sim__field">
-            <label className="css-sim__slider-label">Tour Name</label>
-            <input type="text" value={tourName} onChange={(e) => setTourName(e.target.value)} className="regex-sim__input" placeholder="e.g. Forest Hiker" />
+
+      {/* Tabs Selector */}
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
+        {['validation', 'gridfs', 'sql', 'compass'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`sim-btn ${activeTab === tab ? '' : 'sim-btn--secondary'}`}
+            style={{ flex: 1, fontSize: '10px', padding: '6px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          >
+            {tab === 'validation' && 'Mongoose Schema'}
+            {tab === 'gridfs' && 'GridFS Chunks'}
+            {tab === 'sql' && 'SQL vs NoSQL'}
+            {tab === 'compass' && 'Compass Shell'}
+          </button>
+        ))}
+      </div>
+
+      <div className="regex-sim" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+        {/* Tab 1: Validation */}
+        {activeTab === 'validation' && (
+          <div className="css-sim" style={{ width: '100%' }}>
+            <div className="css-sim__controls">
+              <div className="regex-sim__field">
+                <label className="css-sim__slider-label">Tour Name</label>
+                <input type="text" value={tourName} onChange={(e) => setTourName(e.target.value)} className="regex-sim__input" placeholder="e.g. Forest Hiker" />
+              </div>
+              <div className="regex-sim__field">
+                <label className="css-sim__slider-label">Price ($)</label>
+                <input type="text" value={tourPrice} onChange={(e) => setTourPrice(e.target.value)} className="regex-sim__input" placeholder="e.g. 497" />
+              </div>
+              <button onClick={handleInsert} className="sim-btn" style={{ marginTop: '12px' }}>Insert Document</button>
+            </div>
+            <div className="regex-sim">
+              <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+                <div style={{ fontSize: '11px' }}>{validationLog}</div>
+              </div>
+              <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', flexGrow: 1, minHeight: '120px' }}>
+                <div className="note-block__console-title">MongoDB Collection: db.tours.find()</div>
+                <pre style={{ fontSize: '11px', fontFamily: 'var(--mono)', margin: 0 }}>
+                  {JSON.stringify(collections, null, 2)}
+                </pre>
+              </div>
+            </div>
           </div>
-          <div className="regex-sim__field">
-            <label className="css-sim__slider-label">Price ($)</label>
-            <input type="text" value={tourPrice} onChange={(e) => setTourPrice(e.target.value)} className="regex-sim__input" placeholder="e.g. 497" />
+        )}
+
+        {/* Tab 2: GridFS */}
+        {activeTab === 'gridfs' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: '1.5' }}>
+              BSON documents are limited to **16 MB**. Larger files are split into **255 KB** chunks using **GridFS**:
+            </div>
+            
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', fontWeight: 'bold' }}>Mock File Size:</span>
+              <input 
+                type="number" 
+                value={fileSizeMB} 
+                onChange={(e) => setFileSizeMB(Number(e.target.value))} 
+                step="0.5"
+                style={{ width: '80px', padding: '6px', border: '1px solid var(--border)', borderRadius: '6px', backgroundColor: 'var(--bg)', color: 'var(--text-h)' }}
+              />
+              <span style={{ fontSize: '12px' }}>MB</span>
+              <button onClick={uploadToGridFS} disabled={isUploading} className="sim-btn">
+                {isUploading ? 'Uploading...' : 'Upload to GridFS 🚀'}
+              </button>
+            </div>
+
+            {gridfsChunks.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <span className="loop-sim__lane-title" style={{ fontSize: '11px' }}>fs.chunks collection (Visualized Chunks Partitioning)</span>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {gridfsChunks.map((chunk) => (
+                    <div 
+                      key={chunk.id} 
+                      className="loop-sim__item" 
+                      style={{ 
+                        flex: '1 0 80px', 
+                        fontSize: '9px', 
+                        borderColor: 'var(--accent)', 
+                        textAlign: 'center', 
+                        padding: '6px',
+                        backgroundColor: 'var(--accent-bg)'
+                      }}
+                    >
+                      📦 Chunk #{chunk.id}<br />({chunk.size} KB)
+                    </div>
+                  ))}
+                  {fileSizeMB * 1024 / 255 > 8 && (
+                    <div style={{ display: 'flex', alignItems: 'center', padding: '0 8px', fontSize: '11px', opacity: 0.6 }}>
+                      ... and {Math.ceil((fileSizeMB * 1024) / 255) - 8} more chunks
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+              <div className="note-block__console-title">GridFS Engine Logger</div>
+              <div style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>{gridfsLog}</div>
+            </div>
           </div>
-          <button onClick={handleInsert} className="sim-btn" style={{ marginTop: '12px' }}>Insert Document</button>
-        </div>
-        <div className="regex-sim">
-          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
-            <div>{log}</div>
+        )}
+
+        {/* Tab 3: SQL vs NoSQL mapping */}
+        {activeTab === 'sql' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: '1.5' }}>
+              Relational SQL tables vs document BSON MongoDB structures:
+            </div>
+            
+            <table className="scope-sim__table" style={{ width: '100%' }}>
+              <thead>
+                <tr>
+                  <th className="scope-sim__th">SQL Concepts (Relational)</th>
+                  <th className="scope-sim__th">MongoDB Concepts (BSON Documents)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="scope-sim__td" style={{ fontWeight: 'bold' }}>Table</td>
+                  <td className="scope-sim__td">Collection (Flexible schema)</td>
+                </tr>
+                <tr>
+                  <td className="scope-sim__td" style={{ fontWeight: 'bold' }}>Row / Tuple</td>
+                  <td className="scope-sim__td">Document (Stored as BSON object)</td>
+                </tr>
+                <tr>
+                  <td className="scope-sim__td" style={{ fontWeight: 'bold' }}>Column / Field</td>
+                  <td className="scope-sim__td">Field (Key-value property)</td>
+                </tr>
+                <tr>
+                  <td className="scope-sim__td" style={{ fontWeight: 'bold' }}>Primary Key</td>
+                  <td className="scope-sim__td">Object ID (Autogenerated 12-byte hex <code>_id</code>)</td>
+                </tr>
+                <tr>
+                  <td className="scope-sim__td" style={{ fontWeight: 'bold' }}>Foreign Key Join</td>
+                  <td className="scope-sim__td">Embedding (Nested JSON) / Referencing + Populate</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', flexGrow: 1, minHeight: '120px' }}>
-            <div className="note-block__console-title">MongoDB: db.tours.find()</div>
-            <pre style={{ fontSize: '11px', fontFamily: 'var(--mono)', margin: 0 }}>
-              {JSON.stringify(collections, null, 2)}
-            </pre>
+        )}
+
+        {/* Tab 4: Compass CRUD Console */}
+        {activeTab === 'compass' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              {[
+                'db.tours.find()',
+                'db.tours.find({ price: { $lte: 500 } })',
+                'db.tours.find({ price: { $gt: 500 } })'
+              ].map((cmd) => (
+                <button
+                  key={cmd}
+                  onClick={() => {
+                    setActiveCommand(cmd);
+                    runCompassQuery(cmd);
+                  }}
+                  className={`sim-btn ${activeCommand === cmd ? '' : 'sim-btn--secondary'}`}
+                  style={{ fontSize: '10px', padding: '6px 12px', fontFamily: 'var(--mono)' }}
+                >
+                  {cmd}
+                </button>
+              ))}
+            </div>
+
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', flexGrow: 1, minHeight: '140px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginBottom: '8px' }}>
+                <span className="note-block__console-title">MongoDB Compass shell output</span>
+                <span style={{ fontSize: '10px', opacity: 0.7, fontFamily: 'var(--mono)' }}>natours_db ➔ db.tours</span>
+              </div>
+              <pre style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--mono)', whiteSpace: 'pre-wrap' }}>
+                {JSON.stringify(compassOutput, null, 2)}
+              </pre>
+            </div>
           </div>
-        </div>
+        )}
+
       </div>
     </div>
   );
