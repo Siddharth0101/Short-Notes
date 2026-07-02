@@ -1,46 +1,60 @@
 import { useLocation, matchPath } from 'react-router-dom';
 import TopNav from '../../organisms/TopNav/TopNav.jsx';
-import { getDomainById, getTopicBySlug } from '../../../registry/index.js';
+import { getDomainById, getNodeBySplatPath } from '../../../registry/index.js';
 import './AppLayout.css';
 
 export default function AppLayout({ children }) {
   const location = useLocation();
   const isHome = location.pathname === '/';
 
-  // Match path templates
+  // Match recursive path templates
   const domainMatch = matchPath({ path: '/domain/:domainId', end: true }, location.pathname);
-  const topicMatch = matchPath({ path: '/domain/:domainId/topic/:topicSlug', end: true }, location.pathname);
-  const scenarioMatch = matchPath({ path: '/domain/:domainId/topic/:topicSlug/:scenarioId', end: true }, location.pathname);
+  const dirMatch = matchPath({ path: '/domain/:domainId/dir/*', end: true }, location.pathname);
+  const fileMatch = matchPath({ path: '/domain/:domainId/file/*', end: true }, location.pathname);
 
   let paths = [];
 
+  const getBreadcrumbs = (domainId, splat) => {
+    const domainData = getDomainById(domainId);
+    if (!domainData) return [];
+
+    if (!splat) {
+      return [{ label: domainData.name }];
+    }
+
+    const breadcrumbs = [
+      { label: domainData.name, to: `/domain/${domainId}` }
+    ];
+
+    const segments = splat.split('/').filter(Boolean);
+    let accumulatedPath = '';
+
+    segments.forEach((segment, idx) => {
+      const isLast = idx === segments.length - 1;
+      accumulatedPath = accumulatedPath ? `${accumulatedPath}/${segment}` : segment;
+      
+      const node = getNodeBySplatPath(domainId, accumulatedPath);
+      if (node) {
+        if (isLast) {
+          breadcrumbs.push({ label: node.name || node.title });
+        } else {
+          breadcrumbs.push({
+            label: node.name || node.title,
+            to: `/domain/${domainId}/dir/${accumulatedPath}`
+          });
+        }
+      }
+    });
+
+    return breadcrumbs;
+  };
+
   if (domainMatch) {
-    const domainData = getDomainById(domainMatch.params.domainId);
-    if (domainData) {
-      paths = [
-        { label: domainData.name }
-      ];
-    }
-  } else if (topicMatch) {
-    const domainData = getDomainById(topicMatch.params.domainId);
-    const topicData = getTopicBySlug(topicMatch.params.domainId, topicMatch.params.topicSlug);
-    if (domainData && topicData) {
-      paths = [
-        { label: domainData.name, to: `/domain/${domainData.id}` },
-        { label: topicData.topic }
-      ];
-    }
-  } else if (scenarioMatch) {
-    const domainData = getDomainById(scenarioMatch.params.domainId);
-    const topicData = getTopicBySlug(scenarioMatch.params.domainId, scenarioMatch.params.topicSlug);
-    const scenario = topicData?.scenarios.find(s => s.id === scenarioMatch.params.scenarioId);
-    if (domainData && topicData && scenario) {
-      paths = [
-        { label: domainData.name, to: `/domain/${domainData.id}` },
-        { label: topicData.topic, to: `/domain/${domainData.id}/topic/${topicData.slug}` },
-        { label: scenario.title }
-      ];
-    }
+    paths = getBreadcrumbs(domainMatch.params.domainId, '');
+  } else if (dirMatch) {
+    paths = getBreadcrumbs(dirMatch.params.domainId, dirMatch.params['*']);
+  } else if (fileMatch) {
+    paths = getBreadcrumbs(fileMatch.params.domainId, fileMatch.params['*']);
   }
 
   return (

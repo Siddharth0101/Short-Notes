@@ -42,117 +42,81 @@ function formatTitle(str) {
     .join(' ');
 }
 
-function parseGlob(files) {
-  const topicsMap = {};
-
-  Object.entries(files).forEach(([filePath, importer]) => {
-    const parts = filePath.split('/');
-    if (parts.length < 5) return;
-    
-    const topicFolderName = parts[parts.length - 2];
-    const fileName = parts[parts.length - 1];
-    
-    const numberMatch = topicFolderName.match(/^(\d+)_/);
-    const prefix = numberMatch ? `${numberMatch[1]}. ` : '';
-    const cleanLabel = topicFolderName.replace(/^\d+_/, '').replace(/_/g, ' ');
-    const formattedLabel = cleanLabel
-      .split(' ')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-      .join(' ');
-    
-    const topicLabel = `${prefix}${formattedLabel}`;
-    const topicSlug = topicFolderName.toLowerCase().replace(/_/g, '-');
-    
-    const scenarioId = fileName.replace(/\.js$/, '').toLowerCase().replace(/_/g, '-').replace(/,/g, '-');
-    const scenarioTitle = formatTitle(fileName.replace(/\.js$/, ''));
-    
-    if (!topicsMap[topicFolderName]) {
-      topicsMap[topicFolderName] = {
-        topic: topicLabel,
-        slug: topicSlug,
-        scenarios: []
-      };
-    }
-    
-    // Resolve components if override is defined
-    let component = null;
-    if (scenarioId === 'closure-visualizer') {
-      component = lazy(() => import('../../../05_Interview/01_JavaScript/01_Closures/ClosureVisualizer.jsx'));
-    } else if (scenarioId === 'bubble-sort-visualizer') {
-      component = lazy(() => import('../../../05_Interview/02_Dsa/01_Sorting/BubbleSortVisualizer.jsx'));
-    } else if (scenarioId === 'jira-modal-persist') {
-      component = lazy(() => import('../../../05_Interview/03_Frontend/01_React_Routing/Jira_Modal_Refresh_Persist.jsx').then(m => ({ default: m.ActiveSprintReactRouter })));
-    } else if (scenarioId === 'http-client-flow') {
-      component = lazy(() => import('../../../05_Interview/04_Backend/01_Http_Client/HttpClientVisualizer.jsx'));
-    }
-
-    const customOverride = CUSTOM_VISUALIZERS[scenarioId];
-    
-    topicsMap[topicFolderName].scenarios.push({
-      id: scenarioId,
-      title: scenarioTitle,
-      description: customOverride ? customOverride.description : `Interactive script runner and notes for ${scenarioTitle.toLowerCase()}.`,
-      tag: customOverride ? customOverride.tag : 'Notes & Script',
-      readTime: customOverride ? customOverride.readTime : '6 mins',
-      fetchFile: importer,
-      component: component
-    });
-  });
-
-  return Object.entries(topicsMap)
-    .sort(([keyA], [keyB]) => keyA.localeCompare(keyB, undefined, { numeric: true }))
-    .map(([_, data]) => data);
+function formatDirectoryLabel(folderName) {
+  const numberMatch = folderName.match(/^(\d+)_/);
+  const prefix = numberMatch ? `${numberMatch[1]}. ` : '';
+  const cleanLabel = folderName.replace(/^\d+_/, '').replace(/_/g, ' ');
+  const formattedLabel = cleanLabel
+    .split(' ')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+  return `${prefix}${formattedLabel}`;
 }
 
-function parseInterviewGlob(files) {
-  const topicsMap = {};
+function buildTree(files, domainPrefix) {
+  const root = { name: 'Root', type: 'directory', children: {} };
 
   Object.entries(files).forEach(([filePath, importer]) => {
+    // filePath: "../../../04_Backend/01_Node/02_NODE_FOUNDATIONS/Node_NPM_Core_Modules.js"
     const parts = filePath.split('/');
-    if (parts.length < 6) return;
+    const domainIdx = parts.indexOf(domainPrefix);
+    if (domainIdx === -1) return;
     
-    // Group by category folders under 05_Interview: parts[4]
-    const topicFolderName = parts[4];
-    const fileName = parts[parts.length - 1];
+    // relativeParts: ['01_Node', '02_NODE_FOUNDATIONS', 'Node_NPM_Core_Modules.js']
+    const relativeParts = parts.slice(domainIdx + 1);
     
-    const numberMatch = topicFolderName.match(/^(\d+)_/);
-    const prefix = numberMatch ? `${numberMatch[1]}. ` : '';
-    const cleanLabel = topicFolderName.replace(/^\d+_/, '').replace(/_/g, ' ');
-    const formattedLabel = cleanLabel
-      .split(' ')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-      .join(' ');
-    
-    const topicLabel = `${prefix}${formattedLabel}`;
-    const topicSlug = topicFolderName.toLowerCase().replace(/_/g, '-');
-    
-    const scenarioId = fileName.replace(/\.jsx$/, '').toLowerCase().replace(/_/g, '-');
-    const scenarioTitle = formatTitle(fileName.replace(/\.jsx$/, ''));
-    
-    if (!topicsMap[topicFolderName]) {
-      topicsMap[topicFolderName] = {
-        topic: topicLabel,
-        slug: topicSlug,
-        scenarios: []
-      };
-    }
-    
-    const customOverride = CUSTOM_VISUALIZERS[scenarioId];
-    
-    topicsMap[topicFolderName].scenarios.push({
-      id: scenarioId,
-      title: scenarioTitle,
-      description: customOverride ? customOverride.description : `Interactive interview question for ${scenarioTitle.toLowerCase()}.`,
-      tag: customOverride ? customOverride.tag : 'Interview Scenario',
-      readTime: customOverride ? customOverride.readTime : '8 mins',
-      fetchFile: null,
-      component: lazy(() => importer().then((m) => ({ default: m.default || Object.values(m)[0] })))
+    let current = root;
+    relativeParts.forEach((part, index) => {
+      const isFile = index === relativeParts.length - 1;
+      
+      if (isFile) {
+        const isJsx = part.endsWith('.jsx');
+        const cleanName = part.replace(/\.(js|jsx)$/, '');
+        const scenarioId = cleanName.toLowerCase().replace(/_/g, '-').replace(/,/g, '-');
+        
+        let component = null;
+        if (isJsx) {
+          component = lazy(() => importer().then((m) => ({ default: m.default || Object.values(m)[0] })));
+        } else {
+          // Resolve manual overrides for raw js notes
+          if (scenarioId === 'closure-visualizer') {
+            component = lazy(() => import('../../../05_Interview/01_JavaScript/01_Closures/ClosureVisualizer.jsx'));
+          } else if (scenarioId === 'bubble-sort-visualizer') {
+            component = lazy(() => import('../../../05_Interview/02_Dsa/01_Sorting/BubbleSortVisualizer.jsx'));
+          } else if (scenarioId === 'jira-modal-persist') {
+            component = lazy(() => import('../../../05_Interview/03_Frontend/01_React_Routing/Jira_Modal_Refresh_Persist.jsx').then(m => ({ default: m.ActiveSprintReactRouter })));
+          } else if (scenarioId === 'http-client-flow') {
+            component = lazy(() => import('../../../05_Interview/04_Backend/01_Http_Client/HttpClientVisualizer.jsx'));
+          }
+        }
+
+        const customOverride = CUSTOM_VISUALIZERS[scenarioId];
+
+        current.children[part] = {
+          id: scenarioId,
+          title: formatTitle(cleanName),
+          description: customOverride ? customOverride.description : `Interactive script runner and notes for ${cleanName.toLowerCase().replace(/_/g, ' ')}.`,
+          tag: customOverride ? customOverride.tag : 'Notes & Script',
+          readTime: customOverride ? customOverride.readTime : '6 mins',
+          type: 'file',
+          fetchFile: isJsx ? null : importer,
+          component: component
+        };
+      } else {
+        if (!current.children[part]) {
+          current.children[part] = {
+            name: formatDirectoryLabel(part),
+            slug: part.toLowerCase().replace(/_/g, '-'),
+            type: 'directory',
+            children: {}
+          };
+        }
+        current = current.children[part];
+      }
     });
   });
 
-  return Object.entries(topicsMap)
-    .sort(([keyA], [keyB]) => keyA.localeCompare(keyB, undefined, { numeric: true }))
-    .map(([_, data]) => data);
+  return root;
 }
 
 export const DOMAINS = {
@@ -161,35 +125,35 @@ export const DOMAINS = {
     name: '01. JavaScript Playgrounds',
     description: 'Explore visual simulators for scopes, closures, execution contexts, and OOP rules.',
     icon: '🟨',
-    topics: parseGlob(javascriptFiles)
+    tree: buildTree(javascriptFiles, '01_JavaScript')
   },
   dsa: {
     id: 'dsa',
     name: '02. DSA Visualizers',
     description: 'Animate and interact with sorting, recursion, heaps, graphs, and search algorithms.',
     icon: '🟦',
-    topics: parseGlob(dsaFiles)
+    tree: buildTree(dsaFiles, '02_Dsa')
   },
   frontend: {
     id: 'frontend',
     name: '03. Frontend Scenarios',
     description: 'Run interactive responsive designs, CSS layouts, and advanced UI state actions.',
     icon: '🟧',
-    topics: parseGlob(frontendFiles)
+    tree: buildTree(frontendFiles, '03_Frontend')
   },
   backend: {
     id: 'backend',
     name: '04. Backend & APIs',
     description: 'Visualize backend request routing, HTTP client connections, and Node internals.',
     icon: '🟩',
-    topics: parseGlob(backendFiles)
+    tree: buildTree(backendFiles, '04_Backend')
   },
   interview: {
     id: 'interview',
     name: '05. Interview Questions',
     description: 'Explore premium scenario-based visualizers, machine coding challenges, and mock flows.',
     icon: '💼',
-    topics: parseInterviewGlob(interviewFiles)
+    tree: buildTree(interviewFiles, '05_Interview')
   }
 };
 
@@ -199,24 +163,40 @@ export function getDomainById(id) {
   return DOMAINS[id] || null;
 }
 
-export function getTopicBySlug(domainId, slug) {
-  const domain = getDomainById(domainId);
-  return domain?.topics.find((t) => t.slug === slug) || null;
+export function countFiles(node) {
+  if (!node) return 0;
+  if (node.type === 'file') return 1;
+  let count = 0;
+  Object.values(node.children).forEach((child) => {
+    count += countFiles(child);
+  });
+  return count;
 }
 
-export function getAllScenarios() {
-  const list = [];
-  DOMAIN_LIST.forEach((domain) => {
-    domain.topics.forEach((topic) => {
-      topic.scenarios.forEach((scenario) => {
-        list.push({
-          ...scenario,
-          domainId: domain.id,
-          topicSlug: topic.slug,
-          badge: topic.topic
-        });
-      });
-    });
-  });
-  return list;
+export function getContentsSorted(dirNode) {
+  if (!dirNode || !dirNode.children) return [];
+  
+  return Object.entries(dirNode.children)
+    .sort(([keyA], [keyB]) => keyA.localeCompare(keyB, undefined, { numeric: true }))
+    .map(([_, val]) => val);
+}
+
+export function getNodeBySplatPath(domainId, splat) {
+  const domain = getDomainById(domainId);
+  if (!domain || !domain.tree) return null;
+  if (!splat) return domain.tree;
+
+  const segments = splat.split('/').filter(Boolean);
+  let current = domain.tree;
+
+  for (const segment of segments) {
+    if (!current.children) return null;
+    const found = Object.values(current.children).find(
+      (child) => child.slug === segment || child.id === segment
+    );
+    if (!found) return null;
+    current = found;
+  }
+
+  return current;
 }

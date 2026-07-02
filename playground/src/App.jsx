@@ -3,37 +3,33 @@ import { Routes, Route, useParams } from 'react-router-dom';
 import AppLayout from './components/layouts/AppLayout/AppLayout.jsx';
 import Home from './components/pages/Home/Home.jsx';
 import Spinner from './components/atoms/Spinner/Spinner.jsx';
-import { getAllScenarios } from './registry/index.js';
+import { getNodeBySplatPath } from './registry/index.js';
 
 // Lazy load pages and NoteSandbox
 const Domain = lazy(() => import('./components/pages/Domain/Domain.jsx'));
-const Topic = lazy(() => import('./components/pages/Topic/Topic.jsx'));
 const NoteSandbox = lazy(() => import('./components/organisms/NoteSandbox/NoteSandbox.jsx'));
 
-const ALL_SCENARIOS = getAllScenarios();
-
 function SandboxRouteHandler() {
-  const { domainId, topicSlug, scenarioId } = useParams();
+  const { domainId } = useParams();
+  const splat = useParams()['*'];
   
-  const scenario = ALL_SCENARIOS.find(
-    (s) => s.domainId === domainId && s.topicSlug === topicSlug && s.id === scenarioId
-  );
+  const fileNode = getNodeBySplatPath(domainId, splat);
 
-  if (!scenario) {
+  if (!fileNode || fileNode.type !== 'file') {
     return (
       <div style={{ padding: '40px' }}>
-        <h2>Sandbox Not Found 😢</h2>
+        <h2>Sandbox File Not Found 😢</h2>
       </div>
     );
   }
 
-  const ComponentToRender = scenario.component;
+  const ComponentToRender = fileNode.component;
 
   if (ComponentToRender) {
     return <ComponentToRender />;
   }
 
-  return <NoteSandbox title={scenario.title} fetchFile={scenario.fetchFile} />;
+  return <NoteSandbox title={fileNode.title} fetchFile={fileNode.fetchFile} />;
 }
 
 function App() {
@@ -42,29 +38,29 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         
-        {/* Domain Selection Topics list */}
+        {/* Domain Root Explorer */}
         <Route 
           path="/domain/:domainId" 
           element={
-            <Suspense fallback={<Spinner label="Loading domain..." />}>
+            <Suspense fallback={<Spinner label="Loading folder directory..." />}>
               <Domain />
             </Suspense>
           } 
         />
 
-        {/* Dynamic Topic Pages */}
+        {/* Dynamic Nested Directory Explorer */}
         <Route 
-          path="/domain/:domainId/topic/:topicSlug" 
+          path="/domain/:domainId/dir/*" 
           element={
-            <Suspense fallback={<Spinner label="Loading topic..." />}>
-              <Topic />
+            <Suspense fallback={<Spinner label="Loading folder..." />}>
+              <Domain />
             </Suspense>
           } 
         />
 
-        {/* Dynamic Scenario Sandbox Pages inside Topics */}
+        {/* Dynamic Scenario Sandbox Page View */}
         <Route
-          path="/domain/:domainId/topic/:topicSlug/:scenarioId"
+          path="/domain/:domainId/file/*"
           element={
             <Suspense fallback={<Spinner label="Loading sandbox..." />}>
               <SandboxRouteHandler />
