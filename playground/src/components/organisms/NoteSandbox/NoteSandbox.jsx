@@ -14,7 +14,16 @@ import {
   ListSimulator,
   ScopeTrackerSimulator,
   EventLoopSimulator,
-  HttpRouteSimulator
+  HttpRouteSimulator,
+  WebFundamentalsSimulator,
+  NodeFoundationsSimulator,
+  NodeInternalsSimulator,
+  MongooseMongoSimulator,
+  DeploymentSimulator,
+  PatternsSimulator,
+  HeapSimulator,
+  HashTableSimulator,
+  CheatSheetSimulator
 } from './simulators/Simulators.jsx';
 import './NoteSandbox.css';
 
@@ -49,7 +58,6 @@ function executeCode(code) {
   };
 
   try {
-    // Run the code safely by intercepting console
     const executor = new Function('console', 'window', 'global', `
       return (function() {
         ${code}
@@ -65,7 +73,6 @@ function executeCode(code) {
 
 // Parses raw JS note text into groups of explanations and code blocks
 function parseNoteFile(rawText) {
-  // Strip 'use strict' declarations
   let cleanText = rawText.replace(/^\s*['"]use strict['"];?\s*/i, '');
 
   const sections = [];
@@ -120,7 +127,6 @@ function cleanComment(comment) {
     .split('\n')
     .map((line) => line.replace(/^\s*\*\s?/, '').trimEnd())
     .join('\n')
-    // Remove formatting dividers of equals or dashes
     .replace(/^[\s=*|-]+$/gm, '')
     .trim();
 }
@@ -178,11 +184,220 @@ function CodePlayground({ initialCode }) {
 }
 
 export default function NoteSandbox({ title, fetchFile }) {
-  const { domainId, topicSlug, scenarioId } = useParams();
+  const { domainId } = useParams();
+  const splat = useParams()['*'] || '';
+
+  const segments = splat.split('/').filter(Boolean);
+  const scenarioId = segments[segments.length - 1] || '';
+  const topicSlug = segments[segments.length - 2] || '';
+
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('notes');
+  const [selectedSim, setSelectedSim] = useState('');
+
+  // Get simulators strictly relevant to the current note file
+  const getSimulatorsForFile = (scenId, topSlug) => {
+    const sId = (scenId || '').toLowerCase();
+    const tSlug = (topSlug || '').toLowerCase();
+
+    // 1. Client-Server request / How the Web Works also has Time Complexity relevance
+    if (sId === 'how-web-works' || sId === 'web-backend-fundamentals') {
+      return [
+        { id: 'web', label: '🌐 How Web Works', component: <WebFundamentalsSimulator /> },
+        { id: 'bigo', label: '📈 Time Complexity (Big O)', component: <BigOVisualizer /> }
+      ];
+    }
+
+    // 2. JavaScript OOP / Scopes / Prototypes
+    if (
+      tSlug.includes('oops') ||
+      sId === 'constructor-function' ||
+      sId === 'classes' ||
+      sId === 'call-apply-bind-methods' ||
+      sId === 'this-keyword'
+    ) {
+      return [
+        { id: 'scope', label: '🟨 Scope & Prototypes', component: <ScopeTrackerSimulator /> }
+      ];
+    }
+
+    // 3. Regex
+    if (tSlug.includes('regex') || sId === 'regular-expressions') {
+      return [
+        { id: 'regex', label: '🔍 Regex Matcher', component: <RegexSimulator /> }
+      ];
+    }
+
+    // 4. Async Event Loop
+    if (
+      tSlug.includes('async') ||
+      sId === 'promises' ||
+      sId === 'eventloop' ||
+      sId === 'promises-async-await-node'
+    ) {
+      return [
+        { id: 'eventloop', label: '⏳ Event Loop', component: <EventLoopSimulator /> }
+      ];
+    }
+
+    // 5. DSA Sorting
+    if (tSlug.includes('sorting') || sId === 'sorting-algorithms' || sId === 'bubble-sort-visualizer') {
+      return [
+        { id: 'sorting', label: '📊 Sorting Algorithms', component: <SortingAlgorithmsSimulator /> }
+      ];
+    }
+
+    // 6. DSA Searching
+    if (tSlug.includes('searching') || sId === 'searching-algorithms') {
+      return [
+        { id: 'search', label: '🔎 Binary Search', component: <ArraySearchSimulator /> }
+      ];
+    }
+
+    // 7. DSA Recursion
+    if (tSlug.includes('recursion') || sId === 'recursion-backtracking') {
+      return [
+        { id: 'recursion', label: '🔁 Recursion Tree', component: <RecursionVisualizer /> }
+      ];
+    }
+
+    // 8. DSA Trees
+    if (tSlug.includes('trees') || sId === 'trees-bst-traversal') {
+      return [
+        { id: 'trees', label: '🌲 Binary Tree', component: <BstTreeSimulator /> }
+      ];
+    }
+
+    // 9. DSA Graphs
+    if (tSlug.includes('graphs') || sId === 'graphs-traversal-dijkstra' || sId === 'http-client-flow') {
+      return [
+        { id: 'graphs', label: '🕸️ Graph Pathfinder', component: <GraphVisualizer /> }
+      ];
+    }
+
+    // 10. DSA DP
+    if (tSlug.includes('dynamic-programming') || sId === 'dynamic-programming') {
+      return [
+        { id: 'dp', label: '🗂️ DP Memoization', component: <DpVisualizer /> }
+      ];
+    }
+
+    // 11. DSA Lists
+    if (
+      tSlug.includes('linked-lists') ||
+      tSlug.includes('stacks-queues') ||
+      sId === 'singly-doubly-linked-list' ||
+      sId === 'stacks-queues'
+    ) {
+      return [
+        { id: 'lists', label: '🔗 Stacks & Queues', component: <ListSimulator /> }
+      ];
+    }
+
+    // 12. DSA Patterns
+    if (tSlug.includes('patterns') || sId === 'common-problem-solving-patterns' || sId === 'problem-solving-approach') {
+      return [
+        { id: 'patterns', label: '🔀 Algorithmic Patterns', component: <PatternsSimulator /> }
+      ];
+    }
+
+    // 13. DSA Heaps
+    if (tSlug.includes('heaps') || sId === 'binary-heaps-priority-queue') {
+      return [
+        { id: 'heaps', label: '💎 Binary Heap', component: <HeapSimulator /> }
+      ];
+    }
+
+    // 14. DSA Hash Tables
+    if (tSlug.includes('hash-tables') || sId === 'hash-tables') {
+      return [
+        { id: 'hash', label: '🗄️ Hash Buckets', component: <HashTableSimulator /> }
+      ];
+    }
+
+    // 15. DSA Cheatsheets
+    if (
+      tSlug.includes('advanced') ||
+      tSlug.includes('cheatsheets') ||
+      sId === 'dsa-interview-cheat-sheet' ||
+      sId === 'advanced-dsa-concepts'
+    ) {
+      return [
+        { id: 'cards', label: '🃏 Interview Flashcards', component: <CheatSheetSimulator /> }
+      ];
+    }
+
+    // 16. CSS Units Sizing
+    if (tSlug.includes('css') || sId === 'vw-vh-rem-px') {
+      return [
+        { id: 'css', label: '📐 CSS Units', component: <CssUnitsSimulator /> }
+      ];
+    }
+
+    // 17. Node modules require
+    if (tSlug.includes('node-foundations') || sId === 'node-npm-core-modules') {
+      return [
+        { id: 'modules', label: '📦 require() Bindings', component: <NodeFoundationsSimulator /> }
+      ];
+    }
+
+    // 18. Node Internals
+    if (tSlug.includes('node-internals') || sId === 'node-internals-event-loop-streams') {
+      return [
+        { id: 'internals', label: '⚙️ Libuv Thread Pool', component: <NodeInternalsSimulator /> }
+      ];
+    }
+
+    // 19. Mongoose & DB Basics
+    if (
+      tSlug.includes('no-sql') ||
+      sId === 'mongodb-mongoose-basics' ||
+      sId === 'data-modeling-advanced-mongoose' ||
+      sId === 'auth-authorization-security' ||
+      sId === 'express-error-handling' ||
+      sId === 'pug-server-side-rendering'
+    ) {
+      return [
+        { id: 'mongoose', label: '🗄️ Mongoose Schemas', component: <MongooseMongoSimulator /> }
+      ];
+    }
+
+    // 20. Deployments & Cheat Sheets
+    if (
+      tSlug.includes('deployment') ||
+      sId === 'git-deployment-production' ||
+      sId === 'payments-email-file-uploads' ||
+      sId === 'node-backend-cheat-sheet' ||
+      sId === 'jonas-node-course-map'
+    ) {
+      return [
+        { id: 'deployment', label: '🚀 CI/CD Deployments', component: <DeploymentSimulator /> }
+      ];
+    }
+
+    // 21. Express Pipeline
+    if (tSlug.includes('express') || sId === 'express-rest-api-natours') {
+      return [
+        { id: 'express', label: '⬇️ Express Pipeline', component: <HttpRouteSimulator /> }
+      ];
+    }
+
+    // Fallback: General Big O
+    return [
+      { id: 'bigo', label: '📈 Big O Complexity', component: <BigOVisualizer /> }
+    ];
+  };
+
+  const simsList = getSimulatorsForFile(scenarioId, topicSlug);
+  const currentSimObj = simsList.find((s) => s.id === selectedSim) || simsList[0];
+
+  useEffect(() => {
+    if (simsList.length > 0) {
+      setSelectedSim(simsList[0].id);
+    }
+  }, [splat]);
 
   useEffect(() => {
     let active = true;
@@ -211,62 +426,6 @@ export default function NoteSandbox({ title, fetchFile }) {
       active = false;
     };
   }, [fetchFile]);
-
-  const renderSimulator = () => {
-    const slug = (topicSlug || '').toLowerCase();
-    
-    if (slug.includes('regex')) return <RegexSimulator />;
-    if (slug.includes('css')) return <CssUnitsSimulator />;
-    
-    if (
-      slug.includes('async') ||
-      scenarioId === 'eventloop' ||
-      scenarioId === 'promises'
-    ) {
-      return <EventLoopSimulator />;
-    }
-    
-    if (slug.includes('sorting')) {
-      return <SortingAlgorithmsSimulator />;
-    }
-    
-    if (slug.includes('searching')) {
-      return <ArraySearchSimulator />;
-    }
-    
-    if (slug.includes('recursion')) {
-      return <RecursionVisualizer />;
-    }
-    
-    if (slug.includes('trees')) {
-      return <BstTreeSimulator />;
-    }
-    
-    if (slug.includes('graphs')) {
-      return <GraphVisualizer />;
-    }
-    
-    if (slug.includes('foundations')) {
-      return <BigOVisualizer />;
-    }
-    
-    if (slug.includes('dynamic-programming')) {
-      return <DpVisualizer />;
-    }
-    
-    if (
-      slug.includes('linked-lists') ||
-      slug.includes('stacks-queues')
-    ) {
-      return <ListSimulator />;
-    }
-    
-    if (slug.includes('node') || domainId === 'backend') {
-      return <HttpRouteSimulator />;
-    }
-    
-    return <ScopeTrackerSimulator />;
-  };
 
   if (loading) {
     return <Spinner label={`Loading notes: ${title}...`} />;
@@ -313,7 +472,29 @@ export default function NoteSandbox({ title, fetchFile }) {
         </div>
       ) : (
         <div className="note-sandbox__simulator">
-          {renderSimulator()}
+          {simsList.length > 0 && (
+            <div>
+              {/* Show select buttons ONLY if the note has multiple relevant simulators */}
+              {simsList.length > 1 && (
+                <div className="note-sandbox__visual-selector">
+                  <span style={{ fontSize: '12px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', color: 'var(--text)', whiteSpace: 'nowrap', marginRight: '8px' }}>
+                    Select Visual:
+                  </span>
+                  {simsList.map((sim) => (
+                    <button
+                      key={sim.id}
+                      onClick={() => setSelectedSim(sim.id)}
+                      className={`sim-btn ${selectedSim === sim.id ? '' : 'sim-btn--secondary'}`}
+                      style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
+                    >
+                      {sim.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {currentSimObj ? currentSimObj.component : null}
+            </div>
+          )}
         </div>
       )}
     </div>

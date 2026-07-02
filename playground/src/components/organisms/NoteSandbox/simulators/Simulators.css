@@ -458,6 +458,31 @@
   height: 280px;
 }
 
+/* ─ Thread Pool Layout ─ */
+.threads-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.thread-card {
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 12px;
+  font-family: var(--mono);
+  text-align: center;
+  background-color: var(--bg);
+}
+
+.thread-card--active {
+  border-color: var(--accent);
+  background-color: var(--accent-bg);
+  color: var(--accent);
+  font-weight: bold;
+}
+
 /* ─ Actions and Buttons ─ */
 .sim-btn {
   padding: 10px 18px;

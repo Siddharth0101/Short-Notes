@@ -16,6 +16,26 @@
   padding-bottom: 4px;
 }
 
+.note-sandbox__visual-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+  -webkit-overflow-scrolling: touch;
+}
+
+.note-sandbox__visual-selector::-webkit-scrollbar {
+  height: 4px;
+}
+
+.note-sandbox__visual-selector::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 4px;
+}
+
+
 .note-sandbox__tab {
   background: none;
   border: none;

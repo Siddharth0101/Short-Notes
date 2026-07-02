@@ -182,7 +182,6 @@ export function ArraySearchSimulator() {
   const [statusMsg, setStatusMsg] = useState('Click Step Search to run Binary Search.');
   const [stepCount, setStepCount] = useState(0);
 
-  // Auto-play state
   const [isAutoplay, setIsAutoplay] = useState(false);
   const [speed, setSpeed] = useState(800);
 
@@ -231,7 +230,6 @@ export function ArraySearchSimulator() {
   useEffect(() => {
     if (!isAutoplay) return;
     
-    // Stop autoplay if search resolved
     if (foundIndex !== -1 || (low !== -1 && low > high)) {
       setIsAutoplay(false);
       return;
@@ -307,7 +305,6 @@ export function SortingAlgorithmsSimulator() {
   const [minIdx, setMinIdx] = useState(0);
   const [statusText, setStatusText] = useState('Select algorithm and click Step Swap.');
 
-  // Auto-play state
   const [isAutoplay, setIsAutoplay] = useState(false);
   const [speed, setSpeed] = useState(600);
 
@@ -821,45 +818,120 @@ export function ListSimulator() {
 }
 
 /* ==========================================================================
- * 11. VARIABLE SCOPE INHERITANCE MAP (topic: oops)
+ * 11. VARIABLE SCOPE, PROTOTYPES, & THIS BINDING (topic: oops / general scopes)
  * ========================================================================== */
 export function ScopeTrackerSimulator() {
-  const [vars] = useState({
+  const [activeTab, setActiveTab] = useState('scope'); // scope, prototype, this
+  const [thisLog, setThisLog] = useState('Select an execution type below to trace "this" bindings.');
+  
+  const vars = {
     jonas: '{ name: "Jonas", year: 1991 }',
     matilda: '{ firstName: "Matilda", year: 2017 }',
     this: 'Window Object'
-  });
+  };
+
+  const runThisTrace = (type) => {
+    if (type === 'method') {
+      setThisLog(`🔊 Method Call: jonas.calcAge();\n👉 Rule: "this" always refers to the object calling the method (dot ke pehle wala object).\n📍 "this" is bound to jonas Object: { name: "Jonas", year: 1991 }`);
+    } else if (type === 'simple') {
+      setThisLog(`🔊 Simple Function Call: calcAge();\n👉 Rule: Strict Mode me normal function call ka "this" undefined hota hai.\n📍 "this" = undefined`);
+    } else if (type === 'arrow') {
+      setThisLog(`🔊 Arrow Function Call: () => { console.log(this) };\n👉 Rule: Arrow function ka apna "this" nahi hota. Woh external lexical context se inherit karta hai.\n📍 "this" = Window Object (Parent global context)`);
+    } else if (type === 'event') {
+      setThisLog(`🔊 Event Listener: button.addEventListener("click", function() { ... });\n👉 Rule: DOM Event handler callback me "this" target DOM element ko reference karta hai.\n📍 "this" = <button> HTML Element`);
+    }
+  };
 
   return (
     <div className="sim-container">
       <div className="sim-header">
-        <h3 className="sim-title">Variables Scope Trace</h3>
-        <span className="sim-badge">Lexical Bindings</span>
+        <h3 className="sim-title">Scopes, Prototypes, & "this" Keyword</h3>
+        <span className="sim-badge">OOP Runtime</span>
       </div>
-      <div className="scope-sim">
-        <div style={{ flexGrow: 1 }}>
-          <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text)' }}>
-            This simulator tracks the variables and references generated on compiler runtimes. Add parameters to scripts in the editor to evaluate variables live inside logs.
-          </p>
-        </div>
-        <div>
-          <table className="scope-sim__table">
-            <thead>
-              <tr>
-                <th className="scope-sim__th">Identifier</th>
-                <th className="scope-sim__th">Bound Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(vars).map(([name, value]) => (
-                <tr key={name}>
-                  <td className="scope-sim__td" style={{ fontWeight: 'bold' }}>{name}</td>
-                  <td className="scope-sim__td">{value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      
+      {/* Scope Simulator Tabs */}
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
+        {['scope', 'prototype', 'this'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`sim-btn ${activeTab === tab ? '' : 'sim-btn--secondary'}`}
+            style={{ flex: 1, fontSize: '11px', padding: '6px 0', textTransform: 'capitalize' }}
+          >
+            {tab === 'scope' && 'Variables Scope'}
+            {tab === 'prototype' && 'Prototype Chain'}
+            {tab === 'this' && '"this" Binding'}
+          </button>
+        ))}
+      </div>
+
+      <div className="node-sim__display" style={{ minHeight: '180px', flexDirection: 'column', padding: '16px' }}>
+        {activeTab === 'scope' && (
+          <div className="scope-sim" style={{ width: '100%' }}>
+            <div style={{ flexGrow: 1, marginBottom: '12px' }}>
+              <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text)' }}>
+                Tracks variable declarations inside execution environments. Add variables in the sandbox editor to print them live in the console.
+              </p>
+            </div>
+            <div style={{ width: '100%', overflowX: 'auto' }}>
+              <table className="scope-sim__table">
+                <thead>
+                  <tr>
+                    <th className="scope-sim__th">Identifier</th>
+                    <th className="scope-sim__th">Bound Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(vars).map(([name, value]) => (
+                    <tr key={name}>
+                      <td className="scope-sim__td" style={{ fontWeight: 'bold' }}>{name}</td>
+                      <td className="scope-sim__td">{value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'prototype' && (
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', gap: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', textAlign: 'center', maxWidth: '420px', lineHeight: '1.5' }}>
+              <strong>Prototype Lookup Chain:</strong> matilda variable calling <code>calcAge()</code> links prototypes upward!
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <div className="node-sim__node" style={{ fontSize: '11px', padding: '6px 12px' }}>
+                matilda instance
+              </div>
+              <span className="node-sim__arrow">➔</span>
+              <div className="node-sim__node" style={{ fontSize: '11px', padding: '6px 12px', backgroundColor: 'var(--accent)', color: '#fff' }}>
+                Person.prototype (has calcAge)
+              </div>
+              <span className="node-sim__arrow">➔</span>
+              <div className="node-sim__node" style={{ fontSize: '11px', padding: '6px 12px', border: '1px solid var(--border)', backgroundColor: 'var(--bg)', color: 'var(--text-h)' }}>
+                Object.prototype
+              </div>
+              <span className="node-sim__arrow">➔</span>
+              <div style={{ fontSize: '11px', opacity: 0.5 }}>null</div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'this' && (
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', minHeight: '80px' }}>
+              <pre style={{ margin: 0, fontSize: '12px', whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
+                {thisLog}
+              </pre>
+            </div>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button onClick={() => runThisTrace('method')} className="sim-btn" style={{ fontSize: '11px', padding: '6px 12px' }}>Method Call</button>
+              <button onClick={() => runThisTrace('simple')} className="sim-btn" style={{ fontSize: '11px', padding: '6px 12px' }}>Simple Call</button>
+              <button onClick={() => runThisTrace('arrow')} className="sim-btn" style={{ fontSize: '11px', padding: '6px 12px' }}>Arrow Call</button>
+              <button onClick={() => runThisTrace('event')} className="sim-btn" style={{ fontSize: '11px', padding: '6px 12px' }}>Event Handler</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -875,7 +947,6 @@ export function EventLoopSimulator() {
   const [macrotask, setMacrotask] = useState([]);
   const [step, setStep] = useState(0);
 
-  // Auto-play state
   const [isAutoplay, setIsAutoplay] = useState(false);
   const [speed, setSpeed] = useState(1000);
 
@@ -997,7 +1068,7 @@ export function EventLoopSimulator() {
 }
 
 /* ==========================================================================
- * 13. EXPRESS ROUTE PACKET PIPELINE (topic: node)
+ * 13. EXPRESS ROUTE PACKET PIPELINE (topic: node/express)
  * ========================================================================== */
 export function HttpRouteSimulator() {
   const [activeIdx, setActiveIdx] = useState(-1);
@@ -1033,7 +1104,7 @@ export function HttpRouteSimulator() {
     <div className="sim-container">
       <div className="sim-header">
         <h3 className="sim-title">Express Route Pipeline Simulator</h3>
-        <span className="sim-badge">Node / Express</span>
+        <span className="sim-badge">Express Pipeline</span>
       </div>
       <div className="express-sim">
         <div className="express-sim__pipeline">
@@ -1059,6 +1130,706 @@ export function HttpRouteSimulator() {
             <button onClick={triggerMockRequest} disabled={activeIdx !== -1} className="sim-btn">
               {activeIdx === -1 ? 'Trigger Request' : 'Routing...'}
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 14. WEB BACKEND FUNDAMENTALS (topic: course-overview / How the Web Works)
+ * ========================================================================== */
+export function WebFundamentalsSimulator() {
+  const [phase, setPhase] = useState('DNS'); // DNS, TCP, HTTP, RENDER
+  const [step, setStep] = useState(0);
+  const [log, setLog] = useState('Client (Browser) me "google.com" enter kiya. DNS resolution start.');
+  const [isAutoplay, setIsAutoplay] = useState(false);
+  const [speed, setSpeed] = useState(1200);
+
+  const dnsSteps = [
+    { label: 'Browser Cache', desc: '1. Browser ne local cache memory check kari: "google.com kahan hai?" (Result: Cache Miss)' },
+    { label: 'OS Cache', desc: '2. Browser ne Windows/Mac OS local DNS cache hosts check kiye: (Result: DNS cache miss)' },
+    { label: 'ISP Resolver', desc: '3. Query recursive resolver (Jio/Airtel/BSNL DNS Server) ke paas gayi.' },
+    { label: 'Root Server', desc: '4. ISP Resolver ne Root Name Server (. Librarian) se pucha. Root bola: ".com TLD Server ke paas jao."' },
+    { label: 'TLD Server', desc: '5. Resolver TLD Server (.com) ke paas gaya. TLD bola: "Google Authoritative Server ke paas jao."' },
+    { label: 'Authoritative DNS', desc: '6. Authoritative Server (The Final Boss) ne exact IP address return kiya: 142.250.190.46!' }
+  ];
+
+  const tcpSteps = [
+    { label: 'SYN', desc: '1. Client -> Server: SYN (seq=100) packet bheja. "Hello Server! Kya tum ready ho? Mujhe connection banana hai."' },
+    { label: 'SYN-ACK', desc: '2. Server -> Client: SYN-ACK (seq=300, ack=101) packet. "Haan bhai, main completely ready hu!"' },
+    { label: 'ACK', desc: '3. Client -> Server: ACK (ack=301) packet. "Done! Baat shuru karte hain." Connection ESTABLISHED!' }
+  ];
+
+  const httpSteps = [
+    { label: 'HTTP GET Request', desc: 'HTTP GET Request headers dispatched:\nGET /search?q=javascript HTTP/1.1\nHost: google.com\nUser-Agent: Chrome' },
+    { label: 'HTTP 200 Response', desc: 'Server returns response payload:\nHTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 4500\n\n(HTML content returned)' }
+  ];
+
+  const renderSteps = [
+    { label: 'DOM Parsing', desc: '1. Browser HTML content parse karke DOM (Document Object Model) tree build kar raha hai.' },
+    { label: 'CSSOM Parsing', desc: '2. CSS styles read karke CSSOM rules model map kiye.' },
+    { label: 'Layout Calculation', desc: '3. DOM + CSSOM match karke coordinate geometry calculate kari.' },
+    { label: 'Paint Page', desc: '4. Pixels screen pe draw painting complete! Web page rendered successfully!' }
+  ];
+
+  const handleNext = () => {
+    if (phase === 'DNS') {
+      if (step < dnsSteps.length - 1) {
+        setStep(prev => prev + 1);
+        setLog(dnsSteps[step + 1].desc);
+      } else {
+        setPhase('TCP');
+        setStep(0);
+        setLog(tcpSteps[0].desc);
+      }
+    } else if (phase === 'TCP') {
+      if (step < tcpSteps.length - 1) {
+        setStep(prev => prev + 1);
+        setLog(tcpSteps[step + 1].desc);
+      } else {
+        setPhase('HTTP');
+        setStep(0);
+        setLog(httpSteps[0].desc);
+      }
+    } else if (phase === 'HTTP') {
+      if (step < httpSteps.length - 1) {
+        setStep(prev => prev + 1);
+        setLog(httpSteps[step + 1].desc);
+      } else {
+        setPhase('RENDER');
+        setStep(0);
+        setLog(renderSteps[0].desc);
+      }
+    } else if (phase === 'RENDER') {
+      if (step < renderSteps.length - 1) {
+        setStep(prev => prev + 1);
+        setLog(renderSteps[step + 1].desc);
+      } else {
+        setIsAutoplay(false);
+        setLog('🎉 Web Request complete! Website successfully rendered.');
+      }
+    }
+  };
+
+  const handleReset = () => {
+    setPhase('DNS');
+    setStep(0);
+    setIsAutoplay(false);
+    setLog('Client (Browser) me "google.com" enter kiya. DNS resolution start.');
+  };
+
+  useEffect(() => {
+    if (!isAutoplay) return;
+
+    const timer = setTimeout(() => {
+      const isDnsDone = phase === 'DNS' && step >= dnsSteps.length - 1;
+      const isTcpDone = phase === 'TCP' && step >= tcpSteps.length - 1;
+      const isHttpDone = phase === 'HTTP' && step >= httpSteps.length - 1;
+      const isRenderDone = phase === 'RENDER' && step >= renderSteps.length - 1;
+
+      if (isRenderDone) {
+        setIsAutoplay(false);
+        setLog('🎉 Web Request complete! Website successfully rendered.');
+        return;
+      }
+
+      handleNext();
+    }, speed);
+
+    return () => clearTimeout(timer);
+  }, [isAutoplay, speed, phase, step]);
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">Detailed: How the Web Works</h3>
+        <span className="sim-badge">Web Architecture</span>
+      </div>
+
+      {/* Stepper Tabs */}
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
+        {['DNS', 'TCP', 'HTTP', 'RENDER'].map((p) => (
+          <button
+            key={p}
+            onClick={() => { setPhase(p); setStep(0); setIsAutoplay(false); }}
+            className={`sim-btn ${phase === p ? '' : 'sim-btn--secondary'}`}
+            style={{ flex: 1, fontSize: '11px', padding: '6px 0' }}
+          >
+            {p === 'DNS' && '1. DNS Lookup'}
+            {p === 'TCP' && '2. TCP Handshake'}
+            {p === 'HTTP' && '3. HTTP Req/Res'}
+            {p === 'RENDER' && '4. Rendering'}
+          </button>
+        ))}
+      </div>
+
+      {/* Visual Canvas */}
+      <div className="node-sim__display" style={{ minHeight: '180px', flexDirection: 'column' }}>
+        {phase === 'DNS' && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
+            {dnsSteps.map((node, i) => (
+              <div
+                key={i}
+                className="node-sim__node"
+                style={{
+                  fontSize: '11px',
+                  padding: '6px 12px',
+                  backgroundColor: i === step ? 'var(--accent)' : 'var(--accent-bg)',
+                  color: i === step ? '#fff' : 'var(--text)',
+                  border: '1px solid var(--border)'
+                }}
+              >
+                {node.label}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {phase === 'TCP' && (
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center' }}>
+            <div className="node-sim__node" style={{ backgroundColor: 'var(--accent)', color: '#fff' }}>Client</div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '4px' }}>
+                {step === 0 && 'SYN ➔'}
+                {step === 1 && '◀ SYN-ACK'}
+                {step === 2 && 'ACK ➔'}
+              </span>
+              <div style={{ width: '120px', height: '2px', backgroundColor: 'var(--border)' }} />
+            </div>
+            <div className="node-sim__node" style={{ border: '1px solid var(--border)', backgroundColor: 'var(--bg)', color: 'var(--text-h)' }}>Server</div>
+          </div>
+        )}
+
+        {phase === 'HTTP' && (
+          <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ padding: '8px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '11px', fontFamily: 'var(--mono)', opacity: step === 0 ? 1 : 0.4 }}>
+              <strong>Request Headers</strong><br />
+              GET / HTTP/1.1<br />
+              Host: google.com<br />
+              User-Agent: Chrome
+            </div>
+            <div style={{ padding: '8px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '11px', fontFamily: 'var(--mono)', opacity: step === 1 ? 1 : 0.4 }}>
+              <strong>Response Headers</strong><br />
+              HTTP/1.1 200 OK<br />
+              Content-Type: text/html<br />
+              Content-Length: 4500
+            </div>
+          </div>
+        )}
+
+        {phase === 'RENDER' && (
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {renderSteps.map((node, i) => (
+                <div
+                  key={i}
+                  style={{
+                    fontSize: '11px',
+                    padding: '4px 10px',
+                    borderRadius: '4px',
+                    backgroundColor: i === step ? 'var(--accent)' : 'var(--accent-bg)',
+                    color: i === step ? '#fff' : 'var(--text)',
+                    border: '1px solid var(--border)',
+                    textAlign: 'center'
+                  }}
+                >
+                  {node.label}
+                </div>
+              ))}
+            </div>
+            {step === 3 && (
+              <div
+                style={{
+                  width: '120px',
+                  height: '80px',
+                  border: '1px solid var(--accent)',
+                  borderRadius: '6px',
+                  backgroundColor: 'var(--accent-bg)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  color: 'var(--accent)',
+                  boxShadow: 'var(--shadow)',
+                  animation: 'fadeIn 0.5s ease'
+                }}
+              >
+                Mock Google Page
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Control Console */}
+      <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+        <pre style={{ margin: 0, fontSize: '12px', whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
+          {log}
+        </pre>
+      </div>
+
+      {/* Controls Bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text)' }}>Interval: {speed}ms</span>
+          <input type="range" min="400" max="2500" step="100" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="css-sim__slider" style={{ width: '110px' }} />
+        </div>
+        <div className="buttons" style={{ display: 'flex', gap: '8px' }}>
+          <button onClick={handleReset} className="sim-btn sim-btn--secondary">Reset</button>
+          <button onClick={() => setIsAutoplay(!isAutoplay)} className={`sim-btn ${isAutoplay ? 'sim-btn--secondary' : ''}`}>
+            {isAutoplay ? 'Pause' : 'Auto Play'}
+          </button>
+          <button onClick={handleNext} disabled={isAutoplay} className="sim-btn">Next Step</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 15. NODE REQ MODULE BINDINGS (topic: node-foundations)
+ * ========================================================================== */
+export function NodeFoundationsSimulator() {
+  const [log, setLog] = useState('Select an action to trace CommonJS modules exports.');
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">CommonJS Require Module Linker</h3>
+        <span className="sim-badge">Node Modules</span>
+      </div>
+      <div className="regex-sim">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ padding: '12px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '12px', fontFamily: 'var(--mono)', backgroundColor: 'var(--bg)' }}>
+            <strong>// math.js</strong><br />
+            exports.add = (a, b) =&gt; a + b;<br />
+            exports.multiply = (a, b) =&gt; a * b;
+          </div>
+          <div style={{ padding: '12px', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '12px', fontFamily: 'var(--mono)', backgroundColor: 'var(--bg)' }}>
+            <strong>// app.js</strong><br />
+            const math = require('./math.js');<br />
+            console.log(math.add(5, 10));
+          </div>
+        </div>
+        <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+          <div className="note-block__console-title">Console Trace Logs</div>
+          <div>{log}</div>
+        </div>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+          <button onClick={() => setLog('Loaded require("./math.js"): Object properties mapping exports successfully.')} className="sim-btn sim-btn--secondary">Require modules</button>
+          <button onClick={() => setLog('math.add(5, 10) output: 15')} className="sim-btn">Execute add()</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 16. NODE INTERNALS EVENT LOOP & THREAD POOL (topic: node-internals)
+ * ========================================================================== */
+export function NodeInternalsSimulator() {
+  const [activeThread, setActiveThread] = useState(-1);
+  const [log, setLog] = useState('Dispatch tasks to trace Thread Pool workers offloading.');
+
+  const runPoolTask = async (taskType) => {
+    if (taskType === 'sync') {
+      setLog('Main Thread: Executing console.log("Direct add"). Instantly pops off call stack.');
+      return;
+    }
+
+    if (taskType === 'os') {
+      setLog('Event Loop: HTTP task offloaded directly to OS Kernel network threads. Freeing Call Stack.');
+      await new Promise(r => setTimeout(r, 1200));
+      setLog('OS Kernel: Packet returned. Event loop triggers HTTP callback.');
+      return;
+    }
+
+    const threadIdx = Math.floor(Math.random() * 4);
+    setActiveThread(threadIdx);
+    setLog(`Event Loop: Offloaded heavy ${taskType} task to worker Thread #${threadIdx + 1}`);
+    
+    await new Promise(r => setTimeout(r, 1500));
+    
+    setActiveThread(-1);
+    setLog(`Thread #${threadIdx + 1}: Task finished! Pushes callback back to Callback queue.`);
+  };
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">Libuv Thread Pool & Event Loop</h3>
+        <span className="sim-badge">Node Internals</span>
+      </div>
+      <div className="regex-sim">
+        <div className="loop-sim">
+          <div className="loop-sim__lane" style={{ minHeight: '120px' }}>
+            <span className="loop-sim__lane-title">Main Call Stack</span>
+            <div className="loop-sim__item" style={{ backgroundColor: 'var(--accent)', color: '#fff' }}>Single Thread</div>
+          </div>
+          <div className="loop-sim__lane" style={{ minHeight: '120px' }}>
+            <span className="loop-sim__lane-title">Libuv Event Loop</span>
+            <div className="loop-sim__item" style={{ borderColor: 'var(--accent)' }}>Callback Check Loop</div>
+          </div>
+        </div>
+
+        <div>
+          <span className="loop-sim__lane-title" style={{ fontSize: '11px' }}>Worker Thread Pool (Default size = 4)</span>
+          <div className="threads-grid">
+            {[1, 2, 3, 4].map((t, idx) => (
+              <div key={idx} className={`thread-card ${activeThread === idx ? 'thread-card--active' : ''}`}>
+                Thread #{t} {activeThread === idx ? '[Active Worker]' : '[Idle]'}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+          <div className="note-block__console-title">Execution Engine Output</div>
+          <div>{log}</div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <button onClick={() => runPoolTask('sync')} className="sim-btn sim-btn--secondary">console.log() (Sync)</button>
+          <button onClick={() => runPoolTask('os')} className="sim-btn sim-btn--secondary">HTTPS request (OS kernel)</button>
+          <button onClick={() => runPoolTask('Crypto PBKDF2')} className="sim-btn">Crypto hash (Thread pool)</button>
+          <button onClick={() => runPoolTask('File System I/O')} className="sim-btn">FS readFile (Thread pool)</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 17. MONGOOSE SCHEMA VALIDATOR SIMULATOR (topic: no-sql)
+ * ========================================================================== */
+export function MongooseMongoSimulator() {
+  const [tourName, setTourName] = useState('');
+  const [tourPrice, setTourPrice] = useState('');
+  const [collections, setCollections] = useState([
+    { _id: '507f1f77bcf86cd799439011', name: 'The Forest Hiker', price: 497 },
+    { _id: '507f1f77bcf86cd799439012', name: 'The Sea Explorer', price: 897 }
+  ]);
+  const [log, setLog] = useState('Enter values and click Insert to validate Mongoose models.');
+
+  const handleInsert = () => {
+    if (!tourName) {
+      setLog('❌ Mongoose Validation Error: Tour Name is a required field!');
+      return;
+    }
+    if (!tourPrice || isNaN(tourPrice) || Number(tourPrice) <= 0) {
+      setLog('❌ Mongoose Validation Error: Tour Price must be a positive number!');
+      return;
+    }
+
+    const docId = Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
+    const newDoc = { _id: docId, name: tourName, price: Number(tourPrice) };
+
+    setCollections([...collections, newDoc]);
+    setTourName('');
+    setTourPrice('');
+    setLog(`✅ Tour document successfully validated and written to MongoDB Collection as BSON!`);
+  };
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">Mongoose Validation Schema Sandbox</h3>
+        <span className="sim-badge">MongoDB Collections</span>
+      </div>
+      <div className="css-sim">
+        <div className="css-sim__controls">
+          <div className="regex-sim__field">
+            <label className="css-sim__slider-label">Tour Name</label>
+            <input type="text" value={tourName} onChange={(e) => setTourName(e.target.value)} className="regex-sim__input" placeholder="e.g. Forest Hiker" />
+          </div>
+          <div className="regex-sim__field">
+            <label className="css-sim__slider-label">Price ($)</label>
+            <input type="text" value={tourPrice} onChange={(e) => setTourPrice(e.target.value)} className="regex-sim__input" placeholder="e.g. 497" />
+          </div>
+          <button onClick={handleInsert} className="sim-btn" style={{ marginTop: '12px' }}>Insert Document</button>
+        </div>
+        <div className="regex-sim">
+          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+            <div>{log}</div>
+          </div>
+          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', flexGrow: 1, minHeight: '120px' }}>
+            <div className="note-block__console-title">MongoDB: db.tours.find()</div>
+            <pre style={{ fontSize: '11px', fontFamily: 'var(--mono)', margin: 0 }}>
+              {JSON.stringify(collections, null, 2)}
+            </pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 18. GIT PRODUCTION DEPLOYMENT PIPELINE (topic: deployment)
+ * ========================================================================== */
+export function DeploymentSimulator() {
+  const [activeStep, setActiveStep] = useState(-1);
+  const [log, setLog] = useState('Click Deploy App to start Production Build.');
+
+  const runBuild = async () => {
+    const steps = [
+      'Git Push triggered: uploading assets to Git remote branches.',
+      'CI/CD checks: running lint constraints and NPM package installations.',
+      'Vite bundle compiler: minifying CSS variables and splitting JS chunks.',
+      'Environment bindings loaded: reading secret port keys.',
+      'Deployment complete: notes playground live on Netlify servers!'
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      setActiveStep(i);
+      setLog(steps[i]);
+      await new Promise(r => setTimeout(r, 1200));
+    }
+    setActiveStep(-1);
+  };
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">Git Production CI/CD Pipeline</h3>
+        <span className="sim-badge">Deployment</span>
+      </div>
+      <div className="express-sim">
+        <div className="express-sim__pipeline">
+          {['Git Hook', 'Lint Checks', 'Webpack Bundling', 'Live server'].map((node, idx) => (
+            <div key={idx} className={`express-sim__node ${activeStep === idx ? 'express-sim__node--active' : ''}`}>{node}</div>
+          ))}
+        </div>
+        <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+          <div className="note-block__console-title">Build Server CLI Output</div>
+          <div>{log}</div>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={runBuild} disabled={activeStep !== -1} className="sim-btn">
+            {activeStep === -1 ? 'Deploy App' : 'Building...'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 19. PROBLEM SOLVING PATTERNS (topic: patterns)
+ * ========================================================================== */
+export function PatternsSimulator() {
+  const [array] = useState([2, 5, 8, 1, 9, 3, 7]);
+  const [mode, setMode] = useState('window'); // window, pointers
+  const [left, setLeft] = useState(0);
+  const [right, setRight] = useState(6);
+  const [winStart, setWinStart] = useState(0);
+
+  const stepPatterns = () => {
+    if (mode === 'pointers') {
+      if (left < right) {
+        setLeft(prev => prev + 1);
+        setRight(prev => prev - 1);
+      } else {
+        setLeft(0);
+        setRight(6);
+      }
+    } else {
+      if (winStart < 4) {
+        setWinStart(prev => prev + 1);
+      } else {
+        setWinStart(0);
+      }
+    }
+  };
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">Algorithm Patterns Simulator</h3>
+        <span className="sim-badge">DSA Patterns</span>
+      </div>
+      <div className="node-sim">
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button onClick={() => setMode('window')} className={`sim-btn ${mode === 'window' ? '' : 'sim-btn--secondary'}`} style={{ flex: 1 }}>Sliding Window</button>
+          <button onClick={() => setMode('pointers')} className={`sim-btn ${mode === 'pointers' ? '' : 'sim-btn--secondary'}`} style={{ flex: 1 }}>Two Pointers</button>
+        </div>
+        <div className="node-sim__display">
+          <div className="node-sim__list">
+            {array.map((val, idx) => {
+              let isHighlighted = false;
+              let pointerLabel = '';
+              
+              if (mode === 'pointers') {
+                if (idx === left) { isHighlighted = true; pointerLabel = 'L'; }
+                if (idx === right) { isHighlighted = true; pointerLabel = 'R'; }
+              } else {
+                if (idx >= winStart && idx < winStart + 3) { isHighlighted = true; }
+              }
+
+              return (
+                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div className="node-sim__node" style={{ backgroundColor: isHighlighted ? 'var(--accent)' : 'var(--accent-bg)', color: isHighlighted ? '#fff' : 'var(--text)', border: '1px solid var(--border)' }}>
+                    {val}
+                  </div>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', height: '15px' }}>{pointerLabel}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="array-sim__controls">
+          <span style={{ fontSize: '13px', color: 'var(--text)' }}>
+            {mode === 'pointers' ? `Pointers at index L:${left} and R:${right}` : `Window bounding indices ${winStart} to ${winStart + 2}`}
+          </span>
+          <button onClick={stepPatterns} className="sim-btn">Step Progress</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 20. BINARY HEAP VISUALIZER (topic: heaps)
+ * ========================================================================== */
+export function HeapSimulator() {
+  const [heap] = useState([95, 75, 80, 55, 60, 45, 50]);
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">Max-Binary Heap Array Tree</h3>
+        <span className="sim-badge">Binary Heap</span>
+      </div>
+      <div className="node-sim">
+        <div className="node-sim__display" style={{ minHeight: '220px' }}>
+          <div className="node-sim__list">
+            {heap.map((val, idx) => (
+              <div key={idx} className="node-sim__node" style={{ borderRadius: '50%', width: '42px', height: '42px', justifyContent: 'center' }}>
+                {val}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', width: '100%' }}>
+          <div className="note-block__console-title">Parent/Child Index Math Relations</div>
+          <div style={{ fontSize: '12px', fontFamily: 'var(--mono)' }}>
+            Left child = 2 * index + 1 | Right child = 2 * index + 2 | Parent = Math.floor((index - 1) / 2)
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 21. HASH TABLE COLLISIONS (topic: hash-tables)
+ * ========================================================================== */
+export function HashTableSimulator() {
+  const [buckets, setBuckets] = useState(Array(8).fill(null).map(() => []));
+  const [keyInput, setKeyInput] = useState('');
+  const [valInput, setValInput] = useState('');
+  const [status, setStatus] = useState('Type a key and value to hash insert.');
+
+  const handleHashInsert = () => {
+    if (!keyInput || !valInput) return;
+    // Simple hash sum
+    let hash = 0;
+    for (let i = 0; i < keyInput.length; i++) hash += keyInput.charCodeAt(i);
+    const bucketIdx = hash % 8;
+
+    const copy = [...buckets];
+    copy[bucketIdx] = [...copy[bucketIdx], { key: keyInput, val: valInput }];
+    
+    setBuckets(copy);
+    setKeyInput('');
+    setValInput('');
+    setStatus(`Hashed key "${keyInput}" to bucket index: ${bucketIdx} (hash sum: ${hash})`);
+  };
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">Hash Table separate Chaining</h3>
+        <span className="sim-badge">Hash Tables</span>
+      </div>
+      <div className="css-sim">
+        <div className="css-sim__controls">
+          <div className="regex-sim__field">
+            <label className="css-sim__slider-label">Key</label>
+            <input type="text" value={keyInput} onChange={(e) => setKeyInput(e.target.value)} className="regex-sim__input" placeholder="e.g. name" />
+          </div>
+          <div className="regex-sim__field">
+            <label className="css-sim__slider-label">Value</label>
+            <input type="text" value={valInput} onChange={(e) => setValInput(e.target.value)} className="regex-sim__input" placeholder="e.g. jonas" />
+          </div>
+          <button onClick={handleHashInsert} className="sim-btn" style={{ marginTop: '8px' }}>Hash Insert</button>
+        </div>
+        <div className="regex-sim">
+          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+            <div>{status}</div>
+          </div>
+          <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', maxHeight: '180px', overflowY: 'auto' }}>
+            {buckets.map((b, idx) => (
+              <div key={idx} style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', padding: '6px 0', fontSize: '12px' }}>
+                <strong style={{ width: '80px' }}>Bucket #{idx}:</strong>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {b.map((item, i) => (
+                    <span key={i} style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontFamily: 'var(--mono)', fontSize: '11px' }}>
+                      {item.key}: {item.val}
+                    </span>
+                  ))}
+                  {b.length === 0 && <span style={{ opacity: 0.5 }}>empty</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+ * 22. ADVANCED DSA INTERACTIVE FLASHCARDS (topic: advanced / cheatsheets)
+ * ========================================================================== */
+export function CheatSheetSimulator() {
+  const [selectedCard, setSelectedCard] = useState(0);
+
+  const cards = [
+    { title: 'Graph Dijkstra Complexity', term: 'O((V + E) log V)', desc: 'Finds the shortest path on a weighted graph using a Priority Queue / Heap.' },
+    { title: 'Binary Search Bounds', term: 'O(log N)', desc: 'Halves search intervals at every step. Requires pre-sorted arrays.' },
+    { title: 'Dynamic Programming Memo', term: 'O(N) Time, O(N) Space', desc: 'Saves sub-problems in a cache array to skip overlapping recursion branches.' },
+    { title: 'Tree traversals', term: 'Inorder = Left, Root, Right', desc: 'Traverses complete BST node chains in sorted ascending numerical order.' }
+  ];
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">DSA Flashcard Interview Prep</h3>
+        <span className="sim-badge">Cheat Sheets</span>
+      </div>
+      <div className="regex-sim">
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {cards.map((c, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedCard(idx)}
+              className={`sim-btn ${selectedCard === idx ? '' : 'sim-btn--secondary'}`}
+              style={{ fontSize: '11px', padding: '6px 12px' }}
+            >
+              {c.title}
+            </button>
+          ))}
+        </div>
+        <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)', minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+          <div style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '8px' }}>
+            {cards[selectedCard].term}
+          </div>
+          <div style={{ fontSize: '13px', opacity: 0.8 }}>
+            {cards[selectedCard].desc}
           </div>
         </div>
       </div>
