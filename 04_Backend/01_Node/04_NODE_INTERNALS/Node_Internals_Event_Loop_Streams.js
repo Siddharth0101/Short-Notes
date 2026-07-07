@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * NODE INTERNALS - EVENT LOOP, STREAMS, MODULES
+ * NODE INTERNALS - EVENT LOOP, STREAMS, MODULES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Ye section interview aur real performance dono ke liye important hai.

@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * PROBLEM SOLVING APPROACH - HOW TO THINK IN DSA
+ * PROBLEM SOLVING APPROACH - HOW TO THINK IN DSA [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - DSA me sabse pehle coding nahi, thinking hoti hai.

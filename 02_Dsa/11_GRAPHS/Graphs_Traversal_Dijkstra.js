@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * GRAPHS, TRAVERSALS, AND SHORTEST PATH
+ * GRAPHS, TRAVERSALS, AND SHORTEST PATH [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Graph nodes/vertices aur connections/edges ka collection hai.

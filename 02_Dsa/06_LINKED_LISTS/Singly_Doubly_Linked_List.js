@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * LINKED LISTS - SINGLY AND DOUBLY
+ * LINKED LISTS - SINGLY AND DOUBLY [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Linked list nodes ka chain hota hai.

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * 1. CONSTRUCTOR FUNCTION (The Blueprint)
+ * 1. CONSTRUCTOR FUNCTION (The Blueprint) [⚡ VISUAL]
  * Ye ek blueprint hai jo unique objects banata hai.
  * Kaam: Har instance ke liye data (properties) alag-alag store karna.
  */

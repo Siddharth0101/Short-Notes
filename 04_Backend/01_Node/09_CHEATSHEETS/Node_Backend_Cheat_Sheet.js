@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * NODE BACKEND CHEAT SHEET - JONAS COURSE REVISION
+ * NODE BACKEND CHEAT SHEET - JONAS COURSE REVISION [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Fast revision file.

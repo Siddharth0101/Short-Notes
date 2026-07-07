@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * SORTING ALGORITHMS
+ * SORTING ALGORITHMS [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Sorting = data ko order me arrange karna.

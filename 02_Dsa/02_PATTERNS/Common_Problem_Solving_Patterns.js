@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * COMMON PROBLEM SOLVING PATTERNS
+ * COMMON PROBLEM SOLVING PATTERNS [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Patterns templates jaise hote hain.

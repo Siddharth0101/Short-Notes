@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * EXPRESS ERROR HANDLING - SHORT NOTES
+ * EXPRESS ERROR HANDLING - SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Error handling scattered nahi hona chahiye.

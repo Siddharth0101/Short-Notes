@@ -1,6 +1,6 @@
 /**
  * ========================================================================
- * REGULAR EXPRESSIONS (RegEx) IN JAVASCRIPT - COMPLETE GUIDE
+ * REGULAR EXPRESSIONS (RegEx) IN JAVASCRIPT - COMPLETE GUIDE [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Regular Expression (ya short me "RegEx") ek text pattern hota hai jo hum use

@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * AUTHENTICATION, AUTHORIZATION, SECURITY - SHORT NOTES
+ * AUTHENTICATION, AUTHORIZATION, SECURITY - SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Authentication: user kaun hai?

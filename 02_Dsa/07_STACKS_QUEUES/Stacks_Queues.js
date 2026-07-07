@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * STACKS AND QUEUES
+ * STACKS AND QUEUES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Stack and queue abstract data types hain.

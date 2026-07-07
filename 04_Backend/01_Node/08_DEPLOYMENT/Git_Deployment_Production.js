@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * GIT, DEPLOYMENT, PRODUCTION - SHORT NOTES
+ * GIT, DEPLOYMENT, PRODUCTION - SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Production app means code + config + database + secrets + process handling.

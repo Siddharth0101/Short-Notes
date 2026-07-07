@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * JONAS NODE.JS COURSE MAP - SHORT NOTES
+ * JONAS NODE.JS COURSE MAP - SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Course ka main project "Natours" hai.

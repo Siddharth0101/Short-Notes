@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * NODE.JS, NPM, CORE MODULES - COMPLETE SHORT NOTES
+ * NODE.JS, NPM, CORE MODULES - COMPLETE SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Node.js browser ke bahar JavaScript run karne ka runtime hai.

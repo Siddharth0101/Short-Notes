@@ -516,7 +516,20 @@ export default function NoteSandbox({ title, fetchFile }) {
         <div className="note-sandbox__blocks">
           {blocks.map((block, idx) => (
             <div key={idx} className="note-block">
-              {block.text && <div className="note-block__text">{block.text}</div>}
+              {block.text && (
+                <div className="note-block__text" style={{ position: 'relative' }}>
+                  {block.text.includes('[⚡ VISUAL]') ? (
+                    <>
+                      <span className="visual-highlight-chip">
+                        ⚡ VISUAL
+                      </span>
+                      {block.text.replace(' [⚡ VISUAL]', '').replace('[⚡ VISUAL]', '')}
+                    </>
+                  ) : (
+                    block.text
+                  )}
+                </div>
+              )}
               {block.code && <CodePlayground initialCode={block.code} />}
             </div>
           ))}

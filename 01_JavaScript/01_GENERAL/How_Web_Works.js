@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * HOW THE WEB WORKS — COMPLETE GUIDE (Frontend + Backend Perspective)
+ * HOW THE WEB WORKS — COMPLETE GUIDE (Frontend + Backend Perspective) [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Web basically ek communication system hai jo 2 computers ke beech kaam karta hai:

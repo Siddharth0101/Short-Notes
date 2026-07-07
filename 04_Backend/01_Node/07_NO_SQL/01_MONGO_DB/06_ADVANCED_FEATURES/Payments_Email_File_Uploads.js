@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * PAYMENTS, EMAIL, FILE UPLOADS - SHORT NOTES
+ * PAYMENTS, EMAIL, FILE UPLOADS - SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Ye section production app features add karta hai.

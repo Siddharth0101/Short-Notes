@@ -2157,7 +2157,7 @@ export function MongooseMongoSimulator() {
 
       {/* Tabs Selector */}
       <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
-        {['validation', 'gridfs', 'sql', 'compass'].map((tab) => (
+        {['validation', 'gridfs', 'sql', 'compass', 'mvc'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -2168,6 +2168,7 @@ export function MongooseMongoSimulator() {
             {tab === 'gridfs' && 'GridFS Chunks'}
             {tab === 'sql' && 'SQL vs NoSQL'}
             {tab === 'compass' && 'Compass Shell'}
+            {tab === 'mvc' && 'MVC Arch'}
           </button>
         ))}
       </div>
@@ -2331,6 +2332,80 @@ export function MongooseMongoSimulator() {
               <pre style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--mono)', whiteSpace: 'pre-wrap' }}>
                 {JSON.stringify(compassOutput, null, 2)}
               </pre>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: MVC Architecture */}
+        {activeTab === 'mvc' && (
+          <div style={{ width: '100%', overflowX: 'auto', backgroundColor: '#f3f4f6', borderRadius: '8px', padding: '24px' }}>
+            <div style={{ position: 'relative', width: '800px', height: '480px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '12px', overflow: 'hidden', border: '1px solid #d1d5db', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+              
+              {/* Top Gradient matching screenshot */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '140px', background: 'linear-gradient(to bottom, #5cb85c 0%, #ffffff 100%)', opacity: 0.8 }} />
+              
+              <div style={{ position: 'absolute', top: '24px', left: '32px', fontWeight: '800', fontSize: '22px', color: '#ffffff', letterSpacing: '1px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                MVC ARCHITECTURE IN OUR EXPRESS APP
+              </div>
+
+              {/* SVG Connections */}
+              <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+                <defs>
+                  <marker id="arr-thick" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                    <polygon points="0 0, 7 2.5, 0 5" fill="#4b5563" />
+                  </marker>
+                </defs>
+                {/* Request to Router */}
+                <line x1="130" y1="240" x2="185" y2="240" stroke="#4b5563" strokeWidth="3" markerEnd="url(#arr-thick)" />
+                {/* Router to Controller */}
+                <line x1="285" y1="240" x2="345" y2="240" stroke="#4b5563" strokeWidth="3" markerEnd="url(#arr-thick)" />
+                {/* Controller to Model */}
+                <line x1="480" y1="214" x2="590" y2="166" stroke="#4b5563" strokeWidth="3" markerEnd="url(#arr-thick)" />
+                {/* Controller to View */}
+                <line x1="480" y1="270" x2="590" y2="328" stroke="#4b5563" strokeWidth="3" markerEnd="url(#arr-thick)" />
+              </svg>
+
+              {/* REQUEST */}
+              <div style={{ position: 'absolute', left: '30px', top: '220px', width: '100px', height: '40px', background: 'linear-gradient(135deg, #74d372, #5cb85b)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', borderRadius: '4px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+                REQUEST
+              </div>
+
+              {/* ROUTER */}
+              <div style={{ position: 'absolute', left: '195px', top: '195px', width: '90px', height: '90px', background: 'linear-gradient(135deg, #74d372, #5cb85b)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', borderRadius: '50%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+                ROUTER
+              </div>
+
+              <div style={{ position: 'absolute', left: '185px', top: '295px', width: '110px', backgroundColor: '#e5e7eb', padding: '12px', borderRadius: '4px', fontSize: '11px', fontFamily: 'monospace', color: '#374151', lineHeight: '1.6' }}>
+                tourRouter.js<br/>userRouter.js<br/>...
+              </div>
+
+              {/* CONTROLLER */}
+              <div style={{ position: 'absolute', left: '420px', top: '150px', transform: 'translateX(-50%)', fontWeight: '800', color: '#4b5563', fontSize: '14px' }}>
+                APPLICATION LOGIC
+              </div>
+              <div style={{ position: 'absolute', left: '355px', top: '175px', width: '130px', height: '130px', background: 'linear-gradient(135deg, #69d96e, #50bf55)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', borderRadius: '50%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+                CONTROLLER
+              </div>
+
+              <div style={{ position: 'absolute', left: '355px', top: '320px', width: '130px', backgroundColor: '#e5e7eb', padding: '12px', borderRadius: '4px', fontSize: '11px', fontFamily: 'monospace', color: '#374151', lineHeight: '1.6' }}>
+                tourController.js<br/>userController.js<br/>...
+              </div>
+
+              {/* MODEL */}
+              <div style={{ position: 'absolute', left: '650px', top: '55px', transform: 'translateX(-50%)', fontWeight: '800', color: '#4b5563', fontSize: '14px' }}>
+                BUSINESS LOGIC
+              </div>
+              <div style={{ position: 'absolute', left: '595px', top: '85px', width: '110px', height: '110px', background: 'linear-gradient(135deg, #4bc684, #34a86a)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', borderRadius: '50%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+                MODEL
+              </div>
+
+              {/* VIEW */}
+              <div style={{ position: 'absolute', left: '595px', top: '305px', width: '110px', height: '110px', background: 'linear-gradient(135deg, #99e847, #82c938)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', borderRadius: '50%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+                VIEW
+              </div>
+              <div style={{ position: 'absolute', left: '650px', top: '430px', transform: 'translateX(-50%)', fontWeight: '800', color: '#4b5563', fontSize: '14px' }}>
+                PRESENTATION LOGIC
+              </div>
             </div>
           </div>
         )}

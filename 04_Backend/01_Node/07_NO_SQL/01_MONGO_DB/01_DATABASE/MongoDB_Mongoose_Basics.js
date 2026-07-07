@@ -172,12 +172,54 @@ console.log(tourDocument.name);
 
 /**
  * ========================================================================
- * 9. MVC WITH MONGOOSE
+ * 9. MVC WITH MONGOOSE [⚡ VISUAL]
  * ========================================================================
  * NOTES:
- * - Model DB data handle kare.
- * - Controller model call kare and response send kare.
- * - Router URL map kare.
+ * - Application Architecture Express app mein: Request -> Router -> Controller -> Model/View
+ * - ROUTER (Application Logic): Client se request receive karta hai aur specific route ke liye controller mapping karta hai. (e.g. tourRouter.js, userRouter.js)
+ * - CONTROLLER (Application Logic): Application ka brain. Request receive karke business logic (Model) call karta hai aur presentation logic (View) ko data send karta hai. (e.g. tourController.js)
+ * - MODEL (Business Logic): Database related saari logic, mongoose schemas, aur business rules yahan hoti hain. Controller model ke through database se data leta hai.
+ * - VIEW (Presentation Logic): User ko data dikhane ki logic (React, Pug templates, JSON response etc).
+ *
+ * ```mermaid
+ * flowchart LR
+ *     Request[REQUEST]
+ *     Router((ROUTER))
+ *     Controller((CONTROLLER))
+ *     Model((MODEL))
+ *     View((VIEW))
+ *     
+ *     Request --> Router
+ *     Router --> Controller
+ *     
+ *     RouterFiles["tourRouter.js<br>userRouter.js<br>..."]
+ *     ControllerFiles["tourController.js<br>userController.js<br>..."]
+ *     
+ *     Router -.- RouterFiles
+ *     Controller -.- ControllerFiles
+ *     
+ *     Controller -.-> Model
+ *     Controller -.-> View
+ *     
+ *     subgraph "APPLICATION LOGIC"
+ *     Router
+ *     Controller
+ *     end
+ *     
+ *     subgraph "BUSINESS LOGIC"
+ *     Model
+ *     end
+ *     
+ *     subgraph "PRESENTATION LOGIC"
+ *     View
+ *     end
+ *     
+ *     style Request fill:#63d070,stroke:#none,color:#fff,font-weight:bold
+ *     style Router fill:#62d270,stroke:#none,color:#fff,font-weight:bold
+ *     style Controller fill:#5ad26a,stroke:#none,color:#fff,font-weight:bold
+ *     style Model fill:#3baf74,stroke:#none,color:#fff,font-weight:bold
+ *     style View fill:#7dd23b,stroke:#none,color:#fff,font-weight:bold
+ * ```
  */
 
 

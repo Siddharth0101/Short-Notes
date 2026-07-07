@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * DSA INTERVIEW CHEAT SHEET
+ * DSA INTERVIEW CHEAT SHEET [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Ye quick revision file hai.

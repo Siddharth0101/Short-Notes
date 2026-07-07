@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * EVENT LOOP IN JAVASCRIPT — COMPLETE GUIDE
+ * EVENT LOOP IN JAVASCRIPT — COMPLETE GUIDE [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - JavaScript ek "SINGLE-THREADED" language hai — matlab ek waqt me sirf EK 

@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * TREES, BINARY SEARCH TREES, TRAVERSALS, TRIES
+ * TREES, BINARY SEARCH TREES, TRAVERSALS, TRIES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Tree hierarchical data structure hai.

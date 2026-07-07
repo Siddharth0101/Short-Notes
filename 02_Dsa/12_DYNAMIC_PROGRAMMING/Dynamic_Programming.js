@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * DYNAMIC PROGRAMMING
+ * DYNAMIC PROGRAMMING [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Dynamic Programming = complex problem ko smaller overlapping subproblems me todna.

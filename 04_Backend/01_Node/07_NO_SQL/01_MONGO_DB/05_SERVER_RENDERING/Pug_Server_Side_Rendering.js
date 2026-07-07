@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * SERVER-SIDE RENDERING WITH PUG - SHORT NOTES
+ * SERVER-SIDE RENDERING WITH PUG - SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - SSR me server HTML generate karke browser ko bhejta hai.

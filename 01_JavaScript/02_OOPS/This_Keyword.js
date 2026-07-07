@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * 1. WHAT IS THE 'this' KEYWORD? (Who is executing the code?)
+ * 1. WHAT IS THE 'this' KEYWORD? (Who is executing the code?) [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - 'this' ek special variable hai jo har JS execution context me (har naye 

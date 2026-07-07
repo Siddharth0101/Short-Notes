@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * SEARCHING ALGORITHMS
+ * SEARCHING ALGORITHMS [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Searching ka matlab data structure me target value dhoondhna.

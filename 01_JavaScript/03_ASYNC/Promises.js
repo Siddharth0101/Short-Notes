@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * PROMISES IN JAVASCRIPT — COMPLETE GUIDE
+ * PROMISES IN JAVASCRIPT — COMPLETE GUIDE [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Promise ek OBJECT hai jo kisi FUTURE VALUE ko represent karta hai.

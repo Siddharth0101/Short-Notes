@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * BINARY HEAPS AND PRIORITY QUEUE
+ * BINARY HEAPS AND PRIORITY QUEUE [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Heap ek tree-like structure hai jo usually array me store hota hai.

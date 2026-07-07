@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * 1. CONSTRUCTOR FUNCTIONS (The "Under the Hood" Way)
+ * 1. CONSTRUCTOR FUNCTIONS (The "Under the Hood" Way) [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Ye ek normal function hota hai jo 'new' keyword ke saath use hota hai.

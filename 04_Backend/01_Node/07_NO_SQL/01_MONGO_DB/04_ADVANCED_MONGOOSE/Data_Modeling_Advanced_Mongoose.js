@@ -2,7 +2,7 @@
 
 /**
  * ========================================================================
- * DATA MODELING AND ADVANCED MONGOOSE - SHORT NOTES
+ * DATA MODELING AND ADVANCED MONGOOSE - SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - NoSQL me data model app queries ke according design hota hai.
