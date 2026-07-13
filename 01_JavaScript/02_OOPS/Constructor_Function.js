@@ -78,3 +78,28 @@ QUICK SUMMARY TABLE
 | __proto__        | Object ka actual physical link to prototype.      |
 ========================================================================
 */
+
+/**
+ * 7. OBJECT.DEFINEPROPERTY (Property Descriptors)
+ * Object.defineProperty() se hum kisi object par directly property define ya modify kar sakte hain.
+ * Ye properties ki characteristics (like readability, mutability, loop visibility) control karne me help karta hai.
+ *
+ * Syntax:
+ * Object.defineProperty(obj, prop, descriptor)
+ *
+ * Descriptor Properties:
+ * - value: Property ki data value (any type).
+ * - writable: true/false (kya hum key ki value modify kar sakte hain?). Default: false.
+ * - enumerable: true/false (kya ye key loops like 'for...in' ya 'Object.keys()' me dikhegi?). Default: false.
+ * - configurable: true/false (kya property ko delete ya modify kiya ja sakta hai?). Default: false.
+ *
+ * USE CASE (EXPRESS 5 GOTCHA):
+ * Express 5 me `req.query` read-only getter hota hai.
+ * Isliye `req.query.limit = '5'` run nahi karta (silently ignore hota hai).
+ * `Object.defineProperty` ko use karke hum application router custom middleware me property value inject kar sakte hain:
+ * 
+ * Object.defineProperty(req, 'query', {
+ *   value: { ...req.query, limit: '5' },
+ *   writable: true
+ * });
+ */

@@ -414,3 +414,33 @@ console.log(typeof APIFeaturesExample);
 //         message: 'Discount price should be below regular price'
 //     }
 // }
+
+
+/**
+ * ========================================================================
+ * 22. ALIASING ROUTES (MIDDLEWARE CONCEPT)
+ * ========================================================================
+ * NOTES:
+ * - Aliasing: Popular, frequent queries ke liye custom URL shortcuts banana (e.g. /top-5-cheap).
+ * - Direct query params type karne ke bajaye user short, readable static URL request karta hai.
+ * - Middleware function request ke `req.query` object ko automatically populate kar deta hai,
+ *   phir call pass control karne ke liye `next()` call karta hai.
+ *
+ * EXPRESS 5 GOTCHA:
+ * - Express 5 me `req.query` read-only getter hota hai.
+ * - `req.query.limit = '5'` directly assign karne par changes silently ignore ho jate hain.
+ * - Isko modify karne ke liye `Object.defineProperty` se overwrite kiya jata hai with `writable: true`.
+ *
+ * EXAMPLE:
+ * exports.aliasTopTour = (req, res, next) => {
+ *   Object.defineProperty(req, 'query', {
+ *     value: {
+ *       ...req.query,
+ *       limit: '5',
+ *       sort: 'price,-rating'
+ *     },
+ *     writable: true
+ *   });
+ *   next();
+ * };
+ */
