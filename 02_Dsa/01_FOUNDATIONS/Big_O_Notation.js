@@ -2,18 +2,24 @@
 
 /**
  * ========================================================================
- * BIG O NOTATION - COMPLETE SHORT NOTES
+ * BIG O NOTATION - COMPLETE SHORT NOTES [⚡ VISUAL]
  * ========================================================================
  * NOTES:
  * - Big O ka kaam hai code ki performance ko input size ke hisaab se describe karna.
  * - Input size ko usually "n" bolte hain.
- * - Hum exact seconds nahi count karte, hum growth rate count karte hain.
- * - Example: n badhne par operations kitni speed se badh rahe hain?
  *
- * WHY IMPORTANT?
- * - Same problem ke multiple solutions ho sakte hain.
- * - Big O batata hai kaunsa solution large input par better chalega.
- * - Interviews me "works" se zyada important hota hai "scales well".
+ * BIG O COMPLEXITY CHART:
+ * ┌─────────────────────────────────────────────────────────────┐
+ * │ Operations                                                  │
+ * │     ▲                                                       │
+ * │     │  O(n^2) Quadratic [Horrible]                         │
+ * │     │     │   O(n log n) Linearithmic [Bad]                 │
+ * │     │     │      │   O(n) Linear [Fair]                     │
+ * │     │     │      │      │   O(log n) Logarithmic [Good]     │
+ * │     │     │      │      │      │   O(1) Constant [Excellent]│
+ * │  ───┴─────┴──────┴──────┴──────┴──────┴───────────────────► │
+ * │                                                  Input (n)  │
+ * └─────────────────────────────────────────────────────────────┘
  */
 
 
@@ -71,13 +77,18 @@ printAllPairs([1, 2]);
  * ========================================================================
  * 2. COMMON BIG O ORDER
  * ========================================================================
- * FASTEST TO SLOWEST:
- *
- * O(1)        Constant        - direct access, fixed work
- * O(log n)    Logarithmic     - binary search
- * O(n)        Linear          - single loop
- * O(n log n)  Linearithmic    - good sorting algorithms
- * O(n^2)      Quadratic       - nested loops
+ * FASTEST TO SLOWEST COMPARISON TABLE:
+ * ┌───────────┬───────────────┬──────────────────────┬──────────────────┐
+ * │ Notation  │ Name          │ Growth Rate          │ Example          │
+ * ├───────────┼───────────────┼──────────────────────┼──────────────────┤
+ * │ O(1)      │ Constant      │ Fixed operations     │ Array lookup     │
+ * │ O(log n)  │ Logarithmic   │ Halves input size    │ Binary Search    │
+ * │ O(n)      │ Linear        │ Proportional to n    │ Simple Loop      │
+ * │ O(n log n)│ Linearithmic  │ Divide & conquer     │ Merge Sort       │
+ * │ O(n^2)    │ Quadratic     │ Nested loops         │ Bubble Sort      │
+ * │ O(2^n)    │ Exponential   │ Doubles each step    │ Recursive Fibonacci│
+ * └───────────┴───────────────┴──────────────────────┴──────────────────┘
+ */
  * O(2^n)      Exponential     - many brute force recursion problems
  * O(n!)       Factorial       - all permutations brute force
  *

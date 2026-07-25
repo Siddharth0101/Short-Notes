@@ -7,7 +7,15 @@
  * NOTES:
  * - Patterns templates jaise hote hain.
  * - Problem dekhte hi agar pattern pehchan gaya, solution fast banega.
- * - Colt Steele ke course me ye section bahut important hai.
+ * - Colt Steele ke course ke core patterns.
+ *
+ * PATTERNS MAP:
+ * ┌──────────────────────────────────────────────────────────────┐
+ * │ 1. Frequency Counter  → Objects/Maps for counting O(n)       │
+ * │ 2. Multiple Pointers  → Left/Right pointers on sorted arrays │
+ * │ 3. Sliding Window     → Subarray/substring window movement   │
+ * │ 4. Divide & Conquer   → Binary search concept                │
+ * └──────────────────────────────────────────────────────────────┘
  */
 
 
