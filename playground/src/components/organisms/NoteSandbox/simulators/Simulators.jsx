@@ -2684,3 +2684,375 @@ export function CheatSheetSimulator() {
     </div>
   );
 }
+
+/* ==========================================================================
+ * 23. HTML & CSS INTERVIEW VISUAL SIMULATOR (topic: css / interview)
+ * ========================================================================== */
+export function HtmlCssInterviewSimulator() {
+  const [activeTool, setActiveTool] = useState('triangle');
+
+  // Triangle state
+  const [triDir, setTriDir] = useState('up');
+  const [triSize, setTriSize] = useState(50);
+  const [triColor, setTriColor] = useState('#3b82f6');
+
+  // Box Sizing state
+  const [boxMode, setBoxMode] = useState('border-box');
+  const [contentWidth, setContentWidth] = useState(200);
+  const [padding, setPadding] = useState(20);
+  const [border, setBorder] = useState(5);
+
+  // Specificity state
+  const [selectorInput, setSelectorInput] = useState('#main-header ul.nav li a:hover');
+
+  // Flexbox state
+  const [flexDir, setFlexDir] = useState('row');
+  const [justify, setJustify] = useState('space-between');
+  const [align, setAlign] = useState('center');
+  const [flexGap, setFlexGap] = useState(12);
+
+  // Specificity Calculator helper
+  const calculateSpecificity = (selector) => {
+    let ids = (selector.match(/#[a-zA-Z0-9_-]+/g) || []).length;
+    let classes = (selector.match(/\.[a-zA-Z0-9_-]+/g) || []).length;
+    let pseudoClasses = (selector.match(/:[a-zA-Z0-9_-]+/g) || []).length;
+    let attrs = (selector.match(/\[[^\]]+\]/g) || []).length;
+    let elements = (selector.match(/(^|[\s>+~])([a-zA-Z0-9]+)/g) || []).length;
+
+    const classScore = classes + pseudoClasses + attrs;
+    return { inline: 0, id: ids, class: classScore, element: elements };
+  };
+
+  const specScore = calculateSpecificity(selectorInput);
+
+  const getTriangleStyles = () => {
+    const half = triSize / 2;
+    if (triDir === 'up') {
+      return {
+        width: 0,
+        height: 0,
+        borderLeft: `${half}px solid transparent`,
+        borderRight: `${half}px solid transparent`,
+        borderBottom: `${triSize}px solid ${triColor}`
+      };
+    }
+    if (triDir === 'down') {
+      return {
+        width: 0,
+        height: 0,
+        borderLeft: `${half}px solid transparent`,
+        borderRight: `${half}px solid transparent`,
+        borderTop: `${triSize}px solid ${triColor}`
+      };
+    }
+    if (triDir === 'left') {
+      return {
+        width: 0,
+        height: 0,
+        borderTop: `${half}px solid transparent`,
+        borderBottom: `${half}px solid transparent`,
+        borderRight: `${triSize}px solid ${triColor}`
+      };
+    }
+    return {
+      width: 0,
+      height: 0,
+      borderTop: `${half}px solid transparent`,
+      borderBottom: `${half}px solid transparent`,
+      borderLeft: `${triSize}px solid ${triColor}`
+    };
+  };
+
+  const computedTotalWidth =
+    boxMode === 'border-box' ? contentWidth : contentWidth + padding * 2 + border * 2;
+
+  return (
+    <div className="sim-container">
+      <div className="sim-header">
+        <h3 className="sim-title">HTML & CSS Visual Simulator</h3>
+        <span className="sim-badge">Interview Visuals</span>
+      </div>
+
+      {/* Sub-tool Selector */}
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+        <button
+          onClick={() => setActiveTool('triangle')}
+          className={`sim-btn ${activeTool === 'triangle' ? '' : 'sim-btn--secondary'}`}
+          style={{ fontSize: '11px', padding: '6px 12px' }}
+        >
+          📐 CSS Triangle
+        </button>
+        <button
+          onClick={() => setActiveTool('box')}
+          className={`sim-btn ${activeTool === 'box' ? '' : 'sim-btn--secondary'}`}
+          style={{ fontSize: '11px', padding: '6px 12px' }}
+        >
+          📦 Box Model
+        </button>
+        <button
+          onClick={() => setActiveTool('specificity')}
+          className={`sim-btn ${activeTool === 'specificity' ? '' : 'sim-btn--secondary'}`}
+          style={{ fontSize: '11px', padding: '6px 12px' }}
+        >
+          🎯 Specificity Calculator
+        </button>
+        <button
+          onClick={() => setActiveTool('flexbox')}
+          className={`sim-btn ${activeTool === 'flexbox' ? '' : 'sim-btn--secondary'}`}
+          style={{ fontSize: '11px', padding: '6px 12px' }}
+        >
+          🔳 Flexbox Sandbox
+        </button>
+      </div>
+
+      {/* Tool 1: CSS Triangle Generator */}
+      {activeTool === 'triangle' && (
+        <div className="css-sim">
+          <div className="css-sim__controls">
+            <div className="regex-sim__field">
+              <label className="css-sim__slider-label">Direction</label>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {['up', 'down', 'left', 'right'].map((dir) => (
+                  <button
+                    key={dir}
+                    onClick={() => setTriDir(dir)}
+                    className={`sim-btn ${triDir === dir ? '' : 'sim-btn--secondary'}`}
+                    style={{ fontSize: '11px', padding: '4px 8px', textTransform: 'capitalize' }}
+                  >
+                    {dir}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="css-sim__slider-row">
+              <label className="css-sim__slider-label">
+                <span>Triangle Height/Width</span>
+                <span>{triSize}px</span>
+              </label>
+              <input
+                type="range"
+                min="20"
+                max="100"
+                value={triSize}
+                onChange={(e) => setTriSize(Number(e.target.value))}
+                className="css-sim__slider"
+              />
+            </div>
+            <div className="regex-sim__field">
+              <label className="css-sim__slider-label">Color</label>
+              <input
+                type="color"
+                value={triColor}
+                onChange={(e) => setTriColor(e.target.value)}
+                style={{ cursor: 'pointer', border: 'none', background: 'transparent' }}
+              />
+            </div>
+          </div>
+          <div className="css-sim__preview" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '180px' }}>
+            <div style={getTriangleStyles()} />
+          </div>
+        </div>
+      )}
+
+      {/* Tool 2: Box Model Simulator */}
+      {activeTool === 'box' && (
+        <div className="css-sim">
+          <div className="css-sim__controls">
+            <div className="regex-sim__field">
+              <label className="css-sim__slider-label">Box-Sizing Property</label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => setBoxMode('border-box')}
+                  className={`sim-btn ${boxMode === 'border-box' ? '' : 'sim-btn--secondary'}`}
+                  style={{ fontSize: '11px', padding: '6px 12px' }}
+                >
+                  border-box
+                </button>
+                <button
+                  onClick={() => setBoxMode('content-box')}
+                  className={`sim-btn ${boxMode === 'content-box' ? '' : 'sim-btn--secondary'}`}
+                  style={{ fontSize: '11px', padding: '6px 12px' }}
+                >
+                  content-box
+                </button>
+              </div>
+            </div>
+            <div className="css-sim__slider-row">
+              <label className="css-sim__slider-label"><span>Width</span><span>{contentWidth}px</span></label>
+              <input type="range" min="100" max="300" value={contentWidth} onChange={(e) => setContentWidth(Number(e.target.value))} className="css-sim__slider" />
+            </div>
+            <div className="css-sim__slider-row">
+              <label className="css-sim__slider-label"><span>Padding</span><span>{padding}px</span></label>
+              <input type="range" min="0" max="40" value={padding} onChange={(e) => setPadding(Number(e.target.value))} className="css-sim__slider" />
+            </div>
+            <div className="css-sim__slider-row">
+              <label className="css-sim__slider-label"><span>Border Width</span><span>{border}px</span></label>
+              <input type="range" min="0" max="15" value={border} onChange={(e) => setBorder(Number(e.target.value))} className="css-sim__slider" />
+            </div>
+          </div>
+          <div className="regex-sim">
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+              <div>Box Model Mode: <strong>{boxMode}</strong></div>
+              <div style={{ color: 'var(--accent)', marginTop: '4px', fontWeight: 'bold' }}>
+                Total Rendered Canvas Width: {computedTotalWidth}px
+              </div>
+            </div>
+            <div style={{ padding: '20px', backgroundColor: 'var(--bg)', border: '1px dashed var(--border)', borderRadius: '8px', textAlign: 'center' }}>
+              <div style={{
+                width: `${computedTotalWidth}px`,
+                maxWidth: '100%',
+                margin: '0 auto',
+                padding: `${padding}px`,
+                border: `${border}px solid var(--accent)`,
+                backgroundColor: 'var(--bg-card)',
+                boxSizing: boxMode,
+                fontSize: '12px',
+                color: 'var(--text-h)',
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease'
+              }}>
+                Content Area ({contentWidth}px)
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tool 3: Specificity Calculator */}
+      {activeTool === 'specificity' && (
+        <div className="css-sim">
+          <div className="css-sim__controls">
+            <div className="regex-sim__field">
+              <label className="css-sim__slider-label">Test CSS Selector</label>
+              <input
+                type="text"
+                value={selectorInput}
+                onChange={(e) => setSelectorInput(e.target.value)}
+                className="regex-sim__input"
+                placeholder="e.g. #header .menu li a:hover"
+              />
+            </div>
+            <div style={{ fontSize: '11px', opacity: 0.8, color: 'var(--text)' }}>
+              Presets to test:
+            </div>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              {[
+                '#nav ul.menu li:hover a',
+                'div.card .title',
+                '#header',
+                'h1, p',
+                'button[type="submit"]:hover'
+              ].map((preset) => (
+                <button
+                  key={preset}
+                  onClick={() => setSelectorInput(preset)}
+                  className="sim-btn sim-btn--secondary"
+                  style={{ fontSize: '10px', padding: '4px 8px' }}
+                >
+                  {preset}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="regex-sim">
+            <div className="note-block__console" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-h)', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '8px' }}>
+                Specificity Tuple: ({specScore.inline}, {specScore.id}, {specScore.class}, {specScore.element})
+              </div>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', fontSize: '12px' }}>
+                <span style={{ backgroundColor: 'var(--bg-card)', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--border)' }}>
+                  Inline: <strong>{specScore.inline}</strong>
+                </span>
+                <span style={{ backgroundColor: 'var(--bg-card)', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--border)' }}>
+                  ID Selectors: <strong>{specScore.id}</strong>
+                </span>
+                <span style={{ backgroundColor: 'var(--bg-card)', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--border)' }}>
+                  Classes/Pseudo/Attrs: <strong>{specScore.class}</strong>
+                </span>
+                <span style={{ backgroundColor: 'var(--bg-card)', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--border)' }}>
+                  Elements: <strong>{specScore.element}</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tool 4: Flexbox Sandbox */}
+      {activeTool === 'flexbox' && (
+        <div className="css-sim">
+          <div className="css-sim__controls">
+            <div className="regex-sim__field">
+              <label className="css-sim__slider-label">flex-direction</label>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {['row', 'column', 'row-reverse', 'column-reverse'].map((dir) => (
+                  <button
+                    key={dir}
+                    onClick={() => setFlexDir(dir)}
+                    className={`sim-btn ${flexDir === dir ? '' : 'sim-btn--secondary'}`}
+                    style={{ fontSize: '10px', padding: '4px 8px' }}
+                  >
+                    {dir}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="regex-sim__field">
+              <label className="css-sim__slider-label">justify-content</label>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'].map((j) => (
+                  <button
+                    key={j}
+                    onClick={() => setJustify(j)}
+                    className={`sim-btn ${justify === j ? '' : 'sim-btn--secondary'}`}
+                    style={{ fontSize: '10px', padding: '4px 8px' }}
+                  >
+                    {j}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="regex-sim__field">
+              <label className="css-sim__slider-label">align-items</label>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {['stretch', 'center', 'flex-start', 'flex-end'].map((a) => (
+                  <button
+                    key={a}
+                    onClick={() => setAlign(a)}
+                    className={`sim-btn ${align === a ? '' : 'sim-btn--secondary'}`}
+                    style={{ fontSize: '10px', padding: '4px 8px' }}
+                  >
+                    {a}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="css-sim__slider-row">
+              <label className="css-sim__slider-label"><span>Gap</span><span>{flexGap}px</span></label>
+              <input type="range" min="0" max="32" value={flexGap} onChange={(e) => setFlexGap(Number(e.target.value))} className="css-sim__slider" />
+            </div>
+          </div>
+          <div className="css-sim__preview">
+            <div style={{
+              display: 'flex',
+              flexDirection: flexDir,
+              justifyContent: justify,
+              alignItems: align,
+              gap: `${flexGap}px`,
+              minHeight: '180px',
+              backgroundColor: 'var(--bg)',
+              border: '1px dashed var(--border)',
+              borderRadius: '8px',
+              padding: '16px'
+            }}>
+              <div style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '12px 18px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 1</div>
+              <div style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '16px 22px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 2 (Bigger)</div>
+              <div style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '12px 18px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 3</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+

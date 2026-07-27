@@ -23,7 +23,8 @@ import {
   PatternsSimulator,
   HeapSimulator,
   HashTableSimulator,
-  CheatSheetSimulator
+  CheatSheetSimulator,
+  HtmlCssInterviewSimulator
 } from './simulators/Simulators.jsx';
 import './NoteSandbox.css';
 
@@ -331,9 +332,10 @@ export default function NoteSandbox({ title, fetchFile }) {
       ];
     }
 
-    // 16. CSS Units Sizing
-    if (tSlug.includes('css') || sId === 'vw-vh-rem-px') {
+    // 16. CSS Units Sizing & HTML/CSS Interview Sandbox
+    if (tSlug.includes('css') || sId.includes('css') || sId.includes('interview') || sId.includes('html')) {
       return [
+        { id: 'html-css-sim', label: '🎨 HTML & CSS Visual Sandbox', component: <HtmlCssInterviewSimulator /> },
         { id: 'css', label: '📐 CSS Units', component: <CssUnitsSimulator /> }
       ];
     }

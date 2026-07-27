@@ -21,6 +21,16 @@ const CUSTOM_VISUALIZERS = {
     description: 'Simulate the lifecycle of an HTTP request. Trace execution paths through Client headers, network routing, server middleware, and controllers.',
     tag: 'Network Flow',
     readTime: '12 mins'
+  },
+  'html-css-interview-masterclass': {
+    description: 'Complete 100% comprehensive answers for all HTML & CSS interview questions with interactive simulators, code snippets, and visual layout diagrams.',
+    tag: 'HTML & CSS Masterclass',
+    readTime: '20 mins'
+  },
+  '02-html-css-interview-questions': {
+    description: 'Comprehensive HTML & CSS interview question bank with code playgrounds, interactive visualizer tabs, and detailed notes.',
+    tag: 'Interview Notes',
+    readTime: '20 mins'
   }
 };
 
