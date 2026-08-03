@@ -173,17 +173,25 @@
 
 /**
  * ========================================================================
- * 10. DATA MODELING QUICK RULES
+ * 10. DATA MODELING QUICK RULES (EMBED VS REFERENCE - JONAS FRAMEWORK)
  * ========================================================================
- * 1:1       -> embed
- * 1:few     -> embed
- * 1:many    -> reference
- * 1:ton     -> child reference parent
- * many:many -> references / separate collection
+ * RELATIONSHIP CARDINALITY:
+ * - 1 : 1       -> EMBED (e.g. Tour & StartLocation)
+ * - 1 : Few     -> EMBED (e.g. Tour & Locations array [3-5 locations])
+ * - 1 : Many    -> EMBED (if bounded/dependent) OR REFERENCE (if standalone/large)
+ * - 1 : Ton     -> CHILD REFERENCE ALWAYS! (Store parent_id in child doc. e.g. Reviews, Comments, Logs).
+ *                  ❌ Never embed in parent (16MB document size limit).
+ * - Many : Many -> REFERENCE (Two-way or Child Referencing).
  *
- * Query together often -> embed.
- * Huge growing array   -> reference.
- * Need independent lifecycle -> reference.
+ * ACCESS PATTERNS & READ/WRITE:
+ * - Query together often?  -> EMBED (Fast reads, 1 query, 0 populate cost).
+ * - Query separately?      -> REFERENCE (Independent lifecycle).
+ * - High Read / Low Write  -> EMBED
+ * - High Write / Dynamic   -> REFERENCE (Avoids rewriting huge parent documents)
+ *
+ * COUPLING:
+ * - Tightly coupled / Dependent -> EMBED
+ * - Standalone / Shared entity  -> REFERENCE (e.g. User/Guides shared across tours)
  */
 
 

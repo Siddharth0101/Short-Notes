@@ -279,3 +279,31 @@ console.log(requestDataPlaces.params.id);
  * - Collections save karo.
  * - Environments use karo: dev URL, prod URL, token variables.
  */
+
+
+/**
+ * ========================================================================
+ * 17. DATA MODELING: WHEN TO EMBED VS WHEN TO REFERENCE (JONAS COURSE)
+ * ========================================================================
+ * NOTES:
+ * - NoSQL schema design is driven by APP ACCESS PATTERNS & QUERIES (not strict normalization).
+ *
+ * 🟢 1. RELATIONSHIP CARDINALITY:
+ *   • 1 : 1       -> EMBED (e.g. Tour & StartLocation)
+ *   • 1 : Few     -> EMBED (e.g. Tour & Locations [3-5 locations])
+ *   • 1 : Many    -> EMBED if bounded/dependent; REFERENCE if independent/large
+ *   • 1 : Ton     -> CHILD REFERENCE ALWAYS! (Store parent_id in child doc. e.g. Tour & Reviews, Post & Comments).
+ *                    ❌ Never embed in parent (16MB document limit breach).
+ *   • Many : Many -> REFERENCE (Two-way or Child Referencing).
+ *
+ * 🔵 2. ACCESS PATTERNS & READ/WRITE RATIO:
+ *   • Queried Together?  -> EMBED (1 query, zero .populate() overhead).
+ *   • Queried Separately? -> REFERENCE (Independent lifecycle).
+ *   • High Read / Low Write -> EMBED (Super fast reads).
+ *   • High Write / Dynamic  -> REFERENCE (Prevents rewriting large docs on update).
+ *
+ * 🟡 3. DATA COUPLING:
+ *   • Tightly Coupled -> EMBED (Child data parent ke bina meaningless hai).
+ *   • Standalone / Shared -> REFERENCE (Entity multiple places pe share hoti hai, e.g. User/Guides).
+ */
+
