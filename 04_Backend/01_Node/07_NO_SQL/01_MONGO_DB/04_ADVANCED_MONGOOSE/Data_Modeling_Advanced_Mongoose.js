@@ -65,33 +65,58 @@ console.log(embeddedExample.name, referencedExample.rating);
 
 /**
  * ========================================================================
- * 3. WHEN TO EMBED VS WHEN TO REFERENCE (JONAS 3-STEP CRITERIA)
+ * 3. WHEN TO EMBED AND WHEN TO REFERENCE? (A PRACTICAL FRAMEWORK)
  * ========================================================================
+ *
+ * 💡 DECISION RULE: Combine all 3 criteria to take the final decision!
+ * 
+ * ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+ * │                     3. WHEN TO EMBED AND WHEN TO REFERENCE? A PRACTICAL FRAMEWORK                                  │
+ * │                                 👉 Combine all 3 criteria to take decision! 👈                                     │
+ * ├──────────────────────────────────┬────────────────────────────────────────┬────────────────────────────────────────┤
+ * │ CRITERIA                         │ EMBEDDING                              │ REFERENCING                            │
+ * ├──────────────────────────────────┼────────────────────────────────────────┼────────────────────────────────────────┤
+ * │ 1. RELATIONSHIP TYPE             │ 👉 1 : FEW                             │ 👉 1 : MANY                            │
+ * │    (How two datasets are         │ 👉 1 : MANY (Bounded array)            │ 👉 1 : TON (Millions / Unbounded)      │
+ * │    related to each other)        │                                        │ 👉 MANY : MANY                         │
+ * ├──────────────────────────────────┼────────────────────────────────────────┼────────────────────────────────────────┤
+ * │ 2. DATA ACCESS PATTERNS          │ 👉 Data is mostly READ                 │ 👉 Data is UPDATED a lot               │
+ * │    (How often data is read &     │ 👉 Data does NOT change quickly        │ 👉 (LOW read/write ratio)              │
+ * │    written. Read/write ratio)    │ 👉 (HIGH read/write ratio)             │                                        │
+ * │                                  │ 💡 Example: Movies + Images (e.g. 100) │ 💡 Example: Movies + Reviews           │
+ * ├──────────────────────────────────┼────────────────────────────────────────┼────────────────────────────────────────┤
+ * │ 3. DATA CLOSENESS                │ 👉 Datasets are CLOSELY related        │ 👉 Datasets are NOT closely related    │
+ * │    (How "much" data is related,  │ 👉 We mostly need to query data        │ 👉 We mostly need to query data        │
+ * │    how we want to query)         │    TOGETHER                            │    SEPARATELY                          │
+ * │                                  │ 💡 Example: Movies + Images / Tour+Loc │ 💡 Example: Movies + Reviews / UserRef │
+ * └──────────────────────────────────┴────────────────────────────────────────┴────────────────────────────────────────┘
  *
  * 🟢 CRITERIA 1: RELATIONSHIP TYPE (CARDINALITY / MULTIPLICITY)
  * ------------------------------------------------------------------------
- * 1 : 1 (One-to-One)   -> EMBED by default. (e.g. Tour & StartLocation, User & Profile)
- * 1 : Few (One-to-Few) -> EMBED by default. Small & bounded array. (e.g. Tour & 3-5 Locations, User & Addresses)
+ * 1 : 1 (One-to-One)   -> EMBED by default (e.g. Tour & StartLocation, User & Profile)
+ * 1 : Few (One-to-Few) -> EMBED by default. Small & bounded array (e.g. Tour & 3-5 Locations, User & Addresses)
  * 1 : Many (One-to-Many):
  *     - EMBED if child docs only belong to parent & array is bounded (e.g. Order & OrderItems).
  *     - REFERENCE if child docs exist independently or array grows large (e.g. Tour & Tour Guides).
  * 1 : Ton / Millions   -> REFERENCE (Child Referencing ALWAYS!). Store parent ID in child doc!
  *     (e.g. Tour & Reviews, Post & Comments, Server & Logs).
  *     ❌ NEVER embed in parent! Parent document 16MB limit hit kar jayega!
- * Many : Many (Many-to-Many) -> REFERENCE (Child or Two-way Referencing). (e.g. Users & Booked Tours, Students & Courses)
+ * Many : Many (Many-to-Many) -> REFERENCE (Child or Two-way Referencing) (e.g. Users & Booked Tours, Students & Courses)
  *
  * 🔵 CRITERIA 2: DATA ACCESS PATTERNS (QUERYING & READ/WRITE RATIO)
  * ------------------------------------------------------------------------
- * - Queried Together?  -> EMBED if fields/docs UI me always ek saath chaiye (e.g. Tour details + Start Location).
- * - Queried Separately? -> REFERENCE if child data independently access / update hota hai (e.g. User Management).
- * - Read/Write Ratio:
- *     - High Read / Low Write -> EMBED (Super fast reads, 0 population cost).
- *     - High Write / Dynamic  -> REFERENCE (Avoids rewriting huge parent documents on every small update).
+ * - High Read / Low Write Ratio -> EMBED (Super fast reads, 0 population cost).
+ *   Example: Movies + Images (Images frequently read with movie, rarely updated).
+ * - High Write / Low Read Ratio -> REFERENCE (Avoids rewriting huge parent document on every small update).
+ *   Example: Movies + Reviews (Reviews dynamically added/edited constantly by thousands of users).
+ * - Queried Together vs Separately:
+ *   - Queried Together  -> EMBED if fields/docs UI me always ek saath chaiye (e.g. Tour details + Start Location).
+ *   - Queried Separately -> REFERENCE if child data independently access / update hota hai (e.g. User Management).
  *
- * 🟡 CRITERIA 3: DATA COUPLING & STANDALONE LIFECYCLE
+ * 🟡 CRITERIA 3: DATA CLOSENESS & STANDALONE LIFECYCLE
  * ------------------------------------------------------------------------
- * - Tightly Coupled (Dependent Data) -> EMBED (Child entity parent ke bina meaningful nahi hai, e.g. Location coordinates).
- * - Standalone / Shared Entity        -> REFERENCE (Child entity independently exist karti hai & multiple parents me shared hai, e.g. User/Guides accounts).
+ * - Tightly Coupled (Data Closeness High) -> EMBED (Child entity parent ke bina meaningful nahi hai, e.g. Location coordinates).
+ * - Standalone / Shared Entity (Closeness Low) -> REFERENCE (Child entity independently exist karti hai & multiple parents me shared hai, e.g. User/Guides accounts).
  *
  * 📊 SUMMARY MATRIX: WHEN TO EMBED VS REFERENCE
  * ┌──────────────────────┬─────────────────────────────┬───────────────────────────────┐

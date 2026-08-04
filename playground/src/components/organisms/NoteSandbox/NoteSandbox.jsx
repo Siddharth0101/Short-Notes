@@ -186,6 +186,119 @@ function CodePlayground({ initialCode }) {
   );
 }
 
+function FormattedNoteText({ text }) {
+  if (!text) return null;
+
+  const isVisual = text.includes('[⚡ VISUAL]');
+  const cleanText = text.replace(/\[⚡ VISUAL\]/g, '').trim();
+
+  const lines = cleanText.split('\n');
+  const elements = [];
+
+  let asciiBoxLines = [];
+  let inAsciiBox = false;
+  let keyIndex = 0;
+
+  const flushAsciiBox = () => {
+    if (asciiBoxLines.length > 0) {
+      const asciiContent = asciiBoxLines.join('\n');
+      elements.push(
+        <div key={`ascii-${keyIndex++}`} className="ascii-table-wrapper">
+          <div className="ascii-table-header">
+            <span className="ascii-table-title">⚡ Decision Framework Matrix</span>
+            <span className="ascii-table-tag">Diagram</span>
+          </div>
+          <pre className="ascii-table-content">{asciiContent}</pre>
+        </div>
+      );
+      asciiBoxLines = [];
+      inAsciiBox = false;
+    }
+  };
+
+  const isAsciiBoxLine = (line) => {
+    return /[┌┐└┘├┤┬┴┼═│─]/.test(line);
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (isAsciiBoxLine(line)) {
+      inAsciiBox = true;
+      asciiBoxLines.push(line);
+    } else {
+      if (inAsciiBox) {
+        flushAsciiBox();
+      }
+
+      const trimmed = line.trim();
+
+      if (/^={3,}/.test(trimmed) || /^-{3,}/.test(trimmed)) {
+        continue;
+      }
+
+      if (/^[0-9]+\.\s+[A-Z\s()?-]+$/.test(trimmed)) {
+        elements.push(
+          <div key={`head-${keyIndex++}`} className="note-section-header">
+            <span className="note-section-header__badge">SECTION</span>
+            <h3 className="note-section-header__title">{trimmed}</h3>
+          </div>
+        );
+      } else if (trimmed.startsWith('🟢 CRITERIA 1') || trimmed.startsWith('🔵 CRITERIA 2') || trimmed.startsWith('🟡 CRITERIA 3')) {
+        const isGreen = trimmed.includes('CRITERIA 1');
+        const isBlue = trimmed.includes('CRITERIA 2');
+        const badgeClass = isGreen ? 'note-criteria-badge--green' : isBlue ? 'note-criteria-badge--blue' : 'note-criteria-badge--yellow';
+        elements.push(
+          <div key={`crit-${keyIndex++}`} className="note-criteria-card">
+            <span className={`note-criteria-badge ${badgeClass}`}>
+              {trimmed.split(':')[0]}
+            </span>
+            <strong className="note-criteria-title">{trimmed.substring(trimmed.indexOf(':') + 1)}</strong>
+          </div>
+        );
+      } else if (trimmed.startsWith('📊 SUMMARY MATRIX')) {
+        elements.push(
+          <div key={`sum-${keyIndex++}`} className="note-criteria-card note-criteria-card--purple">
+            <span className="note-criteria-badge note-criteria-badge--purple">📊 SUMMARY MATRIX</span>
+            <strong className="note-criteria-title">{trimmed.replace('📊 SUMMARY MATRIX:', '')}</strong>
+          </div>
+        );
+      } else if (trimmed.startsWith('💡 DECISION RULE:') || trimmed.startsWith('💡 Example:')) {
+        elements.push(
+          <div key={`tip-${keyIndex++}`} className="note-tip-callout">
+            <span className="note-tip-icon">💡</span>
+            <span>{trimmed.replace('💡', '').trim()}</span>
+          </div>
+        );
+      } else if (trimmed.startsWith('❌ NEVER')) {
+        elements.push(
+          <div key={`warn-${keyIndex++}`} className="note-warn-callout">
+            <span className="note-warn-icon">❌</span>
+            <span>{trimmed.replace('❌', '').trim()}</span>
+          </div>
+        );
+      } else {
+        elements.push(
+          <div key={`line-${keyIndex++}`} className="note-line">
+            {line}
+          </div>
+        );
+      }
+    }
+  }
+
+  if (inAsciiBox) {
+    flushAsciiBox();
+  }
+
+  return (
+    <div className="note-block__text-formatted" style={{ position: 'relative' }}>
+      {isVisual && <span className="visual-highlight-chip">⚡ VISUAL</span>}
+      {elements}
+    </div>
+  );
+}
+
 export default function NoteSandbox({ title, fetchFile }) {
   const { domainId } = useParams();
   const splat = useParams()['*'] || '';
@@ -518,20 +631,7 @@ export default function NoteSandbox({ title, fetchFile }) {
         <div className="note-sandbox__blocks">
           {blocks.map((block, idx) => (
             <div key={idx} className="note-block">
-              {block.text && (
-                <div className="note-block__text" style={{ position: 'relative' }}>
-                  {block.text.includes('[⚡ VISUAL]') ? (
-                    <>
-                      <span className="visual-highlight-chip">
-                        ⚡ VISUAL
-                      </span>
-                      {block.text.replace(' [⚡ VISUAL]', '').replace('[⚡ VISUAL]', '')}
-                    </>
-                  ) : (
-                    block.text
-                  )}
-                </div>
-              )}
+              {block.text && <FormattedNoteText text={block.text} />}
               {block.code && <CodePlayground initialCode={block.code} />}
             </div>
           ))}

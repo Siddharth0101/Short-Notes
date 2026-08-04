@@ -17,14 +17,16 @@
 
 /* ─ Primary variant ─ */
 .link-btn--primary {
-  background: var(--text-h);
-  color: var(--bg);
+  background: var(--accent);
+  color: #090d16;
+  font-weight: 600;
   padding: 12px 18px;
   border: 1px solid transparent;
 }
 
 .link-btn--primary:hover {
-  opacity: 0.9;
+  background: var(--accent-hover);
+  color: #ffffff;
 }
 
 /* ─ Ghost variant ─ */

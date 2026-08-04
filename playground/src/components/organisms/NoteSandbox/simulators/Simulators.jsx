@@ -2060,8 +2060,13 @@ export function NodeInternalsSimulator() {
  * 17. MONGOOSE SCHEMA VALIDATOR SIMULATOR (topic: no-sql)
  * ========================================================================== */
 export function MongooseMongoSimulator() {
-  const [activeTab, setActiveTab] = useState('validation'); // validation, gridfs, sql, compass
+  const [activeTab, setActiveTab] = useState('framework'); // framework, validation, gridfs, sql, compass
   
+  // Tab 0: Framework Decision Matrix state
+  const [cardinality, setCardinality] = useState('1:Few');
+  const [accessPattern, setAccessPattern] = useState('high-read');
+  const [closeness, setCloseness] = useState('close');
+
   // Tab 1: Validation state
   const [tourName, setTourName] = useState('');
   const [tourPrice, setTourPrice] = useState('');
@@ -2148,6 +2153,41 @@ export function MongooseMongoSimulator() {
     }
   };
 
+  // Compute decision matrix output
+  let decision = 'EMBEDDING';
+  let decisionColor = '#10b981';
+  let reason = '';
+  let mockSchema = '';
+
+  if (cardinality === '1:Ton') {
+    decision = 'REFERENCING';
+    decisionColor = '#3b82f6';
+    reason = '1:Ton (Millions) relationship! Unbounded arrays hit the 16MB document limit. Store parent ID in child document (Child Referencing).';
+    mockSchema = `// Review Document (Child Referencing)\n{\n  "_id": "64a98...9011",\n  "review": "Amazing tour!",\n  "rating": 5,\n  "tour": "5c88...2955" // Parent Reference\n}`;
+  } else if (cardinality === 'Many:Many') {
+    decision = 'REFERENCING';
+    decisionColor = '#3b82f6';
+    reason = 'Many-to-Many relationship! Normalize data with ObjectId references to avoid massive duplication and complex write updates.';
+    mockSchema = `// User Document\n{\n  "_id": "5c8a...181",\n  "name": "Jonas",\n  "bookedTours": ["5c88...2955", "5c88...2956"]\n}`;
+  } else if (cardinality === '1:1' || cardinality === '1:Few') {
+    decision = 'EMBEDDING';
+    decisionColor = '#10b981';
+    reason = 'Small & bounded relationship (1:1 or 1:Few)! Denormalize data directly into parent document for instant 1-query reads without populate overhead.';
+    mockSchema = `// Tour Document (Embedded Location)\n{\n  "_id": "5c88...2955",\n  "name": "The Forest Hiker",\n  "startLocation": {\n    "type": "Point",\n    "coordinates": [-80.185, 25.774],\n    "description": "Miami, USA"\n  }\n}`;
+  } else {
+    if (accessPattern === 'high-read' && closeness === 'close') {
+      decision = 'EMBEDDING';
+      decisionColor = '#10b981';
+      reason = 'Data is mostly read and queried together with parent, and array size is bounded. EMBED for fast reads without populate cost.';
+      mockSchema = `// Order Document (Embedded OrderItems)\n{\n  "_id": "order_9918",\n  "total": 150,\n  "items": [\n    { "name": "Camper Tent", "qty": 1, "price": 120 },\n    { "name": "Water Bottle", "qty": 2, "price": 15 }\n  ]\n}`;
+    } else {
+      decision = 'REFERENCING';
+      decisionColor = '#3b82f6';
+      reason = 'Data is frequently updated or queried separately. REFERENCE child documents to keep parent document small and writes fast.';
+      mockSchema = `// Tour Document\n{\n  "_id": "5c88...2955",\n  "guides": ["5c8a...181", "5c8a...182"] // References to User collection\n}`;
+    }
+  }
+
   return (
     <div className="sim-container" style={{ minHeight: '440px' }}>
       <div className="sim-header">
@@ -2157,13 +2197,14 @@ export function MongooseMongoSimulator() {
 
       {/* Tabs Selector */}
       <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
-        {['validation', 'gridfs', 'sql', 'compass', 'mvc'].map((tab) => (
+        {['framework', 'validation', 'gridfs', 'sql', 'compass', 'mvc'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`sim-btn ${activeTab === tab ? '' : 'sim-btn--secondary'}`}
             style={{ flex: 1, fontSize: '10px', padding: '6px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}
           >
+            {tab === 'framework' && '⚡ Decision Matrix'}
             {tab === 'validation' && 'Mongoose Schema'}
             {tab === 'gridfs' && 'GridFS Chunks'}
             {tab === 'sql' && 'SQL vs NoSQL'}
@@ -2174,6 +2215,100 @@ export function MongooseMongoSimulator() {
       </div>
 
       <div className="regex-sim" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+        {/* Tab 0: Framework Decision Matrix */}
+        {activeTab === 'framework' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: '1.4' }}>
+              <strong>Jonas Practical Decision Engine:</strong> Combine all 3 criteria (Relationship, Data Access, Closeness) to determine whether to <strong>EMBED</strong> or <strong>REFERENCE</strong>.
+            </div>
+
+            {/* Interactive Selectors */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+              {/* Selector 1: Cardinality */}
+              <div style={{ background: 'var(--bg)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '6px', color: 'var(--text-h)' }}>
+                  1. Relationship Type
+                </label>
+                <select 
+                  value={cardinality} 
+                  onChange={(e) => setCardinality(e.target.value)}
+                  style={{ width: '100%', padding: '6px', fontSize: '11px', borderRadius: '6px', border: '1px solid var(--border)', background: 'var(--bg-card)', color: 'var(--text-h)' }}
+                >
+                  <option value="1:1">1 : 1 (One-to-One)</option>
+                  <option value="1:Few">1 : Few (One-to-Few)</option>
+                  <option value="1:Many">1 : Many (One-to-Many)</option>
+                  <option value="1:Ton">1 : Ton (Millions)</option>
+                  <option value="Many:Many">Many : Many</option>
+                </select>
+              </div>
+
+              {/* Selector 2: Access Pattern */}
+              <div style={{ background: 'var(--bg)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '6px', color: 'var(--text-h)' }}>
+                  2. Read / Write Ratio
+                </label>
+                <select 
+                  value={accessPattern} 
+                  onChange={(e) => setAccessPattern(e.target.value)}
+                  style={{ width: '100%', padding: '6px', fontSize: '11px', borderRadius: '6px', border: '1px solid var(--border)', background: 'var(--bg-card)', color: 'var(--text-h)' }}
+                >
+                  <option value="high-read">Mostly Read (High R/W Ratio)</option>
+                  <option value="high-write">Updated a Lot (Low R/W Ratio)</option>
+                </select>
+              </div>
+
+              {/* Selector 3: Closeness */}
+              <div style={{ background: 'var(--bg)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <label style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '6px', color: 'var(--text-h)' }}>
+                  3. Data Closeness
+                </label>
+                <select 
+                  value={closeness} 
+                  onChange={(e) => setCloseness(e.target.value)}
+                  style={{ width: '100%', padding: '6px', fontSize: '11px', borderRadius: '6px', border: '1px solid var(--border)', background: 'var(--bg-card)', color: 'var(--text-h)' }}
+                >
+                  <option value="close">Queried Together (Closely Related)</option>
+                  <option value="separate">Queried Separately (Independent)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Decision Engine Output Card */}
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px', boxShadow: 'var(--shadow)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text)' }}>
+                  Decision Recommendation
+                </span>
+                <span style={{ 
+                  background: decision === 'EMBEDDING' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(59, 130, 246, 0.1)', 
+                  color: decision === 'EMBEDDING' ? '#047857' : '#1d4ed8', 
+                  border: decision === 'EMBEDDING' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(59, 130, 246, 0.3)',
+                  fontSize: '11px', 
+                  fontWeight: '700', 
+                  padding: '4px 12px', 
+                  borderRadius: '99px', 
+                  letterSpacing: '0.03em' 
+                }}>
+                  {decision === 'EMBEDDING' ? '🟢 EMBEDDING (Denormalized)' : '🔵 REFERENCING (Normalized)'}
+                </span>
+              </div>
+
+              <div style={{ fontSize: '13px', color: 'var(--text-h)', lineHeight: '1.5', background: 'var(--bg)', padding: '10px 12px', borderRadius: '6px', border: '1px solid var(--border)' }}>
+                💡 <strong>Why:</strong> {reason}
+              </div>
+
+              <div style={{ background: 'var(--bg)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <div style={{ fontSize: '10px', color: 'var(--accent)', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.05em' }}>
+                  BSON Document Structure Preview
+                </div>
+                <pre style={{ fontFamily: 'var(--mono)', fontSize: '11.5px', color: 'var(--text-h)', margin: 0, overflowX: 'auto', lineHeight: '1.4' }}>
+                  {mockSchema}
+                </pre>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Tab 1: Validation */}
         {activeTab === 'validation' && (

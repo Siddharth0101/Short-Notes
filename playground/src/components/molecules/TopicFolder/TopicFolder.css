@@ -8,12 +8,13 @@
   gap: 16px;
   cursor: pointer;
   text-decoration: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .topic-folder:hover {
-  border-color: var(--accent-border);
-  box-shadow: var(--shadow);
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px -8px rgba(56, 189, 248, 0.25);
 }
 
 .topic-folder__icon {

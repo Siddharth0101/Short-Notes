@@ -49,12 +49,13 @@
 }
 
 .note-sandbox__tab:hover {
-  color: var(--text-h);
+  color: #ffffff;
 }
 
 .note-sandbox__tab--active {
-  color: var(--text-h);
-  font-weight: 600;
+  color: #38bdf8;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
 }
 
 .note-sandbox__tab--active::after {
@@ -64,12 +65,13 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: var(--accent);
+  background-color: #38bdf8;
   border-radius: 99px;
+  box-shadow: 0 0 8px #38bdf8;
 }
 
 .note-sandbox__subtitle {
-  color: var(--text);
+  color: #94a3b8;
   font-size: 14px;
   margin-top: 4px;
   margin-bottom: 24px;
@@ -83,14 +85,19 @@
 }
 
 .note-block {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  background: linear-gradient(180deg, #111827 0%, #0d1322 100%);
+  border: 1px solid #1f2937;
+  border-radius: 14px;
   padding: 32px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  transition: border-color 0.2s ease;
+}
+
+.note-block:hover {
+  border-color: rgba(56, 189, 248, 0.3);
 }
 
 .note-block__text {
@@ -112,11 +119,11 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
-  background-color: var(--bg);
+  background-color: #030712;
 }
 
 .note-block__editor-header {
-  background-color: var(--bg-card);
+  background-color: #111827;
   border-bottom: 1px solid var(--border);
   padding: 8px 16px;
   display: flex;
@@ -136,8 +143,8 @@
   width: 100%;
   min-height: 150px;
   border: none;
-  background-color: var(--bg);
-  color: var(--text-h);
+  background-color: #030712;
+  color: #e5e7eb;
   font-family: var(--mono);
   font-size: 13px;
   line-height: 1.5;
@@ -153,24 +160,25 @@
 }
 
 .note-block__btn-run {
-  padding: 8px 16px;
-  background-color: var(--text-h);
-  color: var(--bg);
+  padding: 8px 18px;
+  background-color: #38bdf8;
+  color: #090d16;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 13px;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.1s ease;
 }
 
 .note-block__btn-run:hover {
-  opacity: 0.9;
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 .note-block__console {
-  background-color: var(--text-h);
-  color: #a7f3d0; /* subtle green logs */
+  background-color: #030712;
+  color: #34d399; /* emerald green logs */
   font-family: var(--mono);
   font-size: 13px;
   line-height: 1.5;
@@ -184,13 +192,13 @@
 }
 
 .note-block__console--error {
-  color: #fca5a5; /* error red */
+  color: #f87171; /* error red */
 }
 
 .note-block__console-title {
   font-size: 11px;
   font-weight: bold;
-  color: #94a3b8;
+  color: #6b7280;
   margin-bottom: 8px;
   text-transform: uppercase;
 }
@@ -221,4 +229,192 @@
   0% { box-shadow: 0 4px 14px rgba(234, 88, 12, 0.4); }
   50% { box-shadow: 0 4px 20px rgba(234, 88, 12, 0.7); }
   100% { box-shadow: 0 4px 14px rgba(234, 88, 12, 0.4); }
+}
+
+/* ─── Rich Formatted Note & ASCII Table UI ───────────────────────────────── */
+
+.note-block__text-formatted {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #f1f5f9; /* Bright crisp white font */
+}
+
+.note-line {
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Unique ASCII Table Obsidian Glass Container */
+.ascii-table-wrapper {
+  background: #0c1222; /* Deep dark obsidian blue */
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 18px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.12);
+}
+
+.ascii-table-header {
+  background: linear-gradient(90deg, #131d35 0%, #0c1222 100%);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.ascii-table-title {
+  font-family: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #38bdf8; /* Neon Cyan */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.ascii-table-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #34d399; /* Emerald */
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  padding: 3px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ascii-table-content {
+  font-family: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.42;
+  color: #38bdf8; /* Glowing Cyan Table Lines & Grid */
+  padding: 18px 20px;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.ascii-table-content::-webkit-scrollbar {
+  height: 5px;
+}
+.ascii-table-content::-webkit-scrollbar-thumb {
+  background-color: rgba(56, 189, 248, 0.3);
+  border-radius: 4px;
+}
+
+/* Note Section Headers & Cards */
+.note-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.note-section-header__badge {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+
+.note-section-header__title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.note-criteria-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: #111827;
+  border: 1px solid var(--border);
+  margin-top: 6px;
+}
+
+.note-criteria-card--purple {
+  border-color: rgba(192, 132, 252, 0.3);
+  background-color: rgba(192, 132, 252, 0.05);
+}
+
+.note-criteria-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 99px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+.note-criteria-badge--green {
+  background-color: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+.note-criteria-badge--blue {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.note-criteria-badge--yellow {
+  background-color: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.note-criteria-badge--purple {
+  background-color: rgba(192, 132, 252, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(192, 132, 252, 0.35);
+}
+
+.note-criteria-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.note-tip-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+.note-warn-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-weight: 500;
+  font-size: 14px;
+  margin: 6px 0;
 }
