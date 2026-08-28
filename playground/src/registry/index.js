@@ -38,7 +38,7 @@ const CUSTOM_VISUALIZERS = {
 const javascriptFiles = import.meta.glob('../../../01_JavaScript/**/*.js', { query: '?raw' });
 const dsaFiles = import.meta.glob('../../../02_Dsa/**/*.js', { query: '?raw' });
 const frontendFiles = import.meta.glob('../../../03_Frontend/**/*.js', { query: '?raw' });
-const backendFiles = import.meta.glob('../../../04_Backend/**/*.js', { query: '?raw' });
+const backendFiles = import.meta.glob('../../../04_Backend/**/*.js', { query: '?raw' }); // Force HMR 2
 
 // Scan interview directory for visualizer components
 const interviewFiles = import.meta.glob('../../../05_Interview/**/*.jsx');
