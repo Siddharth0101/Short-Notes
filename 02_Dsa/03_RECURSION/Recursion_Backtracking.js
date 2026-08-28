@@ -7,9 +7,9 @@
  * NOTES:
  * - Recursion = function khud ko call karta hai.
  * - Har recursive call call stack me ek new frame add karti hai.
- * - Recursive solution me 2 cheezein mandatory hain:
- *   1. Base case
- *   2. Different input ke saath recursive call
+ * - Recursive solution me 2 cheezein mandatory hain (Colt Steele's Rule):
+ *   1. Base Case (The condition when the recursion ends)
+ *   2. Different Input (Calling the function again with a different piece of data)
  */
 
 
@@ -114,13 +114,13 @@ console.log(power(3, 4)); // 81
 
 /**
  * ========================================================================
- * 3. COMMON RECURSION MISTAKES
+ * 3. COMMON RECURSION MISTAKES (Colt Steele's Callouts)
  * ========================================================================
- * MISTAKES:
- * - Base case missing.
- * - Base case wrong.
- * - Recursive call same input se ho rahi hai.
- * - Return keyword bhool gaye.
+ * MISTAKES (Where things go wrong):
+ * - No base case (or base case is missing/wrong) -> leads to Stack Overflow!
+ * - Forgetting to return or returning the wrong thing!
+ * - Recursive call same input se ho rahi hai (Not changing the input).
+ * - Console.log instead of returning the value.
  */
 
 
@@ -170,8 +170,12 @@ console.log(collectOddValues([2, 4, 6, 8])); // []
  * ========================================================================
  * NOTES:
  * - Helper array nahi, function return values combine karta hai.
- * - Arrays ke saath slice/spread/concat useful hote hain.
  * - Space zyada lag sakti hai because new arrays bante hain.
+ *
+ * COLT STEELE'S PURE RECURSION TIPS:
+ * - For arrays, use methods like `slice`, the `spread operator`, and `concat` that make copies of arrays so you do not mutate them.
+ * - Remember that strings are immutable so you will need to use methods like `slice`, `substr`, or `substring` to make copies of strings.
+ * - To make copies of objects use `Object.assign`, or the `spread operator`.
  *
  * EXAMPLE - collectOddValuesPure:
  * Input:  [1, 2, 3, 4, 5]
