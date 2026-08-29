@@ -398,11 +398,28 @@ console.log(airline.lastIndexOf('r'));    // 10
 console.log(airline.indexOf('Portugal')); // 8
 console.log(airline.indexOf('portugal')); // -1 (case-sensitive!)
 
-// Slice (does NOT mutate):
+// ------------------------------------------------------------------------
+// EXTRACTION METHODS: slice() vs substring() vs substr()
+// ------------------------------------------------------------------------
+// 1. slice(startIndex, endIndex)
+// - Extracts from start to end (end NOT included).
+// - Supports negative indexes (counts from the end).
 console.log(airline.slice(4));       // 'Air Portugal'
 console.log(airline.slice(4, 7));    // 'Air' (end not included)
 console.log(airline.slice(-2));      // 'al' (last 2)
 console.log(airline.slice(1, -1));   // 'AP Air Portuga' (remove first and last)
+
+// 2. substring(startIndex, endIndex)
+// - Like slice, but treats negative indexes as 0.
+// - If startIndex > endIndex, it swaps them! (slice returns empty string).
+console.log(airline.substring(4, 7));  // 'Air'
+console.log(airline.substring(7, 4));  // 'Air' (swaps to 4, 7)
+console.log(airline.substring(-2, 4)); // 'TAP ' (-2 becomes 0, extracts 0 to 4)
+
+// 3. substr(startIndex, length) [DEPRECATED - Avoid using in new code]
+// - Extracts 'length' number of characters starting from startIndex.
+console.log(airline.substr(4, 3));     // 'Air' (starts at 4, takes 3 chars)
+console.log(airline.substr(-8, 3));    // 'Por' (starts 8 from end, takes 3 chars)
 
 // Case:
 console.log(airline.toLowerCase()); // 'tap air portugal'
