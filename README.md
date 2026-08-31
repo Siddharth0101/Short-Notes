@@ -20,5 +20,5 @@ Numbered folders show the suggested learning order.
 
 ## Note
 
-DSA can be studied in parallel after JavaScript basics. Backend currently has the Node.js track under `04_Backend/01_Node`.
+DSA can be studied in parallel after JavaScript basics. Backend currently has the Node.js track under `04_Backend/01_Node` and Java Spring Boot under `04_Backend/02_Java_Spring_Boot`.
 

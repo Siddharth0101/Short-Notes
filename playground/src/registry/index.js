@@ -38,7 +38,7 @@ const CUSTOM_VISUALIZERS = {
 const javascriptFiles = import.meta.glob('../../../01_JavaScript/**/*.js', { query: '?raw' });
 const dsaFiles = import.meta.glob('../../../02_Dsa/**/*.js', { query: '?raw' });
 const frontendFiles = import.meta.glob('../../../03_Frontend/**/*.js', { query: '?raw' });
-const backendFiles = import.meta.glob('../../../04_Backend/**/*.js', { query: '?raw' }); // Force HMR 2
+const backendFiles = import.meta.glob('../../../04_Backend/**/*.{js,java}', { query: '?raw' }); // Force HMR 2
 
 // Scan interview directory for visualizer components
 const interviewFiles = import.meta.glob('../../../05_Interview/**/*.jsx');
@@ -81,7 +81,7 @@ function buildTree(files, domainPrefix) {
       
       if (isFile) {
         const isJsx = part.endsWith('.jsx');
-        const cleanName = part.replace(/\.(js|jsx)$/, '');
+        const cleanName = part.replace(/\.(js|jsx|java)$/, '');
         const scenarioId = cleanName.toLowerCase().replace(/_/g, '-').replace(/,/g, '-');
         
         let component = null;
