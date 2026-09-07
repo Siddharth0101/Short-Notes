@@ -111,6 +111,117 @@
  * ========================================================================
  * - Anonymous class = bina naam ki class. Interface/abstract class ko on-the-spot implement karna.
  * - Lambda = anonymous class ka shortcut (sirf Functional Interfaces ke liye, Java 8+).
+ * 
+ * ========================================================================
+ * 7. PACKAGES (Telusko)
+ * ========================================================================
+ * - Package = folder structure jo related classes ko GROUP karti hai.
+ * - Purpose: Name conflicts avoid karna (two classes same name, different packages),
+ *   access control, aur code organization.
+ * 
+ * CREATING A PACKAGE:
+ * - Syntax: package com.telusko.app;  // FIRST statement of the file (before imports)
+ * - Convention: Reversed domain name → com.telusko.app, com.telusko.service
+ * - Directory structure MUST match package name:
+ *   com/telusko/app/MyClass.java
+ * 
+ * IMPORTING:
+ * - import com.telusko.app.MyClass;     // Import specific class
+ * - import com.telusko.app.*;           // Import ALL classes from package (not sub-packages!)
+ * - java.lang.* is AUTOMATICALLY imported (String, System, Math etc.)
+ * 
+ * ACCESS ACROSS PACKAGES:
+ * ┌──────────────┬───────────────────────────────────────────────────────┐
+ * │  Modifier    │ Accessible from other package?                        │
+ * ├──────────────┼───────────────────────────────────────────────────────┤
+ * │ public       │ ✅ Yes — fully accessible                            │
+ * │ protected    │ ✅ Only in child class (via inheritance)              │
+ * │ default      │ ❌ No — only within same package                     │
+ * │ private      │ ❌ No — only within same class                       │
+ * └──────────────┴───────────────────────────────────────────────────────┘
+ * 
+ * BUILT-IN PACKAGES:
+ * - java.lang  → String, Math, System, Object, Thread (auto-imported)
+ * - java.util  → Collections, ArrayList, HashMap, Scanner, Date
+ * - java.io    → File, InputStream, OutputStream, Reader, Writer
+ * - java.sql   → Connection, Statement, ResultSet (JDBC)
+ * - java.time  → LocalDate, LocalTime, LocalDateTime (Java 8+)
+ * 
+ * ========================================================================
+ * 8. INNER CLASSES (Detailed — Telusko)
+ * ========================================================================
+ * - Inner class = class ke andar class. Logical grouping ke liye.
+ * - Outer class ke private members ko bhi access kar sakti hai.
+ * 
+ * 4 TYPES:
+ * 
+ * a) MEMBER INNER CLASS (Non-static nested class):
+ *    - Outer class ke instance ke sath tied hai.
+ *    - Create karne ke liye outer object chahiye: Outer.Inner obj = outer.new Inner();
+ *    - Outer class ke ALL members (including private) access kar sakti hai.
+ * 
+ * b) STATIC INNER CLASS (Static nested class):
+ *    - `static` keyword lagta hai. Outer class ka object NAHI chahiye.
+ *    - Create: Outer.StaticInner obj = new Outer.StaticInner();
+ *    - Sirf outer class ke STATIC members access kar sakti hai.
+ * 
+ * c) LOCAL INNER CLASS:
+ *    - Method ke ANDAR defined hoti hai.
+ *    - Sirf usi method ke scope me accessible hai (bahar se nahi).
+ *    - Method ke local variables jo effectively final hain, unhe access kar sakti hai.
+ * 
+ * d) ANONYMOUS INNER CLASS:
+ *    - Bina naam ki class. On-the-spot interface/abstract class implement karna.
+ *    - Lambda expressions ka predecessor (Java 8 se pehle yahi use hota tha).
+ *    - Syntax: new InterfaceName() { @Override ... };
+ * 
+ * ========================================================================
+ * 9. RECORD CLASSES (Java 16+ — Telusko)
+ * ========================================================================
+ * - Record = immutable data carrier class ka SHORTCUT.
+ * - Problem: Simple data hold karne ke liye class banao toh boilerplate bohot hota hai
+ *   (constructor, getters, toString, equals, hashCode — sab manually likhna padta hai).
+ * - Solution: `record` keyword se sab AUTOMATICALLY generate hota hai!
+ * 
+ * SYNTAX:
+ *   record Point(int x, int y) {}
+ *   // Ye AUTOMATICALLY generate karta hai:
+ *   // - private final fields (x, y)
+ *   // - Constructor: Point(int x, int y)
+ *   // - Getters: x(), y() (NOT getX()!)
+ *   // - toString(): Point[x=5, y=10]
+ *   // - equals() and hashCode() based on all fields
+ * 
+ * RULES:
+ * - Fields are FINAL (immutable — set once in constructor, no setters).
+ * - Cannot extend another class (implicitly extends java.lang.Record).
+ * - CAN implement interfaces.
+ * - CAN have static fields/methods, instance methods, and custom constructors.
+ * - CANNOT have instance fields beyond the record components.
+ * 
+ * ========================================================================
+ * 10. SEALED CLASSES (Java 17+ — Telusko)
+ * ========================================================================
+ * - Sealed class = inheritance RESTRICT karti hai. Sirf SPECIFIED classes extend kar sakti hain.
+ * - Problem: Abstract class / interface ko koi bhi extend/implement kar sakta hai.
+ *   Kabhi kabhi control chahiye ki KON extend kare.
+ * - Solution: `sealed` keyword + `permits` clause.
+ * 
+ * SYNTAX:
+ *   sealed class Shape permits Circle, Rectangle, Triangle {}
+ *   // Ab SIRF Circle, Rectangle, Triangle hi Shape extend kar sakti hain.
+ *   // Koi bhi nayi class Shape extend nahi kar sakti!
+ * 
+ * PERMITTED SUBCLASS RULES:
+ * - Subclass MUST be one of: final, sealed, or non-sealed.
+ *   - final: Aur koi extend nahi kar sakta (chain ends).
+ *   - sealed: Aur restrict karta hai (chain continues).
+ *   - non-sealed: Koi bhi extend kar sakta hai (chain opens up).
+ * - Permitted classes MUST be in the same package (or module).
+ * 
+ * USE CASE:
+ * - Pattern matching (Java 17+): switch expressions me sealed hierarchy use karna
+ *   taaki compiler guarantee de sake ki saare cases covered hain.
  */
 
 // ========== ABSTRACT CLASS EXAMPLE ==========
@@ -228,6 +339,113 @@ class Cat extends Animal {
     void eat() { System.out.println("Cat is eating fish 🐟"); }
 }
 
+// ========== INNER CLASSES EXAMPLES ==========
+class OuterClass {
+    private String outerSecret = "Outer's private secret 🔐";
+    static String outerStatic = "Outer's static data";
+
+    // a) MEMBER INNER CLASS (Non-static) — needs outer object
+    class MemberInner {
+        void showSecret() {
+            // Can access outer's PRIVATE members!
+            System.out.println("Member Inner accessing: " + outerSecret);
+        }
+    }
+
+    // b) STATIC INNER CLASS — no outer object needed
+    static class StaticInner {
+        void showStatic() {
+            // Can only access outer's STATIC members
+            System.out.println("Static Inner accessing: " + outerStatic);
+            // System.out.println(outerSecret); // ❌ ERROR! Can't access non-static
+        }
+    }
+
+    // c) LOCAL INNER CLASS — defined inside a method
+    void methodWithLocalClass() {
+        final String localVar = "I'm local"; // must be effectively final
+
+        class LocalInner {
+            void display() {
+                System.out.println("Local Inner: " + localVar);
+                System.out.println("Local Inner also sees: " + outerSecret);
+            }
+        }
+
+        LocalInner local = new LocalInner();
+        local.display();
+        // LocalInner is NOT accessible outside this method
+    }
+}
+
+// ========== RECORD CLASS EXAMPLE (Java 16+) ==========
+// Instead of writing a full class with constructor, getters, toString, equals, hashCode:
+record StudentRecord(String name, int age, String course) {
+    // Custom compact constructor (validation)
+    StudentRecord {
+        if (age < 0) throw new IllegalArgumentException("Age cannot be negative: " + age);
+        // No need to write this.name = name etc. — auto-assigned!
+    }
+
+    // Custom instance method (allowed)
+    String greeting() {
+        return "Hi, I'm " + name + " studying " + course + "!";
+    }
+
+    // Static method (allowed)
+    static StudentRecord createDefault() {
+        return new StudentRecord("Unknown", 0, "Undeclared");
+    }
+}
+
+// ========== SEALED CLASS EXAMPLE (Java 17+) ==========
+// Only Circle2D, Rectangle2D, Triangle2D can extend Shape2D. Nobody else!
+sealed class Shape2D permits Circle2D, Rectangle2D, Triangle2D {
+    String name;
+    Shape2D(String name) { this.name = name; }
+}
+
+// final → cannot be extended further
+final class Circle2D extends Shape2D {
+    double radius;
+    Circle2D(double radius) {
+        super("Circle");
+        this.radius = radius;
+    }
+    double area() { return Math.PI * radius * radius; }
+}
+
+// final → chain ends here
+final class Rectangle2D extends Shape2D {
+    double w, h;
+    Rectangle2D(double w, double h) {
+        super("Rectangle");
+        this.w = w;
+        this.h = h;
+    }
+    double area() { return w * h; }
+}
+
+// non-sealed → anyone can extend Triangle2D (opens up the chain)
+non-sealed class Triangle2D extends Shape2D {
+    double base, height;
+    Triangle2D(double base, double height) {
+        super("Triangle");
+        this.base = base;
+        this.height = height;
+    }
+    double area() { return 0.5 * base * height; }
+}
+
+// Since Triangle2D is non-sealed, this is ALLOWED:
+class EquilateralTriangle extends Triangle2D {
+    EquilateralTriangle(double side) {
+        super(side, side * Math.sqrt(3) / 2);
+    }
+}
+
+// class Hexagon extends Shape2D {} // ❌ COMPILE ERROR! Not in permits list.
+
 // ========== MAIN CLASS ==========
 public class Core_Java_OOPs_Advanced {
     public static void main(String[] args) {
@@ -338,5 +556,112 @@ public class Core_Java_OOPs_Advanced {
         System.out.println("public    -> Everywhere (no restriction)");
         System.out.println("Rule: Always use the MOST RESTRICTIVE modifier possible.");
         System.out.println("Encapsulation = fields private + public getters/setters.");
+
+        // ===== 6. PACKAGES DEMO =====
+        System.out.println("\n===== Packages =====");
+        System.out.println("Package = folder structure to organize related classes.");
+        System.out.println("Convention: reversed domain → com.telusko.app");
+        System.out.println("");
+        System.out.println("Creating: package com.telusko.service; (FIRST line of file)");
+        System.out.println("Importing: import com.telusko.service.UserService;");
+        System.out.println("Wildcard:  import com.telusko.service.*; (all classes, not sub-packages)");
+        System.out.println("");
+        System.out.println("Built-in packages:");
+        System.out.println("  java.lang  → Auto-imported (String, Math, System, Object)");
+        System.out.println("  java.util  → Collections, ArrayList, Scanner, HashMap");
+        System.out.println("  java.io    → File, InputStream, BufferedReader");
+        System.out.println("  java.sql   → Connection, PreparedStatement (JDBC)");
+        System.out.println("  java.time  → LocalDate, LocalDateTime (Java 8+)");
+
+        // ===== 7. INNER CLASSES =====
+        System.out.println("\n===== Inner Classes =====");
+
+        // a) MEMBER INNER CLASS — needs outer object
+        System.out.println("--- Member Inner Class ---");
+        OuterClass outer = new OuterClass();
+        OuterClass.MemberInner memberInner = outer.new MemberInner(); // outer.new!
+        memberInner.showSecret();
+
+        // b) STATIC INNER CLASS — no outer object needed
+        System.out.println("\n--- Static Inner Class ---");
+        OuterClass.StaticInner staticInner = new OuterClass.StaticInner(); // no outer needed
+        staticInner.showStatic();
+
+        // c) LOCAL INNER CLASS — inside a method
+        System.out.println("\n--- Local Inner Class ---");
+        outer.methodWithLocalClass();
+
+        // d) ANONYMOUS INNER CLASS — already shown in Lambda section above
+        System.out.println("\n--- Anonymous Inner Class ---");
+        Drawable anonymousDrawable = new Drawable() {
+            @Override
+            public void draw() {
+                System.out.println("Anonymous class drawing! 🎨");
+            }
+        };
+        anonymousDrawable.draw();
+        anonymousDrawable.render(); // default method still works
+
+        // ===== 8. RECORD CLASSES (Java 16+) =====
+        System.out.println("\n===== Record Classes (Java 16+) =====");
+
+        StudentRecord s1 = new StudentRecord("Navin", 35, "Java");
+        StudentRecord s2 = new StudentRecord("Navin", 35, "Java");
+        StudentRecord s3 = new StudentRecord("Siddharth", 22, "CS");
+
+        // Auto-generated toString()
+        System.out.println("s1: " + s1); // StudentRecord[name=Navin, age=35, course=Java]
+
+        // Auto-generated getters (NOT getX(), just x()!)
+        System.out.println("Name: " + s1.name() + ", Age: " + s1.age());
+
+        // Auto-generated equals() — content-based
+        System.out.println("s1.equals(s2): " + s1.equals(s2)); // true (same content)
+        System.out.println("s1.equals(s3): " + s1.equals(s3)); // false
+
+        // Auto-generated hashCode()
+        System.out.println("s1.hashCode() == s2.hashCode(): " + (s1.hashCode() == s2.hashCode())); // true
+
+        // Custom method
+        System.out.println(s3.greeting());
+
+        // Static factory method
+        StudentRecord defaultStudent = StudentRecord.createDefault();
+        System.out.println("Default: " + defaultStudent);
+
+        // Immutable — NO setters!
+        // s1.name = "Changed"; // ❌ COMPILE ERROR! Fields are final.
+
+        // ===== 9. SEALED CLASSES (Java 17+) =====
+        System.out.println("\n===== Sealed Classes (Java 17+) =====");
+
+        Circle2D circle = new Circle2D(5);
+        Rectangle2D rect = new Rectangle2D(4, 6);
+        Triangle2D tri = new Triangle2D(10, 5);
+        EquilateralTriangle eqTri = new EquilateralTriangle(6);
+
+        System.out.println(circle.name + " area: " + circle.area());
+        System.out.println(rect.name + " area: " + rect.area());
+        System.out.println(tri.name + " area: " + tri.area());
+        System.out.println("Equilateral " + eqTri.name + " area: " + eqTri.area());
+
+        System.out.println("\nSealed hierarchy:");
+        System.out.println("  sealed Shape2D permits Circle2D, Rectangle2D, Triangle2D");
+        System.out.println("  → Circle2D is final (nobody can extend)");
+        System.out.println("  → Rectangle2D is final (nobody can extend)");
+        System.out.println("  → Triangle2D is non-sealed (EquilateralTriangle CAN extend)");
+        System.out.println("  → Hexagon extends Shape2D? ❌ NOT allowed (not in permits)");
+
+        // Pattern matching with sealed classes
+        Shape2D shape = new Circle2D(7);
+        // Compiler knows ALL possible subtypes — exhaustive switch possible!
+        String desc = switch (shape) {
+            case Circle2D ci    -> "Circle with radius " + ci.radius;
+            case Rectangle2D re -> "Rectangle " + re.w + "x" + re.h;
+            case Triangle2D tr  -> "Triangle base=" + tr.base + " height=" + tr.height;
+        };
+        System.out.println("Pattern match: " + desc);
+
+        System.out.println("\n✅ All Advanced OOPs concepts covered!");
     }
 }
