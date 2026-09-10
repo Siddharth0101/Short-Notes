@@ -39,6 +39,7 @@ const javascriptFiles = import.meta.glob('../../../01_JavaScript/**/*.js', { que
 const dsaFiles = import.meta.glob('../../../02_Dsa/**/*.js', { query: '?raw' });
 const frontendFiles = import.meta.glob('../../../03_Frontend/**/*.js', { query: '?raw' });
 const backendFiles = import.meta.glob('../../../04_Backend/**/*.{js,java}', { query: '?raw' }); // Force HMR 2
+const systemDesignFiles = import.meta.glob('../../../06_System_Design/**/*.js', { query: '?raw' });
 
 // Scan interview directory for visualizer components
 const interviewFiles = import.meta.glob('../../../05_Interview/**/*.jsx');
@@ -164,6 +165,13 @@ export const DOMAINS = {
     description: 'Explore premium scenario-based visualizers, machine coding challenges, and mock flows.',
     icon: '💼',
     tree: buildTree(interviewFiles, '05_Interview')
+  },
+  systemdesign: {
+    id: 'systemdesign',
+    name: '06. System Design (Frontend & Backend)',
+    description: 'Master HLD, LLD, React architecture, Namaste React fundamentals, and Backend-for-Frontend patterns.',
+    icon: '🏗️',
+    tree: buildTree(systemDesignFiles, '06_System_Design')
   }
 };
 

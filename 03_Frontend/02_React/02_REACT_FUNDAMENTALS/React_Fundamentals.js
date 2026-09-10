@@ -410,3 +410,45 @@ function ControlledForm() {
         </form>
     );
 }
+
+/**
+ * ========================================================================
+ * 12. NAMASTE REACT ARCHITECTURE: FIBER & RECONCILIATION
+ * ========================================================================
+ * SOURCE: Akshay Saini (Namaste React Deep Dive)
+ *
+ * WHAT IS VIRTUAL DOM?
+ * - Virtual DOM is simply a JavaScript representation of the actual DOM.
+ * - Created via React.createElement() which returns a plain JS object.
+ *
+ * RECONCILIATION (DIFFING ALGORITHM):
+ * - React uses a heuristic O(n) diffing algorithm.
+ * - Compares current Fiber tree with workInProgress Fiber tree.
+ * - Two phases:
+ *   1. Render Phase (diffing, interruptible in React 18 Concurrent mode)
+ *   2. Commit Phase (synchronous Real DOM updates)
+ *
+ * WHY KEYS MATTER IN LISTS:
+ * - Keys identify which items have changed, been added, or removed.
+ * - Never use array index or Math.random() as key for dynamic/filterable lists!
+ */
+
+/**
+ * ========================================================================
+ * 13. JSX UNDER THE HOOD (BABEL TRANSPILATION)
+ * ========================================================================
+ * JSX ──► Babel (AST Transpilation) ──► React.createElement() ──► JS Object ──► Real DOM
+ *
+ * - JSX is NOT HTML inside JavaScript!
+ * - JSX sanitizes user input to prevent XSS attacks automatically.
+ */
+
+/**
+ * ========================================================================
+ * 14. HOOKS UNDER THE HOOD (RULES OF HOOKS)
+ * ========================================================================
+ * - React tracks hooks using an INTERNAL SINGLY-LINKED LIST stored on the Fiber's memoizedState.
+ * - Why hooks must be called at the top level:
+ *   Conditional hooks alter the traversal order of the linked list between renders,
+ *   causing state pointers to read the wrong state nodes!
+ */
