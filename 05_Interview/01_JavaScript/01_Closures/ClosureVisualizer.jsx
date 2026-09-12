@@ -270,7 +270,7 @@ const styles = {
   },
   stackFrame: {
     backgroundColor: 'var(--accent)',
-    color: '#fff',
+    color: 'var(--on-accent)',
     padding: '8px 12px',
     borderRadius: '4px',
     textAlign: 'center',

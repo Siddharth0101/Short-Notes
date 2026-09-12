@@ -81,7 +81,7 @@ short Hinglish explanations, important rules, and compact Java/Spring examples.
 ### Security & Microservices
 - Spring Security: Authentication vs Authorization, PasswordEncoder
 - JWT: Stateless auth, structure, flow, request filters
-- Web Security: CSRF (disable for APIs), CORS configuration
+- Web Security: CSRF based on credential transport (retain for cookie authentication), CORS configuration
 - Method Security: @PreAuthorize, @Secured
 - OAuth2: Social Login (SSO) with Google/GitHub
 - Spring AI: RAG, Prompts, LLM integration, ChatClient
@@ -90,5 +90,4 @@ short Hinglish explanations, important rules, and compact Java/Spring examples.
 - Distributed Tracing: Zipkin, Micrometer, Trace/Span IDs
 - DevOps: Maven, Docker (Images, Containers, Dockerfile)
 - Docker Advanced: Networking (bridge/host/overlay), Volumes (data persistence), docker-compose
-
 

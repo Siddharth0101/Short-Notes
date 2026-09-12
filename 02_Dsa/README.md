@@ -1,5 +1,7 @@
 # DSA Short Notes
 
+> Start with the [new structured study path](../notes/README.md#data-structures--algorithms). This folder preserves the original source notes and examples.
+
 These notes follow the same style as the JavaScript and Frontend notes in this repo:
 short Hinglish explanations, important rules, and JavaScript examples.
 

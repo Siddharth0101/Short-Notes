@@ -38,7 +38,7 @@ function hasCustomSimulator(sId, splatPath) {
 
 export default function Domain() {
   const { domainId } = useParams();
-  const splat = useParams()['*'] || '';
+  const splat = (useParams()['*'] || '').replace(/^dir\//, '');
   
   const domainData = getDomainById(domainId);
   const currentNode = getNodeBySplatPath(domainId, splat);

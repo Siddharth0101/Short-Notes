@@ -1,0 +1,377 @@
+{
+  "javascript": {
+    "prerequisites": [],
+    "stages": [
+      {
+        "id": "javascript-1",
+        "title": "Start with the language",
+        "goal": "Learn one small concept at a time, starting with variables.",
+        "checkpoint": "Calculate the total study minutes for an array of lessons using a function, loop and condition.",
+        "chapters": [
+          "js-variables",
+          "js-types-operators",
+          "js-conditionals",
+          "js-loops",
+          "js-functions",
+          "js-arrays-objects"
+        ]
+      },
+      {
+        "id": "javascript-2",
+        "title": "Work with data and scope",
+        "goal": "Transform collections, validate input, then understand bindings and built-in utilities.",
+        "checkpoint": "Explain a closure and build a validated calculation without accidental string concatenation.",
+        "chapters": [
+          "js-modern-data-collections",
+          "js-language-foundations",
+          "js-scope-closures",
+          "js-numbers-dates-regex"
+        ]
+      },
+      {
+        "id": "javascript-3",
+        "title": "Build browser interactions",
+        "goal": "Learn HTML/CSS structure before manipulating the DOM.",
+        "checkpoint": "Build a keyboard-accessible list with delegated actions.",
+        "chapters": [
+          "javascript-browser-foundations",
+          "js-dom-events-browser"
+        ]
+      },
+      {
+        "id": "javascript-4",
+        "title": "Understand objects and design",
+        "goal": "Learn receivers and prototypes before the OOP project.",
+        "checkpoint": "Explain this for three call sites and implement the small state-machine project.",
+        "chapters": [
+          "js-this-prototypes-classes",
+          "js-oop-mini-project"
+        ]
+      },
+      {
+        "id": "javascript-5",
+        "title": "Handle asynchronous work and delivery",
+        "goal": "Progress from promises and fetching to concurrency limits and modules.",
+        "checkpoint": "Handle a failed request, cap concurrent work, and explain how the app reaches the browser.",
+        "chapters": [
+          "js-async-event-loop",
+          "javascript-async-patterns",
+          "js-modules-tooling-debugging"
+        ]
+      }
+    ]
+  },
+  "react": {
+    "prerequisites": [
+      "js-functions",
+      "js-modern-data-collections",
+      "js-dom-events-browser",
+      "js-async-event-loop"
+    ],
+    "stages": [
+      {
+        "id": "react-1",
+        "title": "Components before architecture",
+        "goal": "Start with JSX and props, add state, then understand rendering and identity.",
+        "checkpoint": "Build an editable list whose drafts remain attached to the correct items.",
+        "chapters": [
+          "react-jsx-props",
+          "react-state-forms",
+          "react-components-rendering"
+        ]
+      },
+      {
+        "id": "react-2",
+        "title": "Reuse UI and synchronize safely",
+        "goal": "Learn composition, then effects, refs and custom hooks.",
+        "checkpoint": "Extract a reusable component and clean up a cancellable effect.",
+        "chapters": [
+          "react-composition-styling",
+          "react-effects-custom-hooks"
+        ]
+      },
+      {
+        "id": "react-3",
+        "title": "Connect a complete application",
+        "goal": "Add navigation, shared state, server-state caching and typed boundaries.",
+        "checkpoint": "Build a routed page with explicit cache identity and validated API data.",
+        "chapters": [
+          "react-routing-url-state",
+          "react-context-reducer-redux",
+          "react-query-supabase",
+          "react-typescript-contracts"
+        ]
+      },
+      {
+        "id": "react-4",
+        "title": "Measure and practice",
+        "goal": "Profile production behavior before the machine-coding exercise.",
+        "checkpoint": "Demonstrate stale-request protection, keyboard behavior and one measured improvement.",
+        "chapters": [
+          "react-performance-production",
+          "react-machine-coding"
+        ]
+      }
+    ]
+  },
+  "java": {
+    "prerequisites": [],
+    "stages": [
+      {
+        "id": "java-1",
+        "title": "Write your first Java programs",
+        "goal": "Run main, declare variables, make decisions, write methods, and create instances.",
+        "checkpoint": "Compile a learner program with two independent objects and a method that processes an array.",
+        "chapters": [
+          "java-first-program",
+          "java-decisions-loops",
+          "java-methods-arrays",
+          "java-classes-constructors",
+          "java-language-foundations"
+        ]
+      },
+      {
+        "id": "java-2",
+        "title": "Build a reliable core model",
+        "goal": "Extend basic classes with OOP, collections, exceptions, streams and memory reasoning.",
+        "checkpoint": "Choose a collection, preserve equality contracts and close an owned resource.",
+        "chapters": [
+          "java-object-model",
+          "java-collections-generics",
+          "java-exceptions-io-time",
+          "java-streams-lambdas",
+          "java-jvm-memory"
+        ]
+      },
+      {
+        "id": "java-3",
+        "title": "Build test and persist",
+        "goal": "Set up builds and tests before database access and SQL concurrency exercises.",
+        "checkpoint": "Test a JDBC operation and explain a join and an atomic inventory update.",
+        "chapters": [
+          "java-maven-testing",
+          "java-jdbc-sql",
+          "java-sql-interview-lab"
+        ]
+      },
+      {
+        "id": "java-4",
+        "title": "Create Spring applications",
+        "goal": "Move from dependency injection and REST to persistence and security.",
+        "checkpoint": "Implement a validated resource endpoint with a transaction and authorization boundary.",
+        "chapters": [
+          "java-spring-rest",
+          "java-jpa-transactions",
+          "java-security-microservices"
+        ]
+      },
+      {
+        "id": "java-5",
+        "title": "Operate concurrent services",
+        "goal": "Study thread safety, resource limits and production signals after the application model.",
+        "checkpoint": "Demonstrate a race-safe operation and distinguish pool wait from execution time.",
+        "chapters": [
+          "java-concurrency",
+          "java-concurrency-production",
+          "java-observability-actuator"
+        ]
+      }
+    ]
+  },
+  "mongodb": {
+    "prerequisites": [
+      "js-modern-data-collections",
+      "js-async-event-loop",
+      "js-modules-tooling-debugging"
+    ],
+    "stages": [
+      {
+        "id": "mongodb-1",
+        "title": "Understand the server request",
+        "goal": "Start with Node and HTTP, then learn Express routing and errors.",
+        "checkpoint": "Trace a request through middleware to a controlled response.",
+        "chapters": [
+          "mongo-node-runtime-http",
+          "mongo-express-rest-errors"
+        ]
+      },
+      {
+        "id": "mongodb-2",
+        "title": "Store and model data",
+        "goal": "Learn documents and CRUD before introducing Mongoose schemas.",
+        "checkpoint": "Choose embedding or references for a concrete access pattern and validate writes.",
+        "chapters": [
+          "mongo-documents-crud-modeling",
+          "mongo-mongoose-validation-relations"
+        ]
+      },
+      {
+        "id": "mongodb-3",
+        "title": "Query efficiently",
+        "goal": "Learn indexes and aggregation, then inspect query plans and bounded streaming.",
+        "checkpoint": "Explain the winning plan for a tenant-scoped query and stream a large export.",
+        "chapters": [
+          "mongo-indexes-aggregation-transactions",
+          "mongodb-query-production-lab"
+        ]
+      },
+      {
+        "id": "mongodb-4",
+        "title": "Secure and ship",
+        "goal": "Add authentication and authorization before payment/upload/deployment integration.",
+        "checkpoint": "Reject unauthorized resource access and recover safely from a duplicate webhook.",
+        "chapters": [
+          "mongo-auth-security",
+          "mongo-production-integrations"
+        ]
+      }
+    ]
+  },
+  "dsa": {
+    "prerequisites": [
+      "js-functions",
+      "js-arrays-objects"
+    ],
+    "stages": [
+      {
+        "id": "dsa-1",
+        "title": "Understand cost and basic structures",
+        "goal": "Start with complexity, lists/stacks/queues, and hashing before pattern-based problems.",
+        "checkpoint": "Choose an array, queue or map and justify operation costs.",
+        "chapters": [
+          "dsa-complexity",
+          "dsa-linear-structures",
+          "dsa-hashing"
+        ]
+      },
+      {
+        "id": "dsa-2",
+        "title": "Learn reusable problem-solving patterns",
+        "goal": "Use familiar structures for counters, pointers and search; then introduce recursion and sorting.",
+        "checkpoint": "State a binary-search invariant and trace a recursive call before coding.",
+        "chapters": [
+          "dsa-patterns",
+          "dsa-searching",
+          "dsa-recursion",
+          "dsa-sorting"
+        ]
+      },
+      {
+        "id": "dsa-3",
+        "title": "Handle ordered candidates and hierarchies",
+        "goal": "Apply stack invariants, then learn trees and heaps before graphs.",
+        "checkpoint": "Prove the stack bound and implement a heap-based top-k solution.",
+        "chapters": [
+          "dsa-monotonic-stack-lab",
+          "dsa-trees",
+          "dsa-heaps"
+        ]
+      },
+      {
+        "id": "dsa-4",
+        "title": "Solve graph and dynamic-programming problems",
+        "goal": "Build on queues, recursion, hashing and heaps to reason about dependencies and repeated subproblems.",
+        "checkpoint": "Choose BFS versus Dijkstra, then derive a DP state and recurrence.",
+        "chapters": [
+          "dsa-graphs",
+          "dsa-dynamic-programming"
+        ]
+      }
+    ]
+  },
+  "system-design": {
+    "prerequisites": [
+      "react-performance-production",
+      "java-jpa-transactions",
+      "java-concurrency-production"
+    ],
+    "stages": [
+      {
+        "id": "system-design-1",
+        "title": "Shared design foundations",
+        "goal": "Clarify requirements and capacity before choosing scaling and caching components.",
+        "checkpoint": "State workload, latency, freshness and correctness assumptions for a service.",
+        "chapters": [
+          "design-requirements-capacity",
+          "design-scaling-caching"
+        ]
+      },
+      {
+        "id": "system-design-2",
+        "title": "React frontend architecture",
+        "goal": "Design rendering, state and performance before the frontend interview case.",
+        "checkpoint": "Design an accessible catalog with URL state, caching and stale-request handling.",
+        "chapters": [
+          "design-react-architecture",
+          "design-react-data-state",
+          "design-frontend-performance",
+          "system-design-frontend-design-round"
+        ]
+      },
+      {
+        "id": "system-design-3",
+        "title": "Java backend architecture",
+        "goal": "Design APIs and data boundaries, then messaging, reliability and operations.",
+        "checkpoint": "Explain a reservation invariant, retry identity and failure recovery timeline.",
+        "chapters": [
+          "design-java-api-data",
+          "design-messaging-reliability",
+          "design-security-operations",
+          "system-design-backend-design-round"
+        ]
+      },
+      {
+        "id": "system-design-4",
+        "title": "End-to-end case studies",
+        "goal": "Combine frontend and backend reasoning only after studying both sides.",
+        "checkpoint": "Walk through checkout and real-time reconnection failures without losing durable state.",
+        "chapters": [
+          "design-commerce-case-study",
+          "design-realtime-case-study"
+        ]
+      }
+    ]
+  },
+  "interview": {
+    "prerequisites": [
+      "js-modules-tooling-debugging",
+      "react-machine-coding",
+      "java-observability-actuator",
+      "mongo-production-integrations",
+      "dsa-dynamic-programming",
+      "design-realtime-case-study"
+    ],
+    "stages": [
+      {
+        "id": "interview-1",
+        "title": "Language interview practice",
+        "goal": "Use the playbook for the language you have finished studying.",
+        "checkpoint": "Explain an output question and defend a design choice without reading the answer.",
+        "chapters": [
+          "interview-javascript",
+          "interview-java"
+        ]
+      },
+      {
+        "id": "interview-2",
+        "title": "Application interview practice",
+        "goal": "Move from language reasoning to frontend and data-backed application scenarios.",
+        "checkpoint": "Complete one machine-coding or query-design drill with error cases.",
+        "chapters": [
+          "interview-react",
+          "interview-mongodb"
+        ]
+      },
+      {
+        "id": "interview-3",
+        "title": "Algorithms and architecture practice",
+        "goal": "Use these rounds after the corresponding DSA or design course.",
+        "checkpoint": "State an invariant in a coding round and a measurable requirement in a design round.",
+        "chapters": [
+          "interview-dsa",
+          "interview-system-design"
+        ]
+      }
+    ]
+  }
+}

@@ -18,17 +18,17 @@
  * ========================================================================
  * 2. JWT (JSON WEB TOKEN) STATELESS AUTHENTICATION
  * ========================================================================
- * - Traditional Session: User login karta hai, server ek 'session' memory me save karta hai aur browser ko 'cookie' deta hai. Microservices me ye bura hai kyunki agar server-A pe login kiya aur request server-B pe gayi toh wo usko nahi janta.
+ * - Traditional Session: Browser opaque session cookie bhejta hai. Multiple servers shared session storage (for example Redis) use kar sakte hain; sessions are a valid distributed architecture choice.
  * - Stateless (JWT): 
  *   a) User login (POST /login) -> Server DB verify karta hai -> JWT generate karke return karta hai.
- *   b) Server kuch yaad nahi rakhta.
+ *   b) Access-token verification can avoid a session lookup; refresh rotation, revocation, and user data may still require server-side state.
  *   c) Next request me user JWT `Authorization: Bearer <token>` header me bhejta hai.
  *   d) Server apni secret key se token verify karta hai aur usme se user details nikal leta hai.
  * 
  * JWT STRUCTURE:
  * - Header: Algorithm details (HS256).
  * - Payload: Data / Claims (e.g., username, role, expiration time).
- * - Signature: (Header + Payload) hashed with a SECRET_KEY. Agar kisi ne payload change kiya toh signature match nahi karega!
+ * - Signature: Encoded header and payload are authenticated with an allowed algorithm and key (HMAC or asymmetric signature). Payload is not encrypted; validate issuer, audience, expiry, and signature.
  * 
  * IMPLEMENTATION FLOW (JWT in Spring):
  * - Step 1: Login API jo credentials le aur `AuthenticationManager` se verify kare.
@@ -40,7 +40,8 @@
  * ========================================================================
  * - CSRF kya hai? Ek attacker aapki authenticated session (cookies) ka fayda uthake background me fake request bhejta hai (e.g., money transfer on evil-site.com).
  * - Spring Security by default POST/PUT/DELETE pe CSRF protection ON rakhta hai (CSRF token expected).
- * - Stateless APIs (JWT): Jab hum cookies use hi nahi kar rahe, toh CSRF attack possible nahi hai. Isliye REST APIs (JWT) ke liye hum `csrf.disable()` kar dete hain!
+ * - CSRF depends on automatically attached credentials, not REST/JWT labels. Session cookies, JWT cookies, and browser-managed Basic auth can require CSRF protection.
+ * - Disable only for an API that exclusively accepts explicit bearer headers and has no ambient credential authentication. XSS remains a separate risk.
  * 
  * ========================================================================
  * 4. CORS (Cross-Origin Resource Sharing)
@@ -97,7 +98,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for REST APIs (since we use tokens, not cookies)
+            .csrf(csrf -> csrf.disable()) // Only for explicit bearer-header-only authentication; retain CSRF for ambient credentials
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/public/**", "/login", "/register").permitAll() // Open endpoints
@@ -156,4 +157,3 @@ public class Spring_Security_JWT {
         System.out.println("Security Rule #4: Fix frontend blocking with correct CORS configuration.");
     }
 }
-

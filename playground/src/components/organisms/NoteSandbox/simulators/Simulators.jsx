@@ -904,7 +904,7 @@ export function ScopeTrackerSimulator() {
                 matilda instance
               </div>
               <span className="node-sim__arrow">➔</span>
-              <div className="node-sim__node" style={{ fontSize: '11px', padding: '6px 12px', backgroundColor: 'var(--accent)', color: '#fff' }}>
+              <div className="node-sim__node" style={{ fontSize: '11px', padding: '6px 12px', backgroundColor: 'var(--accent)', color: 'var(--on-accent)' }}>
                 Person.prototype (has calcAge)
               </div>
               <span className="node-sim__arrow">➔</span>
@@ -1030,7 +1030,7 @@ export function EventLoopSimulator() {
           <div className="loop-sim__lane">
             <span className="loop-sim__lane-title">Call Stack</span>
             {stack.map((item, i) => (
-              <div key={i} className="loop-sim__item" style={{ backgroundColor: 'var(--accent)', color: '#fff' }}>{item}</div>
+              <div key={i} className="loop-sim__item" style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)' }}>{item}</div>
             ))}
           </div>
           <div className="loop-sim__lane">
@@ -1574,7 +1574,7 @@ export function WebFundamentalsSimulator() {
 
         {phase === 'TCP' && (
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center' }}>
-            <div className="node-sim__node" style={{ backgroundColor: 'var(--accent)', color: '#fff' }}>Client</div>
+            <div className="node-sim__node" style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)' }}>Client</div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '4px' }}>
                 {step === 0 && 'SYN ➔'}
@@ -1836,7 +1836,7 @@ export function NodeInternalsSimulator() {
             <div className="loop-sim">
               <div className="loop-sim__lane" style={{ minHeight: '90px' }}>
                 <span className="loop-sim__lane-title">Main Call Stack (Single Thread)</span>
-                <div className="loop-sim__item" style={{ backgroundColor: 'var(--accent)', color: '#fff' }}>JS Execution</div>
+                <div className="loop-sim__item" style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)' }}>JS Execution</div>
               </div>
               <div className="loop-sim__lane" style={{ minHeight: '90px' }}>
                 <span className="loop-sim__lane-title">libuv Event Loop</span>
@@ -2473,7 +2473,7 @@ export function MongooseMongoSimulator() {
 
         {/* Tab 5: MVC Architecture */}
         {activeTab === 'mvc' && (
-          <div style={{ width: '100%', overflowX: 'auto', backgroundColor: '#f3f4f6', borderRadius: '8px', padding: '24px' }}>
+          <div style={{ width: '100%', overflowX: 'auto', backgroundColor: 'var(--surface-soft)', borderRadius: '8px', padding: '24px' }}>
             <div style={{ position: 'relative', width: '800px', height: '480px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '12px', overflow: 'hidden', border: '1px solid #d1d5db', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
               
               {/* Top Gradient matching screenshot */}
@@ -2510,24 +2510,24 @@ export function MongooseMongoSimulator() {
                 ROUTER
               </div>
 
-              <div style={{ position: 'absolute', left: '185px', top: '295px', width: '110px', backgroundColor: '#e5e7eb', padding: '12px', borderRadius: '4px', fontSize: '11px', fontFamily: 'monospace', color: '#374151', lineHeight: '1.6' }}>
+              <div style={{ position: 'absolute', left: '185px', top: '295px', width: '110px', backgroundColor: 'var(--surface-soft)', padding: '12px', borderRadius: '4px', fontSize: '11px', fontFamily: 'monospace', color: 'var(--body-text)', lineHeight: '1.6' }}>
                 tourRouter.js<br/>userRouter.js<br/>...
               </div>
 
               {/* CONTROLLER */}
-              <div style={{ position: 'absolute', left: '420px', top: '150px', transform: 'translateX(-50%)', fontWeight: '800', color: '#4b5563', fontSize: '14px' }}>
+              <div style={{ position: 'absolute', left: '420px', top: '150px', transform: 'translateX(-50%)', fontWeight: '800', color: 'var(--body-text)', fontSize: '14px' }}>
                 APPLICATION LOGIC
               </div>
               <div style={{ position: 'absolute', left: '355px', top: '175px', width: '130px', height: '130px', background: 'linear-gradient(135deg, #69d96e, #50bf55)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', borderRadius: '50%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
                 CONTROLLER
               </div>
 
-              <div style={{ position: 'absolute', left: '355px', top: '320px', width: '130px', backgroundColor: '#e5e7eb', padding: '12px', borderRadius: '4px', fontSize: '11px', fontFamily: 'monospace', color: '#374151', lineHeight: '1.6' }}>
+              <div style={{ position: 'absolute', left: '355px', top: '320px', width: '130px', backgroundColor: 'var(--surface-soft)', padding: '12px', borderRadius: '4px', fontSize: '11px', fontFamily: 'monospace', color: 'var(--body-text)', lineHeight: '1.6' }}>
                 tourController.js<br/>userController.js<br/>...
               </div>
 
               {/* MODEL */}
-              <div style={{ position: 'absolute', left: '650px', top: '55px', transform: 'translateX(-50%)', fontWeight: '800', color: '#4b5563', fontSize: '14px' }}>
+              <div style={{ position: 'absolute', left: '650px', top: '55px', transform: 'translateX(-50%)', fontWeight: '800', color: 'var(--body-text)', fontSize: '14px' }}>
                 BUSINESS LOGIC
               </div>
               <div style={{ position: 'absolute', left: '595px', top: '85px', width: '110px', height: '110px', background: 'linear-gradient(135deg, #4bc684, #34a86a)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', borderRadius: '50%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
@@ -2538,7 +2538,7 @@ export function MongooseMongoSimulator() {
               <div style={{ position: 'absolute', left: '595px', top: '305px', width: '110px', height: '110px', background: 'linear-gradient(135deg, #99e847, #82c938)', color: '#fff', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', borderRadius: '50%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
                 VIEW
               </div>
-              <div style={{ position: 'absolute', left: '650px', top: '430px', transform: 'translateX(-50%)', fontWeight: '800', color: '#4b5563', fontSize: '14px' }}>
+              <div style={{ position: 'absolute', left: '650px', top: '430px', transform: 'translateX(-50%)', fontWeight: '800', color: 'var(--body-text)', fontSize: '14px' }}>
                 PRESENTATION LOGIC
               </div>
             </div>
@@ -2654,7 +2654,7 @@ export function PatternsSimulator() {
 
               return (
                 <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div className="node-sim__node" style={{ backgroundColor: isHighlighted ? 'var(--accent)' : 'var(--accent-bg)', color: isHighlighted ? '#fff' : 'var(--text)', border: '1px solid var(--border)' }}>
+                  <div className="node-sim__node" style={{ backgroundColor: isHighlighted ? 'var(--accent)' : 'var(--accent-bg)', color: isHighlighted ? 'var(--on-accent)' : 'var(--text)', border: '1px solid var(--border)' }}>
                     {val}
                   </div>
                   <span style={{ fontSize: '11px', fontWeight: 'bold', height: '15px' }}>{pointerLabel}</span>
@@ -2760,7 +2760,7 @@ export function HashTableSimulator() {
                 <strong style={{ width: '80px' }}>Bucket #{idx}:</strong>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {b.map((item, i) => (
-                    <span key={i} style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontFamily: 'var(--mono)', fontSize: '11px' }}>
+                    <span key={i} style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)', padding: '2px 8px', borderRadius: '4px', fontFamily: 'var(--mono)', fontSize: '11px' }}>
                       {item.key}: {item.val}
                     </span>
                   ))}
@@ -3180,9 +3180,9 @@ export function HtmlCssInterviewSimulator() {
               borderRadius: '8px',
               padding: '16px'
             }}>
-              <div style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '12px 18px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 1</div>
-              <div style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '16px 22px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 2 (Bigger)</div>
-              <div style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '12px 18px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 3</div>
+              <div style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)', padding: '12px 18px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 1</div>
+              <div style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)', padding: '16px 22px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 2 (Bigger)</div>
+              <div style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)', padding: '12px 18px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>Box 3</div>
             </div>
           </div>
         </div>

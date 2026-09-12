@@ -1,5 +1,7 @@
 # Backend Short Notes
 
+> Start with the [new structured study path](../notes/README.md#java--spring). This folder preserves the original source notes and examples.
+
 ## Suggested Reading Order
 
 1. `01_Node/README.md`

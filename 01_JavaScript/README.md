@@ -1,5 +1,7 @@
 # JavaScript Short Notes
 
+> Start with the [new structured study path](../notes/README.md#javascript). This folder preserves the original source notes and examples.
+
 Jonas Schmedtmann JavaScript course style notes.
 Short Hinglish explanations, visual ASCII diagrams, important rules, and compact JavaScript examples.
 

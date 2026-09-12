@@ -1,75 +1,69 @@
-import { Suspense, lazy } from 'react';
-import { Routes, Route, useParams } from 'react-router-dom';
-import AppLayout from './components/layouts/AppLayout/AppLayout.jsx';
-import Home from './components/pages/Home/Home.jsx';
-import Spinner from './components/atoms/Spinner/Spinner.jsx';
-import { getNodeBySplatPath } from './registry/index.js';
-
-// Lazy load pages and NoteSandbox
-const Domain = lazy(() => import('./components/pages/Domain/Domain.jsx'));
-const NoteSandbox = lazy(() => import('./components/organisms/NoteSandbox/NoteSandbox.jsx'));
-
-function SandboxRouteHandler() {
-  const { domainId } = useParams();
-  const splat = useParams()['*'];
-  
-  const fileNode = getNodeBySplatPath(domainId, splat);
-
-  if (!fileNode || fileNode.type !== 'file') {
-    return (
-      <div style={{ padding: '40px' }}>
-        <h2>Sandbox File Not Found 😢</h2>
+import { lazy, Suspense, Component } from 'react';
+import { Routes, Route, useLocation, Link } from 'react-router-dom';
+import { ProgressProvider } from './lib/progress.jsx';
+import Shell from './library/Shell.jsx';
+import Dashboard from './library/Dashboard.jsx';
+import Library from './library/Library.jsx';
+const Reader = lazy(() => import('./library/Reader.jsx'));
+const VisualLab = lazy(() => import('./library/VisualLab.jsx'));
+const Interviews = lazy(() => import('./library/Interviews.jsx'));
+const LegacyRoute = lazy(() => import('./library/LegacyRoute.jsx'));
+class PageBoundary extends Component {
+  state = { error: false };
+  static getDerivedStateFromError() {
+    return { error: true };
+  }
+  render() {
+    return this.state.error ? (
+      <div className="empty-state">
+        <h1>This page couldn’t load.</h1>
+        <p>Your saved progress is still on this device. Reload to try again.</p>
+        <button className="primary-button" onClick={() => window.location.reload()}>
+          Reload page
+        </button>
       </div>
+    ) : (
+      this.props.children
     );
   }
-
-  const ComponentToRender = fileNode.component;
-
-  if (ComponentToRender) {
-    return <ComponentToRender />;
-  }
-
-  return <NoteSandbox title={fileNode.title} fetchFile={fileNode.fetchFile} />;
 }
-
-function App() {
+export default function App() {
+  const location = useLocation();
   return (
-    <AppLayout>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        
-        {/* Domain Root Explorer */}
-        <Route 
-          path="/domain/:domainId" 
-          element={
-            <Suspense fallback={<Spinner label="Loading folder directory..." />}>
-              <Domain />
-            </Suspense>
-          } 
-        />
-
-        {/* Dynamic Nested Directory Explorer */}
-        <Route 
-          path="/domain/:domainId/dir/*" 
-          element={
-            <Suspense fallback={<Spinner label="Loading folder..." />}>
-              <Domain />
-            </Suspense>
-          } 
-        />
-
-        {/* Dynamic Scenario Sandbox Page View */}
-        <Route
-          path="/domain/:domainId/file/*"
-          element={
-            <Suspense fallback={<Spinner label="Loading sandbox..." />}>
-              <SandboxRouteHandler />
-            </Suspense>
-          }
-        />
-      </Routes>
-    </AppLayout>
+    <ProgressProvider>
+      <Shell>
+        <PageBoundary key={location.pathname}>
+          <Suspense
+            fallback={
+              <div className="loading-state" role="status">
+                Opening your notebook…
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/library" element={<Library />} />
+              <Route path="/paths" element={<Library paths />} />
+              <Route path="/saved" element={<Library saved />} />
+              <Route path="/notes/:noteId" element={<Reader />} />
+              <Route path="/visuals" element={<VisualLab />} />
+              <Route path="/interview" element={<Interviews />} />
+              <Route path="/domain/:domainId/*" element={<LegacyRoute />} />
+              <Route
+                path="*"
+                element={
+                  <div className="empty-state">
+                    <h1>That page isn’t in the notebook.</h1>
+                    <Link className="primary-button" to="/library">
+                      Explore the library
+                    </Link>
+                  </div>
+                }
+              />
+            </Routes>
+          </Suspense>
+        </PageBoundary>
+      </Shell>
+    </ProgressProvider>
   );
 }
-
-export default App;

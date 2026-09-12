@@ -1,5 +1,7 @@
 # Frontend Short Notes
 
+> Start with the [new structured study path](../notes/README.md#react). This folder preserves the original source notes and examples.
+
 ## Suggested Reading Order
 
 1. `01_CSS/Vw_Vh,Rem,Px.js`

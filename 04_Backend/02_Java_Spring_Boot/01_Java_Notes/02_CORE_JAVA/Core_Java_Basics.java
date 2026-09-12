@@ -16,7 +16,10 @@
  * - Variable = ek named container jo data store karta hai memory me.
  * - Naming convention: camelCase (e.g., maxSpeed, isRunning). Keywords reserved hain (int, class, etc.).
  * 
- * PRIMITIVE TYPES (8 total — stored in Stack):
+ * PRIMITIVE TYPES (8 total — storage depends on context, not primitive/reference alone):
+ * - Local values are modeled in stack frames; primitive instance fields and array elements belong to heap objects.
+ * - JVM optimizations may eliminate allocations or keep values in registers.
+ * - Defaults below apply to fields/array elements. Local variables must be initialized before use.
  * ┌─────────┬──────────┬───────────────────────────────────┬─────────────────────┐
  * │  Type   │  Size    │  Range                            │  Default Value      │
  * ├─────────┼──────────┼───────────────────────────────────┼─────────────────────┤
@@ -26,8 +29,8 @@
  * │ long    │ 8 bytes  │ -2^63 to 2^63-1                   │ 0L                  │
  * │ float   │ 4 bytes  │ ~7 decimal digits precision        │ 0.0f                │
  * │ double  │ 8 bytes  │ ~15 decimal digits precision       │ 0.0d                │
- * │ char    │ 2 bytes  │ 0 to 65,535 (Unicode)             │ '\u0000'            │
- * │ boolean │ 1 bit    │ true / false                       │ false               │
+ * │ char    │ 2 bytes  │ 0 to 65,535 (UTF-16 code unit)    │ '\u0000'            │
+ * │ boolean │ JVM-dependent storage │ true / false           │ false               │
  * └─────────┴──────────┴───────────────────────────────────┴─────────────────────┘
  * 
  * LITERALS:
@@ -47,7 +50,7 @@
  * Java me ek data type ko dusre me convert karna = Type Conversion.
  * 
  * a) WIDENING (Implicit / Automatic Conversion):
- *    - Chhota type -> Bada type. Java AUTOMATICALLY karta hai. NO data loss.
+ *    - Allowed widening conversions are implicit. int -> float and long -> float/double can lose precision.
  *    - byte -> short -> int -> long -> float -> double
  *    - Example: int x = 5; double y = x;  // y = 5.0 (auto-widened)
  * 
@@ -81,7 +84,7 @@
  *    - true && false -> false,  true || false -> true,  !true -> false
  * 
  * d) ASSIGNMENT OPERATORS: =, +=, -=, *=, /=, %=
- *    - x += 5 is shorthand for x = x + 5
+ *    - x += 5 includes an implicit cast back to x's type; it is not always equivalent to x = x + 5.
  * 
  * e) UNARY OPERATORS: ++, --, +, -, ~ (bitwise complement), ! (logical NOT)
  *    - Pre-increment: ++x (pehle badhao, phir use karo)
@@ -102,7 +105,7 @@
  * 4. MEMORY MANAGEMENT
  * ========================================================================
  * - Stack Memory: Method calls, local variables aur references store hote hain (Fast, LIFO).
- * - Heap Memory: Objects aur unke instance variables store hote hain. Garbage Collector (GC) heap me un-referenced objects ko delete karta hai.
+ * - Heap Memory: Objects aur unke instance variables store hote hain. GC roots se unreachable objects collection ke eligible hote hain; collection timing guaranteed nahi.
  * 
  * ========================================================================
  * 5. OOPS (OBJECT-ORIENTED PROGRAMMING)

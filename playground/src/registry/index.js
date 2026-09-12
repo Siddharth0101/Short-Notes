@@ -104,6 +104,7 @@ function buildTree(files, domainPrefix) {
         const customOverride = CUSTOM_VISUALIZERS[scenarioId];
 
         current.children[part] = {
+          source: filePath.replace('../../../', ''),
           id: scenarioId,
           title: formatTitle(cleanName),
           description: customOverride ? customOverride.description : `Interactive script runner and notes for ${cleanName.toLowerCase().replace(/_/g, ' ')}.`,

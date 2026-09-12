@@ -1,5 +1,7 @@
 # Interview Short Notes & Scenarios
 
+> Start with the [new structured study path](../notes/README.md#interview-playbooks). This folder preserves the original source notes and examples.
+
 This directory contains scenario-based questions, machine coding problems, and standard interview preparation notes — organized by **topic folders**.
 
 ## Folder Structure

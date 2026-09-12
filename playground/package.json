@@ -1,24 +1,36 @@
 {
-  "name": "playground",
+  "name": "shortnotes",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run curriculum:check && npm run test && npm run lint && npm run build",
+    "format": "prettier --write \"src/library/**/*.{js,jsx}\" \"src/lib/**/*.{js,jsx}\" \"src/data/*.js\" src/App.jsx src/index.css src/theme.css \"tests/*.mjs\" vite.config.js",
+    "curriculum:check": "node ../scripts/sync-curriculum.mjs --check"
   },
   "dependencies": {
+    "lucide-react": "^1.44.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.1"
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.18.1",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "jsdom": "^30.0.1",
     "oxlint": "^1.71.0",
+    "prettier": "^3.9.6",
     "vite": "^8.1.1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
