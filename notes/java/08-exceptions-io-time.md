@@ -13,6 +13,8 @@ tags: exceptions, io, time, resources
 
 Exception ek failed operation ka structured signal hai. Caller ko decide karna hota hai ki recover karna possible hai, retry meaningful hai, ya error translate karke boundary par return karna hai. Har catch block mein print karke continue karna failure ko success jaisa bana deta hai. Resource cleanup correctness ka part hai, garbage collector ka replacement task nahi.
 
+> **Core takeaway:** Resource ownership determines who closes a stream; exceptions must not bypass cleanup.
+
 ## Exception contracts
 
 Checked exceptions catch ya declare karne padte hain. RuntimeException subclasses unchecked hain. Checked ka matlab recoverable aur unchecked ka matlab programmer bug automatically nahi; API designer contract choose karta hai. `throw` exception raise karta hai, `throws` method signature mein possibility declare karta hai. Catch most-specific exceptions pehle rakho. Original cause preserve karo so debugging mein root failure lost na ho. [Exception guide](https://dev.java/learn/exceptions/)
@@ -105,6 +107,18 @@ Payment/order APIs mein exception translation exactly is pattern se dikhti hai: 
 ## Practice
 
 UTF-8 file importer banao. Invalid row number ke saath error report karo. Fixed Clock se midnight-boundary test likho, phir Europe/Berlin daylight-saving day par 24-hour duration aur one-day calendar addition compare karo. Phir ek token-expiry checker likho jo injected `Clock` use kare, aur teen tests likho: expiry se pehle, exactly at expiry, aur expiry ke baad.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A file-reading method throws halfway through processing. Sketch how to ensure its owned reader closes and how the caller learns about failure.
+
+> **Hint:** Use a construct whose cleanup runs on normal and exceptional exits.
+
+**Answer guide — compare after attempting:** Open the reader in try-with-resources and propagate or meaningfully wrap the exception. Verify the failure path as well as successful reading. Do not swallow the exception and return a fabricated complete result. Avoid closing a resource owned by a caller unless the contract transfers ownership.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

@@ -13,6 +13,8 @@ tags: oop, records, equality, interfaces
 
 Object sirf fields plus getters nahi hai. Achha object apne valid states protect karta hai. Bank balance private rakh kar unrestricted setter dena encapsulation ka purpose miss karta hai. Public methods domain actions express karein: deposit, reserve, cancel. Constructor ke baad instance valid ho, aur har method validity preserve kare.
 
+> **Core takeaway:** Value equality and identity answer different questions; hash-based collections need a matching equality contract.
+
 ## Composition and polymorphism
 
 Interface behavior ka contract deta hai. Inheritance tab use karo jab subtype parent ki expectations preserve kare. Reuse ke liye composition usually flexible hai: order service ke paas pricing strategy ho sakti hai. Runtime dispatch overridden instance method select karta hai; overloaded method selection compile-time types se hoti hai. Static methods instance polymorphism participate nahi karte.
@@ -126,6 +128,18 @@ Sealed interface ke saath `switch` expression compiler-verified exhaustive hota 
 ## Practice
 
 PaymentResult ko sealed success/failure variants se model karo. Ek mutable map key ka failing lookup demonstrate karo, phir immutable record key se correct karo. Test equality between independently constructed equal values. Phir ek `Money` class likho jisme `equals`/`hashCode` currency aur amount dono use karein, aur ek failing test likho jo sirf amount compare karne ki galti pakde.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Two independently created IDs contain the same text. Specify when they should compare equal and what happens if equals changes but hashCode does not.
+
+> **Hint:** Equal objects must produce equal hash codes.
+
+**Answer guide — compare after attempting:** For a value ID, compare the text value and compute hashCode from the same stable fields. A HashSet should retain one logical ID. Test equal and unequal values. Violating the contract can make lookup and deduplication fail even when equals reports equality.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

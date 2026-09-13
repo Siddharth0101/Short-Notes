@@ -24,12 +24,13 @@ Use a globally unique permanent ID, a unique positive order within its track, an
 
 Follow this body structure:
 
-1. `## Mental model`: what it means and when it helps.
+1. `## Mental model`: what it means and when it helps. End it with a concise `> **Core takeaway:**` that states the key mechanism or decision.
 2. Concept sections: assumptions, examples, tradeoffs, and gotchas.
 3. Fenced code: use `js`, `jsx`, `java`, `sql`, or `text` accurately. Label application excerpts and required dependencies.
 4. `## Practice` or `## Practice and answer`: tasks that require recall and application.
-5. Interview questions: explain why, not just what.
-6. Primary sources: link the exact documentation supporting version-sensitive claims.
+5. `## Revision and practice lab`: include **Recall**, a chapter-specific **Apply** challenge, a **Hint**, an **Answer guide — compare after attempting**, and an **Exit check**. Supply an expected result, a trace, or observable acceptance criteria. State assumptions; do not reuse a generic challenge across unrelated chapters.
+6. Interview questions: explain why, not just what.
+7. Primary sources: link the exact documentation supporting version-sensitive claims.
 
 Never claim a code excerpt is runnable by itself if it needs a framework, schema, component, or dependency that is not included. Avoid outdated blanket rules such as “all primitives live on the stack” or “REST APIs never need CSRF protection.”
 
@@ -66,3 +67,17 @@ Run `node scripts/sync-curriculum.mjs` from the repository root to regenerate th
 ## Unified course content
 
 Every source file discovered by `catalog.js` must have an explicit chapter owner in `playground/src/data/sourceChapters.json`. Assign by topic, including shared SQL/frontend topics across folder boundaries. The reader loads examples on expansion; do not reintroduce a separate source-note collection. Old source IDs remain aliases. Every chapter needs relevant interview practice; use an explicit `noteId` for precise placement of new questions, and include primary documentation links for externally researched concepts. New scenarios belong in `scenarioQuestions.js`; avoid unsupported company-frequency claims. Verify source mapping, old links/bookmarks, search, and inline practice with the app tests.
+
+## Review the learning experience
+
+Use the [study guide](notes/STUDY_GUIDE.md) as the learner-facing routine. Keep revision takeaways short and put detailed reasoning in concept sections. A lab should be solvable using the chapter and its prerequisites. Beginner exercises should not require tools or concepts introduced later without explanation.
+
+Attempt the exercise separately from its answer guide. Check numeric examples, empty/boundary inputs, and any claimed failure outcome. Label design answers as one defensible approach when alternatives exist. Keep answers readable in both GitHub Markdown and the app; raw HTML disclosure elements are not supported by the current app Markdown renderer. Existing interview cards provide hidden answers.
+
+## Maintain the supplied interview checklist
+
+`playground/src/data/requestedQuestions.js` holds the original additions and targeted answer expansions keyed by existing question IDs. Reuse a canonical question when its learning objective is already covered; expand its answer when the requested example is missing. Give each addition an explicit chapter `noteId`, a topic from `interviewTopics.js`, a difficulty, an original answer, a follow-up, and a primary technical reference. Optional `promptCode` is Markdown displayed before answer reveal; label runtime assumptions and keep intended output out of the prompt.
+
+Question answers support Markdown code fences. Use complete runnable examples when practical and label framework or multi-file excerpts. Do not present one observed timer order as a portable guarantee. Preserve stable IDs so confidence tracking continues to work.
+
+Run `node scripts/sync-interviews.mjs` after editing the bank or checklist mappings. It regenerates `notes/INTERVIEW_WORKBOOK.md`; `npm run check` verifies it stays synchronized. Keep inaccessible image exercises explicitly pending until the actual images are available.

@@ -4,6 +4,8 @@
 
 Before starting: [Performance suspense and production quality](../react/10-performance-production.md) · [JPA Hibernate and Spring transactions](../java/15-jpa-transactions.md) · [Java concurrency under real resource limits](../java/18-concurrency-production.md).
 
+Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+
 ## Stage 1: Shared design foundations
 
 Clarify requirements and capacity before choosing scaling and caching components.

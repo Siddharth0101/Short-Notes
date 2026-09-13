@@ -14,6 +14,8 @@ visual: caching
 
 Scale karna work distribute ya avoid karna hai. Cache repeated work avoid karti hai. Replica reads distribute kar sakti hai. Sharding data ownership partition karti hai. Load balancer requests distribute karta hai. Har mechanism consistency, cost and operational tradeoffs introduce karta hai; ek tool sab bottlenecks solve nahi karta.
 
+> **Core takeaway:** A cache reduces origin work only for the requests it can safely reuse.
+
 ## Layered read path
 
 ```text
@@ -162,6 +164,32 @@ Resharding ka cost bhi pehle se socho: 8 se 16 shards jaana matlab poora dataset
 Hot-key expiry simulate karo. Cache disabled condition mein maximum safe fallback throughput derive karo. Recent edit replica se stale aaye toh UI and routing policy specify karo.
 
 Phir stampede reproduce karo: ek key ko 200 ms rebuild cost do, 200 concurrent readers chalao, aur count karo ki kitne rebuilds hue. Single-flight lock lagakar dobara count karo. Uske baad cache-aside race reproduce karo — reader ko database read ke baad artificially 100 ms pause karao, us beech mein write plus invalidate chalao, aur verify karo ki cache mein stale value baith gayi. Last mein apne shard key ke liye skew calculate karo: top tenant ka traffic share nikaalo aur estimate karo ki uska shard uniform expectation se kitna guna load lega.
+
+## Research notes: Define behavior beyond capacity
+
+Request count poorly represents capacity when request costs differ. Identify the scarce resource and choose what to reject or degrade before waiting grows without bound.
+
+Original policy: omit recommendations under overload while preserving an article. Checkout cannot invent inventory results to seem available. Specify degraded behavior as a product contract and monitor it separately from full success.
+
+**Interview check:** Why is an unlimited queue a poor overload strategy?
+
+**Answer:** It converts overload into growing latency and memory use. Expired requests can still consume resources. Bound waiting and prioritize or reject work according to explicit requirements.
+
+**Practice:** Compare accepted throughput, rejection rate, queue age and latency during a burst.
+
+[Read the source — Google SRE](https://sre.google/sre-book/handling-overload/). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** At 1000 reads/second with a 90% hit rate, estimate origin reads. What happens immediately after a cold restart?
+
+> **Hint:** A hit-rate estimate is conditional on a warm cache.
+
+**Answer guide — compare after attempting:** A warm cache sends about 100 reads/second to origin, ignoring refresh overhead. A cold cache may send close to 1000 until populated. Discuss request coalescing, controlled warming, and admission limits; size the failure plan instead of assuming the steady-state hit rate always holds.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

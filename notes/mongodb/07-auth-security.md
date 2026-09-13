@@ -14,6 +14,8 @@ visual: request-flow
 
 Authentication identity establish karti hai; authorization decide karti hai ki identified user specific resource par action kar sakta hai. Login successful hona har record access ka permission nahi hai. Browser UI, API input aur stored data sab trust boundaries hain. Security ek middleware package install karne se complete nahi hoti; har boundary par explicit policy chahiye.
 
+> **Core takeaway:** Private-resource access must be scoped by authenticated ownership on the server.
+
 ## Authorize the resource in the query
 
 ```js
@@ -79,6 +81,32 @@ Two-user test likho: user A user B ka topic read/update na kar sake. Expired ses
 **Q. JWT encrypted hota hai?** Common signed JWT readable claims rakhta hai; signing tampering detect karti hai. Confidential claims ke liye separate encryption mechanism chahiye.
 
 **Q. Role check enough hai?** Often nahi. Same role ke users alag tenants/resources own karte hain; object-level authorization required hai.
+
+## Research notes: Authorize both the action and its object
+
+Authentication identifies the caller. Authorization decides whether that caller can perform this action on this object, including tenant and ownership constraints. Check each request and deny when no rule permits access.
+
+Original matrix: an owner edits a draft, a reviewer approves it, and an unrelated user does neither. A single logged-in check cannot describe this policy. Test each allowed and denied cell, including changing the object ID with a valid token.
+
+**Interview check:** Why is hiding an Approve button insufficient?
+
+**Answer:** A caller can submit HTTP directly. The server must enforce the action and resource policy independently of UI rendering.
+
+**Practice:** Revoke reviewer membership and retry with the existing session.
+
+[Read the source — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A notes update endpoint accepts noteId and ownerId from the body. Explain the attack and rewrite the ownership rule.
+
+> **Hint:** The caller can alter both submitted fields.
+
+**Answer guide — compare after attempting:** Derive user identity from the verified session, and filter the update by note ID plus that identity. Allowlist editable fields so ownerId cannot be reassigned. Test user A attempting to edit user B's note and confirm no write occurs.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

@@ -14,6 +14,8 @@ visual: react-identity
 
 Machine coding round mein working happy path sirf starting point hai. Strong solution has a small state model, clear component contracts, predictable identity and observable failure states. Write acceptance criteria before styling. For a search interface, clarify minimum query length, keyboard behavior, loading state, empty results and what happens when old responses arrive late.
 
+> **Core takeaway:** Machine coding rewards explicit states, stable identity, and observable edge-case handling.
+
 ## Model state before components
 
 Keep input text separate from the selected result. A selected entity ID represents identity; a label is only presentation and may not be unique. Result data belongs to the query that produced it. Do not show results from query A under the heading for query B without an explicit stale-data indication.
@@ -88,6 +90,18 @@ Build a table with URL filters, stable row IDs, an editable draft, and a paginat
 ### Interview defense
 
 Draw the owners of URL state, local draft state, and server data. Explain why copying all props into state creates synchronization work. Compare rendering ten thousand rows with windowing, including keyboard navigation and screen-reader tradeoffs. Deliver a short screen recording plus tests for identity, request races, and navigation; a static happy-path screenshot is insufficient evidence.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Search for A, then B. B returns first and A returns last. Specify the visible result and a test that proves your implementation handles this ordering.
+
+> **Hint:** Control promise resolution order in a test.
+
+**Answer guide — compare after attempting:** Only B should remain visible. Track request identity or use equivalent stale-response protection, with cancellation where supported. Resolve B before A in a deterministic test and assert the displayed query/result remains B. Also ensure an old failure cannot overwrite B's successful state.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 [React identity and state](https://react.dev/learn/preserving-and-resetting-state) and [WAI combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) explain the relevant contracts.

@@ -15,6 +15,8 @@ Hash table key ko hash value aur phir bucket location mein map karta hai. Differ
 
 Good distribution aur controlled load factor ke under typical hash operations expected O(1) ho sakte hain. Adversarial collisions ya unsuitable implementation mein worst case O(n) ho sakta hai. Hashing long string key ka cost bhi key length par depend kar sakta hai; har key ko automatically unit-size mat samjho.
 
+> **Core takeaway:** Hashing trades additional storage for efficient key lookup under its assumptions.
+
 ## Collision strategies
 
 **Separate chaining:** Har bucket entries ki list ya another structure rakhta hai. **Open addressing:** Entries table mein hi rehti hain; collision par probing se next location dhoondte hain. Open-addressed deletion ko empty slot se replace karna probe chain tod sakta hai, isliye tombstones ya appropriate reinsertion strategy chahiye.
@@ -174,6 +176,34 @@ Distributed systems mein **consistent hashing** keys ko nodes par map karta hai 
 **Prompt:** LRU cache ke liye hash map + doubly linked list kyun, sirf hash map kyun nahi?
 
 **Answer:** Hash map O(1) lookup deta hai lekin recency ordering nahi rakhta — "sabse purana kaunsa hai" answer karne ke liye poora map scan karna padega (O(n) per eviction). Doubly linked list ordering rakhti hai aur **held node reference** par O(1) removal/move-to-front deti hai, lekin usme key se node dhoondhna O(n) hai. Dono milkar donon operations O(1) karte hain: map se node reference milta hai, list se ordering. Yeh "ek access pattern par ek structure, dono ko sync mein rakho" wala general design pattern hai.
+
+## Research notes: Expected and amortized are different guarantees
+
+Doubling capacity spreads resizing work across many inserts: copied capacities form a geometric sum. Growing by one can repeatedly copy almost the entire structure.
+
+Amortized cost concerns a sequence of operations. Expected hashing cost depends on assumptions about hash distribution. “Always O(1)” removes both qualifications.
+
+Trace eight insertions with capacities 1, 2, 4, 8; list copy counts. Compare growth through every integer capacity.
+
+**Interview check:** Can one insertion be linear despite constant amortized insertion?
+
+**Answer:** Yes. One resize may copy the contents, while total resizing work across geometric growth is linear in the number of inserts. Amortized cost does not bound individual-operation latency.
+
+**Practice:** Explain why separate shrink and grow thresholds prevent resize thrashing.
+
+[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/160b3b5f9da2e03815ca1e6ee0dba62a_MIT6_006F11_lec09.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Find the first repeated value in `[4,2,4,2]` while scanning left to right. Why must you test membership before insertion?
+
+> **Hint:** The first duplicate encountered is determined by scan order.
+
+**Answer guide — compare after attempting:** Keep a Set; check each value, then add unseen values. Return 4 at the third item. Empty and all-distinct inputs return the chosen no-duplicate result. Expected time is O(n), extra space O(n); specify equality semantics for nonprimitive inputs.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

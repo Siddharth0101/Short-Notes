@@ -5,6 +5,8 @@ import { TRACKS } from '../lib/content.js';
 import { notes, trackById } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import Icon from './Icons.jsx';
+import Markdown from './Markdown.jsx';
+import { INTERVIEW_TOPICS, questionTopic } from '../data/interviewTopics.js';
 
 export function QuestionCard({ item, number }) {
   const [revealed, setRevealed] = useState(false);
@@ -29,6 +31,7 @@ export function QuestionCard({ item, number }) {
         </div>
       </div>
       <h2>{item.question}</h2>
+      {item.promptCode && <Markdown>{item.promptCode}</Markdown>}
       <div className="question-tags">
         {item.tags.map((tag) => (
           <span key={tag}>{tag}</span>
@@ -37,7 +40,7 @@ export function QuestionCard({ item, number }) {
       {revealed && (
         <div className="question-answer" id={`answer-${item.id}`}>
           <span className="card-overline">A STRONG ANSWER</span>
-          <p>{item.answer}</p>
+          <Markdown>{item.answer}</Markdown>
           <div className="follow-up">
             <Icon name="messages" size={18} />
             <div>
@@ -213,13 +216,15 @@ export default function Interviews() {
   const [mock, setMock] = useState(null);
   const { progress } = useProgress();
   const track = params.get('track') || 'all';
+  const topic = params.get('topic') || 'all';
   const filtered = interviewQuestions
     .filter(
       (item) =>
         (track === 'all' || item.track === track) &&
+        (topic === 'all' || questionTopic(item) === topic) &&
         (level === 'all' || item.level === level) &&
         (!unreviewed || !progress.known.includes(item.id)) &&
-        `${item.question} ${item.answer} ${item.tags.join(' ')}`
+        `${item.question} ${item.promptCode || ''} ${item.answer} ${item.tags.join(' ')}`
           .toLowerCase()
           .includes(query.toLowerCase()),
     )
@@ -284,6 +289,21 @@ export default function Interviews() {
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>
+        <select
+          aria-label="Interview topic"
+          value={topic}
+          onChange={(event) => {
+            setParams(event.target.value === 'all' ? {} : { topic: event.target.value });
+            setLimit(12);
+          }}
+        >
+          <option value="all">All topics</option>
+          {INTERVIEW_TOPICS.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
         <select
           aria-label="Interview difficulty"
           value={level}

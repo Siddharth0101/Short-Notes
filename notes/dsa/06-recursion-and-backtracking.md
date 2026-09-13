@@ -14,6 +14,8 @@ visual: recursion-stack
 
 Recursive function ek state ko smaller states mein delegate karke solve karta hai. Har active call ke apne parameters aur local bindings hote hain. Base case solved state handle karta hai; progress measure ensure karta hai ki har branch eventually base case tak pahunche. “Function khud ko call karta hai” syntax explain karta hai, correctness nahi.
 
+> **Core takeaway:** Backtracking must restore shared choices before exploring siblings.
+
 ## Write the contract first
 
 `sumFrom(nums, i)` ka contract hai: index i se end tak sum return karo. Empty suffix ka sum zero hai. Ek element consume karne se remaining suffix ki length strictly decrease hoti hai.
@@ -271,6 +273,18 @@ Memoization ka production analogue caching hai, aur wahi trap wapas aata hai: ca
 **Prompt:** Tree depth nikalne ka recursive version kab iterative version se genuinely alag behave karega?
 
 **Answer:** Jab tree skewed ho aur depth engine ki call-stack limit cross kare (Node mein typically kuch hazaar frames). Dono O(n) time aur O(h) space hain, lekin recursive version `RangeError` throw karta hai jabki explicit-stack version heap use karta hai aur chalta rehta hai. Complexity identical hone ke bawajood ek production mein fail karta hai — yeh "same big-O, different real behavior" ka clean example hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Generate subsets of `[1,2]` using one mutable path. Why does storing the path object itself in every result corrupt the output?
+
+> **Hint:** Later push/pop operations change the same object.
+
+**Answer guide — compare after attempting:** Store a copy at each completed choice, producing the four subsets `[]`, `[1]`, `[2]`, and `[1,2]` in an order determined by traversal. Restore the path after each branch. Materializing all subsets costs O(n·2^n) output time/space, not merely O(2^n) scalar work.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

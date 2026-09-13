@@ -14,6 +14,8 @@ visual: request-flow
 
 Node JavaScript ko browser ke outside run karta hai. V8 JavaScript execute karta hai; Node APIs operating system aur libuv ke through I/O coordinate karti hain. Main JavaScript thread par long CPU work sab requests ke callbacks delay kar sakta hai. Async I/O ka matlab har operation ke liye naya JavaScript thread create hona nahi hai. Kuch APIs OS networking use karti hain; kuch work libuv thread pool mein jaata hai.
 
+> **Core takeaway:** The event loop can coordinate many waits, but synchronous CPU work still blocks it.
+
 ## A minimal HTTP server
 
 ```js
@@ -113,6 +115,38 @@ Health endpoint ke saath text-file download add karo using a stream. Large file 
 **Q. Node single-threaded hai?** JavaScript execution usually one main thread par hoti hai, lekin runtime OS services, thread pool aur optional workers use karta hai. Blanket “sab single-threaded” inaccurate hai.
 
 **Q. Stream readFile se kab useful hai?** Large data, progressive processing aur bounded memory mein. Small configuration file ko startup par read karna simpler ho sakta hai.
+
+## Research notes: Backpressure is a producer contract
+
+When a writable returns false from write(), stop producing until it can accept more work. Continuing turns the buffer into an accidental queue. An error-aware pipeline coordinates cooperating streams.
+
+```js
+import { pipeline } from 'node:stream/promises';
+import { createReadStream, createWriteStream } from 'node:fs';
+await pipeline(createReadStream('input.txt'), createWriteStream('copy.txt'));
+```
+
+The input must exist and the output is owned by this exercise. Streaming the final stage cannot undo an earlier stage loading the whole dataset.
+
+**Interview check:** Does backpressure cap the total number of simultaneous exports?
+
+**Answer:** No. It regulates flow within cooperating pipelines. The service separately needs admission limits across pipelines and cleanup on cancellation and errors.
+
+**Practice:** Use a slow destination and compare memory when demand is respected or ignored.
+
+[Read the source — Node.js](https://nodejs.org/en/learn/modules/backpressuring-in-streams). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** An endpoint performs a long synchronous calculation before sending a response. Why do unrelated lightweight requests slow down, and what experiment isolates the cause?
+
+> **Hint:** Asynchronous networking does not make synchronous calculation parallel.
+
+**Answer guide — compare after attempting:** Measure event-loop delay and compare concurrent lightweight requests with and without the calculation. Move suitable CPU work to workers or another execution service, with bounded queues. Simply marking the handler async does not move its synchronous body off the event loop.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

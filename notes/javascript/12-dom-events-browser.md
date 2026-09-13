@@ -13,6 +13,8 @@ tags: dom, events, delegation, browser, accessibility
 
 HTML document browser mein object tree ban jaata hai jise DOM kehte hain. JavaScript tree ko query aur update kar sakta hai. Event ek interaction ka record hai jo capture, target aur bubble phases se travel kar sakta hai. DOM structure aur event path ko alag socho: clicked icon event target ho sakta hai, lekin action button ka hai.
 
+> **Core takeaway:** Delegation handles events through a stable ancestor; the target may be nested inside the action.
+
 ## Delegate list actions
 
 ```html
@@ -113,6 +115,43 @@ Dynamic task list banao with add/remove buttons, keyboard support aur empty-stat
 **Q. Delegation kab useful hai?** Dynamic repeated children par shared action handling ke liye. Event bubbling aur correct target resolution required hai.
 
 **Q. DOM update immediately screen par dikhta hai?** JavaScript DOM update kar sakta hai, lekin visible paint browser rendering schedule par hota hai. Long synchronous work paint delay kar sakta hai.
+
+## Research notes: Own a listener lifecycle
+
+Related listeners can share an abort signal and be disposed together. Use a fresh controller for each independent widget.
+
+```js
+function mountCounter(button, output) {
+  const lifetime = new AbortController();
+  let count = 0;
+  button.addEventListener('click', () => {
+    output.textContent = String(++count);
+  }, { signal: lifetime.signal });
+  return () => lifetime.abort();
+}
+```
+
+A global controller would couple widget lifetimes: disposing one could remove another's listeners.
+
+**Interview check:** Does once: true replace lifecycle cleanup?
+
+**Answer:** It removes a listener after its first invocation. If that event never happens on a long-lived target, explicit disposal still matters. One-event behavior and resource ownership are different requirements.
+
+**Practice:** Mount two counters, dispose one, and verify only the other responds.
+
+[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A delete button contains an icon. Explain why checking only `event.target.matches('button')` misses clicks, and describe a fix for dynamically added rows.
+
+> **Hint:** Find the nearest matching action and verify that it belongs to your list.
+
+**Answer guide — compare after attempting:** Use `event.target.closest('button[data-id]')` when the target is an Element, and confirm the button is inside the intended list. Read its stable item ID and remove that item. One ancestor listener also handles rows added later.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

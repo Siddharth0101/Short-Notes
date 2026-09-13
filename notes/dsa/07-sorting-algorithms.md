@@ -14,6 +14,8 @@ visual: sorting
 
 Sorting ek order establish karti hai jisse duplicate grouping, interval scanning aur binary search easy ho jaate hain. Algorithm ko comparisons, moves, memory, stability aur key assumptions se judge karo. **Stable** ka matlab equal-key records ka original relative order preserve hona hai.
 
+> **Core takeaway:** Stability preserves the input order of items with equal sort keys.
+
 ## Choosing an algorithm
 
 | Algorithm | Best | Average or expected | Worst | Typical auxiliary space | Stable |
@@ -318,6 +320,18 @@ Product-level examples bhi wahi tradeoffs dikhate hain: leaderboards ke liye top
 **Prompt:** `[3, 1, 2].sort((a, b) => a > b)` kya return karega aur kyun?
 
 **Answer:** Comparator boolean return kar raha hai, jo `1`/`0` mein coerce hota hai — negative value kabhi return hi nahi hoti. Sort ke liye "a, b se pehle aata hai" wali information hi missing hai, so behavior implementation-defined hai aur output aksar input jaisa hi (`[3, 1, 2]`) reh jaata hai. Correct comparator `(a, b) => a - b` hai, jo teenon cases (negative, zero, positive) return karta hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Records are `(A,2)`, `(B,1)`, `(C,2)` and are sorted by the number. What does a stable sort guarantee, and when does that matter?
+
+> **Hint:** Only equal-key relative order is constrained by stability.
+
+**Answer guide — compare after attempting:** A stable result is `(B,1)`, `(A,2)`, `(C,2)`. A stays before C. This matters when prior order carries meaning, such as earlier sorting by another field. Stability is distinct from runtime complexity and from whether sorting mutates its input.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

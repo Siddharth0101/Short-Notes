@@ -16,6 +16,8 @@ A monotonic stack stores unresolved candidates in an order that makes future eli
 
 For daily temperatures, each day needs the first later strictly warmer day. Store indices of days whose warmer answer is unknown. Their temperatures remain non-increasing from bottom to top; equal temperatures are allowed because equal is not warmer.
 
+> **Core takeaway:** A monotonic stack retains candidates that future values may resolve.
+
 ## Worked solution
 
 ```javascript
@@ -59,6 +61,18 @@ Trace [], [30], [30, 30], [40, 30, 20] and [20, 30, 40]. Write a quadratic refer
 **Why store indices?** They retain identity and allow distances or expiration checks without a second lookup.
 
 **When is a monotonic stack the wrong tool?** Arbitrary online updates or range queries may need a tree or other structure; future elimination is no longer permanent under all update models.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Find the next strictly greater value to the right for `[2,2,3,1]`. Explain how equality changes the pop condition.
+
+> **Hint:** Equal values do not satisfy strictly greater.
+
+**Answer guide — compare after attempting:** The answers are `[3,3,-1,-1]`. In a left-to-right unresolved-index stack, pop while the new value is strictly greater than the stacked value. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

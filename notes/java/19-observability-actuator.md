@@ -13,6 +13,8 @@ tags: actuator, observability, metrics, tracing, logging
 
 Ek service "working" hai ya nahi, yeh sirf uske apne process ke andar se pata nahi chalta — usse externally observable banana padta hai. Observability teen pillars par khadi hoti hai: logs (kya hua, discrete events), metrics (kitna/kitni baar, aggregated numbers over time), aur traces (ek request ka poora journey multiple services ke through). Spring Boot Actuator health/metrics endpoints ready-made deta hai; production readiness ka matlab hai in signals ko correctly configure karna, sirf feature ko "on" kar dena nahi.
 
+> **Core takeaway:** Observability should explain where requests spend time and how failures affect users.
+
 ## Health checks: liveness versus readiness
 
 ```java
@@ -122,6 +124,18 @@ Implement reserve, confirm, and release operations around an explicit reservatio
 ### Interview defense
 
 Explain the invariant, transaction boundary, and recovery after a commit followed by a lost response. Compare a conditional update, pessimistic lock, and optimistic version check. Provide measured conflict and latency results under contention. A successful HTTP response alone does not prove race safety.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Endpoint latency rises while database execution time stays flat. Name two other timings to inspect and a useful trace boundary.
+
+> **Hint:** Execution time omits queueing and downstream waits.
+
+**Answer guide — compare after attempting:** Inspect connection-pool acquisition wait and outbound-service latency, plus request queueing where applicable. Trace controller-to-service-to-database/outbound boundaries with correlated request context. Compare affected and healthy requests; avoid placing unbounded user IDs in metric labels.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/index.html)

@@ -4,6 +4,8 @@
 
 Before starting: [Objects arrays and modern data transformations](../javascript/07-modern-data-collections.md) · [Event loop promises and resilient fetching](../javascript/15-async-event-loop.md) · [Modules web delivery and debugging](../javascript/17-modules-tooling-debugging.md).
 
+Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+
 ## Stage 1: Understand the server request
 
 Start with Node and HTTP, then learn Express routing and errors.

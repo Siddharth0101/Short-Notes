@@ -15,6 +15,8 @@ Tree ek hierarchy hai: root se children tak links jaate hain, aur ordinary roote
 
 Tree ki height longest root-to-leaf path se related hai. Interview mein convention batao: neeche empty tree ki height 0 aur leaf ki height 1 use kar rahe hain. Balanced tree aur complete tree same concept nahi: complete tree last level tak left-to-right filled hota hai, balancing mainly height bound maintain karta hai.
 
+> **Core takeaway:** A BST property constrains whole subtrees, not just immediate children.
+
 ## Traversal order
 
 | Traversal | Order | Useful for |
@@ -236,6 +238,34 @@ Tree traversal ka roz ka use compilers aur tooling mein hai: ASTs par postorder 
 **Prompt:** Inorder traversal se BST validate karna aur bounds-based recursion — dono correct hain. Interview mein kya bologe?
 
 **Answer:** Dono O(n) hain, dono O(h) space lete hain. Bounds version pehla violation milte hi early exit karta hai aur explicitly dikhata hai ki constraint poore subtree par lagti hai. Inorder version conceptually simple hai aur ek independent cross-check deta hai. Asli value dono ko mention karne mein hai: jab code run nahi kar sakte, do independent methods ka same answer dena correctness ka strongest available evidence hai.
+
+## Research notes: Balance the height that controls lookup
+
+Sorted insertion can turn an ordinary BST into a chain. Search depends on height; ordering alone does not guarantee logarithmic lookup.
+
+AVL trees constrain subtree-height differences. Rotations restore balance while preserving in-order key order. Update height metadata in dependency order.
+
+Original trace: insert 10, 20, 30. A rotation puts 20 above 10 and 30, preserving the sorted traversal.
+
+**Interview check:** Why can rotation change the root without breaking search order?
+
+**Answer:** It rearranges local links while preserving ordering among affected subtrees. Show that each subtree stays on the correct side of its new ancestors.
+
+**Practice:** Trace an insertion requiring a double rotation and verify heights.
+
+[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/83cdd705cd418d10d9769b741e34a2b8_MIT6_006F11_lec06.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A tree has root 10, left child 5, and 5's right child 12. Each local edge looks plausible. Is the tree a valid BST?
+
+> **Hint:** The left subtree inherits an upper bound from the root.
+
+**Answer guide — compare after attempting:** It is invalid because 12 lies in 10's left subtree. Validate with inherited lower/upper bounds or an equivalent global-order check. Define a duplicate-key policy explicitly. Testing only each parent and its children misses this violation.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

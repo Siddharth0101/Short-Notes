@@ -14,6 +14,8 @@ visual: event-loop
 
 Browser mein current JavaScript job run-to-completion hota hai. Async I/O host environment handle karta hai; completion ke baad callback continuation schedule hoti hai. Promise fulfilled hone se `.then` callback current synchronous line ke beech execute nahi hota. `await` surrounding async function ko suspend karta hai, poore browser ko block nahi karta.
 
+> **Core takeaway:** Promise reactions run after the current synchronous work; a zero-delay timer is still scheduled work.
+
 ## Trace the order
 
 ```js
@@ -128,6 +130,18 @@ Search box banao with debounce, abort aur loading/error/empty states. Slow first
 **Q. Promise parallel thread hai?** Nahi. Promise future outcome ka object hai; underlying operation execution model decide karta hai.
 
 **Q. Await loop ko fast banata hai?** Nahi. Har iteration await kare to work sequential hota hai. Concurrency explicitly design karni padti hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Predict a script that logs A, schedules a zero-delay timer logging B, queues `Promise.resolve().then(() => console.log('C'))`, then logs D.
+
+> **Hint:** Finish the current script before draining its promise reactions.
+
+**Answer guide — compare after attempting:** The order is A, D, C, B in this ordinary single-script scenario. The timer delay does not make it interrupt synchronous code. Explain the queue boundary instead of memorizing letters; adding more asynchronous sources requires a fresh trace.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

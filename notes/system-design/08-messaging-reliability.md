@@ -14,6 +14,8 @@ visual: outbox-pattern
 
 Network call timeout ambiguous hai: operation server par complete hui ya nahi, caller sure nahi ho sakta. Queue reliable handoff help karti hai, but business correctness automatically guarantee nahi karti. Design har step ke before/after crash scenario se validate karo.
 
+> **Core takeaway:** Reliable delivery requires replay-safe consumers and bounded retries.
+
 ## The dual-write problem
 
 Order database commit ke baad broker publish fail hua toh order exists but notification absent. Broker publish pehle kiya aur database rollback hua toh event nonexistent order describe karega. Transactional outbox business row and event row same database transaction mein persist karta hai; relay committed events asynchronously publish karta hai. Relay crash duplicate publish de sakta hai. [Transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)
@@ -170,6 +172,32 @@ Orchestration versus choreography ka practical tradeoff: choreography (har servi
 Consumer ko database commit ke immediately baad crash karao and same event replay karo. Notification duplicate prevent karne ki mechanism explain karo. One-hour backlog drain time derive karo at different worker throughput.
 
 Phir retry amplification measure karo: teen nested layers banao jinme har ek 3 attempts karti hai, downstream ko artificially fail karao, aur actual request count gino. Uske baad "retry only at one layer" policy lagakar dobara gino. Last mein poison message inject karo (ek event jiska payload schema violate karta hai) aur verify karo ki wo bounded attempts ke baad DLQ mein jaata hai, queue block nahi karta — phir DLQ se replay tool likhkar test karo ki fix ke baad wo cleanly process ho jaata hai.
+
+## Research notes: Budget retries across the call graph
+
+Retries use capacity while a dependency may already be struggling. Three layers with up to three attempts each can create 27 leaf attempts. Specify whether the attempt count includes the original call.
+
+Choose a retry boundary, cap attempts, honor an end-to-end deadline and spread retries with jitter. A timed-out write may already have committed; retries must respect operation semantics.
+
+**Interview check:** Why can exponential backoff without jitter still cause bursts?
+
+**Answer:** Clients failing together can schedule their next attempt together. Random delay spreads retries; it still needs limits and a budget because waiting does not create capacity.
+
+**Practice:** Allocate 900 ms across two attempts, waits and network overhead.
+
+[Read the source — AWS Builders’ Library](https://d1.awsstatic.com/builderslibrary/pdfs/timeouts-retries-and-backoff-with-jitter.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A consumer commits an order update but crashes before acknowledging the message. Describe redelivery and the safe consumer response.
+
+> **Hint:** The broker cannot infer that the business effect already committed.
+
+**Answer guide — compare after attempting:** Expect the message again. Coordinate a durable processed-message ID with the business update so replay becomes a no-op, then acknowledge. Bound retry attempts and isolate poison messages. An external side effect needs its own idempotency strategy; deduplicating only in process memory is insufficient.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

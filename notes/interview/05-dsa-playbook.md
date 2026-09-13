@@ -14,6 +14,8 @@ visual: dynamic-programming
 
 Coding interview mein interviewer ko tumhara reasoning inspect karna hota hai. Har line narrate karne ke bajaye assumptions, invariant aur tradeoff communicate karo. Correct brute force ek useful baseline hai; optimization tab meaningful hai jab lost repeated work clearly identify kar sako.
 
+> **Core takeaway:** Algorithm answers should earn correctness before claiming efficiency.
+
 ## A 35-minute structure
 
 | Time | Work | Deliverable |
@@ -95,6 +97,38 @@ Each 0–2 score: problem contract, correctness argument, implementation, comple
 Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
 
 After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+
+## Research notes: Prove before optimizing
+
+Amazon emphasizes applying fundamentals to problems rather than memorizing details.
+
+**Original practice round:** Find the first position where a sorted array is at least a target. State a half-open search interval and what remains possible after each iteration.
+
+**Failure injection:** Use empty input, all-equal values, a missing target and targets beyond both ends.
+
+**Evidence to bring:** Trace the interval shrinking, justify each discarded region and state O(log n) time with constant auxiliary space. An output example alone is not a proof.
+
+The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+
+**Interview check:** How should you review this round after attempting it?
+
+**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+
+**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+
+[Read the source — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** In eight minutes, solve first repeated value in a list, then defend complexity and test cases. How would your answer change if extra memory were forbidden?
+
+> **Hint:** Clarify whether modifying input is allowed and whether original scan order matters.
+
+**Answer guide — compare after attempting:** A Set gives an expected O(n)-time, O(n)-space scan preserving first-repeat order. Test empty, distinct, and multiple repeated values. Without memory or mutation, repeated scans give O(n²) time and O(1) extra space. Sorting changes the order and therefore does not directly preserve the requested semantics.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 [Princeton's analysis](https://algs4.cs.princeton.edu/14analysis/) aur [graph traversal reference](https://algs4.cs.princeton.edu/41graph/) complexity and BFS properties support karte hain. The mock process and drills original practice material hain.

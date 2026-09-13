@@ -13,6 +13,8 @@ tags: mongodb, crud, bson, modeling, embedding, references
 
 MongoDB document database hai. Collection related documents group karti hai aur BSON strings/numbers ke alawa ObjectId, dates aur other types support karta hai. Flexible schema ka matlab no data design nahi hai. Document shape ko actual read/write patterns, growth, ownership aur consistency requirements ke hisaab se choose karo. Application schema aur database validation dono data quality improve kar sakte hain.
 
+> **Core takeaway:** Model documents around reads and bounded growth; single-document atomicity does not cover unrelated documents.
+
 ## CRUD in mongosh
 
 ```js
@@ -78,6 +80,34 @@ Notes, users, bookmarks aur reading sessions ka model draw karo. Har relationshi
 **Q. MongoDB joins support nahi karta?** Aggregation `$lookup` related data combine kar sakta hai; join availability aur ideal data model separate questions hain.
 
 **Q. Schema-less means validation unnecessary?** Nahi. Consistent contracts application correctness aur future migrations ke liye essential hain.
+
+## Research notes: Model bounded growth and data ownership
+
+Embedding can keep related data together for reading or atomic updates. References can separate lifecycles and avoid unbounded growth. Estimate growth before embedding an array.
+
+Original decision: an order's purchase-time address is bounded historical data; embedding it can make sense. A customer's entire activity history grows indefinitely and needs a separate or bounded storage model.
+
+For duplicated fields, decide whether each is historical fact or a cache that must follow changes.
+
+**Interview check:** Is every duplicated field a schema mistake?
+
+**Answer:** No. A deliberate snapshot or read optimization may justify duplication. Specify whether it is immutable history or cached data and define refresh behavior for the latter.
+
+**Practice:** Estimate the size of two years of customer activity.
+
+[Read the source — MongoDB](https://www.mongodb.com/docs/manual/data-modeling/). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** An article may receive millions of comments. Should all comments live in its document? Propose storage for a page of recent comments.
+
+> **Hint:** An unbounded child collection changes the embedding tradeoff.
+
+**Answer guide — compare after attempting:** Store comments separately with article identity and a stable ordering field; index for the paginated query. A small bounded preview may be embedded if useful. Specify how it stays consistent. Avoid loading or rewriting the entire comment history for a single page.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

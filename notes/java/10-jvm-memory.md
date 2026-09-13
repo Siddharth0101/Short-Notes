@@ -14,6 +14,8 @@ visual: gc-sweep
 
 JVM abstract execution model aur actual optimized runtime ko distinguish karo. Model mein each thread ke stack frames method invocation state hold karte hain; heap shared object storage hai. Primitive/reference distinction memory location decide nahi karta. Primitive instance field object ka part ho sakta hai, while local reference stack frame mein modeled hoti hai. JIT actual storage optimize kar sakta hai.
 
+> **Core takeaway:** A memory leak can consist of reachable objects that are no longer useful.
+
 ## Trace references before locations
 
 ```java
@@ -105,6 +107,18 @@ Long-running Spring Boot services mein sabse common leak sources hote hain: unbo
 ## Practice
 
 Unbounded cache ko bounded eviction policy mein convert karo. Increasing-load test se post-GC live memory compare karo. Ek retained listener ka reference path draw karo, aur removal lifecycle document karo. Phir ek non-static inner class ko static registry mein register karke outer-instance leak reproduce karo, aur static nested class se fix karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A service retains every processed request in a static map. Why can garbage collection run successfully while heap usage keeps growing?
+
+> **Hint:** Reachability prevents collection even after business work is finished.
+
+**Answer guide — compare after attempting:** The static map keeps request objects reachable. Inspect heap retention paths and map growth, then bound or expire entries according to the real retention need. More frequent garbage collection does not fix an unbounded owner. Verify memory stabilizes under repeated load.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

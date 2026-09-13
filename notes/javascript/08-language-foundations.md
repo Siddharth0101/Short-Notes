@@ -13,6 +13,8 @@ tags: variables, types, coercion, functions, fundamentals
 
 JavaScript mein variable ek binding hai jo kisi value ko refer karti hai. Value ka type hota hai; variable ko permanently ek type assign nahi hota. Pehle input ko normalize karo, phir business rule lagao, aur last mein output format karo. Yeh teen steps mix karne se coercion bugs silently aa jaate hain. `const` binding ko reassign karne se rokta hai; object ke andar ki properties automatically immutable nahi banti. Naya code likhne se pehle "yeh value kis type ki honi chahiye" explicitly sochna, baad mein debug karne se zyada bugs abhi hi rok deta hai.
 
+> **Core takeaway:** Validation must distinguish missing, malformed, and valid zero input.
+
 ## Values and decisions
 
 Primitive values hain string, number, bigint, boolean, undefined, symbol aur null. Objects, arrays aur functions reference identity rakhte hain. Do separately created objects same fields ke baad bhi `===` se equal nahi hote. `typeof null` ka result historical reason se `"object"` hai; null check explicitly karo.
@@ -91,6 +93,18 @@ Discount calculator likho jo blank input, negative quantity, zero quantity aur i
 **Q. `const` object mutate kaise ho sakta hai?** Binding constant hai, referenced object nahi. Nested immutability ke liye deliberate update discipline chahiye.
 
 **Q. `null` aur `undefined` mein difference?** Undefined usually missing/uninitialized value ko represent karta hai; null explicitly absent value communicate karta hai. API contract define karta hai ki kaunsa use hoga.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Design validation for a whole-number lesson count from a text field. Classify `''`, `'  '`, `'0'`, `'3.5'`, and `'four'`.
+
+> **Hint:** Check the trimmed string before numeric conversion, then check integer and range.
+
+**Answer guide — compare after attempting:** Blank inputs are missing; `'0'` is valid; `'3.5'` and `'four'` are invalid. After rejecting blanks, use `Number`, `Number.isInteger`, and a nonnegative range check. State a maximum if the application requires one.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

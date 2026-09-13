@@ -13,6 +13,8 @@ tags: effects, useEffect, useRef, custom-hooks, races
 
 Effect React tree ko external system se synchronize karta hai: network request, browser listener, timer, socket ya third-party widget. Effect ko general “state change ke baad code chalao” tool mat banao. Rendering se calculate hone wali value render mein calculate karo; button click ki action handler mein karo. Effect setup ke opposite cleanup ka mental checklist useful hai.
 
+> **Core takeaway:** An effect owns synchronization with an external system and must release what it starts.
+
 ## A cancellable data effect
 
 ```jsx
@@ -51,30 +53,7 @@ Id change par previous cleanup run hota hai, phir new setup. Abort unnecessary r
 
 Effect apne render ki bindings capture karta hai. Dependency array mein effect ke used reactive values include karo. Missing dependency stale behavior create kar sakti hai. Linter suppress karne se actual dependency disappear nahi hoti. Object/function har render mein create ho rahe hain to dependency identity change hogi; creation effect ke andar move karna ya responsibility redesign karna helpful ho sakta hai.
 
-```jsx
-// Galat: onLoaded har render par naya function reference hai, isliye effect
-// har render ke baad phir se fire hoga (aur exhaustive-deps lint isse flag karega)
-function TopicView({ topicId, onLoaded }) {
-  useEffect(() => {
-    fetchTopic(topicId).then(onLoaded);
-  }, [topicId, onLoaded]);
-}
-
-// Sahi option 1: parent onLoaded ko useCallback se stabilize kare
-const handleLoaded = useCallback(data => setActiveTopic(data), []);
-
-// Sahi option 2: agar callback truly optional hai, effect ke andar hi latest
-// value ko ref se read karo taaki dependency list clean rahe
-function TopicView({ topicId, onLoaded }) {
-  const onLoadedRef = useRef(onLoaded);
-  useEffect(() => { onLoadedRef.current = onLoaded; });
-  useEffect(() => {
-    fetchTopic(topicId).then(data => onLoadedRef.current(data));
-  }, [topicId]);
-}
-```
-
-Dono fixes ka tradeoff samajhna zaroori hai: option 1 parent ko discipline maintain karne ko force karta hai, option 2 effect ko intentionally stale-callback-safe banata hai. Linter suppress karke sirf `[topicId]` likh dena (bina fix ke) sabse risky hai, kyunki `onLoaded` closure purani hi reh jaati hai aur silently wrong data ke saath call ho sakti hai.
+Including `onLoaded` in dependencies is correct. If its identity changes, synchronization restarts. The research notes below explain why removing it is not the fix.
 
 Empty dependency array ka meaning component lifetime ke saath setup hai, universal "exactly once" guarantee nahi. Development Strict Mode extra setup-cleanup cycle chala sakta hai. Cleanup real resource undo kare: listener remove, connection disconnect, timer clear. Effect callback itself async mat banao, kyunki async function promise return karta hai aur effect cleanup function expect karta hai.
 
@@ -109,7 +88,7 @@ function useLocalStorage(key, initialValue) {
 
 `useLocalStorage("theme", "light")` call karne wale har component ko normal `useState` jaisa hi API milta hai, lekin persistence internally handled hai. Yeh pattern illustrate karta hai ki custom hook stateful logic ko reuse karta hai — har caller apni independent state instance leta hai, storage key same ho tab bhi.
 
-Doosra common pattern debouncing ka hai, jisme timer ko ref mein rakha jaata hai taaki render trigger na ho:
+Debouncing example mein timeout handle Effect closure mein local hai; cleanup usi timer ko cancel karta hai:
 
 ```jsx
 function useDebouncedValue(value, delayMs) {
@@ -124,7 +103,7 @@ function useDebouncedValue(value, delayMs) {
 
 Yahan cleanup critical hai: agar `clearTimeout` na ho, to fast typing ke dauraan multiple stale timeouts queue ho jaayenge aur search request se zyada baar fire hogi.
 
-`useEffect` browser paint ke baad asynchronously chalta hai; visual glitch (jaise flicker) avoid karna ho — measurement lekar turant DOM update karna ho — to `useLayoutEffect` use karo, jo paint se pehle synchronously chalta hai. Zyadatar synchronization cases (data fetch, subscriptions) ke liye `useEffect` hi sahi choice hai; `useLayoutEffect` sirf layout-measurement jaisi specific cases ke liye reserve karo, kyunki yeh paint block karta hai.
+Effect timing is explained in the research notes below. Reserve paint-blocking `useLayoutEffect` for necessary visual measurement.
 
 ## Gotchas
 
@@ -148,6 +127,32 @@ Chat ya notifications feature mein WebSocket connection effect ke andar open hot
 **Q. Effect infinite loop kyun hota hai?** Effect state update karta hai, update dependency identity/value change karti hai, phir effect repeat hota hai. Dependency aur data model dono inspect karo.
 
 **Q. Ref aur state ka difference?** State render schedule karti hai; ref mutation nahi. Ref stale-closure workaround ho sakti hai, lekin dependencies hide karne ka default solution nahi.
+
+## Research notes: Effect timing depends on the trigger
+
+`useEffect` is not an unconditional after-paint hook. React generally allows paint first for non-interaction Effects; interaction-related Effects may run before paint. Necessary layout measurement before paint belongs in `useLayoutEffect`, which blocks painting.
+
+Dependency changes run old cleanup before new setup. Dependencies use `Object.is`. A new options object can restart synchronization even when its fields look equal; prefer primitive dependencies and create connection options inside the Effect when appropriate.
+
+**Interview check:** Does including an unstable callback violate exhaustive-deps?
+
+**Answer:** No. Including it declares the dependency correctly. If its identity changes, rerunning follows that declaration. Fix unnecessary churn through ownership or appropriate stabilization rather than removing a needed dependency.
+
+**Practice:** Trace setup and cleanup as roomId changes twice.
+
+[Read the source — React](https://react.dev/reference/react/useEffect). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A subscription effect runs again when roomId changes. Describe the expected subscribe/unsubscribe sequence for room A, then B, then unmount.
+
+> **Hint:** Pair each setup with cleanup for the same room and resource.
+
+**Answer guide — compare after attempting:** Subscribe to A; clean up A before subscribing to B; clean up B on unmount. Return cleanup from the effect and include reactive dependencies. Development checks can exercise an additional setup/cleanup cycle, so cleanup must actually undo the subscription.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

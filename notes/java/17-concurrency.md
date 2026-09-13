@@ -14,6 +14,8 @@ visual: thread-sync
 
 Concurrency multiple tasks ko progress karne deti hai; parallelism same time multiple CPU cores par execution hai. Shared mutable state ke teen questions hain: operation atomic hai? latest write visible hai? allowed ordering kya hai? `volatile` visibility help karta hai, lekin `count++` ko atomic nahi banata because read, add and write separate actions hain.
 
+> **Core takeaway:** A compound read-modify-write needs synchronization as a whole.
+
 ## Protect an invariant
 
 ```java
@@ -172,6 +174,18 @@ Request-scoped correlation IDs, security context aur tenant info aksar `ThreadLo
 ## Practice
 
 Two workers se 100,000 increments run karo, unsafe count observe karo, phir atomic correction karo. Inventory race ko coordinated start ke saath test karo. Finally one slow task cancel karke verify karo ki resource release hota hai. Phir do-account transfer deadlock ko reproduce karo (dono directions se simultaneously transfer chala kar), aur consistent lock-ordering se fix karo. Last mein ek pooled-thread ThreadLocal leak simulate karo: cleanup skip karke ek "wrong user" read reproduce karo, phir `finally` block se fix karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Two threads each increment a shared plain int 1000 times. Is 2000 guaranteed, and how would you repair the counter?
+
+> **Hint:** Reading, adding, and writing are separate steps.
+
+**Answer guide — compare after attempting:** 2000 is not guaranteed because increments can overwrite each other. Use a lock around the full update or an appropriate atomic counter. Wait for both threads before inspecting the result. Merely declaring the field volatile does not make increment atomic.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

@@ -14,6 +14,8 @@ visual: request-flow
 
 Storefront mostly read-heavy discovery hai; checkout correctness-sensitive workflow hai. Same caching and failure policy dono par apply nahi karni chahiye. User ko fast browsing chahiye, but stale price ya duplicate payment unacceptable ho sakti hai. Design requirements separate karke connect karo.
 
+> **Core takeaway:** Checkout is a workflow whose database state and external payment state can temporarily disagree.
+
 ## Scope and assumed workload
 
 Assume 1 million daily visitors, each 10 catalog reads and 1% conversion. Average catalog throughput roughly 116 reads/s; chosen 20x peak factor gives about 2,320 reads/s. Orders roughly 10,000/day, averaging 0.12/s, but sale bursts much higher ho sakte hain. These synthetic inputs interview reasoning demonstrate karte hain, vendor capacity claims nahi.
@@ -278,6 +280,18 @@ failed           -> confirmed         allowed only via reconciliation, with audi
 State diagram draw karo with payment-timeout branch. Same checkout request five times replay karo. Last item ke liye two buyers race karao and verify accepted reservations never exceed available stock.
 
 Phir upar wali expiry race deliberately reproduce karo: reservation expiry ko 5 seconds set karo, payment confirmation ko 10 seconds delay karo, aur dekho ki kya hota hai. Phir `payment_pending` state aur conditional updates add karke verify karo ki expiry job us reservation ko chhodti hai. Uske baad webhook out-of-order test karo — `succeeded` pehle aur `failed` baad mein bhejo — aur confirm karo ki order confirmed rehta hai aur rejected transition log/alert hoti hai. Last mein ek reconciliation query likho jo provider ke charges list ko apne confirmed orders se compare kare aur dono directions ke mismatches report kare.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Payment succeeds but the client times out before receiving the order response. What should a retry do, and what should the UI say?
+
+> **Hint:** The client cannot infer failure from a missing response.
+
+**Answer guide — compare after attempting:** Retry or query status using a stable operation identity so the same purchase is recovered instead of charged again. Show a pending/verification state until the server confirms the outcome. Persist the idempotency result and reconcile uncertain provider responses with durable order state.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

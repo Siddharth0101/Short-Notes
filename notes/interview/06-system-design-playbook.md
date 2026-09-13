@@ -14,6 +14,8 @@ visual: outbox-pattern
 
 System design box drawing exercise se zyada requirements aur tradeoffs ka argument hai. User action se data persistence aur visible response tak complete path explain karo. React frontend ki loading, focus aur stale-state behavior backend retries aur consistency se connected hai.
 
+> **Core takeaway:** A design defense makes tradeoffs reviewable with workload assumptions and failure traces.
+
 ## A 45-minute design structure
 
 1. **0–5 minutes:** Core flows, actors, permissions, exclusions, freshness/latency goals clarify karo.
@@ -90,6 +92,38 @@ Each 0–2 score: requirements, API/data model, bottleneck analysis, failure han
 Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
 
 After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+
+## Research notes: Expose assumptions and failure recovery
+
+Microsoft includes testing and problem-solving in its technical interview guidance.
+
+**Original practice round:** Design a job-processing service with status queries. Define acknowledgment, retry identity and retention before naming a queue product.
+
+**Failure injection:** Crash a worker after the business write but before acknowledgment; delay a dependency.
+
+**Evidence to bring:** Trace the durable state before and after replay. Distinguish transport redelivery from repeated business effects, then explain bounds on waiting and retries.
+
+The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+
+**Interview check:** How should you review this round after attempting it?
+
+**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+
+**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+
+[Read the source — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Spend ten minutes designing a notes service for 1000 concurrent editors. Name three questions to resolve before selecting transport or storage.
+
+> **Hint:** Concurrent users alone do not specify event rate, document contention, or durability needs.
+
+**Answer guide — compare after attempting:** Ask edit frequency, same-document concurrency, and offline/conflict expectations. Derive traffic, choose a consistency model, and explain durable writes plus reconnect recovery. State one rejected alternative and its concrete cost. A diagram without these decisions is not enough to defend the design.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 [AWS safe retries and idempotency](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/), [AWS transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html), aur [W3C combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) design details ke primary references hain.

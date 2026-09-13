@@ -13,6 +13,8 @@ tags: fundamentals, react, jsx, props
 
 A React component describes UI from inputs. A function component receives props and returns elements expressed with JSX. JSX looks like HTML but is syntax used by the build tool to produce JavaScript element descriptions. Start in the existing React app: you do not need routing, Redux, effects or server-state caching for this lesson.
 
+> **Core takeaway:** Props describe a component's input; rendering should not mutate that input.
+
 ## Compose a small screen
 
 ```jsx
@@ -51,6 +53,18 @@ Add a third card without duplicating the article markup. Add a description prop 
 ## Check before moving on
 
 You should explain which component owns each prop and what the browser eventually renders. Next, use useState and event handlers to change what the component displays over time.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Create a `LessonTitle` component receiving `title` and `minutes`. Render two instances with different values. Where should a changed title come from?
+
+> **Hint:** Treat props as read-only values supplied by the parent.
+
+**Answer guide — compare after attempting:** `function LessonTitle({title, minutes}) { return <h2>{title} · {minutes} min</h2>; }` is a component excerpt for a React app. The parent passes new props when data changes. Assigning to a prop locally does not update the parent's data model.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

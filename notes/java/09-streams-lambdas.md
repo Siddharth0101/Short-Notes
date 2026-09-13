@@ -13,6 +13,8 @@ tags: streams, lambdas, optional, collectors
 
 Lambda behavior ko value ki tarah pass karne ka compact syntax hai. Stream collection nahi, data processing pipeline hai: source, intermediate transformations, terminal operation. Stream use karna automatically multithreaded execution nahi banata. Pipeline ko mathematical transformation jaisa rakho: input se output, minimal hidden mutation.
 
+> **Core takeaway:** Stream pipelines should express transformations without hidden shared mutation.
+
 ## Functional interfaces
 
 Functional interface ka ek abstract method hota hai. Predicate test karta hai, Function transform karta hai, Consumer side effect karta hai, Supplier value produce karta hai. Method reference lambda ka compact equivalent ho sakta hai. Captured local variable final ya effectively final hona chahiye; captured object itself mutable ho sakta hai, jo concurrency bugs ka source ban sakta hai.
@@ -112,6 +114,39 @@ Report/analytics endpoints mein `groupingBy` + `averagingInt`/`summingLong` comb
 ## Practice
 
 Duplicate-free tags alphabetically return karo. Then second-highest distinct score find karo without assuming two values exist. Apna solution empty data, duplicate scores and missing values par explain karo. Phir `Collectors.toMap` ko duplicate-key input par bina merge function ke exception reproduce karo, phir merge function add karke fix karo.
+
+## Research notes: Keep the source when traversing twice
+
+A stream describes processing and is consumed by a terminal operation. Retain the collection or a stream-producing function for independent traversals.
+
+```java
+var values = java.util.List.of(2, 4, 7);
+long even = values.stream().filter(n -> n % 2 == 0).count();
+int total = values.stream().mapToInt(Integer::intValue).sum();
+System.out.println(even + ":" + total); // 2:13
+```
+
+Keep transformations free of shared mutable side effects. Parallel processing is a workload and concurrency decision.
+
+**Interview check:** Why should count and sum not reuse the same Stream variable?
+
+**Answer:** The first terminal operation consumes it. Create another stream from the source or design a suitable single-pass reduction when warranted.
+
+**Practice:** Explain the risks of mutating a shared ArrayList from parallel forEach.
+
+[Read the source — Dev.java](https://dev.java/learn/api/streams/). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Replace a stream that appends into an external ArrayList with a pipeline producing names of active users. Why is parallelizing the original dangerous?
+
+> **Hint:** Collect the result through the stream operation itself.
+
+**Answer guide — compare after attempting:** Filter active users, map to names, then collect using the required result-list contract. Concurrent writes to an ordinary shared ArrayList are unsafe. Also clarify whether callers need a mutable result; Java's Stream.toList returns an unmodifiable list.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

@@ -14,6 +14,8 @@ visual: binary-search
 
 Linear search har candidate check karta hai. Binary search prove karta hai ki remaining candidates ka poora half discard ho sakta hai. Is proof ke liye sorted data ya monotone predicate chahiye. Arbitrary unsorted input par binary search chalana correctness bug hai, sirf performance issue nahi.
 
+> **Core takeaway:** Binary search needs a monotone decision and a precise interval convention.
+
 ## A reusable lower bound
 
 `lowerBound` first index return karta hai jahan value target se greater ya equal hai. Aisi value na ho toh `values.length` insertion position return hoti hai. Half-open interval `[left, right)` use karke boundaries consistent rakho.
@@ -206,6 +208,18 @@ Version rollouts aur capacity autoscaling mein bhi yehi shape hai. Aur distribut
 **Prompt:** "First bad version" problem mein API call expensive hai. Kaunsi cheez complexity se zyada matter karti hai?
 
 **Answer:** **Calls ki count**, jo exactly O(log n) hai — aur wahi optimize karna hai, per-call constant nahi. Yahan linear scan O(n) API calls karega, jo latency aur rate limits ki wajah se practically unusable hai. Yeh ek accha example hai jahan cost model "operations" nahi, "expensive external calls" hai; complexity analysis ke liye sahi unit choose karna answer ka hissa hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Find the first index with value at least 2 in `[1,2,2,4]`. Specify results for targets 0 and 5 and for an empty array.
+
+> **Hint:** Use a half-open interval and let length mean no qualifying index.
+
+**Answer guide — compare after attempting:** Results are 1, 0, 4, and 0 for the respective cases. Maintain `[lo,hi)` with hi initially length; move lo to mid+1 when the middle value is too small, otherwise move hi to mid. Returning lo handles duplicates and missing boundaries consistently.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

@@ -14,6 +14,8 @@ visual: react-render
 
 Har render ko state ka snapshot milta hai. Setter current local variable ko turant change nahi karta; future render ke liye update queue karta hai. State ka owner woh closest common component hona chahiye jise value read/update karni hai. Jo value existing props/state se calculate ho sakti hai, uski duplicate state frequently unnecessary hoti hai.
 
+> **Core takeaway:** A state setter schedules work; functional updates express changes relative to pending state.
+
 ## A controlled reading filter
 
 ```jsx
@@ -164,6 +166,39 @@ Study goal form banao with title, minutes aur track. Blank title reject karo, pe
 **Q. State lift kab karoge?** Jab siblings ko coordinated value chahiye; unnecessary global state banaane ki need nahi.
 
 **Q. Mutation ke baad setter same object de to issue?** React equality checks update skip kar sakti hain, aur previous snapshots bhi corrupt ho jaate hain. New reference plus unchanged data preservation use karo.
+
+## Research notes: Represent coherent request states
+
+Independent booleans can allow contradictory loading and success states. Store a coherent status and derive display flags.
+
+```jsx
+const [request, setRequest] = useState({ status: 'idle' });
+const busy = request.status === 'loading';
+// setRequest({ status: 'success', data });
+// setRequest({ status: 'error', message });
+```
+
+Store a selected ID instead of duplicating the selected record. Derive that record from the current collection so an edit cannot leave stale copies.
+
+**Interview check:** Should every field be merged into one state object?
+
+**Answer:** No. Group values that change together and keep independent values separate when clearer. The goal is coherent transitions and less synchronization, not a particular object count.
+
+**Practice:** Draw allowed form transitions including retry and cancellation.
+
+[Read the source — React](https://react.dev/learn/choosing-the-state-structure). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Starting at zero, call `setCount(count + 1)` twice in one click handler. Compare with calling `setCount(n => n + 1)` twice.
+
+> **Hint:** Both direct expressions read the same render snapshot.
+
+**Answer guide — compare after attempting:** The direct updates result in 1; functional updates result in 2. Each updater receives the pending result of the previous updater. Use this form when the next value depends on the previous one; keep updater functions pure.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

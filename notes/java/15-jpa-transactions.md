@@ -13,6 +13,8 @@ tags: jpa, hibernate, transactions, n-plus-one
 
 JPA specification hai; Hibernate uska popular implementation hai; Spring Data JPA repository boilerplate reduce karta hai. Entity ordinary response DTO nahi. Persistence context managed entities track karta hai and changes SQL synchronization mein convert kar sakta hai. Database constraints still final correctness boundary hain.
 
+> **Core takeaway:** Transaction behavior depends on the actual invocation boundary and the operations inside it.
+
 ## Entity lifecycle and mapping
 
 New entity transient hoti hai. Persistence context se associated entity managed hoti hai. Context close/detach ke baad detached object changes automatically persist nahi hote. `flush` pending changes database tak synchronize karta hai, `commit` transaction complete karta hai; flush alone durability guarantee nahi.
@@ -124,6 +126,34 @@ N+1 queries production mein aksar tab discover hote hain jab list endpoint sudde
 ## Practice
 
 List endpoint ke SQL statement count measure karo. Same version se two updates execute karke conflict verify karo. Checked-exception rollback policy ka integration test likho and explicit transaction boundary diagram banao. Phir ek `@ManyToOne` relation ko default EAGER fetch ke saath chhodo, list endpoint ka query count measure karo, phir `LAZY` karke difference dikhao. Last mein `orphanRemoval` ko ek shared-reference relation par galti se laga kar unintended delete reproduce karo.
+
+## Research notes: Trace the actual transaction entry point
+
+Default proxy-based transaction advice intercepts calls crossing the proxy. An object's call to its own annotated method does not apply that inner method's transaction metadata.
+
+Original trace: a controller calls `CheckoutService.checkout()`, which calls `this.reserve()`. If only reserve is annotated, do not assume it starts a transaction. Move the intended boundary to an externally invoked service method or an appropriately separated bean.
+
+If checkout already has a transaction, the internal call can run inside it; the inner annotation still was not intercepted.
+
+**Interview check:** Why can self-invoked REQUIRES_NEW fail to start an independent transaction?
+
+**Answer:** The call bypasses the proxy, so the propagation metadata is not applied. Verify the actual call path before relying on annotation placement.
+
+**Practice:** Force an inner failure in an integration test and inspect durable rows.
+
+[Read the source — Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** In Spring's usual proxy-based transaction setup, one method calls another annotated method on `this`. Why might the intended transaction not begin?
+
+> **Hint:** An internal method call does not pass through the external proxy.
+
+**Answer guide — compare after attempting:** The transactional interceptor is bypassed for that self-invocation. Put the transaction on the externally invoked service boundary or call a separate managed collaborator as appropriate. Verify rollback with an integration test; an annotation's presence alone is not evidence that interception occurred.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

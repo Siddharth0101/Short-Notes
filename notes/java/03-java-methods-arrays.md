@@ -13,6 +13,8 @@ tags: fundamentals, java, methods, arrays
 
 A method describes an operation with named parameters and a declared return type. An array stores a fixed number of values of a specified element type. These let you replace repeated statements with a reusable calculation. Start with static methods in the Main class so instance creation can be learned separately in the next lesson.
 
+> **Core takeaway:** Java passes argument values; an object reference value can still point at shared mutable data.
+
 ## A complete calculation
 
 ```java
@@ -49,6 +51,18 @@ Write a method that counts sessions lasting at least 20 minutes. Test an empty a
 ## Check before moving on
 
 Distinguish parameter from argument and return value from side effect. Next, group state and behavior into an instance with a constructor.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A method sets `values[0] = 9` and then assigns `values = new int[]{7}`. Starting from `{1,2}`, what does the caller observe?
+
+> **Hint:** Distinguish changing the referenced array from replacing the local parameter.
+
+**Answer guide — compare after attempting:** The caller's array becomes `{9,2}`. Element mutation reaches the shared array, while reassignment changes only the method's local reference. Java is still pass-by-value; the copied value in this case is a reference.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

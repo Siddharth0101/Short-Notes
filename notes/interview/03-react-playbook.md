@@ -14,6 +14,8 @@ visual: react-render
 
 React interview ka core hai state se UI derive karna aur external systems ke saath synchronization correct rakhna. Hook names list karne ke bajaye render, identity aur ownership ka model explain karo. Har proposed optimization ke saath measurement aur failure case hona chahiye.
 
+> **Core takeaway:** React interviews test observable behavior and state ownership, not only hook names.
+
 ## Representative questions and answers
 
 **Why does calling setCount(count + 1) three times often add only one?** Same handler render snapshot ka same count read karta hai, so teen updates same replacement request karte hain. Previous queued value par sequential transformation chahiye to `setCount(c => c + 1)` three times use karo. Updater pure hona chahiye.
@@ -87,6 +89,38 @@ Score each 0–2: state ownership, effect correctness, identity, accessibility, 
 Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
 
 After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+
+## Research notes: Demonstrate component behavior
+
+Amazon emphasizes applying fundamentals to problems rather than memorizing details.
+
+**Original practice round:** Build a dialog editor that keeps a draft until Save and discards it on Cancel. Explain draft ownership and focus restoration.
+
+**Failure injection:** Change the selected record while a draft is open; close with Escape.
+
+**Evidence to bring:** Test record identity, save/cancel behavior, keyboard operation and where focus lands. State whether record changes discard or preserve a draft.
+
+The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+
+**Interview check:** How should you review this round after attempting it?
+
+**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+
+**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+
+[Read the source — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A filtered editable list moves drafts between rows. Deliver a diagnosis, minimal repair, and regression test in five minutes.
+
+> **Hint:** Ask which identity owns each draft before adding effects.
+
+**Answer guide — compare after attempting:** Check unstable/index keys and draft storage keyed by position. Use stable item IDs and keep drafts associated with those IDs. Type into one row, filter/reorder/prepend, and verify its draft stays attached. Explain intentional resets separately from accidental remounts.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 [React state snapshots](https://react.dev/learn/state-as-a-snapshot), [effect synchronization](https://react.dev/learn/synchronizing-with-effects), aur [memo reference](https://react.dev/reference/react/memo) core behavior explain karte hain.

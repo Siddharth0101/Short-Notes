@@ -13,6 +13,8 @@ tags: typescript, state, narrowing, api, testing
 
 TypeScript compile time par JavaScript contracts check karta hai. Browser receives JavaScript, so a type annotation cannot prove that a server actually sent the expected response. Think of two boundaries: runtime parsing protects external input; static types help trusted code use the parsed result correctly.
 
+> **Core takeaway:** Static types describe trusted program values; external data still needs runtime validation.
+
 ## Make invalid states harder to represent
 
 Independent booleans like loading, failed and ready allow contradictory combinations. A discriminated union ties each status to the data available in that state.
@@ -74,6 +76,46 @@ Add a refreshing state that preserves old items and an offline state with a retr
 **Does readonly mean immutable at runtime?** No. It restricts permitted assignments through that TypeScript view; aliases and runtime mutation still require careful design.
 
 **Why prefer a union over optional data and optional error?** The union expresses which combinations are valid and lets control-flow narrowing enforce branch-specific access.
+
+## Research notes: Make omitted states visible to the compiler
+
+A discriminated union connects each state to its valid fields. Exhaustive narrowing exposes missing cases.
+
+```ts
+type Save = { kind: 'idle' } | { kind: 'failed'; message: string };
+function label(state: Save): string {
+  switch (state.kind) {
+    case 'idle': return 'Save';
+    case 'failed': return state.message;
+    default: {
+      const unreachable: never = state;
+      return unreachable;
+    }
+  }
+}
+```
+
+Add a `saving` member and the default branch stops type-checking until it is handled.
+
+**Interview check:** Does asserting external JSON as Save validate its contents?
+
+**Answer:** No. Type assertions do not perform runtime checks. Validate untrusted data at the boundary before exposing a typed union to application code.
+
+**Practice:** Add success with a saved ID and update each decision point.
+
+[Read the source — TypeScript](https://www.typescriptlang.org/docs/handbook/2/narrowing.html). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** An API returns `{"minutes":"ten"}` while your interface says minutes is a number. Why does a type assertion fail to protect you, and what should the boundary return?
+
+> **Hint:** An assertion does not transform or inspect the response.
+
+**Answer guide — compare after attempting:** Accept external JSON as unknown, inspect its object shape and numeric fields, and return either validated data or an explicit parse failure. Reject this response. Test missing, null, negative, and malformed values according to the contract instead of asserting the expected interface.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

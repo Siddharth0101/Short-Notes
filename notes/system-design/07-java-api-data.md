@@ -14,6 +14,8 @@ visual: request-flow
 
 Backend business invariants ka authority hai. React buttons hide karne se authorization enforce nahi hoti. API design transport details ko stable use cases mein translate karta hai. Data model query needs and correctness requirements support kare; tables ko random entity nouns se create karna enough nahi.
 
+> **Core takeaway:** The service boundary should enforce business invariants and own persistence decisions.
+
 ## Begin with a modular service
 
 ```text
@@ -154,6 +156,18 @@ Pool sizing ka counter-intuitive part: pool badhana aksar galat fix hai. 100 con
 Bookmark create/delete semantics document karo. Same version se two title updates send karo; one should conflict according to chosen policy. Tenant A ke token se tenant B ke cursor and IDs test karo.
 
 Uske baad pool exhaustion reproduce karo: pool size 5 set karo, ek endpoint mein transaction ke andar 500 ms sleep daalo, aur 50 concurrent requests bhejo — observe karo ki *unrelated* endpoints bhi slow ho gaye. Phir sleep ko transaction ke bahar nikalo aur difference dekho. Last mein idempotency table implement karke same POST 5 baar bhejo (parallel mein bhi), aur verify karo ki exactly ek row bani aur paanchon responses identical the.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Two requests reserve the last seat. Explain why checking availability and later inserting a reservation without coordination is unsafe.
+
+> **Hint:** Both callers can observe availability before either writes.
+
+**Answer guide — compare after attempting:** Use an atomic conditional update, suitable lock, or database constraint within the chosen transaction design. One request succeeds; the other gets a defined conflict/unavailable result. Check affected rows and test concurrent attempts. A cache cannot be the sole authority for scarce inventory.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

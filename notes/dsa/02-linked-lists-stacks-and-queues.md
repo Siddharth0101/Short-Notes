@@ -13,6 +13,8 @@ tags: linked-list, stack, queue, pointers, monotonic-stack
 
 Array positions ko directly access karna easy banata hai. Linked list mein relevant node already ho toh local links change karna easy hota hai. Stack last-in first-out aur queue first-in first-out access expose karte hain. Yeh access contracts hain, jinhe different storage structures se implement kar sakte ho.
 
+> **Core takeaway:** Data-structure choice follows operation order: stack is LIFO, queue is FIFO.
+
 ## Linked list operations
 
 Singly linked list mein `head`, optionally `tail`, aur length store karo. Har node ke `value` aur `next` hote hain. Prepend O(1), tail pointer ke saath append O(1), index i tak pahunchna O(i). Tail remove karna O(n), kyunki predecessor find karna padta hai. Doubly linked list ka `prev` known node removal O(1) banata hai, lekin extra pointers aur invariants maintain karne padte hain.
@@ -293,6 +295,18 @@ Doubly linked list ka classic production use LRU cache hai: hash map node refere
 **Prompt:** BFS ka code correct hai lekin bade graph par timeout kar raha hai. Sabse pehle kya dekhoge?
 
 **Answer:** Queue implementation. `queue.shift()` har dequeue par baaki elements ko move karta hai, so V dequeues O(V²) ban jaate hain — algorithm O(V + E) hone ke bawajood. Fix head index (`queue[head++]`) ya proper ring buffer hai. Doosra check: visited enqueue ke waqt mark ho raha hai ya dequeue ke waqt — dequeue par marking se same vertex multiple baar queue mein aa sakta hai aur kaam exponentially badh sakta hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Design undo for edits A, B, C, then undo twice. Contrast with a job queue holding the same labels. What should empty removal do?
+
+> **Hint:** Trace from the end for undo and from the front for jobs.
+
+**Answer guide — compare after attempting:** Undo removes C then B; a queue processes A then B. Define empty removal as a documented sentinel or error. For an array-backed queue, consider a head index instead of shifting every element on each removal.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

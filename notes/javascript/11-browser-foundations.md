@@ -13,6 +13,8 @@ tags: html, css, accessibility, browser, layout
 
 Browser UI teen connected contracts hai: HTML describes meaning, CSS describes presentation, and JavaScript adds behavior. Framework components eventually produce these same browser primitives. A button-looking div does not acquire native keyboard behavior, and a React render does not necessarily cause a browser paint.
 
+> **Core takeaway:** Semantic HTML supplies interaction behavior; CSS determines layout without changing meaning.
+
 ## The rendering path
 
 Parse HTML into DOM and CSS into style rules; resolve computed styles; lay out geometry; paint visual content; composite layers when appropriate. Changes can invalidate different amounts of work. Updating width may trigger layout, while transform often avoids layout, but compositor behavior depends on browser and element details. Measure the actual trace instead of assuming every animation is cheap.
@@ -69,6 +71,39 @@ Build the layout above with one 200-character title. Check 320px width and 200% 
 **Why can min-width: 0 fix an overflowing flex item?** It permits shrinking below the automatic content minimum; it does not arbitrarily hide content.
 
 **Does display: none preserve accessibility exposure?** The hidden subtree is generally removed from layout and the accessibility tree. Choose hiding behavior according to the interaction, not appearance alone.
+
+## Research notes: Semantic HTML before custom interaction
+
+Use an anchor for navigation and a button for an action. A clickable `div` requires extra keyboard, focus and accessibility behavior.
+
+```html
+<label for="course-search">Find a course</label>
+<input id="course-search" name="query" type="search">
+<button type="button">Clear search</button>
+<a href="/library">Browse all courses</a>
+```
+
+Placeholder text is not a persistent visible label. Start with native behavior, then add styling.
+
+**Interview check:** What can be missing from a control that only handles click on a div?
+
+**Answer:** Keyboard activation, focusability, and an accessible role or name may be absent. Prefer the correct native element and preserve its behavior while styling it.
+
+**Practice:** Navigate and activate the example using only a keyboard.
+
+[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Sketch a lesson card with a heading, description, and an action that expands details. How will it work with keyboard input and at a narrow width?
+
+> **Hint:** An action is a button; navigation is a link.
+
+**Answer guide — compare after attempting:** Use a real button with an accessible name and an expanded-state indicator tied to the controlled content. Keep visible focus and a flexible card width. Verify activation with Enter and Space and check that long text wraps without hiding the action.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

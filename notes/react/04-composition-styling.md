@@ -13,6 +13,8 @@ tags: composition, patterns, css, accessibility, components
 
 Reusable component ek stable contract expose karta hai: inputs, actions, slots aur accessibility behavior. Har visual variation ko boolean prop bana doge to combinations unmanageable ho sakte hain. Composition caller ko meaningful pieces arrange karne deti hai, jabki component shared behavior own karta hai. Reuse ka goal similar pixels copy karna nahi, same responsibility centralize karna hai.
 
+> **Core takeaway:** Composition separates reusable structure from the content placed inside it.
+
 ## Start with simple slots
 
 ```jsx
@@ -146,6 +148,18 @@ Card ke three real uses compare karo aur common shell extract karo. Ek use mein 
 **Q. Composition inheritance se React mein useful kyun hai?** UI pieces ko props/children se combine karna explicit data flow deta hai aur rigid component inheritance hierarchy avoid karta hai.
 
 **Q. Custom hook component state share karta hai?** Logic share karta hai; individual calls ki state separate hoti hai jab tak shared external source use na ho.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Design one `Panel` for a profile and a lesson list without adding `isProfile` and `isLessons` switches. What should its public inputs be?
+
+> **Hint:** Let callers supply content instead of making the panel understand every domain.
+
+**Answer guide — compare after attempting:** A title slot, children, and an optional actions slot cover the shared shell. Profile and lesson components provide their own content. Keep domain fetching and validation outside the shell. Add a specialized prop only when multiple uses demonstrate a real shared behavior.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

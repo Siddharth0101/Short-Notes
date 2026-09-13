@@ -13,6 +13,8 @@ tags: fundamentals, js, types, operators
 
 A value has a type, and that type affects what an operator does. Variables are names; values are the things being named. JavaScript can assign a different type to a let binding later, but keeping one clear meaning per variable makes a program easier to follow. For now, concentrate on numbers, strings and booleans, plus missing values.
 
+> **Core takeaway:** Conversion is a decision at the input boundary; truthiness does not validate a number.
+
 ## Calculate and compare
 
 ```javascript
@@ -41,6 +43,18 @@ Predict '5' + 2, Number('5') + 2, 5 > 2 and 5 === '5'. Then run them. Compute th
 ## Check before moving on
 
 Explain why 0 and '0' are different values. You should be able to produce a boolean comparison and distinguish it from assignment. The next lesson uses these booleans to choose which statements run.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Predict `'8' + 2`, `Number('8') + 2`, and `Number('')`. Why should an empty form field not automatically become a valid score?
+
+> **Hint:** An empty string has a numeric conversion too.
+
+**Answer guide — compare after attempting:** The results are `'82'`, `10`, and `0`. Reject blank input before conversion, then check that the result is finite and within the allowed range. A successful conversion alone does not prove that the user supplied a score.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

@@ -14,6 +14,8 @@ visual: event-loop
 
 Interview mein definition recall ke saath prediction aur debugging test hota hai. Strong answer ka flow hai: rule batao, chhota example do, edge case discuss karo, phir practical use connect karo. Output question mein code run karne se pehle execution trace likho; guess correct hone se reasoning prove nahi hoti.
 
+> **Core takeaway:** A strong language answer combines a prediction, the mechanism, and a changed example.
+
 ## A focused mock session
 
 | Time | Task | Good evidence |
@@ -94,6 +96,38 @@ Har dimension ko 0–2 score do: semantics, example, edge cases, implementation,
 Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
 
 After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+
+## Research notes: Explain the contract before coding
+
+Amazon emphasizes applying fundamentals to problems rather than memorizing details.
+
+**Original practice round:** Implement a trailing debounce that preserves the receiver and supports cancellation. State whether calls return a result or merely schedule work.
+
+**Failure injection:** Cancel before the delay, call twice rapidly, then change the receiver.
+
+**Evidence to bring:** A good test checks the final arguments, receiver identity, zero calls after cancellation and explicit timer cleanup.
+
+The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+
+**Interview check:** How should you review this round after attempting it?
+
+**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+
+**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+
+[Read the source — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Give a two-minute explanation of why two factory-created counters can be independent. Then change the example so they intentionally share state.
+
+> **Hint:** Identify the exact binding captured by each returned function.
+
+**Answer guide — compare after attempting:** Independent counters capture bindings from separate factory calls; shared counters capture one outer binding. Show a short call trace for both, including their different outputs. Score the answer on mechanism and evidence, not use of the word closure alone.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 [MDN closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures), [JavaScript execution model](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model), aur [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) semantics ke references hain.

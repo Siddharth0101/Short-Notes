@@ -13,6 +13,8 @@ tags: frequency-counter, two-pointers, sliding-window, prefix-sum
 
 Pattern ek reusable invariant hai, bas problem ke keyword se match karne wali trick nahi. Frequency counter multiplicity remember karta hai; two pointers impossible pairs discard karte hain. Sliding window neighboring contiguous ranges ka work reuse karti hai. Prefix sums repeated range addition ko subtraction mein convert karte hain.
 
+> **Core takeaway:** A pattern is valid only when its invariant matches the input constraints.
+
 ## Frequency counters
 
 Anagrams ke liye baar-baar character search/delete karne ke bajay counts compare karo. Text semantics pehle define karo: neeche Unicode code points count hote hain, case preserve hota hai, aur accents normalize ya grapheme clusters combine nahi hote.
@@ -289,6 +291,18 @@ Frequency counters observability pipelines mein har jagah hain — log lines par
 **Prompt:** `countSubarraysWithSum` ki worst-case space kya hai, aur woh kab hit hoti hai?
 
 **Answer:** O(n). Jab saare prefix sums distinct hon (jaise saare elements positive), map mein n + 1 entries jaati hain. "Map sirf O(k) leta hai" bolna tab valid hota jab values ki range chhoti ho — general signed input par aisi koi bound nahi hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** You want a target-sum subarray and use a shrinking window intended for nonnegative values. Explain why adding negative values breaks that reasoning.
+
+> **Hint:** Removing an element no longer necessarily decreases the sum.
+
+**Answer guide — compare after attempting:** A negative removal can increase the sum, so the direction of window adjustment is no longer reliable. For example, `[4,-1]` reaches target 3 even though discarding 4 early would miss it. Use an appropriate prefix-sum method when negatives are allowed.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

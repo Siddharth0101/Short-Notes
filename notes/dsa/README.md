@@ -4,6 +4,8 @@
 
 Before starting: [Functions parameters arguments and return values](../javascript/05-js-functions.md) · [Arrays objects and simple data modeling](../javascript/06-js-arrays-objects.md).
 
+Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+
 ## Stage 1: Understand cost and basic structures
 
 Start with complexity, lists/stacks/queues, and hashing before pattern-based problems.

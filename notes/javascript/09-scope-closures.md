@@ -14,6 +14,8 @@ visual: closures
 
 Function call hone par execution context stack par aata hai. Function apne variables ke liye pehle local scope, phir definition ke surrounding lexical scopes search karta hai. Caller ka scope automatically access nahi hota. Closure function aur uske accessible lexical environment ka combination hai. Function return hone ke baad bhi captured bindings reachable hain to environment alive reh sakta hai.
 
+> **Core takeaway:** A closure retains access to its lexical bindings; separate factory calls can own separate state.
+
 ## Trace an independent counter
 
 ```js
@@ -119,6 +121,47 @@ Real app mein yeh dynamic list ke event handlers (har row ka apna id/index), API
 **Q. Closure function return hone ke baad kaise work karta hai?** Stack frame end hota hai, lekin reachable lexical bindings ko garbage collector reclaim nahi karta.
 
 **Q. Scope aur call stack same hain?** Nahi. Stack active calls dikhata hai; lexical scope variable lookup ka relationship hai jo code definition se decide hota hai.
+
+## Research notes: Live bindings versus snapshots
+
+Closure binding read karta hai; pehle calculate ki hui string khud update nahi hoti.
+
+```js
+function makeRevision() {
+  let revision = 0;
+  const label = `Revision ${revision}`;
+  return {
+    advance: () => ++revision,
+    live: () => revision,
+    snapshot: () => label,
+  };
+}
+const r = makeRevision();
+r.advance();
+console.log(r.live(), r.snapshot()); // 1, "Revision 0"
+```
+
+Both readers are closures. One reads the changing number; the other reads a string computed earlier.
+
+**Interview check:** Why does the snapshot stay unchanged even though both readers are closures?
+
+**Answer:** The numeric binding changed, but the earlier string was not recomputed. Calculate the label inside the reader for a current label; capture deliberately when historical state is required.
+
+**Practice:** Move label creation into snapshot(), then predict the output.
+
+[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Build two counters starting at zero. Call the first twice and the second once. Predict outputs and explain why a single global count changes the behavior.
+
+> **Hint:** Declare the count inside the factory and return a function that increments it.
+
+**Answer guide — compare after attempting:** `function makeCounter() { let n = 0; return () => ++n; }` gives 1, 2, 1 across those calls. Each factory invocation creates its own binding. A global binding would be shared, producing 1, 2, 3 instead.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

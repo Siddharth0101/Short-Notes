@@ -4,6 +4,12 @@ A personal developer notebook with **Hinglish explanations and English technical
 
 Start with the [structured reading index](notes/README.md), or run the app for search, bookmarks, learning paths, and progress tracking. The existing source notes and PDFs remain in their original locations.
 
+## Learn, practice, and review
+
+Every one of the **85 chapters** now includes a concise core takeaway and an original **Revision and practice lab**: recall, a topic-specific challenge, a hint, an answer guide, and an exit check. The 85 new labs complement the existing interactive interview bank. Exercises progress from output tracing and small implementations to concurrency, failure recovery, and design defenses.
+
+Follow the [study guide](notes/STUDY_GUIDE.md) for session plans, a self-review rubric, a mistake-log worksheet, and stage deliverables. In the app, use the chapter table of contents to jump to **Revision and practice lab**. On GitHub, the same material is readable directly in each Markdown chapter.
+
 ## Run the app
 
 Requires Node.js 22.12+ (or a newer supported release).
@@ -35,7 +41,7 @@ Start with the [course syllabus](notes/README.md). Both **All notes** and **Lear
 | System design | 12 | Requirements/scaling → React frontend → Java backend → integrated case studies |
 | Interview playbooks | 6 | Language rounds → application rounds → algorithms and design, after the corresponding course |
 
-**85 study chapters, 142 integrated source examples, 170 interactive interview questions, and 20 visualizations.** Counts in the app are calculated from its content rather than maintained manually.
+**85 study chapters, 142 integrated source examples, 274 interactive interview questions, and 20 visualizations.** Counts in the app are calculated from its content rather than maintained manually.
 
 New practical chapters add HTML/CSS, bounded async concurrency, React machine coding, TypeScript contracts, Java resource limits, SQL joins/windows, MongoDB query plans, monotonic stacks, and complete frontend/backend design rounds.
 
@@ -69,6 +75,12 @@ Use one structured course sequence: each chapter combines explanations, code, re
 
 All 85 chapters include interview practice. Six technical course capstones provide failure scenarios and acceptance criteria; all six interview playbooks include an assessed mock round. The 26 new scenario questions are original practice material, with technical references where applicable, not claims about questions asked by specific companies.
 
+## Supplied interview checklist
+
+[Open the answered interview workbook](notes/INTERVIEW_WORKBOOK.md). The bank now includes 104 additional questions across HTML, CSS, JavaScript, React, Redux, Node, MongoDB, Java/Spring, DSA, and system design, with 13 existing answers expanded instead of duplicated. Use **Interview topic** to select a focused practice area. Output puzzles show corrected code before answer reveal; answers support formatted examples and follow-ups.
+
+The workbook records reused questions and corrected premises, with code solutions for both supplied Drive flexbox images and additional original flexbox exercises.
+
 ## A useful study routine
 
 1. Follow either JavaScript → React → frontend design, or Java → Spring → backend design. Study DSA alongside either track.
@@ -78,6 +90,10 @@ All 85 chapters include interview practice. Six technical course capstones provi
 5. Bookmark weak topics. Export progress from **Bookmarks** to keep a backup or merge it on another device.
 
 Progress is stored in this browser's local storage. There is no account, server sync, or automatic cross-device backup. Clearing site data removes local progress; exported JSON can be imported again.
+
+## Researched additions
+
+[Open the curated source map](notes/RESEARCH_SOURCES.md): 30 primary sources support new explanations, worked examples and answered interview checks in 34 existing chapters across all seven courses. Reviewed 13 September 2026. Sources include MDN, React, TanStack Query, TypeScript, Oracle/Dev.java, Spring, PostgreSQL, Node, Express, MongoDB, OWASP, MIT 6.006, AWS Builders’ Library, Google SRE, Supabase and employer interview guidance. The additions appear inside the existing reader and search, with no separate course collection.
 
 ## Course references
 

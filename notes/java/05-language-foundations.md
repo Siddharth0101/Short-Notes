@@ -14,6 +14,8 @@ visual: java-memory
 
 Java program ko compiler pehle bytecode mein translate karta hai, phir JVM execute karti hai. JDK development tools aur runtime capabilities provide karta hai. Java ki strength compile-time contracts hain: variable ka declared type decide karta hai ki kaunse operations legal hain. `var` local type inference hai; variable dynamically typed nahi ho jata. Examples Java 21-compatible syntax use karte hain unless otherwise stated.
 
+> **Core takeaway:** Widening the destination does not widen arithmetic already performed.
+
 ## Types and conversions
 
 Eight primitives hain: byte, short, int, long, float, double, char, boolean. `char` ek UTF-16 code unit hai; har Unicode character ek char mein fit nahi hota. Boolean ke logical values true/false hain, language universal one-bit storage promise nahi karti. Fields aur array elements default values lete hain; local variable ko read karne se pehle definitely assign karna zaroori hai.
@@ -99,6 +101,18 @@ Request validation code mein yeh foundations directly dikhte hain: incoming JSON
 ## Practice
 
 Temperature converter likho jisme integer-division bug intentionally introduce karke fix karo. Ek array ka min/max find karo, empty input ka behavior document karo. Phir reference reassignment aur object mutation ke outputs execution se pehle predict karo. Last mein ek status-code mapper ko purane colon-style `switch` se likho, ek fallthrough bug intentionally introduce karo, phir arrow-style expression se rewrite karke bug class ko eliminate karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Why can `long total = 100000 * 100000;` be wrong? Repair it and state the expected result.
+
+> **Hint:** At least one operand must already be long.
+
+**Answer guide — compare after attempting:** Both original operands are int, so their multiplication overflows before assignment. `long total = 100000L * 100000;` yields 10000000000. Consider the maximum intermediate value, not just the final variable type.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

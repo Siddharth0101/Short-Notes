@@ -14,6 +14,8 @@ visual: transaction-race
 
 Backend design ki starting point database brand nahi, invariant hai. For a booking service: one seat can have at most one active reservation, a confirmed payment must be traceable, and retries must not create a second logical booking. Availability and latency choices follow these correctness requirements.
 
+> **Core takeaway:** Reservation correctness depends on competing state transitions, especially around expiry.
+
 ## Start with a narrow architecture
 
 A React client calls a stateless Java API backed by a relational database. Keep reservation creation and its idempotency record in one transaction. Add a worker for asynchronous notifications when the user need does not require waiting for delivery. Do not split services until scaling, ownership or isolation requirements justify the distributed boundary.
@@ -63,6 +65,18 @@ Walk through three timelines: two users claim one seat; payment succeeds but HTT
 **Does exactly-once delivery solve booking duplication?** Delivery claims are scoped. Business deduplication still needs stable identity and an atomic invariant at the side-effect boundary.
 
 **Can a local lock protect seats across instances?** No. All writers must coordinate through a shared authoritative mechanism or a valid distributed ownership protocol.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A reservation expires while a payment confirmation arrives. List possible terminal outcomes and what must never happen.
+
+> **Hint:** Treat payment and expiry as competing transitions against durable state.
+
+**Answer guide — compare after attempting:** Atomically decide whether confirmation can consume the active reservation. If expiry wins, reconcile payment with a refund or a new explicit fulfillment decision. Never silently promise an already-reallocated seat. Persist transition history and make duplicate callbacks safe.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

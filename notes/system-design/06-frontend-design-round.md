@@ -13,6 +13,8 @@ tags: frontend, react, system-design, accessibility, caching
 
 Frontend system design is the design of a user-visible distributed client. Browser storage, network, rendering, accessibility and API contracts all participate. Start with a user journey and make each architecture choice explain a requirement. A component diagram without loading, error and stale-data behavior is incomplete.
 
+> **Core takeaway:** A design round needs contracts and failure behavior alongside component boxes.
+
 ## Design brief and assumptions
 
 Design a searchable learning catalog with shareable filters, paginated results and saved topics. Assume mobile browsers, unreliable networks and authenticated users. For an interview exercise, propose a 200ms local interaction budget and measure real devices before treating it as an achieved target. Clarify which pages need search-engine discoverability and which data is private.
@@ -56,6 +58,18 @@ Spend five minutes clarifying requirements, ten on the API/state diagram, ten on
 **Would microfrontends help?** Only if organizational ownership and independent delivery benefits justify integration, dependency and UX consistency costs.
 
 **What is your first deep dive?** Choose the highest-risk user requirement, such as request races or large-list responsiveness, instead of listing every technology you know.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Design a searchable catalog that works when the next page fails. Specify the visible state and retry boundary.
+
+> **Hint:** Existing successful data need not disappear because a later request fails.
+
+**Answer guide — compare after attempting:** Keep current results visible, show a page-specific failure, and retry that page with the same query identity. Clarify pagination consistency, loading announcements, and duplicate-row handling. Demonstrate rapid filter changes and a failed retry; use a deterministic fake API to review behavior.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

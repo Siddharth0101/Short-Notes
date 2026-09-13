@@ -14,6 +14,8 @@ visual: request-flow
 
 Production app database request ke baad finish nahi hoti. Email provider timeout kar sakta hai, payment webhook duplicate aa sakta hai, upload invalid ho sakta hai aur process mid-request restart ho sakta hai. Har integration ke liye success evidence, retry policy, idempotency aur recovery path define karo. Network response lost hone ka matlab operation definitely fail hona nahi hai.
 
+> **Core takeaway:** External callbacks can repeat; durable state must make repeated delivery safe.
+
 ## Server-rendered pages
 
 Pug template server data se HTML generate karta hai. Express mein view engine configure karke controller `res.render("topic", { topic })` call kar sakta hai. Layout inheritance common shell share karti hai, includes smaller pieces reuse karte hain aur escaped interpolation untrusted text output ke liye important hai. Raw/unescaped interpolation sirf deliberately trusted HTML ke liye use karo. SSR initial content server se bhejta hai; every page automatically interactive React app nahi ban jaati.
@@ -145,6 +147,18 @@ Build an order service with an authenticated create endpoint and a webhook handl
 ### Interview defense
 
 Explain the differences between unique constraints, single-document atomicity, and multi-document transactions. If using a transaction, test against a deployment that supports it. Describe the retention of deduplication records and how reconciliation detects a payment/order mismatch. Include a replay script and a concurrency reproduction with your implementation.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A payment provider sends the same success event twice. Sketch storage and processing that avoids fulfilling an order twice.
+
+> **Hint:** Persist an event identity and coordinate it with the business transition.
+
+**Answer guide — compare after attempting:** Record a unique provider event ID and transition the order atomically within the chosen storage design. Repeated events become no-ops. For external fulfillment, persist an outbox task and use an idempotent downstream operation; a local flag cannot atomically cover an unrelated network call.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 [Stripe webhooks](https://docs.stripe.com/webhooks) signatures aur delivery handling explain karta hai. [Express production performance](https://expressjs.com/en/advanced/best-practice-performance.html) operational patterns aur [Pug interpolation](https://pugjs.org/language/interpolation.html) template escaping ka reference hain.

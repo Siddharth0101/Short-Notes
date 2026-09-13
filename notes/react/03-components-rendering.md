@@ -14,6 +14,8 @@ visual: react-render
 
 React component current props, state aur context se UI description calculate karta hai. Render ka matlab function call karke next UI calculate karna hai; commit ka matlab actual DOM changes apply karna hai. Har render ka DOM mutation hona necessary nahi. Component pure rakho taaki React calculation repeat ya discard kare to hidden side effects na hon.
 
+> **Core takeaway:** State belongs to a component's identity within the rendered tree.
+
 ## Build from a component tree
 
 ```jsx
@@ -114,6 +116,18 @@ Topic cards ko list aur grid views mein show karo. Local favorite toggle add kar
 **Q. Virtual DOM always faster hai?** Universal guarantee nahi. React declarative updates manage karta hai; actual performance workload aur implementation par depend karti hai.
 
 **Q. Props aur state mein difference?** Props parent-controlled input hain; state component ki retained memory hai. Dono ko render ke dauraan immutable snapshots ki tarah treat karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Two editable rows use array indices as keys. Type a draft in row B and prepend row A. Explain the misplaced draft and choose a fix.
+
+> **Hint:** Positions shift while the underlying item identities remain stable.
+
+**Answer guide — compare after attempting:** Index keys attach existing state to positions that now represent different items. Use stable data IDs as sibling keys. Verify prepend, reorder, and delete operations. A random key is also wrong because it remounts the row and discards its local state.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

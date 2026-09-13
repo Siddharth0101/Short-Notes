@@ -14,6 +14,8 @@ visual: request-flow
 
 Production system ko build karne ke saath operate and recover bhi karna padta hai. Security trust boundaries define karti hai. Observability unexpected behavior investigate karne ka evidence deti hai. Deployment and recovery procedures changes ko controlled banate hain. Har box ke saath owner, failure signal and recovery action socho.
 
+> **Core takeaway:** An SLO must define which events count as good and which requests are eligible.
+
 ## Trust boundaries
 
 ```text
@@ -167,6 +169,32 @@ Backup ke liye yaad rakho ki untested backup ek assumption hai, guarantee nahi. 
 Database outage tabletop run karo: API status, retries, alerts and recovery list karo. Restore sample backup into isolated environment. Simulate rolling deployment where old and new code overlap against one schema.
 
 Phir ek authorization test likho jo tenant A ke token se tenant B ke resource IDs par har endpoint hit kare; dekho kitne endpoints 200 return karte hain. Uske baad apne service ke top 5 dependencies ke liye degradation ladder likho — har ek ke fail hone par kya band hoga aur kya chalta rahega — aur verify karo ki kam se kam do behaviors actually implemented hain, sirf documented nahi. Last mein apne metrics mein cardinality audit karo: koi label aisa hai jo user/request/order ID carry kar raha ho?
+
+## Research notes: Turn an SLO into a concrete budget
+
+Choose a user-visible indicator before a target. Successful eligible checkouts divided by eligible attempts differs from process uptime. State exclusions and the measurement window.
+
+Original arithmetic: at 99.9% success over 1,000,000 eligible requests, 1,000 may be unsuccessful. After 700 failures, 300 remain in that window's budget. A request-based budget is not automatically a fixed number of downtime minutes.
+
+**Interview check:** Why are internal health checks insufficient as the only success indicator?
+
+**Answer:** A process may answer health checks while the user workflow fails. Measure the meaningful external outcome and use internal metrics to diagnose it.
+
+**Practice:** Decide whether declined cards count as expected business results or service failures.
+
+[Read the source — Google SRE](https://sre.google/sre-book/service-level-objectives/). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** For one million eligible requests and a 99.9% success target, calculate the allowed bad events. What must be specified before building the alert?
+
+> **Hint:** Convert the permitted failure fraction into an event count.
+
+**Answer guide — compare after attempting:** The allowance is 1000 bad events for that measurement window. Define the window, eligible traffic, success semantics, and data source. Distinguish request-based availability from time-based downtime; 1000 errors does not by itself specify a number of minutes offline.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

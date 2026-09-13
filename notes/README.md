@@ -6,6 +6,8 @@ Each subject follows a prerequisite-based sequence. Read lesson 01, continue in 
 
 See [course coverage](COURSE_COVERAGE.md) for instructor context and lecture-audit limits.
 
+Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](STUDY_GUIDE.md) for session plans and self-review.
+
 ## JavaScript
 
 [Open this course syllabus](javascript/README.md)

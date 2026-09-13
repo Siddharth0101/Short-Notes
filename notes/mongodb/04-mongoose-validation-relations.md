@@ -13,6 +13,8 @@ tags: mongoose, schemas, validation, populate, middleware, lean
 
 Mongoose MongoDB ke upar object modeling layer hai. Schema document structure aur application behavior define karta hai; model collection operations ka interface deta hai; document individual hydrated instance hota hai. Mongoose validation application boundary hai, MongoDB index/constraint alag database boundary hai. In dono ko interchangeable samajhne se concurrency bugs aate hain.
 
+> **Core takeaway:** Schema validation is one layer; database constraints and explicit write rules protect concurrent behavior.
+
 ## Define a study topic model
 
 ```js
@@ -117,6 +119,18 @@ Duplicate slug, missing author, invalid track aur too-large minutes create karke
 **Q. Unique validator precheck enough hai?** Nahi. Two concurrent requests precheck pass kar sakti hain; unique database index authoritative protection deta hai.
 
 **Q. Populate referential integrity ensure karta hai?** Nahi. It resolves reads; missing/deleted references aur lifecycle rules application/schema design handle karta hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Two requests create users with the same email after both pass an application-level existence check. What prevents duplicate committed records?
+
+> **Hint:** A pre-check can race with another request.
+
+**Answer guide — compare after attempting:** Use a database unique index on the canonical email representation and handle duplicate-key failure. Define normalization before writing. Mongoose validation or an existence query alone cannot serialize concurrent requests; test simultaneous submissions and an existing duplicate.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

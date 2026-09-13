@@ -13,6 +13,8 @@ tags: numbers, dates, intl, regex, strings, timers
 
 Data storage aur human display alag responsibilities hain. Amount ko formatted currency string ki form mein calculate mat karo. Timestamp ko user-friendly date ki form mein compare mat karo. Pehle machine representation par logic lagao, phir locale aur timezone ke hisaab se display banao. Date-only values, instants aur recurring local times ko ek hi concept mat samjho.
 
+> **Core takeaway:** Formatting a number or date is different from defining its stored meaning.
+
 ## Currency and time display
 
 ```js
@@ -92,6 +94,18 @@ Study-session timer banao jo pause/resume kare aur reload ke baad saved deadline
 **Q. Intl timezone store karta hai?** Formatter display rules apply karta hai; underlying Date ka instant change nahi karta.
 
 **Q. `setInterval(fn, 1000)` accurate clock hai?** Nahi. Scheduling delays possible hain; elapsed time actual timestamps se derive karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** For prices already supplied as integer paise, total 1999 and 2501 and display rupees with two decimal places. Why is parsing that display string back a poor storage contract?
+
+> **Hint:** Perform arithmetic in the supplied minor unit.
+
+**Answer guide — compare after attempting:** The total is 4500 paise, displayed as `45.00` before any currency symbol. Keep 4500 as the stored integer. Locale formatting may add separators or symbols; display text is not a canonical numeric representation. Define rounding separately when converting external decimal prices.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

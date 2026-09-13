@@ -1,3 +1,4 @@
+import { requestedQuestions, answerAdditions } from './requestedQuestions.js';
 import { scenarioQuestions } from './scenarioQuestions.js';
 import { advancedQuestions } from './advancedQuestions.js';
 
@@ -1224,4 +1225,7 @@ export const interviewQuestions = [
   },
   ...advancedQuestions,
   ...scenarioQuestions,
-];
+  ...requestedQuestions,
+].map((item) =>
+  answerAdditions[item.id] ? { ...item, answer: item.answer + answerAdditions[item.id] } : item,
+);

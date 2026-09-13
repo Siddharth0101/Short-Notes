@@ -13,6 +13,8 @@ tags: tanstack-query, server-state, caching, supabase, mutations
 
 Server state ka owner remote system hai; client ke paas uski temporary cached copy hoti hai. Loading boolean aur array se shuru kar sakte ho, lekin freshness, retries, race conditions, deduplication aur invalidation quickly complex ho jaate hain. Query library cache lifecycle manage karti hai. Client UI state aur server cache ko separate rakho, jaise selected tab local hai lekin fetched bookings remote data hain.
 
+> **Core takeaway:** A query key identifies a cached result; freshness and authorization are separate concerns.
+
 ## Query key defines identity
 
 ```jsx
@@ -127,6 +129,32 @@ Track filter switch karke cache behavior observe karo. Mutation ke baad list upd
 **Q. Stale data unusable hai?** Nahi. Stale cache display ho sakti hai while refresh happens; stale freshness metadata hai.
 
 **Q. Query key mein token rakhna chahiye?** Secrets avoid karo. User-scoped data identity clearly model karo aur logout/user switch par sensitive cache clear/reset karo.
+
+## Research notes: Freshness and retention are different clocks
+
+In TanStack Query v5, `staleTime` controls freshness and `gcTime` controls removal of inactive cached data. Stale does not mean deleted. Stale queries can refetch on mount, focus or reconnect; inactive entries default to five minutes of retention.
+
+With `staleTime: 60_000`, a result may become stale after sixty seconds while remaining cached. Staleness alone does not start periodic polling. Choose the policy from the product's freshness requirement.
+
+**Interview check:** Does gcTime: 0 guarantee fresh data while a query stays mounted?
+
+**Answer:** No. Garbage collection applies to inactive queries. It is not a freshness or authorization policy; configure refetch behavior separately and enforce access at the server.
+
+**Practice:** Log mount, unmount, refocus and reconnect requests on a timestamped timeline.
+
+[Read the source — TanStack Query](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Two users request page 1 of their own notes. Explain the bug in key `['notes',1]` and specify a better cache identity.
+
+> **Hint:** Include every input that changes the result, including the user boundary.
+
+**Answer guide — compare after attempting:** Use an identity such as `['notes', userId, {page:1, filter}]` and clear or isolate user data on session changes. Backend access rules must independently enforce ownership. A correct key prevents cache collisions but does not authorize a database read.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

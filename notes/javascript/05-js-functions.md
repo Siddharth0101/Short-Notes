@@ -13,6 +13,8 @@ tags: fundamentals, js, functions
 
 Function ek reusable operation hai. A parameter names an input inside its definition; an argument supplies the actual value at a call site. A return statement sends a value back to the caller and ends that function call. Printing a value is not the same as returning it: a caller cannot calculate with a console message.
 
+> **Core takeaway:** A return value lets callers compose work; logging only displays information.
+
 ## One operation many inputs
 
 ```javascript
@@ -50,6 +52,18 @@ Write rectangleArea(width, height), call it twice and combine the results. Repla
 ## Check before moving on
 
 Explain the difference between a function definition and a function call. Next, use arrays and objects to represent several related values rather than inventing a separate variable for each one.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Write `studyTotal(days, minutesPerDay)` and use its result to calculate two learners' combined minutes. Check `(3,20)` and `(0,20)`.
+
+> **Hint:** Return the multiplication so another expression can use it.
+
+**Answer guide — compare after attempting:** `function studyTotal(days, minutesPerDay) { return days * minutesPerDay; }` returns 60 and 0 for the stated nonnegative numeric inputs. Add two calls to get the combined total. A function that only logs gives the caller `undefined`.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

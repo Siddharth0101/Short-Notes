@@ -14,6 +14,8 @@ visual: caching
 
 Har state same lifecycle follow nahi karti. Modal open flag ephemeral UI state hai. Search query shareable URL state ho sakti hai. Server note list remote data ka cached snapshot hai. Form draft unsaved local intent hai. In sabko one giant global object mein mix karne se reset, invalidation and synchronization bugs badhte hain.
 
+> **Core takeaway:** State ownership and response identity prevent one user's view from overwriting another.
+
 ## State ownership map
 
 | State | Owner | Persistence decision |
@@ -141,6 +143,32 @@ User "react" type karta hai toh 5 keystrokes = 5 distinct cache entries. 20 sear
 Bookmark toggle implement karo with delayed success and failure. Two quick toggles, user switch and stale search response simulate karo. Har case mein final UI state explain karo before running it.
 
 Uske baad read-after-write bug deliberately banao: mutation ko sirf `{ ok: true }` return karwao aur list refetch par artificial 500 ms delayed stale response do; observe karo ki UI purana dikhata hai. Phir mutation se full resource return karke cache seed karo aur difference dekho. Last mein offline replay test karo: network offline karke 10 edits karo, online aao, aur count karo ki kitni requests ek saath jaati hain — phir serial drain plus jitter add karke behavior compare karo.
+
+## Research notes: Client caches do not enforce database access
+
+RLS constrains access when callers bypass the React UI. For UPDATE, USING selects existing rows and WITH CHECK constrains resulting rows; the applicable SELECT policy is also needed.
+
+Original test: a user may edit their draft title but tries to change its owner to another account. Constrain both the existing scope and resulting ownership. Enable RLS, define required operation policies and keep bypass credentials outside browser code.
+
+**Interview check:** Why validate the resulting owner as well as the original row?
+
+**Answer:** An authorized edit must not allow transferring a record into an unauthorized scope. Existing-row and resulting-row predicates protect different parts of the transition.
+
+**Practice:** Test anonymous access, another owner and attempted owner reassignment.
+
+[Read the source — Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A user changes a notes filter while an older request is pending. Define query identity and what should happen when the old response arrives.
+
+> **Hint:** The currently selected filter determines the visible result.
+
+**Answer guide — compare after attempting:** Include user and filter inputs in request/cache identity. Store the old result under its own identity or ignore it for the active view. Keep loading/error feedback associated with the current request. Test reversed completion order and account switching.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

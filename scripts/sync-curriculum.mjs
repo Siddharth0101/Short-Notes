@@ -20,8 +20,10 @@ for (const track of TRACKS) {
 }
 const assigned = new Set();
 const outputs = new Map();
+const studyRoutine = "Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](STUDY_GUIDE.md) for session plans and self-review.\n\n";
 let index =
   "# Course syllabus — start here\n\nEach subject follows a prerequisite-based sequence. Read lesson 01, continue in number order, and complete each stage checkpoint. The app, filenames and this index share the same order. Original source folders remain reference material, not a second course sequence.\n\n**Choose your route:** JavaScript → React → frontend system design; Java → Spring → backend system design. Begin DSA after JavaScript functions and arrays. Begin Node/MongoDB after JavaScript async and modules. Interview playbooks come after the corresponding subject.\n\nSee [course coverage](COURSE_COVERAGE.md) for instructor context and lecture-audit limits.\n\n";
+index += studyRoutine;
 for (const track of TRACKS) {
   const course = curriculum[track.id];
   if (!course) throw new Error(`Missing course ${track.id}`);
@@ -38,6 +40,7 @@ for (const track of TRACKS) {
     : "No prior programming course required. Start with lesson 01.\n\n";
   section += prerequisiteText;
   courseText += prerequisiteText.replace(/\]\(([^)]+)\)/g, "](../$1)");
+  courseText += studyRoutine.replace("(STUDY_GUIDE.md)", "(../STUDY_GUIDE.md)");
   let order = 0;
   for (const [stageIndex, stage] of course.stages.entries()) {
     const header = `### Stage ${stageIndex + 1}: ${stage.title}\n\n${stage.goal}\n\n`;

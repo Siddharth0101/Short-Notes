@@ -13,6 +13,8 @@ tags: maven, junit, testing, build
 
 Build tool source ko repeatable artifact mein convert karta hai. Test suite change ke impact par feedback deti hai. Dono tab useful hain jab developer machine aur CI same declared inputs use karein. Undocumented global dependencies ya only-IDE configuration reproducibility break karte hain.
 
+> **Core takeaway:** A useful test observes a contract and catches a plausible regression.
+
 ## Maven lifecycle and dependencies
 
 `pom.xml` coordinates, dependencies, plugins and build settings describe karta hai. Lifecycle phases ordered hain: validate, compile, test, package, verify, install and deploy. Later phase invoke karoge toh preceding phases execute hoti hain. `install` local repository mein artifact publish karta hai; `deploy` configured remote repository ko publish kar sakta hai, production application deployment ka synonym nahi. [Maven lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
@@ -102,6 +104,18 @@ CI pipeline mein `./mvnw verify` typically unit tests, integration tests aur sta
 ## Practice
 
 Pricing rule ke boundary tests likho. One duplicate insert integration test add karo. Build ko clean checkout mein run karke missing assumptions identify karo. Report exact command and meaningful coverage, sirf "tested" nahi. Phir ek mock-heavy test likho jo internal method calls over-verify karta ho, refactor karke usse output-based assertion mein convert karo, aur dikhao ki test ab implementation-detail-independent hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A pricing method applies a discount only when quantity is at least 10. Select three tests and explain which bug each detects.
+
+> **Hint:** Test immediately below, at, and above the threshold.
+
+**Answer guide — compare after attempting:** Quantities 9, 10, and 11 cover no discount, threshold inclusion, and continued eligibility. Assert exact expected prices under the chosen currency representation. A test that computes its expected value by calling the same pricing helper repeats the implementation instead of independently checking it.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

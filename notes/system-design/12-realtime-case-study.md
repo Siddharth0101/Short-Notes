@@ -14,6 +14,8 @@ visual: request-flow
 
 Real-time ka matlab low-latency updates hai, guaranteed delivery ya automatic conflict resolution nahi. Durable document content, chat messages and temporary presence different data classes hain. Cursor movement drop hona acceptable ho sakta hai; saved edit lose hona nahi. Invariants data type ke according choose karo.
 
+> **Core takeaway:** Reconnect requires durable ordering and gap recovery, not only a live socket.
+
 ## Transport and topology
 
 ```text
@@ -227,6 +229,18 @@ Design a collaborative notes service with a React client, durable backend, and a
 ### Interview defense
 
 Draw the happy path and two failure paths, state which subsystem owns every durable fact, and identify the first scaling bottleneck. Distinguish transport delivery from exactly-once business effects. Finish with observability, a rollout strategy, and the test that would falsify your claimed consistency guarantee.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A client last acknowledged message 41, disconnects, and reconnects after messages 42–45. Explain replay and duplicate handling.
+
+> **Hint:** A live subscription alone misses messages sent during disconnection.
+
+**Answer guide — compare after attempting:** Request messages after the durable cursor, replay 42–45 in order, and merge by stable message identity. Coordinate replay and live delivery so new messages cannot fall into a handoff gap. Deduplicate overlap and define behavior when the cursor is older than retained history.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 - [Server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)

@@ -4,6 +4,8 @@
 
 No prior programming course required. Start with lesson 01.
 
+Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+
 ## Stage 1: Write your first Java programs
 
 Run main, declare variables, make decisions, write methods, and create instances.

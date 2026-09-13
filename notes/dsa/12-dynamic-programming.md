@@ -16,6 +16,8 @@ Dynamic programming repeated subproblems ke answers reuse karta hai. State aisi 
 
 Five steps follow karo: state ka plain-language meaning, choices/transition, base cases, evaluation order, final answer location. Complexity usually **number of distinct states × work per state** se nikalti hai, plus output construction aur arithmetic cost.
 
+> **Core takeaway:** A DP state must contain enough information to determine future choices.
+
 ## Memoization and tabulation
 
 Memoization recursive demand par state solve karta hai aur cache karta hai. Tabulation dependencies ke order mein table fill karta hai. Memoization naturally only reached states evaluate kar sakta hai; tabulation call-stack limit avoid karta hai aur memory compression ko visible banata hai.
@@ -311,6 +313,32 @@ Implement three problems: count target-sum subarrays with negative values, short
 ### Interview defense
 
 Give a counterexample to the tempting incorrect algorithm, then explain the invariant that repairs it. Trace one example by hand and discuss numeric bounds. Stretch task: reconstruct a chosen path or item set, explaining why the memory optimization may need additional reconstruction data.
+
+## Research notes: Numeric magnitude can dominate DP
+
+O(nW) knapsack depends on the numeric capacity W. Binary encoding takes only about log2(W) bits, so this is pseudopolynomial complexity.
+
+Original estimate: 100 items and capacity one billion imply roughly 100 billion state visits. Check the constraints before allocating a table. A different state dimension, approximation or smaller-item-count algorithm may be needed.
+
+**Interview check:** Why is reducing DP memory alone insufficient for huge capacity?
+
+**Answer:** Reducing O(nW) storage to O(W) leaves O(nW) time. Estimate both; indexing by total value or exploiting a smaller item count may change feasibility.
+
+**Practice:** Compare equal item counts with capacities differing by a millionfold.
+
+[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/3484e876d81aba07911a1109f5b5e81e_MIT6_006F11_lec21.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** For house values `[2,7,9,3,1]`, compute the best nonadjacent sum. Define the state and trace each prefix, assuming values are nonnegative.
+
+> **Hint:** At each house compare skipping it with taking it plus the best prefix two positions back.
+
+**Answer guide — compare after attempting:** Let best[i] cover the first i houses. Starting with best[0]=0, prefix results are 2, 7, 11, 11, 12. The answer is 12. Use `max(best[i-1], value[i-1]+best[i-2])` with an explicit first-house base case; the empty input returns 0.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 [Princeton's recursion and dynamic programming discussion](https://introcs.cs.princeton.edu/java/23recursion/) repeated recursive work aur memoization ko cover karta hai. [Princeton's analysis chapter](https://algs4.cs.princeton.edu/14analysis/) states × work-per-state wale cost model ko support karta hai. Coin-change, knapsack, LIS aur edit-distance recurrences aur unke derivations original exercises hain.

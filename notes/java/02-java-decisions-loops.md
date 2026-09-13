@@ -13,6 +13,8 @@ tags: fundamentals, java, decisions, loops
 
 Control flow determines which statement executes next. Java if and loop conditions require booleans; an integer is not accepted as a truthy substitute. Work inside the main method from the previous lesson. This lets you focus on decisions and repetition without adding methods or classes of your own yet.
 
+> **Core takeaway:** Control flow implements a rule; test each boundary and the zero-iteration case.
+
 ## Trace a small program
 
 ```java
@@ -44,6 +46,18 @@ Sum the even integers from 1 through 10 using a loop and a condition. Predict th
 ## Check before moving on
 
 You should be able to trace the counter and accumulator separately and explain short-circuit logic. Next, extract repeated calculations into methods and pass values explicitly.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Write a loop that counts even integers from 1 through n inclusive. What are the results for n = 0, 1, 2, and 5?
+
+> **Hint:** Use an inclusive upper bound and test divisibility by 2.
+
+**Answer guide — compare after attempting:** The counts are 0, 0, 1, and 2. Start count at zero and loop from 1 while the index is at most n, incrementing only for even values. State whether negative n is rejected or treated as an empty range.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

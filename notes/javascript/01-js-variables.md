@@ -13,6 +13,8 @@ tags: fundamentals, js, variables
 
 Variable ek naam hai jisse program value ko refer karta hai. Start with a single value before thinking about functions, objects or a framework. JavaScript statements execute in order. You can try these examples in the browser developer console or in a JavaScript file executed with Node. Run one small example at a time so you can predict every line.
 
+> **Core takeaway:** A binding names a value; assignment evaluates the right side before replacing the left side.
+
 ## Declare before reading
 
 ```javascript
@@ -39,6 +41,18 @@ Create a constant courseName and a changing lessonsRead count. Increase lessonsR
 ## Check before moving on
 
 You should be able to explain declaration, initialization and reassignment separately. Write three statements that turn an initial score of 4 into 7 without typing 7 directly. Next, study the types of values these names can hold.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Start with `let minutes = 10`. Add 5, then double it. Predict both values. Which declaration should hold an unchanging course name?
+
+> **Hint:** Trace one assignment at a time.
+
+**Answer guide — compare after attempting:** The intermediate value is 15 and the final value is 30. Use `const courseName = 'JavaScript'` for the name. Changing the count needs `let`; declaring a name and assigning a new value are separate operations.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

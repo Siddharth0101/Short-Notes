@@ -16,6 +16,8 @@ Graph relationships model karta hai: vertices entities hain aur edges connection
 
 Adjacency list sparse graph ke liye O(V + E) storage deti hai; undirected edge usually twice store hota hai. Adjacency matrix O(V²) storage leti hai, lekin direct edge check O(1) hota hai. Traversal complexity representation ke saath state karo.
 
+> **Core takeaway:** Shortest-path algorithms depend on edge assumptions; BFS minimizes edge count in an unweighted graph.
+
 ## BFS with path reconstruction
 
 ```js
@@ -321,6 +323,32 @@ BFS social graphs mein "degrees of separation" aur friend-of-friend recommendati
 **Prompt:** Ek graph mein saare edge weights exactly 7 hain. Dijkstra chalao ya BFS?
 
 **Answer:** BFS, aur answer ko 7 se multiply kar do. Jab saare weights equal hain toh minimum-edge-count path hi minimum-weight path hai, so BFS ka O(V + E) Dijkstra ke O(E log V) se strictly better hai. Yeh general principle dikhata hai: graph ki extra structure (equal weights, {0,1} weights, DAG) hamesha ek sasta algorithm unlock karti hai — pehle structure identify karo, phir algorithm choose karo.
+
+## Research notes: Negative edges in a DAG
+
+A DAG can have negative edges but cannot have negative cycles. Process vertices in topological order and relax each outgoing edge once for O(V + E) work.
+
+Original graph: A→B costs 4, A→C costs 2, B→C costs -5. Order A, B, C produces distance(C) = -1. Finalizing C just because it initially appears cheapest would miss B's improvement.
+
+**Interview check:** Does every negative edge force Bellman-Ford?
+
+**Answer:** No. A DAG supports topological relaxation with negative weights. For a general graph choose an algorithm supporting negative edges and explicitly address reachable negative cycles.
+
+**Practice:** Add C→A and explain which assumption disappears.
+
+[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/6277a1f06100c26a7ff21031af6757b5_MIT6_006F11_lec16.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Edges are A→B cost 10, A→C cost 1, and C→B cost 1. Compare the fewest-edge path with the cheapest path.
+
+> **Hint:** One edge can cost more than two.
+
+**Answer guide — compare after attempting:** BFS by edges chooses A→B, but the cheapest route is A→C→B with cost 2. Dijkstra applies here because weights are nonnegative. State unreachable-node behavior and test zero-weight edges; ordinary BFS does not minimize arbitrary weighted cost.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

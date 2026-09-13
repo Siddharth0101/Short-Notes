@@ -16,6 +16,8 @@ SQL set-oriented hai: first decide what one output row represents. Most wrong jo
 
 Assume PostgreSQL with customers(id, name) and orders(id, customer_id, total, created_at). total is a decimal amount in one stated currency. Production schemas should make currency and nullability explicit.
 
+> **Core takeaway:** A LEFT JOIN preserves unmatched left rows only if later filtering does not remove them.
+
 ## Top two orders per customer
 
 ```sql
@@ -72,6 +74,41 @@ Create fixtures for a customer with no orders, tied totals and two payments per 
 **Why is DISTINCT a suspicious join fix?** It can hide a grain error while leaving aggregates wrong. Correct the relationship or pre-aggregate each one-to-many side.
 
 **How do you make JPA pagination predictable?** Define a deterministic order, inspect generated SQL and avoid assuming collection fetch joins paginate parent rows cleanly.
+
+## Research notes: Read estimates alongside actual query work
+
+`EXPLAIN` reports a plan; `EXPLAIN ANALYZE` executes the query. Compare row estimates with actual counts and inspect repeated work.
+
+```sql
+-- Local fixture with realistic tenant sizes:
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT id, created_at FROM orders
+WHERE tenant_id = 7
+ORDER BY created_at DESC, id DESC
+LIMIT 25;
+```
+
+A sequential scan may be reasonable when most rows are needed. Large estimation errors can suggest a poor scan or join choice. ANALYZE on a write performs the write; experiment on disposable fixtures.
+
+**Interview check:** Why inspect loops when a plan node looks cheap?
+
+**Answer:** A cheap node repeated many times can dominate total work. Interpret per-loop measurements together with execution count and the parent plan.
+
+**Practice:** Compare plans for a tiny tenant and a tenant owning most rows.
+
+[Read the source — PostgreSQL](https://www.postgresql.org/docs/current/using-explain.html). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Customers A and B exist; only A has a paid order. Return both customers with a paid-order count. Where should the paid-status condition go?
+
+> **Hint:** A WHERE predicate on the joined order can remove B's null-extended row.
+
+**Answer guide — compare after attempting:** Put the status condition in the join condition, group by customer identity, and count a non-null order ID. A gets 1 and B gets 0. COUNT(*) would count B's preserved row as 1, which is not the number of matching orders.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

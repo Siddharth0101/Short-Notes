@@ -13,6 +13,8 @@ tags: arrays, objects, map, set, destructuring, immutability
 
 Collection method choose karne se pehle desired output bolo. Har item transform karna hai to map, subset chahiye to filter, ek matching item chahiye to find, boolean answer chahiye to some/every, aur aggregate chahiye to reduce. Method chain ko fancy banane ke liye use mat karo; intermediate data ka meaning clear hona chahiye. Input mutate karne wala operation caller ki assumptions tod sakta hai.
 
+> **Core takeaway:** Choose a transformation by its output shape: filter selects, map transforms, reduce accumulates.
+
 ## Build a readable transformation
 
 ```js
@@ -89,6 +91,18 @@ Orders ko customer-wise group karo, totals calculate karo aur top two customers 
 **Q. Spread deep clone hai?** Nahi; first level copy hota hai. Suitable structured data ke liye structuredClone useful ho sakta hai, lekin functions jaise values clone nahi hote.
 
 **Q. Map object se kab better hai?** Jab dynamic keys, non-string key identity, direct size aur entry iteration ki need ho. API JSON payload ke liye plain object usually simpler hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** From `[{name:'A',done:true},{name:'B',done:false},{name:'C',done:true}]`, produce the names of completed lessons without changing the input.
+
+> **Hint:** Select records before transforming their shape.
+
+**Answer guide — compare after attempting:** Use `lessons.filter(x => x.done).map(x => x.name)` to get `['A','C']`. An empty input gives `[]`. Check that the original array and records are unchanged; a transformation should not secretly alter the data being displayed elsewhere.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

@@ -15,6 +15,8 @@ Priority queue ka contract hai “next highest-priority item do.” Binary min-h
 
 Array index `i` ke children `2*i + 1` aur `2*i + 2`, parent `floor((i - 1)/2)` hote hain. Complete shape tree ki height O(log n) rakhti hai. Insertion last position par karke bubble up karo; extraction mein last item root par laakar sink down karo.
 
+> **Core takeaway:** A bounded min-heap can retain the k largest values seen so far.
+
 ## A numeric min-heap
 
 ```js
@@ -238,6 +240,18 @@ Observability mein two-heap median pattern aur top-k heaps roz use hote hain: "t
 **Prompt:** `heapify` ki O(n) aur n pushes ki O(n log n) — dono correct bounds hain. Ek hi structure ke liye do alag costs kaise?
 
 **Answer:** Kyunki operations alag hain. `push` element ko leaf par daal kar **upar** bubble karta hai, aur root tak ka path har element ke liye O(log n) ho sakta hai — aur zyadatar elements leaves par hain, so zyadatar pushes full-height work karte hain. Bottom-up `heapify` har node ko **neeche** sink karta hai, aur zyadatar nodes leaves ke paas hain jahan bache hue levels bahut kam hain. Sum `Σ n·h/2^(h+1)` converge karke O(n) deta hai. Same structure, ulta direction, alag total — isiliye bulk construction aur incremental insertion ko alag cost karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Keep the three largest values from `[5,1,9,2,8,7]`. What does the root represent after processing, and is the heap array sorted?
+
+> **Hint:** Discard the smallest retained candidate whenever size exceeds k.
+
+**Answer guide — compare after attempting:** The retained values are 7, 8, and 9; the min-heap root is 7, the third-largest value. Heap storage is not a fully sorted list. Processing costs O(n log k) with O(k) space for positive bounded k; define behavior for k = 0.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

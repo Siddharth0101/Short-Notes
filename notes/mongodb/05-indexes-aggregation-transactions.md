@@ -14,6 +14,8 @@ visual: aggregation-pipeline
 
 Index collection ka extra ordered lookup structure hai. Read ko faster banane ki cost storage, memory aur every relevant write par maintenance hai. Index existing query pattern ke liye design karo, sirf har field par index add mat karo. Aggregation documents ko stages se process karti hai. Transaction multiple writes ko common commit/rollback boundary deti hai; slow data model ko automatically fast nahi banati.
 
+> **Core takeaway:** An atomic conditional update can guard a single-document invariant.
+
 ## Index around an actual query
 
 ```js
@@ -102,6 +104,42 @@ Ten-thousand sample sessions par report run karo. Index se pehle/baad same query
 **Q. Index har query fast karega?** Nahi. Selectivity, prefix, sort, projection aur workload matter karte hain; writes costlier ho sakti hain.
 
 **Q. Transaction retry mein email kyun risky hai?** Callback repeat hone par email duplicate send ho sakta hai; database rollback external delivery undo nahi karta.
+
+## Research notes: Match the version you actually read
+
+An atomic update does not make separate read-then-replace operations race-free. Match the expected version in the write filter.
+
+```js
+const result = await orders.updateOne(
+  { _id: orderId, version: expectedVersion },
+  { $set: { status: 'confirmed' }, $inc: { version: 1 } },
+);
+if (result.matchedCount === 0) {
+  throw new Error('Missing order or concurrent change');
+}
+```
+
+A conflict requires a fresh decision. Include tenant and authorization constraints at the real repository boundary.
+
+**Interview check:** Does single-document atomicity cover a multi-document workflow?
+
+**Answer:** No. Individual operations can be atomic while the overall workflow is partially applied. Use an appropriate transaction or explicit recovery when the invariant spans documents.
+
+**Practice:** Race two writes with the same version and inspect matchedCount.
+
+[Read the source — MongoDB](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A document has stock 1. Two buyers each try to purchase one. Specify the update filter, operation, and success signal.
+
+> **Hint:** Combine eligibility and decrement in the same write.
+
+**Answer guide — compare after attempting:** Filter by product ID and stock at least 1, then decrement stock by 1 with $inc. Only one concurrent operation can match successfully after the decrement; check the matched/modified result. This protects the document's stock, while related multi-document work needs its own consistency design.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

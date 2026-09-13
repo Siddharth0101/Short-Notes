@@ -14,6 +14,8 @@ visual: request-flow
 
 Spring container application objects create aur wire karta hai. Spring Boot conventions, starters and conditional auto-configuration se setup simplify karta hai. Auto-configuration magic replacement nahi: dependencies, properties and registered beans conditions influence karte hain. Constructor injection component ki required collaborators explicit banata hai.
 
+> **Core takeaway:** Dependency injection supplies collaborators; the HTTP boundary translates requests into a stable contract.
+
 ## Request flow
 
 ```text
@@ -136,6 +138,18 @@ Production APIs mein `@RestControllerAdvice` se centralized error mapping consis
 ## Practice
 
 Create/list notes API design karo with validation, maximum page size and consistent errors. Two simultaneous users ke requests se verify karo ki singleton controller mein accidental shared request state nahi hai. Phir ek self-invocation `@Transactional` bug reproduce karo (method ko same class se call karke), aur method ko separate bean mein extract karke fix karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A controller receives a negative quantity. Specify the flow and response behavior without embedding database logic in the controller.
+
+> **Hint:** Separate input validation, business decisions, and persistence.
+
+**Answer guide — compare after attempting:** Validate the request at the boundary and reject it with the API's documented client-error response. Valid input reaches a service that owns the use case and calls persistence collaborators. Test the invalid response and verify no write is attempted.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

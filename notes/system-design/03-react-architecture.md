@@ -14,6 +14,8 @@ visual: react-render
 
 Frontend architecture UI state ko reliable user experience mein translate karti hai. Component hierarchy, routing, data ownership, accessibility and delivery strategy saath design hote hain. Folder names alone architecture nahi. Feature ko independently reason aur change kar paana more important hai than many abstraction layers.
 
+> **Core takeaway:** Rendering choices follow route requirements and data freshness, rather than one rule for the whole app.
+
 ## Organize around product capabilities
 
 ```text
@@ -124,6 +126,18 @@ CDN cache ka ek aur subtle failure: `Cache-Control: public` accidentally kisi au
 Notes product ke routes ko public catalog, reader and private dashboard mein classify karo. Har route ka rendering choice justify karo. Hydration mismatch create karke stable initial state se fix karo.
 
 Phir deployment failure reproduce karo: app build karo, browser mein open karo, phir rebuild karke purane hashed chunks delete kar do aur ek lazy route click karo. Blank screen dekho, phir chunk-load catch plus reload prompt add karke fix karo. Last mein ek rendering-strategy budget likho: har route ke liye estimated CDN hit rate, origin rps at 2,000 total rps, aur us route ka fallback behavior jab origin down ho.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Choose rendering approaches for a public course landing page and a private live progress dashboard. State one deployment risk.
+
+> **Hint:** Discoverability and personalized freshness have different priorities.
+
+**Answer guide — compare after attempting:** A generated or server-rendered landing page can serve discoverable content quickly; a private dashboard needs authenticated data and an interactive update strategy. Both may combine techniques. Verify asset compatibility across releases and prevent private data from entering shared caches.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

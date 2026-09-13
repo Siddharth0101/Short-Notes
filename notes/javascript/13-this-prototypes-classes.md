@@ -13,6 +13,8 @@ tags: this, prototype, classes, oop, inheritance
 
 Ordinary function mein `this` usually call ka receiver hota hai. Function kis object par originally stored tha, usse permanent binding create nahi hoti. Arrow function surrounding `this` capture karta hai. Prototype lookup mein object par property missing ho to next prototype par search hoti hai; object ke andar parent ki saari methods copy nahi hoti.
 
+> **Core takeaway:** For a regular function, the call site determines the receiver; extracting a method loses its original receiver.
+
 ## Predict the receiver
 
 ```js
@@ -108,6 +110,18 @@ ReadingList mein duplicate prevention aur remove method add karo. Snapshot mutat
 **Q. Class aur prototype unrelated systems hain?** Nahi. JavaScript classes prototype-based object model par language syntax aur extra rules add karti hain.
 
 **Q. Arrow function ko bind se new `this` de sakte hain?** Nahi. Uska `this` lexical hota hai; call/apply/bind us receiver ko replace nahi karte.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** In strict mode, extract `const read = account.read` from a method returning `this.balance`. Why does `read()` fail, and how can it remain attached to the account?
+
+> **Hint:** Compare a property call with a standalone call.
+
+**Answer guide — compare after attempting:** `account.read()` supplies the account as receiver; standalone `read()` has undefined `this` in strict mode and accessing balance throws. Use `account.read.bind(account)` or a wrapper that calls `account.read()`. An arrow method has different receiver semantics.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

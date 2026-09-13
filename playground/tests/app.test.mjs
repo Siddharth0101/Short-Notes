@@ -392,3 +392,48 @@ test('Appearance follows the OS only in System mode and persists explicit choice
     else localStorage.setItem('shortnotes.theme', previous);
   }
 });
+
+test('Interview topic deep links, code answers, and mock rounds retain the requested subject', async () => {
+  localStorage.clear();
+  await mount('/interview?topic=html');
+  assert.equal(document.querySelector('[aria-label="Interview topic"]').value, 'html');
+  const htmlCount = interviewQuestions.filter(
+    (item) => item.topic === 'html' || item.id === 'iq-lab-04',
+  ).length;
+  assert.match(
+    document.querySelector('.results-heading').textContent,
+    new RegExp(`${htmlCount} questions`),
+  );
+  await select(document.querySelector('[aria-label="Interview topic"]'), 'redux');
+  assert(
+    [...document.querySelectorAll('.question-card h2')].every((h) =>
+      /Redux|reducer|store|connect/i.test(h.textContent),
+    ),
+  );
+  assert.equal(document.querySelectorAll('.question-answer').length, 0);
+  await click(
+    [...document.querySelectorAll('.question-card')][1].querySelector('.question-actions button'),
+  );
+  assert(document.querySelector('.question-answer pre code'));
+  assert.match(document.querySelector('.question-answer pre').textContent, /initialState/);
+  await click(button('Start mock interview · 5 questions'));
+  assert(document.querySelector('.mock-session'));
+  assert.match(document.querySelector('.mock-session .question-card h2').textContent, /Redux/);
+});
+
+test('An output puzzle shows code before revealing its answer and retains the chapter reading link', async () => {
+  await mount('/notes/js-async-event-loop');
+  const heading = [...document.querySelectorAll('.question-card h2')].find((h) =>
+    h.textContent.includes('await setTimeout'),
+  );
+  assert(heading);
+  const card = heading.closest('.question-card');
+  assert.match(card.querySelector('pre').textContent, /await setTimeout/);
+  assert(!card.querySelector('.question-answer'));
+  await click(card.querySelector('.question-actions button'));
+  assert.match(card.querySelector('.question-answer pre').textContent, /new Promise/);
+  assert.equal(
+    card.querySelector('.answer-reading[href^="/notes/"]').getAttribute('href'),
+    '/notes/js-async-event-loop',
+  );
+});

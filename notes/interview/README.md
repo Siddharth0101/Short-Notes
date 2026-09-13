@@ -4,6 +4,8 @@
 
 Readiness references for the matching subject: [Modules web delivery and debugging](../javascript/17-modules-tooling-debugging.md) · [React machine coding and identity bugs](../react/11-machine-coding.md) · [Observability with Actuator, metrics and tracing](../java/19-observability-actuator.md) · [SSR uploads payments email and deployment](../mongodb/08-production-integrations.md) · [Dynamic programming from state to recurrence](../dsa/12-dynamic-programming.md) · [Case study collaborative notes and real-time chat](../system-design/12-realtime-case-study.md).
 
+Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+
 ## Stage 1: Language interview practice
 
 Use the playbook for the language you have finished studying.

@@ -14,6 +14,8 @@ visual: thread-sync
 
 Backend interview mein local code correctness aur concurrent system behavior dono matter karte hain. Method single request mein correct ho sakta hai lekin two requests ke interleaving mein invariant break kar sakta hai. Answer mein language rule, resource boundary aur failure outcome clearly separate karo.
 
+> **Core takeaway:** A backend answer should protect a business invariant through concurrent and failed execution.
+
 ## Representative questions and answers
 
 **Is Java pass-by-reference?** Nahi, Java pass-by-value hai. Object argument reference value ki copy pass karta hai: same object mutate ho sakta hai, but local parameter reassignment caller ki variable ko replace nahi karta.
@@ -88,6 +90,38 @@ Each 0–2 score: Java semantics, collection contract, concurrency proof, transa
 Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
 
 After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+
+## Research notes: Defend a failure boundary
+
+Microsoft includes testing and problem-solving in its technical interview guidance.
+
+**Original practice round:** Design a transfer between two local account records. Define atomicity, insufficient funds and duplicate request handling before choosing classes.
+
+**Failure injection:** Inject a failure between the debit and credit, then repeat the request.
+
+**Evidence to bring:** Inspect durable balances and request identity. A successful HTTP response is not evidence that the transaction boundary is correct.
+
+The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+
+**Interview check:** How should you review this round after attempting it?
+
+**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+
+**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+
+[Read the source — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** In five minutes, defend a last-item purchase endpoint. Include a concurrent request and a failed payment, without claiming a database transaction can roll back the provider.
+
+> **Hint:** Separate the inventory decision from the external payment lifecycle.
+
+**Answer guide — compare after attempting:** Explain an atomic inventory/reservation decision, idempotent purchase identity, durable status, and payment reconciliation/compensation. Walk through which state persists at each failure boundary. Give a concurrency test where only one reservation wins and a replay test where no duplicate charge is requested.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 [Java concurrency package](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html), [HashMap contract](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html), [virtual threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html), aur [Spring transaction annotations](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) official references hain.

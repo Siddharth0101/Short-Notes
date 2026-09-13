@@ -13,6 +13,8 @@ tags: fundamentals, js, conditionals
 
 A condition asks a question whose result determines which path runs. Pehle question ko plain language mein likho: is the learner eligible to start? Then turn that question into comparisons. An if statement runs its branch when its condition is truthy; an else branch handles the alternative. A chain of else if branches selects the first matching branch.
 
+> **Core takeaway:** Conditions encode a rule; boundaries decide whether the rule is correct.
+
 ## Trace one decision
 
 ```javascript
@@ -44,6 +46,18 @@ Write a delivery-fee rule: free for totals at least 500, otherwise 40. Add an in
 ## Check before moving on
 
 You should be able to explain which branch runs at an exact boundary. The next lesson repeats statements with loops instead of writing the same decision many times.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A learner passes with score at least 60 and attendance at least 75. Write the condition and classify `(60,75)`, `(59,100)`, and `(90,74)`.
+
+> **Hint:** Both requirements must hold, including equality.
+
+**Answer guide — compare after attempting:** Use `score >= 60 && attendance >= 75`. Only the first pair passes. Test values just below, at, and above each threshold; using OR would admit learners who satisfy only one requirement.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

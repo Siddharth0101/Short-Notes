@@ -14,6 +14,8 @@ visual: request-flow
 
 Authentication identity establish karta hai; authorization decide karta hai ki identity specific resource par action kar sakti hai. Login success se har note read permission nahi milti. Security har server-side operation ka contract hai. Microservice boundary network failures, independent deployments and ownership decisions introduce karti hai; architecture ko automatically simpler nahi banati.
 
+> **Core takeaway:** Authentication identifies a caller; authorization checks permission for the requested resource.
+
 ## Browser and API authentication
 
 Session cookie browser app ke liye valid choice hai. Shared session store multiple app instances support kar sakta hai. JWT signed claims carry karta hai; signature payload encrypt nahi karti. Receiver allowed algorithm, trusted key, issuer, audience and expiry validate kare. Expired/revoked authorization and key rotation ka plan separately chahiye.
@@ -107,6 +109,18 @@ IDOR (insecure direct object reference) bugs — jahan URL/body mein resource ID
 ## Practice
 
 Notes API mein user A ko user B ka note ID guess karwa kar authorization test karo. Then notification consumer ko same event twice deliver karo and verify exactly one logical notification record. Dependency timeout ke time API ka user-visible behavior document karo. Phir ek IDOR vulnerability intentionally reproduce karo (sirf `hasRole` check ke saath endpoint banao jisme dusre user ka ID access ho jaaye), phir `@PreAuthorize` ownership check se fix karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** User A is authenticated and requests user B's private order by guessing its ID. Where must access be checked and what should a test prove?
+
+> **Hint:** Login success does not establish ownership.
+
+**Answer guide — compare after attempting:** Enforce the ownership or role rule on the backend before returning or changing the order. Test cross-user read and write attempts and assert no private data or mutation leaks. Choose consistent forbidden/not-found behavior according to the API contract.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

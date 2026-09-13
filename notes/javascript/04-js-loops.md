@@ -13,6 +13,8 @@ tags: fundamentals, js, loops
 
 A loop repeats statements while a condition permits another iteration. Har iteration ke start par socho: what have I already processed, and what remains? A counter tracks position or repetition; an accumulator combines results. These are different responsibilities, even though both often use numeric variables.
 
+> **Core takeaway:** A loop needs a starting state, a continuation rule, and progress toward stopping.
+
 ## Trace a for loop
 
 ```javascript
@@ -41,6 +43,18 @@ Sum integers from 1 through 5 without writing the final result directly. Make a 
 ## Check before moving on
 
 You should recognize an off-by-one error and an update that never happens. Explain why total must be initialized outside the loop. Next, package a repeatable task into a function so callers can use it with different inputs.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Sum only positive values in `[3,-2,0,5]` with a loop. What should an empty array return, and what happens if the accumulator starts at 1?
+
+> **Hint:** The accumulator should represent the sum before any items are processed.
+
+**Answer guide — compare after attempting:** Start the total at 0; add each value only when it is greater than 0. Results are 8 and 0. Starting at 1 biases every result, including the empty case. Visit each item once.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

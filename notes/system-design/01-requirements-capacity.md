@@ -14,6 +14,8 @@ visual: request-flow
 
 System design boxes draw karne se pehle constraints choose karne ka exercise hai. Same notes product 100 personal users aur 10 million public readers ke liye different architecture demand kar sakta hai. Interview mein assumptions aloud bolo. Har component ka reason user behavior, reliability need ya measured bottleneck se connect hona chahiye.
 
+> **Core takeaway:** Capacity estimates are consequences of explicit assumptions and units.
+
 ## Frame the problem
 
 Functional requirements actions hain: search notes, bookmark chapter, sync progress, collaborate. Nonfunctional requirements quality define karte hain: p95 latency, availability, accessibility, durability, privacy and cost. Scope boundaries state karo, such as offline editing excluded in first version. Product ko improve karte waqt unsupported requirements invent karke infrastructure inflate mat karo.
@@ -138,6 +140,18 @@ Dependency chain ka naive math bhi dhyan se: agar ek request 5 services touch ka
 Video-learning platform ke liye same worksheet fill karo. Read-heavy catalog and write-sensitive checkout separately model karo. Fivefold traffic increase par first three measurements identify karo before adding any service.
 
 Phir ek sensitivity exercise: apne estimate mein peak factor 10 se 50 karo aur likho ki kaunsa component *pehle* fail karega — app instances, connection pool, database CPU, ya bandwidth. Usually answer connection pool ya database hota hai, app instances nahi; yeh identify karna hi capacity work ka real output hai. Last mein retention rule design karo: kaunsa data 90 din baad aggregate mein collapse ho sakta hai, aur usse storage growth curve kitni flat hoti hai?
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Assume 100,000 daily users each make 20 reads per day. Estimate average reads/second and a 10× peak. What assumption would you validate first?
+
+> **Hint:** There are 86,400 seconds in a day.
+
+**Answer guide — compare after attempting:** Two million daily reads average about 23.1 requests/second; a 10× peak is about 231. Validate burstiness and reads per active user against observed traffic. These estimates exclude retries, background work, and downstream fan-out, which need separate accounting.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

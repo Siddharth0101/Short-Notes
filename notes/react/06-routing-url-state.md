@@ -13,6 +13,8 @@ tags: router, url, loaders, navigation, routing
 
 URL app state ka shareable address hai. Route path resource/page identify karta hai; search params filters, sort aur page jaise shareable view choices store kar sakte hain. Router URL ko component/layout tree se match karta hai. Local modal state ko har baar URL mein rakhna necessary nahi, lekin refresh/back/share behavior important ho to URL ownership consider karo.
 
+> **Core takeaway:** The URL is a useful owner for state that should survive refresh and sharing.
+
 ## A nested route tree
 
 ```jsx
@@ -127,6 +129,18 @@ E-commerce listing page mein filter (category, price range), sort order aur page
 **Q. Filter Redux mein ya URL mein?** Shareable/navigation state ho to URL strong default hai. Ephemeral local UI state local rakho; same state ke two competing owners mat banao.
 
 **Q. ProtectedRoute backend security replace karta hai?** Nahi. Woh UX control hai; authorization server-side resource access par enforce hoti hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A search page has query, page number, selected row, and an unsaved editor draft. Choose URL state and define what happens to page when query changes.
+
+> **Hint:** Separate shareable navigation from temporary editing.
+
+**Answer guide — compare after attempting:** Put query and page in URL parameters; keep the unsaved draft locally or in a deliberate draft store. Row selection belongs in the URL only if it should be linkable. Reset page when query changes, validate malformed values, and verify browser Back restores the prior view.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

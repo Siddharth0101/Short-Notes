@@ -13,6 +13,8 @@ tags: oop, encapsulation, inheritance, polymorphism, abstraction, classes, closu
 
 JavaScript "classes only" language nahi hai — OOP yahan object model, prototypes aur classes teeno se express ho sakta hai. Char pillars — encapsulation, inheritance, polymorphism, abstraction — Java jaisi strict class hierarchy ki demand nahi karte; plain object, closure aur `class` syntax teeno inhe achieve kar sakte hain. Design decision hamesha yeh hona chahiye: "kaunsa mechanism is specific problem ke liye simplest hai," na ki "sab kuch class banao." Yeh chapter pehle char pillars ko chhote independent examples se dikhata hai, phir unhe ek single synthesis project mein jodta hai jahan closures, `this` binding, classes aur array methods ek saath kaam karte hain.
 
+> **Core takeaway:** Encapsulation protects valid transitions, rather than merely hiding fields.
+
 ## Encapsulation: hiding internal state
 
 Encapsulation ka matlab hai internal state ko directly bahar se mutate hone se rokna, aur sirf controlled methods ke through interaction allow karna. Closures aur private class fields dono yeh achieve karte hain:
@@ -241,6 +243,18 @@ Kuch cheezein jo yeh example jaanbujh kar exercise karta hai:
 **Q. JavaScript "true" OOP language hai jaise Java?** JavaScript prototype-based object model use karta hai; `class` syntax usi model par ergonomic layer hai. Char pillars achieve ho sakte hain, lekin mechanism (prototypes/closures) Java ki class-based nominal typing se fundamentally different hai.
 
 **Q. Composition ko inheritance se kab prefer karoge?** Jab relationship "is-a" nahi, "has-a"/"can-do" ho, ya jab multiple independent features (logging, retry, caching) ek object mein combine karni ho. Deep inheritance chains fragile hoti hain; composition flat aur mix-and-match rehta hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** An account has balance 100. Specify outcomes for withdrawing 30, then 80, then -5. How will callers know a withdrawal was rejected?
+
+> **Hint:** Validate the amount and available balance before mutating state.
+
+**Answer guide — compare after attempting:** The first withdrawal leaves 70. Reject the next two and retain 70: one exceeds the balance and the other is not a positive amount. Return a documented result or throw a documented error. A rejected transition must leave the account unchanged.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

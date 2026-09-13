@@ -14,6 +14,8 @@ visual: mongo-index
 
 MongoDB discussion schema-less slogan se start mat karo. Documents ka shape, growth limits, read/write patterns aur invariants define karo. “Flexible schema” ka matlab validation ya deliberate modeling unnecessary nahi; production systems ko predictable contracts phir bhi chahiye.
 
+> **Core takeaway:** A database answer needs a query pattern, correctness rule, and evidence from a plan.
+
 ## Representative questions and answers
 
 **Embed or reference order items?** Bounded order line items order ke saath read hote hain aur purchased price ka historical snapshot chahiye, so embedding useful ho sakta hai. Customer ke saare lifetime orders customer document mein embed karna unbounded growth create karega. Independent product catalog reference aur order-specific snapshot saath coexist kar sakte hain.
@@ -79,6 +81,38 @@ Score each 0–2: access-pattern clarity, bounded schema, index reasoning, consi
 Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
 
 After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+
+## Research notes: Justify the query from its workload
+
+Microsoft includes testing and problem-solving in its technical interview guidance.
+
+**Original practice round:** Design a tenant-scoped activity query sorted newest-first. Specify stable pagination and identify which fields belong in its index.
+
+**Failure injection:** Insert events with tied timestamps while paging and compare tiny versus large tenants.
+
+**Evidence to bring:** Check query results, cursor boundaries and actual examined work. Explain the write/storage cost of the proposed index.
+
+The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+
+**Interview check:** How should you review this round after attempting it?
+
+**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+
+**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+
+[Read the source — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Defend a recent-orders endpoint for one customer. Specify filtering, stable pagination, an index candidate, and how you would verify it.
+
+> **Hint:** Equal timestamps require a tie-breaker for deterministic ordering.
+
+**Answer guide — compare after attempting:** Filter by authorized customer identity and sort by timestamp plus unique ID. Use a matching compound index candidate and a cursor containing the ordering values. Inspect execution statistics on realistic data and test tied timestamps. Explain concurrent insert behavior and index write cost.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 [MongoDB atomicity](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/), [compound indexes](https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/), aur [explain results](https://www.mongodb.com/docs/manual/reference/explain-results/) claims ke official references hain.

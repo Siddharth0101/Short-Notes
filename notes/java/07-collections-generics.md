@@ -13,6 +13,8 @@ tags: collections, generics, hashmap, pecs
 
 Collection ka interface behavior batata hai; implementation performance aur ordering decisions leta hai. Pehle requirement likho: duplicates allowed? insertion order important? fast lookup? sorted ranges? thread safety? Uske baad collection choose karo. Har problem mein HashMap use karna aur har ordering problem mein sorting karna unnecessary complexity la sakta hai.
 
+> **Core takeaway:** Choose collections by operations and contracts, including mutability of their keys.
+
 ## Choosing an implementation
 
 | Need | Starting choice | Tradeoff |
@@ -121,6 +123,40 @@ Repository layer se return hone wale collections ko usually unmodifiable rakha j
 ## Practice
 
 Top three frequent words return karo; ties alphabetical rakho. Phir API ko `List<? extends CharSequence>` accept karne ke tradeoff explain karo. Empty input, repeated keys and case normalization test karo. Last mein ek for-each loop se list se element remove karke `ConcurrentModificationException` reproduce karo, phir `Iterator.remove()` ya `removeIf` se fix karo.
+
+## Research notes: A read-only view is not an immutable snapshot
+
+The wrapper disallows changes through its interface but observes mutations to the backing list.
+
+```java
+var names = new java.util.ArrayList<String>();
+names.add("Nia");
+var view = java.util.Collections.unmodifiableList(names);
+names.add("Dev");
+System.out.println(view.size()); // 2
+```
+
+Copying separates structural ownership. If the elements themselves are mutable objects, a shallow copy still shares those objects.
+
+**Interview check:** What additional property does deep immutability require?
+
+**Answer:** Reachable values must also be immutable or defensively copied. Preventing add/remove operations alone does not prevent an element field from changing through another reference.
+
+**Practice:** Replace String with a mutable Customer and trace an element update.
+
+[Read the source — Oracle Java API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** You insert a key into a HashMap, then mutate a field used by its hashCode. Why can lookup fail, even with the same object reference?
+
+> **Hint:** The entry was placed using the previous hash.
+
+**Answer guide — compare after attempting:** Lookup now computes a different hash and may search a different bucket. Keep hash/equality fields immutable, or remove the entry before changing the key and reinsert afterward. Prefer an immutable identifier as the key; do not depend on accidental hash collisions to rescue lookup.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

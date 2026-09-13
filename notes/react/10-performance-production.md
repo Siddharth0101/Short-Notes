@@ -14,6 +14,8 @@ visual: react-render
 
 Performance ka target user experience hai: input quickly respond kare, content timely dikhe aur layout stable rahe. Re-render count alone performance score nahi hai. Network, bundle size, expensive calculation, DOM size aur layout work alag bottlenecks hain. Pehle profiler se actual slow interaction identify karo, phir us boundary par fix apply karo.
 
+> **Core takeaway:** Optimize a measured bottleneck and verify user-visible improvement.
+
 ## Load an optional feature on demand
 
 ```jsx
@@ -144,6 +146,34 @@ Five-thousand-item list par typing profile karo. Pehle state localize karo, phir
 **Q. Har function useCallback mein wrap karoge?** Nahi. Stable identity valuable consumer/dependency ke liye useful ho sakti hai; unnecessary caching complexity add karti hai.
 
 **Q. Suspense error boundary hai?** Nahi. Loading fallback aur error recovery different responsibilities hain, often neighboring boundaries se handled hoti hain.
+
+## Research notes: Measure user experience as well as renders
+
+Current Core Web Vitals targets are LCP at most 2.5 seconds, INP at most 200 milliseconds, and CLS at most 0.1 at the 75th percentile, segmented by mobile and desktop.
+
+They describe loading, responsiveness and layout stability. A component render count is a diagnostic rather than a user outcome. A default navigation-only Lighthouse run uses TBT as a proxy rather than measuring real interaction INP.
+
+Original exercise: sorting freezes on low-end phones despite quick page loading. Record the interaction, identify synchronous work and compare the same workload after improvement.
+
+**Interview check:** Can a good desktop Lighthouse score prove good field INP?
+
+**Answer:** No. Real devices, networks and interactions differ from lab conditions. Use field data to establish the affected population and controlled traces to isolate the cause.
+
+**Practice:** Reserve image dimensions and compare layout shifts.
+
+[Read the source — web.dev](https://web.dev/articles/vitals). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Typing into a filter feels slow with 10,000 rows. Describe an experiment that distinguishes costly filtering from costly rendering.
+
+> **Hint:** Measure both the calculation and the render work with the same workload.
+
+**Answer guide — compare after attempting:** Record a baseline, isolate filtering time, and profile rendering. If DOM volume dominates, test virtualization; if filtering dominates, test a better computation strategy. Compare input responsiveness and correctness afterward. Memoization alone cannot remove work when the relevant input changes on every keystroke.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

@@ -13,6 +13,8 @@ tags: fundamentals, js, arrays, objects
 
 An array represents an ordered collection. An object groups named properties into a record. A list of lesson titles and one learner profile answer different questions, so choose their shapes deliberately. You already know variables, loops and functions; now those tools can process more than one value.
 
+> **Core takeaway:** Arrays hold ordered items; object references can be shared even when variable names differ.
+
 ## Read and update collections
 
 ```javascript
@@ -44,6 +46,18 @@ Create three lesson records with title and minutes properties inside an array. U
 ## Check before moving on
 
 You should be able to distinguish list position from object field name, and mutation from binding reassignment. The next foundations checkpoint combines these small concepts into a validated calculation. After that, move to deeper scope and collection behavior.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Set `const a = {done:false}; const b = a; b.done = true;`. Predict `a.done`, then create an independent copy for this flat object.
+
+> **Hint:** Assignment of an object reference does not clone the object.
+
+**Answer guide — compare after attempting:** `a.done` becomes true because both names refer to the same object. `const b = {...a}` creates a separate top-level object. Its boolean property can change independently; nested objects would still need separate treatment.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

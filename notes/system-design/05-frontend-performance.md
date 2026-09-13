@@ -14,6 +14,8 @@ visual: react-render
 
 Fast frontend ka matlab sirf small bundle nahi. Content jaldi visible ho, interactions responsive hon, layout stable rahe and user task complete kar sake. Accessibility same reliability goal ka part hai: keyboard, screen reader or reduced-motion preference ke saath interface usable rehna chahiye.
 
+> **Core takeaway:** Performance and accessibility are observable user outcomes with explicit budgets.
+
 ## Measure user experience
 
 Core Web Vitals LCP loading, INP interaction responsiveness and CLS layout stability indicate karte hain. Good thresholds at the 75th percentile are LCP at most 2.5 seconds, INP at most 200 milliseconds, CLS at most 0.1. Lab diagnostics repeatable conditions provide karte hain; real-user data device/network diversity reveal karta hai. [Web Vitals](https://web.dev/articles/vitals)
@@ -112,6 +114,18 @@ Motion disable hone par meaning static labels and state descriptions se availabl
 Slow device emulation pe reader profile karo. Keyboard-only search-to-chapter journey complete karo. Reduced motion enable karke animation ka explanation usable hai ya nahi verify karo. Before/after evidence capture karo.
 
 Phir ek budget table apne project ke liye banao: top 8 dependencies ki compressed sizes list karo aur decide karo kaun sa initial bundle mein rehna deserve karta hai. Uske baad artificial long task inject karo (ek 400 ms synchronous loop ek `setInterval` mein) aur button click karke INP degradation observe karo — phir usse `requestIdleCallback` ya chunked loop mein todh kar difference measure karo. Last mein ek API ko 5 s delay par mock karke verify karo ki page partial content dikhata hai, infinite spinner nahi.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A data grid looks fast on your laptop but is slow and hard to use on a phone. Define a small validation matrix and one success signal.
+
+> **Hint:** Vary device capability, network, and input method.
+
+**Answer guide — compare after attempting:** Test a narrow viewport, slower CPU/network, and keyboard navigation with realistic row counts. Measure input-to-visible-update time and loading behavior; verify focus, labels, and error recovery. Set a target from the product requirement and compare before/after results rather than declaring the desktop demo sufficient.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

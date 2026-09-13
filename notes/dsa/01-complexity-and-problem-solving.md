@@ -15,6 +15,8 @@ Algorithm decisions ka sequence hai jiske saath correctness ka reason bhi hona c
 
 Yeh original revision notes hain. Inhe apne course aur existing exercises ke saath use karo. Interview mein code likhne se pehle problem ka contract clear karna answer ka important part hai.
 
+> **Core takeaway:** Complexity counts growth with input size, including extra memory and hidden operations.
+
 ## The solving loop
 
 1. Output, constraints, duplicates, ordering aur mutation allowed hai ya nahi, clarify karo.
@@ -187,6 +189,18 @@ Amortized reasoning system design mein bhi wahi hai: log-structured storage (jai
 **Prompt:** Ek function ke do arrays hain, lengths n aur m, aur woh nested loops se saare pairs compare karta hai. "O(n²)" bolna kab galat hai?
 
 **Answer:** Jab n aur m independently vary karte hain. Correct bound O(nm) hai. Dono ko ek hi `n` mein collapse karna tab hi valid hai jab problem constraint kehti ho ki m = O(n). Interview mein multiple input sizes ko alag naam dena precision ka signal hai.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** An outer loop runs n times and an inner loop doubles j from 1 while j < n. Derive runtime and compare with an inner loop that increments j.
+
+> **Hint:** Count how many doublings reach n.
+
+**Answer guide — compare after attempting:** The doubling loop performs O(log n) iterations, so the nested algorithm is O(n log n). Incrementing by one makes it O(n²). If only counters are stored, auxiliary space is O(1). State the n > 1 assumption when describing the logarithm.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Source check
 

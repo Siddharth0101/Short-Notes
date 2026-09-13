@@ -13,6 +13,8 @@ tags: fundamentals, java, classes, constructors
 
 A class defines the state and behavior of a kind of object. An instance is one concrete object created from that definition. Two learners can use the same class and still have different names and progress. Pehle independent instances samjho; inheritance and interfaces make more sense after this foundation.
 
+> **Core takeaway:** Constructors establish valid instances; methods should preserve their invariants.
+
 ## Create two independent objects
 
 ```java
@@ -59,6 +61,18 @@ Create two learners and complete different numbers of lessons. Verify their coun
 ## Check before moving on
 
 Explain class, instance, constructor, field and method without using them interchangeably. Next, review language edge cases and then learn interfaces, composition, equality and polymorphism.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Design a learner with a name and completed count. Reject a negative starting count, then create two learners and increment only one.
+
+> **Hint:** Keep instance fields separate and validate before assignment.
+
+**Answer guide — compare after attempting:** Use private instance fields, validate the constructor count, and expose a completion method rather than arbitrary unchecked writes. The second learner's count stays unchanged. A static count would incorrectly share the total across all learners unless that was explicitly intended.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

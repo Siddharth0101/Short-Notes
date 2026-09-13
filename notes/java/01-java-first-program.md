@@ -13,6 +13,8 @@ tags: fundamentals, java, first, program
 
 Java source is compiled into bytecode and executed by the JVM. The JDK supplies development tools including javac. Start by running one program and changing one value. You do not need Spring, Maven, collections or object-oriented terminology to understand this first example. The examples in this course use Java 21-compatible syntax unless a later chapter states otherwise.
 
+> **Core takeaway:** Java variables have declared types; integer arithmetic follows those operand types.
+
 ## Compile and run
 
 Save this as Main.java. The public class name and file name match.
@@ -51,6 +53,18 @@ Change the learner name and initialize completed to 3. Add two to it and predict
 ## Check before moving on
 
 Explain the difference between a compilation error and a wrong numeric result in a running program. Next, use operators and conditions to compute values and choose branches.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Predict `7 / 2`, `7 / 2.0`, and the value of `double x = 7 / 2;`. Explain the surprising assignment.
+
+> **Hint:** The division happens before assignment to the destination.
+
+**Answer guide — compare after attempting:** Results are 3, 3.5, and 3.0. Integer operands perform integer division; storing the result in a double cannot restore the discarded fraction. Use a floating-point operand when fractional division is intended.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

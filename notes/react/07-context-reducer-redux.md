@@ -14,6 +14,8 @@ visual: context-flow
 
 State management ka first decision library nahi, ownership aur lifetime hai. Local draft component mein, shared feature state common ancestor mein, URL state router mein aur server cache query layer mein rakho. Context tree ke deep consumers tak value distribute karta hai. Reducer event aur previous state se next state calculate karta hai. Redux shared store, subscriptions aur predictable event flow organize karta hai.
 
+> **Core takeaway:** A reducer centralizes transitions; context distributes a value to consumers.
+
 ## Reducer as a state transition table
 
 ```js
@@ -162,6 +164,18 @@ Reading session reducer ke invalid transitions test karo: idle state ko pause, p
 **Q. Context Redux replace kar deta hai?** Context distribution primitive hai; Redux external store subscriptions, middleware aur debugging workflow deta hai. App needs se decision lo.
 
 **Q. RTK mein mutation-looking syntax allowed kyun?** Reducer ko Immer draft milta hai, jo updates ko immutable result mein convert karta hai. Draft ko reducer lifetime ke bahar retain mat karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** Model a cart action that increments quantity by item ID. What should happen for a missing ID, and how do you keep the old state intact?
+
+> **Hint:** Write a transition rule before choosing a state library.
+
+**Answer guide — compare after attempting:** Map items and replace only the matching item with a new object containing the incremented quantity. Define missing IDs as a no-op or explicit error. Keep the prior array and objects unchanged. Test the reducer independently of context or Redux wiring.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

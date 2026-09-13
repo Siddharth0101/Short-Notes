@@ -4,6 +4,8 @@
 
 Before starting: [Functions parameters arguments and return values](../javascript/05-js-functions.md) · [Objects arrays and modern data transformations](../javascript/07-modern-data-collections.md) · [DOM events and browser interaction](../javascript/12-dom-events-browser.md) · [Event loop promises and resilient fetching](../javascript/15-async-event-loop.md).
 
+Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+
 ## Stage 1: Components before architecture
 
 Start with JSX and props, add state, then understand rendering and identity.

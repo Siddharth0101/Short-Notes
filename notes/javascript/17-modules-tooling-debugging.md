@@ -13,6 +13,8 @@ tags: modules, tooling, http, debugging, testing, npm
 
 Source code authoring format hai; browser tak delivered code build aur network pipeline se guzarta hai. Module dependency graph define karta hai ki kaunsa code kis par depend karta hai. Bundler files combine/split karta hai, transpiler syntax transform karta hai, aur polyfill missing runtime behavior provide karta hai. In teen responsibilities ko interchangeable mat samjho.
 
+> **Core takeaway:** Module boundaries make dependencies explicit; delivery failures still need a reproducible diagnosis.
+
 ## Small module boundary
 
 ```js
@@ -107,6 +109,44 @@ Build a browser search module with a pure result formatter, a request adapter, a
 ### Interview defense
 
 Explain the lifetime of every closure and resource, draw the request timeline, and distinguish debouncing from cancellation and concurrency control. A strong submission includes a deterministic race reproduction and a module boundary that allows the network to be replaced in tests. Stretch task: add a bounded cache and specify invalidation instead of caching indefinitely.
+
+## Research notes: Imports are live read-only bindings
+
+An imported binding reflects exporter updates. Importers cannot assign a replacement to that binding. Cycles are not automatically invalid, but reading an uninitialized binding can fail.
+
+```js
+// score.mjs
+export let score = 0;
+export function award() { score += 2; }
+
+// main.mjs
+import { score, award } from './score.mjs';
+const before = score;
+award();
+console.log(before, score); // 0, 2
+```
+
+Draw evaluation dependencies when debugging a cycle. Move shared pure logic to a lower-level module if it removes the cycle.
+
+**Interview check:** Why does before remain zero when score changes?
+
+**Answer:** Assigning the current numeric value to a local constant creates a snapshot. It does not create another live import binding.
+
+**Practice:** Call award twice and trace the exporter and importer values.
+
+[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A lazy-loaded screen fails only after deployment while existing screens work. Write the first three checks and a user recovery path.
+
+> **Hint:** Inspect the failing chunk request before changing component logic.
+
+**Answer guide — compare after attempting:** Check the chunk URL/status, whether deployed HTML references available assets, and caching behavior across releases. Retain compatible assets or coordinate cache invalidation. Offer a deliberate reload/retry path with draft preservation where relevant; do not create an infinite automatic reload loop.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 [MDN JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) module semantics explain karta hai. [MDN HTTP overview](https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview) web delivery ka reference hai.

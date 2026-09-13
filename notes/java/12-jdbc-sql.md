@@ -13,6 +13,8 @@ tags: jdbc, sql, transactions, indexes
 
 JDBC Java application aur relational database ke beech standard interface hai. Connection transaction context carry karti hai; PreparedStatement parameterized SQL execute karta hai; ResultSet returned rows traverse karta hai. ORM use karne par bhi SQL, constraints and transaction semantics disappear nahi hote.
 
+> **Core takeaway:** A transaction groups database changes; resource cleanup and parameter binding remain separate responsibilities.
+
 ## Parameterized access
 
 ```java
@@ -105,6 +107,18 @@ Registration/checkout flows mein unique-constraint race condition ek classic int
 ## Practice
 
 Unique username registration implement karo and two concurrent identical requests test karo. One write intentionally fail karke rollback verify karo. Real database query plan se list endpoint ka index justify karo. Phir 500 rows ko one-by-one insert versus batch insert se compare karo aur round-trip count/latency difference measure karo.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A transfer debits one row and credits another. The second update fails. Describe the expected persisted state and how you avoid SQL injection.
+
+> **Hint:** Both updates belong to one transaction, with bound parameters.
+
+**Answer guide — compare after attempting:** Rollback must restore the original balances; success commits both updates. Bind account IDs and amounts through prepared statements. Validate amounts and verify affected-row counts. Closing a connection is not a substitute for a deliberate transaction outcome.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

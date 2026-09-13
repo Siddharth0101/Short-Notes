@@ -13,6 +13,8 @@ tags: mongodb, indexes, explain, streams, backpressure
 
 An index is a maintained access path, not a free speed switch. Start with the query's equality filters, ordering and range conditions, then check the plan on representative data. Node streaming solves a related resource problem: process data incrementally so a slow consumer does not require buffering the whole result.
 
+> **Core takeaway:** An index is useful when its ordering matches the actual filter and sort pattern.
+
 ## Design one real access pattern
 
 Suppose a tenant's recent paid orders are requested in descending creation order. Use a stable tie-breaker because timestamps can repeat.
@@ -60,6 +62,18 @@ Generate skewed data: one large tenant and many small tenants. Compare the plan 
 **Should every filter field get a separate index?** No. Compound access patterns, write cost and storage must be considered; inspect plans rather than assuming index intersection will solve everything.
 
 **Does backpressure eliminate overload?** It propagates pacing within cooperating boundaries. Admission control, deadlines and bounded queues are still needed across the full service.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** You list a user's published notes newest first. Suggest an index candidate and describe how to judge it on representative data.
+
+> **Hint:** Equality fields can precede the sort field.
+
+**Answer guide — compare after attempting:** Try a compound index on userId, status, and descending createdAt, adding a stable tie-breaker if pagination requires it. Compare explain execution statistics, examined rows/keys, and sorting behavior. Include write/storage cost and real selectivity; do not declare success just because an index exists.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

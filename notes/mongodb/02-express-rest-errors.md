@@ -14,6 +14,8 @@ visual: request-flow
 
 Express request middleware chain se travel karti hai. Har middleware response complete karta hai, next middleware ko control deta hai, ya error forward karta hai. Registration order behavior define karta hai. Route transport concerns handle kare, service business use case handle kare aur repository database access handle kare. Small app mein layers lightweight rakho; unnecessary wrappers architecture nahi banate.
 
+> **Core takeaway:** Middleware order determines what data and checks a handler receives.
+
 ## Express 5 route with bounded input
 
 ```js
@@ -128,6 +130,44 @@ Topics CRUD API ka request/response contract likho. Malformed JSON, unknown rout
 **Q. Controller aur service separate kyun?** HTTP parsing aur business rules independently understandable/testable hote hain; same use case job ya CLI se reuse ho sakta hai.
 
 **Q. Global error handler har failure catch karega?** Sirf Express ko forwarded errors. Detached async work aur process failures ke liye separate lifecycle handling required hai.
+
+## Research notes: Return the promise that owns the request
+
+Express 5 forwards rejection from a returned handler promise. Detached asynchronous work still needs an explicit error owner.
+
+```js
+// Express 5; loadOrder is an injected async repository.
+app.get('/orders/:id', async (req, res) => {
+  const order = await loadOrder(req.params.id);
+  res.json(order);
+});
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  res.status(500).json({ error: 'Unable to load order' });
+});
+```
+
+Register error middleware after routes. Once a response finishes, a later background failure cannot be reported in that response.
+
+**Interview check:** Why is an exception in a later setTimeout different from a rejected returned promise?
+
+**Answer:** The timer callback is outside the returned promise chain. Catch and route its failure to the appropriate owner, or await an abstraction that includes the work before completing the response.
+
+**Practice:** Inject a repository rejection and verify one controlled response.
+
+[Read the source — Express](https://expressjs.com/en/guide/error-handling/). Reviewed 13 September 2026; examples and exercises here are original.
+
+## Revision and practice lab
+
+**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+
+**Apply:** A JSON endpoint sees an undefined request body. Identify an ordering cause, then specify how malformed JSON should reach a controlled response.
+
+> **Hint:** Parsing must happen before the handler reads the body.
+
+**Answer guide — compare after attempting:** Install the JSON parser before the relevant routes and send the appropriate content type. Handle parsing failures through the error path with a documented client-error response. Do not continue into business logic with a fabricated empty body or expose internal stack traces.
+
+**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
 
 ## Sources
 

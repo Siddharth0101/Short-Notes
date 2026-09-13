@@ -290,3 +290,30 @@ test('Monotonic stack trace matches a brute-force oracle across duplicate and bo
     assert(frames.length <= 2 * values.length + 2);
   }
 });
+
+test('Researched notes cover every course and link to actual chapter sections and primary sources', async () => {
+  const research = JSON.parse(
+    await readFile(path.join(repo, 'notes/research-sources.json'), 'utf8'),
+  );
+  const sourceMap = await readFile(path.join(repo, 'notes/RESEARCH_SOURCES.md'), 'utf8');
+  const covered = new Set();
+  const sectionKeys = new Set();
+  for (const entry of research) {
+    const chapter = chapters.find(({ raw }) => parseFrontmatter(raw).id === entry.chapter);
+    assert(chapter, entry.chapter);
+    const note = parseFrontmatter(chapter.raw);
+    assert.equal(path.relative(repo, chapter.file), entry.file);
+    assert(
+      extractHeadings(note.body).some(({ id }) => id === entry.anchor),
+      entry.anchor,
+    );
+    assert(note.body.includes(`](${entry.url})`), entry.url);
+    assert.equal(new URL(entry.url).protocol, 'https:');
+    assert(entry.publisher && /^\d{4}-\d{2}-\d{2}$/.test(entry.reviewed));
+    assert(sourceMap.includes(`${entry.file.replace('notes/', '')}#${entry.anchor}`));
+    assert(!sectionKeys.has(`${entry.chapter}:${entry.anchor}`));
+    sectionKeys.add(`${entry.chapter}:${entry.anchor}`);
+    covered.add(note.track);
+  }
+  assert.deepEqual([...covered].sort(), TRACKS.map(({ id }) => id).sort());
+});
