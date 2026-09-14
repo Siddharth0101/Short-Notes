@@ -6,7 +6,7 @@ Start with the [structured reading index](notes/README.md), or run the app for s
 
 ## Learn, practice, and review
 
-Every one of the **85 chapters** now includes a concise core takeaway and an original **Revision and practice lab**: recall, a topic-specific challenge, a hint, an answer guide, and an exit check. The 85 new labs complement the existing interactive interview bank. Exercises progress from output tracing and small implementations to concurrency, failure recovery, and design defenses.
+Every one of the **92 chapters** now includes a concise core takeaway and an original **Revision and practice lab**: recall, a topic-specific challenge, a hint, an answer guide, and an exit check. The 92 new labs complement the existing interactive interview bank. Exercises progress from output tracing and small implementations to concurrency, failure recovery, and design defenses.
 
 Follow the [study guide](notes/STUDY_GUIDE.md) for session plans, a self-review rubric, a mistake-log worksheet, and stage deliverables. In the app, use the chapter table of contents to jump to **Revision and practice lab**. On GitHub, the same material is readable directly in each Markdown chapter.
 
@@ -35,13 +35,14 @@ Start with the [course syllabus](notes/README.md). Both **All notes** and **Lear
 | --- | ---: | --- |
 | JavaScript | 17 | Variables → types/operators → decisions → loops → functions → arrays/objects → collections/scope → browser → OOP → async/tooling |
 | React | 11 | JSX/props → state → rendering/identity → composition → effects → routing/shared state → server data/types → performance/practice |
-| Java & Spring | 19 | First program/variables → control flow → methods/arrays → classes → core Java → builds/tests → SQL → Spring/JPA/security → concurrency/operations |
+| Java | 16 | First program → control flow → classes → packages/interfaces → collections/JVM → builds/tests → SQL → concurrency |
+| Spring Boot | 10 | First application → beans/DI → configuration → REST/validation → JPA/security → testing → observability → deployment |
 | Node & MongoDB | 8 | Node/HTTP → Express → documents/CRUD → Mongoose → indexes/query plans → security → production |
 | DSA | 12 | Complexity → lists/stacks/queues → hashing → patterns/search → recursion/sorting → monotonic stacks → trees/heaps → graphs/DP |
 | System design | 12 | Requirements/scaling → React frontend → Java backend → integrated case studies |
 | Interview playbooks | 6 | Language rounds → application rounds → algorithms and design, after the corresponding course |
 
-**85 study chapters, 142 integrated source examples, 274 interactive interview questions, and 20 visualizations.** Counts in the app are calculated from its content rather than maintained manually.
+**92 study chapters, 142 integrated source examples, 283 interactive interview questions, and 20 visualizations.** Counts in the app are calculated from its content rather than maintained manually.
 
 New practical chapters add HTML/CSS, bounded async concurrency, React machine coding, TypeScript contracts, Java resource limits, SQL joins/windows, MongoDB query plans, monotonic stacks, and complete frontend/backend design rounds.
 
@@ -55,7 +56,8 @@ The visual lab also includes React key identity, a last-seat transaction race, a
 notes/                     New, ordered Markdown study chapters
   javascript/              JavaScript learning path
   react/                   React learning path
-  java/                    Java and Spring learning path
+  java/                    Java language and concurrency learning path
+  spring-boot/             Spring Boot application learning path
   mongodb/                 Node, Express and MongoDB learning path
   dsa/                     Data structures and algorithms
   system-design/           React frontend and Java backend architecture
@@ -73,7 +75,7 @@ playground/                React + Vite reading app and tests
 
 Use one structured course sequence: each chapter combines explanations, code, relevant source examples, and answer-reveal interview practice. Search includes chapter text, linked source titles/paths, and interview questions. Expand source examples inside the reader, or open their interactive playground. Existing PDFs are available in the course library. Old source links redirect to their owning chapter, and source bookmarks migrate to that chapter. Source-only completion is retained without marking an entire chapter complete.
 
-All 85 chapters include interview practice. Six technical course capstones provide failure scenarios and acceptance criteria; all six interview playbooks include an assessed mock round. The 26 new scenario questions are original practice material, with technical references where applicable, not claims about questions asked by specific companies.
+All 92 chapters include interview practice. Six technical course capstones provide failure scenarios and acceptance criteria; all six interview playbooks include an assessed mock round. The 26 new scenario questions are original practice material, with technical references where applicable, not claims about questions asked by specific companies.
 
 ## Supplied interview checklist
 
@@ -93,7 +95,7 @@ Progress is stored in this browser's local storage. There is no account, server 
 
 ## Researched additions
 
-[Open the curated source map](notes/RESEARCH_SOURCES.md): 30 primary sources support new explanations, worked examples and answered interview checks in 34 existing chapters across all seven courses. Reviewed 13 September 2026. Sources include MDN, React, TanStack Query, TypeScript, Oracle/Dev.java, Spring, PostgreSQL, Node, Express, MongoDB, OWASP, MIT 6.006, AWS Builders’ Library, Google SRE, Supabase and employer interview guidance. The additions appear inside the existing reader and search, with no separate course collection.
+[Open the curated source map](notes/RESEARCH_SOURCES.md): 30 primary sources support new explanations, worked examples and answered interview checks in 34 existing chapters across the original seven courses. Reviewed 13 September 2026. Sources include MDN, React, TanStack Query, TypeScript, Oracle/Dev.java, Spring, PostgreSQL, Node, Express, MongoDB, OWASP, MIT 6.006, AWS Builders’ Library, Google SRE, Supabase and employer interview guidance. The additions appear inside the existing reader and search, with no separate course collection.
 
 ## Course references
 

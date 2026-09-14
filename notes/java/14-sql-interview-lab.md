@@ -2,7 +2,7 @@
 id: java-sql-interview-lab
 title: SQL joins windows and transaction races
 track: java
-order: 13
+order: 14
 level: Advanced
 minutes: 25
 summary: Solve reporting queries and concurrency failures behind Java APIs.

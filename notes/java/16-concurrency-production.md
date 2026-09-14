@@ -2,7 +2,7 @@
 id: java-concurrency-production
 title: Java concurrency under real resource limits
 track: java
-order: 18
+order: 16
 level: Advanced
 minutes: 25
 summary: Separate thread scheduling from database capacity and cancellation semantics.

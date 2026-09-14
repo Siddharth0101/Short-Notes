@@ -1,8 +1,8 @@
 ---
 id: java-spring-rest
 title: Spring dependency injection and REST APIs
-track: java
-order: 14
+track: spring-boot
+order: 4
 level: Intermediate
 minutes: 23
 summary: Container se request boundary tak Spring ka end-to-end flow samjho.

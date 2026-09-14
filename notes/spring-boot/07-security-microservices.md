@@ -1,8 +1,8 @@
 ---
 id: java-security-microservices
 title: Spring Security and reliable service boundaries
-track: java
-order: 16
+track: spring-boot
+order: 7
 level: Advanced
 minutes: 26
 summary: Authentication, authorization, tokens aur distributed failures ko practical flow mein jodo.

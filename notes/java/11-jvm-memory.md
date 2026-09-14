@@ -2,7 +2,7 @@
 id: java-jvm-memory
 title: JVM memory garbage collection and diagnosis
 track: java
-order: 10
+order: 11
 level: Advanced
 minutes: 22
 summary: Reachability, allocation aur profiling se memory issues ko reason karo.

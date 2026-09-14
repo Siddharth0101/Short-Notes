@@ -1,4 +1,4 @@
-# Java & Spring — ordered course
+# Java — ordered course
 
 [All courses](../README.md)
 
@@ -22,11 +22,12 @@ Run main, declare variables, make decisions, write methods, and create instances
 
 Extend basic classes with OOP, collections, exceptions, streams and memory reasoning.
 
-6. [Objects OOP records and equality](06-object-model.md)
-7. [Collections generics and choosing data structures](07-collections-generics.md)
-8. [Exceptions resources files and time](08-exceptions-io-time.md)
-9. [Lambdas streams and Optional](09-streams-lambdas.md)
-10. [JVM memory garbage collection and diagnosis](10-jvm-memory.md)
+6. [Packages access control and interface boundaries](06-packages-interfaces.md)
+7. [Objects OOP records and equality](07-object-model.md)
+8. [Collections generics and choosing data structures](08-collections-generics.md)
+9. [Exceptions resources files and time](09-exceptions-io-time.md)
+10. [Lambdas streams and Optional](10-streams-lambdas.md)
+11. [JVM memory garbage collection and diagnosis](11-jvm-memory.md)
 
 **Stage checkpoint:** Choose a collection, preserve equality contracts and close an owned resource.
 
@@ -34,28 +35,17 @@ Extend basic classes with OOP, collections, exceptions, streams and memory reaso
 
 Set up builds and tests before database access and SQL concurrency exercises.
 
-11. [Maven builds and useful Java tests](11-maven-testing.md)
-12. [JDBC SQL and transaction boundaries](12-jdbc-sql.md)
-13. [SQL joins windows and transaction races](13-sql-interview-lab.md)
+12. [Maven builds and useful Java tests](12-maven-testing.md)
+13. [JDBC SQL and transaction boundaries](13-jdbc-sql.md)
+14. [SQL joins windows and transaction races](14-sql-interview-lab.md)
 
 **Stage checkpoint:** Test a JDBC operation and explain a join and an atomic inventory update.
 
-## Stage 4: Create Spring applications
+## Stage 4: Reason about concurrency and resource limits
 
-Move from dependency injection and REST to persistence and security.
+Understand thread safety, virtual threads and bounded resources.
 
-14. [Spring dependency injection and REST APIs](14-spring-rest.md)
-15. [JPA Hibernate and Spring transactions](15-jpa-transactions.md)
-16. [Spring Security and reliable service boundaries](16-security-microservices.md)
+15. [Concurrency synchronization and virtual threads](15-concurrency.md)
+16. [Java concurrency under real resource limits](16-concurrency-production.md)
 
-**Stage checkpoint:** Implement a validated resource endpoint with a transaction and authorization boundary.
-
-## Stage 5: Operate concurrent services
-
-Study thread safety, resource limits and production signals after the application model.
-
-17. [Concurrency synchronization and virtual threads](17-concurrency.md)
-18. [Java concurrency under real resource limits](18-concurrency-production.md)
-19. [Observability with Actuator, metrics and tracing](19-observability-actuator.md)
-
-**Stage checkpoint:** Demonstrate a race-safe operation and distinguish pool wait from execution time.
+**Stage checkpoint:** Demonstrate a race-safe operation and explain where backpressure is needed.

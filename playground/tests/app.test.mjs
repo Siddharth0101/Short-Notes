@@ -83,7 +83,7 @@ test('Dashboard displays actual chapter/reference/visual totals and subject navi
   localStorage.clear();
   await mount('/');
   assert.match(text(), /A little clearer, every day/);
-  assert.equal(document.querySelectorAll('.track-card').length, 6);
+  assert.equal(document.querySelectorAll('.track-card').length, 7);
   assert.equal(document.querySelectorAll('.stat strong')[0].textContent, `${notes.length}↗`);
   assert.equal(document.querySelectorAll('.stat strong')[1].textContent, String(archive.length));
   assert.equal(document.querySelectorAll('.stat strong')[2].textContent, String(VISUAL_IDS.length));
@@ -111,10 +111,11 @@ test('Every source has exactly one chapter owner and every chapter includes rele
   for (const note of notes) {
     assert(note.questions.length > 0, note.id);
     for (const question of note.questions) {
-      assert.equal(
-        question.track,
-        note.track === 'interview' ? note.id.replace('interview-', '') : note.track,
-      );
+      const expectedTracks =
+        note.id === 'interview-java'
+          ? ['java', 'spring-boot']
+          : [note.track === 'interview' ? note.id.replace('interview-', '') : note.track];
+      assert(expectedTracks.includes(question.track), `${note.id}: ${question.track}`);
       if (note.track !== 'interview' && question.noteId) assert.equal(question.noteId, note.id);
     }
   }
@@ -197,7 +198,7 @@ test('Readers follow the new syllabus across stage boundaries while retaining or
   assert.match(document.querySelector('.reader-course-context').textContent, /Stage 2/);
   assert.match(document.querySelector('.reader h1').textContent, /Foundations checkpoint/);
   await mount('/notes/java-jpa-transactions');
-  assert(document.querySelector('.chapter-navigation a[href="/notes/java-spring-rest"]'));
+  assert(document.querySelector('.chapter-navigation a[href="/notes/spring-validation-errors"]'));
 });
 
 test('Reader saves bookmarks and completion across mounts, renders code and section anchors', async () => {
@@ -436,4 +437,25 @@ test('An output puzzle shows code before revealing its answer and retains the ch
     card.querySelector('.answer-reading[href^="/notes/"]').getAttribute('href'),
     '/notes/js-async-event-loop',
   );
+});
+
+test('Java and Spring Boot expose independent courses with stable reader links', async () => {
+  for (const track of ['java', 'spring-boot']) {
+    await mount(`/library?track=${track}`);
+    const courseNotes = notes.filter((note) => note.track === track);
+    for (const note of courseNotes) {
+      assert(document.querySelector(`a[href="/notes/${note.id}"]`), note.id);
+    }
+    const otherTrack = track === 'java' ? 'spring-boot' : 'java';
+    for (const note of notes.filter((note) => note.track === otherTrack)) {
+      assert(!document.querySelector(`.note-row a[href="/notes/${note.id}"]`), note.id);
+    }
+  }
+  await mount('/paths?track=spring-boot');
+  assert(document.querySelector('.course-readiness a[href="/notes/java-maven-testing"]'));
+  await mount('/notes/java-jpa-transactions');
+  assert(document.querySelector('.reader-course-context a[href="/paths?track=spring-boot"]'));
+  assert.match(document.querySelector('.reader-course-context').textContent, /Lesson 6 of 10/);
+  await mount('/interview?track=spring-boot');
+  assert(document.querySelector('.question-card'));
 });

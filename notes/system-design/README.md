@@ -2,7 +2,7 @@
 
 [All courses](../README.md)
 
-Before starting: [Performance suspense and production quality](../react/10-performance-production.md) · [JPA Hibernate and Spring transactions](../java/15-jpa-transactions.md) · [Java concurrency under real resource limits](../java/18-concurrency-production.md).
+Before starting: [Performance suspense and production quality](../react/10-performance-production.md) · [JPA Hibernate and Spring transactions](../spring-boot/06-jpa-transactions.md) · [Java concurrency under real resource limits](../java/16-concurrency-production.md).
 
 Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
 

@@ -1,6 +1,6 @@
 # Interview checklist and answered workbook
 
-274 questions are available in the app. This workbook maps the supplied HTML/CSS/JavaScript/React/Redux checklist to canonical questions and includes the additional backend, DSA, and design prompts. 104 questions were added; 21 existing questions are reused here, with expanded examples where needed. Repeated requests map to the same question instead of another card.
+283 questions are available in the app. This workbook maps the supplied HTML/CSS/JavaScript/React/Redux checklist to canonical questions and includes the additional backend, DSA, and design prompts. 104 questions were added; 21 existing questions are reused here, with expanded examples where needed. Repeated requests map to the same question instead of another card.
 
 Use the app's **Interview topic** filter for HTML, CSS, JavaScript, React, Redux, Node.js, Java, Spring Boot, MongoDB, DSA, or system design. HTML/CSS stay attached to browser-foundation reading in the JavaScript course. Answers in the app remain hidden until revealed; this Markdown workbook is a readable offline reference. Code is original, and framework excerpts state their required context.
 

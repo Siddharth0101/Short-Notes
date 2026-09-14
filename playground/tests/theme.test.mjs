@@ -37,9 +37,16 @@ test('Both theme palettes keep core reading, code, buttons and subject labels at
       ['code-text', 'code-bg'],
       ['code-muted', 'code-header'],
       ...['success', 'warning', 'danger', 'info', 'purple'].map((name) => [name, `${name}-bg`]),
-      ...['javascript', 'react', 'java', 'mongodb', 'dsa', 'system-design', 'interview'].map(
-        (name) => [`track-${name}`, `tint-${name}`],
-      ),
+      ...[
+        'javascript',
+        'react',
+        'java',
+        'spring-boot',
+        'mongodb',
+        'dsa',
+        'system-design',
+        'interview',
+      ].map((name) => [`track-${name}`, `tint-${name}`]),
     ];
     for (const [foreground, background] of pairs)
       assert(

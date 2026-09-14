@@ -1,8 +1,8 @@
 ---
 id: java-jpa-transactions
 title: JPA Hibernate and Spring transactions
-track: java
-order: 15
+track: spring-boot
+order: 6
 level: Advanced
 minutes: 26
 summary: Persistence context, fetching aur transaction proxies ke failure modes samjho.

@@ -12,7 +12,8 @@ These original study notes are topic companions to Jonas Schmedtmann’s JavaScr
 
 - [JavaScript](javascript/README.md)
 - [React](react/README.md)
-- [Java & Spring](java/README.md)
+- [Java](java/README.md)
+- [Spring Boot](spring-boot/README.md)
 - [Node & MongoDB](mongodb/README.md)
 - [Data structures & algorithms](dsa/README.md)
 - [System design](system-design/README.md)

@@ -1,8 +1,8 @@
 ---
 id: java-observability-actuator
 title: Observability with Actuator, metrics and tracing
-track: java
-order: 19
+track: spring-boot
+order: 9
 level: Advanced
 minutes: 18
 summary: Health checks, metrics aur distributed tracing se production service ka andar dekho.

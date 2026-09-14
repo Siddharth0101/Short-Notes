@@ -41,11 +41,11 @@ Oracle and Dev.java cover language/library contracts. Spring defines proxy trans
 
 | Added topic | Read in this notebook | Primary source |
 | --- | --- | --- |
-| A read-only view is not an immutable snapshot | [Chapter section](java/07-collections-generics.md#research-notes-a-read-only-view-is-not-an-immutable-snapshot) | [Oracle Java API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)) |
-| Keep the source when traversing twice | [Chapter section](java/09-streams-lambdas.md#research-notes-keep-the-source-when-traversing-twice) | [Dev.java](https://dev.java/learn/api/streams/) |
-| Trace the actual transaction entry point | [Chapter section](java/15-jpa-transactions.md#research-notes-trace-the-actual-transaction-entry-point) | [Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) |
-| Virtual threads still need task ownership | [Chapter section](java/18-concurrency-production.md#research-notes-virtual-threads-still-need-task-ownership) | [Dev.java](https://dev.java/learn/new-features/virtual-threads/) |
-| Read estimates alongside actual query work | [Chapter section](java/13-sql-interview-lab.md#research-notes-read-estimates-alongside-actual-query-work) | [PostgreSQL](https://www.postgresql.org/docs/current/using-explain.html) |
+| A read-only view is not an immutable snapshot | [Chapter section](java/08-collections-generics.md#research-notes-a-read-only-view-is-not-an-immutable-snapshot) | [Oracle Java API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)) |
+| Keep the source when traversing twice | [Chapter section](java/10-streams-lambdas.md#research-notes-keep-the-source-when-traversing-twice) | [Dev.java](https://dev.java/learn/api/streams/) |
+| Trace the actual transaction entry point | [Chapter section](spring-boot/06-jpa-transactions.md#research-notes-trace-the-actual-transaction-entry-point) | [Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) |
+| Virtual threads still need task ownership | [Chapter section](java/16-concurrency-production.md#research-notes-virtual-threads-still-need-task-ownership) | [Dev.java](https://dev.java/learn/new-features/virtual-threads/) |
+| Read estimates alongside actual query work | [Chapter section](java/14-sql-interview-lab.md#research-notes-read-estimates-alongside-actual-query-work) | [PostgreSQL](https://www.postgresql.org/docs/current/using-explain.html) |
 
 ## mongodb
 

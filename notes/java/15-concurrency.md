@@ -2,7 +2,7 @@
 id: java-concurrency
 title: Concurrency synchronization and virtual threads
 track: java
-order: 17
+order: 15
 level: Advanced
 minutes: 25
 summary: Atomicity, visibility, cancellation aur bounded concurrency ko alag samjho.

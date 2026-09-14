@@ -94,7 +94,7 @@
     "title": "A read-only view is not an immutable snapshot",
     "publisher": "Oracle Java API",
     "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)",
-    "file": "notes/java/07-collections-generics.md",
+    "file": "notes/java/08-collections-generics.md",
     "anchor": "research-notes-a-read-only-view-is-not-an-immutable-snapshot",
     "reviewed": "2026-09-13"
   },
@@ -103,7 +103,7 @@
     "title": "Keep the source when traversing twice",
     "publisher": "Dev.java",
     "url": "https://dev.java/learn/api/streams/",
-    "file": "notes/java/09-streams-lambdas.md",
+    "file": "notes/java/10-streams-lambdas.md",
     "anchor": "research-notes-keep-the-source-when-traversing-twice",
     "reviewed": "2026-09-13"
   },
@@ -112,7 +112,7 @@
     "title": "Trace the actual transaction entry point",
     "publisher": "Spring Framework",
     "url": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html",
-    "file": "notes/java/15-jpa-transactions.md",
+    "file": "notes/spring-boot/06-jpa-transactions.md",
     "anchor": "research-notes-trace-the-actual-transaction-entry-point",
     "reviewed": "2026-09-13"
   },
@@ -121,7 +121,7 @@
     "title": "Virtual threads still need task ownership",
     "publisher": "Dev.java",
     "url": "https://dev.java/learn/new-features/virtual-threads/",
-    "file": "notes/java/18-concurrency-production.md",
+    "file": "notes/java/16-concurrency-production.md",
     "anchor": "research-notes-virtual-threads-still-need-task-ownership",
     "reviewed": "2026-09-13"
   },
@@ -130,7 +130,7 @@
     "title": "Read estimates alongside actual query work",
     "publisher": "PostgreSQL",
     "url": "https://www.postgresql.org/docs/current/using-explain.html",
-    "file": "notes/java/13-sql-interview-lab.md",
+    "file": "notes/java/14-sql-interview-lab.md",
     "anchor": "research-notes-read-estimates-alongside-actual-query-work",
     "reviewed": "2026-09-13"
   },
@@ -218,7 +218,7 @@
   {
     "chapter": "design-messaging-reliability",
     "title": "Budget retries across the call graph",
-    "publisher": "AWS Builders’ Library",
+    "publisher": "AWS Builders\u2019 Library",
     "url": "https://d1.awsstatic.com/builderslibrary/pdfs/timeouts-retries-and-backoff-with-jitter.pdf",
     "file": "notes/system-design/08-messaging-reliability.md",
     "anchor": "research-notes-budget-retries-across-the-call-graph",

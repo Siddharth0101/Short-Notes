@@ -2,7 +2,7 @@
 id: java-jdbc-sql
 title: JDBC SQL and transaction boundaries
 track: java
-order: 12
+order: 13
 level: Intermediate
 minutes: 22
 summary: Prepared statements, atomic writes aur query plans se database work samjho.

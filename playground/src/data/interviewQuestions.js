@@ -1,3 +1,5 @@
+import { courseQuestions } from './courseQuestions.js';
+import { questionTopic } from './interviewTopics.js';
 import { requestedQuestions, answerAdditions } from './requestedQuestions.js';
 import { scenarioQuestions } from './scenarioQuestions.js';
 import { advancedQuestions } from './advancedQuestions.js';
@@ -1223,9 +1225,23 @@ export const interviewQuestions = [
     followUp: 'Why is “just add more consumers” not always a valid answer to growing lag?',
     tags: ['backpressure', 'queues', 'resilience'],
   },
+  ...courseQuestions,
   ...advancedQuestions,
   ...scenarioQuestions,
   ...requestedQuestions,
-].map((item) =>
-  answerAdditions[item.id] ? { ...item, answer: item.answer + answerAdditions[item.id] } : item,
-);
+]
+  .map((item) =>
+    item.track === 'java' &&
+    ((!item.noteId && questionTopic(item) === 'spring') ||
+      [
+        'java-spring-rest',
+        'java-jpa-transactions',
+        'java-security-microservices',
+        'java-observability-actuator',
+      ].includes(item.noteId))
+      ? { ...item, track: 'spring-boot', topic: 'spring' }
+      : item,
+  )
+  .map((item) =>
+    answerAdditions[item.id] ? { ...item, answer: item.answer + answerAdditions[item.id] } : item,
+  );

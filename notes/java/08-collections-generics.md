@@ -2,7 +2,7 @@
 id: java-collections-generics
 title: Collections generics and choosing data structures
 track: java
-order: 7
+order: 8
 level: Intermediate
 minutes: 20
 summary: Collection contracts, complexity aur PECS ko practical examples se revise karo.

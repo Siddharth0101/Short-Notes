@@ -114,7 +114,10 @@ for (const note of notes) {
   note.references = archive.filter((item) => item.chapterId === note.id);
   const practiceTrack = note.track === 'interview' ? note.id.replace('interview-', '') : note.track;
   note.questions = interviewQuestions.filter((item) => {
-    if (note.track === 'interview') return item.track === practiceTrack;
+    if (note.track === 'interview')
+      return (
+        item.track === practiceTrack || (practiceTrack === 'java' && item.track === 'spring-boot')
+      );
     if (item.noteId) return item.noteId === note.id;
     if (item.track !== note.track) return false;
     return item.tags.some((tag) => note.tags.includes(tag));

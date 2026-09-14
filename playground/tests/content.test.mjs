@@ -151,7 +151,6 @@ test('Course prerequisites and lesson order form a complete acyclic learning seq
     ['dsa-hashing', 'dsa-patterns'],
     ['dsa-heaps', 'dsa-graphs'],
     ['java-classes-constructors', 'java-object-model'],
-    ['java-sql-interview-lab', 'java-jpa-transactions'],
     ['react-jsx-props', 'react-state-forms'],
     ['react-state-forms', 'react-components-rendering'],
   ])

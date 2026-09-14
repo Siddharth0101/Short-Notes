@@ -14,6 +14,7 @@ export const INTERVIEW_TOPICS = [
 
 export function questionTopic(item) {
   if (item.topic) return item.topic;
+  if (item.track === 'spring-boot') return 'spring';
   if (item.id === 'iq-lab-03') return 'css';
   if (item.id === 'iq-lab-04') return 'html';
   if (

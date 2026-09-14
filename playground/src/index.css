@@ -3689,16 +3689,51 @@ input[type='range'] {
   }
 }
 
-.source-examples, .chapter-practice { margin-top: 3rem; scroll-margin-top: 100px; }
-.source-example { margin: 1rem 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; scroll-margin-top: 100px; }
-.source-example > summary { padding: 1rem; cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
-.source-example-body { padding: 0 1rem 1rem; min-width: 0; }
-.source-caption { font-size: .85rem; color: var(--muted); }
-.chapter-practice .question-card { margin: 1rem 0; }
-.chapter-practice h2, .source-examples h2 { scroll-margin-top: 100px; }
+.source-examples,
+.chapter-practice {
+  margin-top: 3rem;
+  scroll-margin-top: 100px;
+}
+.source-example {
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  scroll-margin-top: 100px;
+}
+.source-example > summary {
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.source-example-body {
+  padding: 0 1rem 1rem;
+  min-width: 0;
+}
+.source-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.chapter-practice .question-card {
+  margin: 1rem 0;
+}
+.chapter-practice h2,
+.source-examples h2 {
+  scroll-margin-top: 100px;
+}
 
 /* Interview examples use the same accessible Markdown/code renderer as chapters. */
 .question-card > .markdown,
-.question-answer .markdown { min-width: 0; overflow-wrap: anywhere; }
-.question-answer .markdown > p { font-size: 13px; line-height: 1.9; }
-.question-answer .markdown pre { white-space: pre; overflow-x: auto; }
+.question-answer .markdown {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.question-answer .markdown > p {
+  font-size: 13px;
+  line-height: 1.9;
+}
+.question-answer .markdown pre {
+  white-space: pre;
+  overflow-x: auto;
+}

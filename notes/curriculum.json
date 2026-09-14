@@ -136,6 +136,7 @@
         "goal": "Extend basic classes with OOP, collections, exceptions, streams and memory reasoning.",
         "checkpoint": "Choose a collection, preserve equality contracts and close an owned resource.",
         "chapters": [
+          "java-packages-interfaces",
           "java-object-model",
           "java-collections-generics",
           "java-exceptions-io-time",
@@ -156,24 +157,63 @@
       },
       {
         "id": "java-4",
-        "title": "Create Spring applications",
-        "goal": "Move from dependency injection and REST to persistence and security.",
-        "checkpoint": "Implement a validated resource endpoint with a transaction and authorization boundary.",
+        "title": "Reason about concurrency and resource limits",
+        "goal": "Understand thread safety, virtual threads and bounded resources.",
+        "checkpoint": "Demonstrate a race-safe operation and explain where backpressure is needed.",
+        "chapters": [
+          "java-concurrency",
+          "java-concurrency-production"
+        ]
+      }
+    ]
+  },
+  "spring-boot": {
+    "prerequisites": [
+      "java-maven-testing",
+      "java-jdbc-sql",
+      "java-concurrency-production"
+    ],
+    "stages": [
+      {
+        "id": "spring-boot-1",
+        "title": "Start and configure an application",
+        "goal": "Learn Boot startup, bean wiring and typed configuration.",
+        "checkpoint": "Start the application and diagnose a missing bean or invalid setting.",
+        "chapters": [
+          "spring-boot-first-application",
+          "spring-beans-di",
+          "spring-configuration"
+        ]
+      },
+      {
+        "id": "spring-boot-2",
+        "title": "Build a clear HTTP boundary",
+        "goal": "Create REST endpoints with DTOs, validation and controlled errors.",
+        "checkpoint": "Demonstrate successful creation and rejected input with documented responses.",
         "chapters": [
           "java-spring-rest",
+          "spring-validation-errors"
+        ]
+      },
+      {
+        "id": "spring-boot-3",
+        "title": "Persist and secure business operations",
+        "goal": "Apply transactions, persistence and authorization boundaries.",
+        "checkpoint": "Prove an invariant survives concurrent requests and unauthorized access is rejected.",
+        "chapters": [
           "java-jpa-transactions",
           "java-security-microservices"
         ]
       },
       {
-        "id": "java-5",
-        "title": "Operate concurrent services",
-        "goal": "Study thread safety, resource limits and production signals after the application model.",
-        "checkpoint": "Demonstrate a race-safe operation and distinguish pool wait from execution time.",
+        "id": "spring-boot-4",
+        "title": "Verify and operate the service",
+        "goal": "Test application boundaries, inspect telemetry and complete a deployment capstone.",
+        "checkpoint": "Run the API acceptance cases and defend a failed deployment recovery plan.",
         "chapters": [
-          "java-concurrency",
-          "java-concurrency-production",
-          "java-observability-actuator"
+          "spring-testing",
+          "java-observability-actuator",
+          "spring-deployment-capstone"
         ]
       }
     ]

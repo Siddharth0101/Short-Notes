@@ -2,7 +2,7 @@
 id: java-maven-testing
 title: Maven builds and useful Java tests
 track: java
-order: 11
+order: 12
 level: Intermediate
 minutes: 18
 summary: Repeatable builds aur behavior-focused tests ke saath reliable feedback lo.

@@ -4,7 +4,7 @@ Write clear Hinglish explanations with English technical terms. Keep headings an
 
 ## Add a chapter
 
-Create `notes/<track>/<order>-<topic>.md`. Valid tracks are `javascript`, `react`, `java`, `mongodb`, `dsa`, `system-design`, and `interview`.
+Create `notes/<track>/<order>-<topic>.md`. Valid tracks are `javascript`, `react`, `java`, `spring-boot`, `mongodb`, `dsa`, `system-design`, and `interview`.
 
 ```yaml
 ---
@@ -66,7 +66,7 @@ Run `node scripts/sync-curriculum.mjs` from the repository root to regenerate th
 
 ## Unified course content
 
-Every source file discovered by `catalog.js` must have an explicit chapter owner in `playground/src/data/sourceChapters.json`. Assign by topic, including shared SQL/frontend topics across folder boundaries. The reader loads examples on expansion; do not reintroduce a separate source-note collection. Old source IDs remain aliases. Every chapter needs relevant interview practice; use an explicit `noteId` for precise placement of new questions, and include primary documentation links for externally researched concepts. New scenarios belong in `scenarioQuestions.js`; avoid unsupported company-frequency claims. Verify source mapping, old links/bookmarks, search, and inline practice with the app tests.
+Every source file discovered by `catalog.js` must have an explicit chapter owner in `playground/src/data/sourceChapters.json`. Assign by topic, including shared SQL/frontend topics across folder boundaries. The reader loads examples on expansion; do not reintroduce a separate source-note collection. Old source IDs remain aliases. Every chapter needs relevant interview practice; use an explicit `noteId` for precise placement of new questions, and include primary documentation links for externally researched concepts. New scenarios belong in `scenarioQuestions.js`; dedicated Java/Spring course additions live in `courseQuestions.js`; avoid unsupported company-frequency claims. Verify source mapping, old links/bookmarks, search, and inline practice with the app tests.
 
 ## Review the learning experience
 

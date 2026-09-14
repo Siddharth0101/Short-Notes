@@ -2,7 +2,7 @@
 id: java-object-model
 title: Objects OOP records and equality
 track: java
-order: 6
+order: 7
 level: Foundation
 minutes: 19
 summary: Invariants, polymorphism aur value objects se maintainable Java models banao.

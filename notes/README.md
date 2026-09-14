@@ -111,7 +111,7 @@ Profile production behavior before the machine-coding exercise.
 
 **Stage checkpoint:** Demonstrate stale-request protection, keyboard behavior and one measured improvement.
 
-## Java & Spring
+## Java
 
 [Open this course syllabus](java/README.md)
 
@@ -133,11 +133,12 @@ Run main, declare variables, make decisions, write methods, and create instances
 
 Extend basic classes with OOP, collections, exceptions, streams and memory reasoning.
 
-6. [Objects OOP records and equality](java/06-object-model.md)
-7. [Collections generics and choosing data structures](java/07-collections-generics.md)
-8. [Exceptions resources files and time](java/08-exceptions-io-time.md)
-9. [Lambdas streams and Optional](java/09-streams-lambdas.md)
-10. [JVM memory garbage collection and diagnosis](java/10-jvm-memory.md)
+6. [Packages access control and interface boundaries](java/06-packages-interfaces.md)
+7. [Objects OOP records and equality](java/07-object-model.md)
+8. [Collections generics and choosing data structures](java/08-collections-generics.md)
+9. [Exceptions resources files and time](java/09-exceptions-io-time.md)
+10. [Lambdas streams and Optional](java/10-streams-lambdas.md)
+11. [JVM memory garbage collection and diagnosis](java/11-jvm-memory.md)
 
 **Stage checkpoint:** Choose a collection, preserve equality contracts and close an owned resource.
 
@@ -145,31 +146,64 @@ Extend basic classes with OOP, collections, exceptions, streams and memory reaso
 
 Set up builds and tests before database access and SQL concurrency exercises.
 
-11. [Maven builds and useful Java tests](java/11-maven-testing.md)
-12. [JDBC SQL and transaction boundaries](java/12-jdbc-sql.md)
-13. [SQL joins windows and transaction races](java/13-sql-interview-lab.md)
+12. [Maven builds and useful Java tests](java/12-maven-testing.md)
+13. [JDBC SQL and transaction boundaries](java/13-jdbc-sql.md)
+14. [SQL joins windows and transaction races](java/14-sql-interview-lab.md)
 
 **Stage checkpoint:** Test a JDBC operation and explain a join and an atomic inventory update.
 
-### Stage 4: Create Spring applications
+### Stage 4: Reason about concurrency and resource limits
 
-Move from dependency injection and REST to persistence and security.
+Understand thread safety, virtual threads and bounded resources.
 
-14. [Spring dependency injection and REST APIs](java/14-spring-rest.md)
-15. [JPA Hibernate and Spring transactions](java/15-jpa-transactions.md)
-16. [Spring Security and reliable service boundaries](java/16-security-microservices.md)
+15. [Concurrency synchronization and virtual threads](java/15-concurrency.md)
+16. [Java concurrency under real resource limits](java/16-concurrency-production.md)
 
-**Stage checkpoint:** Implement a validated resource endpoint with a transaction and authorization boundary.
+**Stage checkpoint:** Demonstrate a race-safe operation and explain where backpressure is needed.
 
-### Stage 5: Operate concurrent services
+## Spring Boot
 
-Study thread safety, resource limits and production signals after the application model.
+[Open this course syllabus](spring-boot/README.md)
 
-17. [Concurrency synchronization and virtual threads](java/17-concurrency.md)
-18. [Java concurrency under real resource limits](java/18-concurrency-production.md)
-19. [Observability with Actuator, metrics and tracing](java/19-observability-actuator.md)
+Before starting: [Maven builds and useful Java tests](java/12-maven-testing.md) · [JDBC SQL and transaction boundaries](java/13-jdbc-sql.md) · [Java concurrency under real resource limits](java/16-concurrency-production.md).
 
-**Stage checkpoint:** Demonstrate a race-safe operation and distinguish pool wait from execution time.
+### Stage 1: Start and configure an application
+
+Learn Boot startup, bean wiring and typed configuration.
+
+1. [Spring Boot first application and project structure](spring-boot/01-first-application.md)
+2. [Beans constructor injection and lifecycle](spring-boot/02-beans-di.md)
+3. [Configuration properties profiles and startup failures](spring-boot/03-configuration.md)
+
+**Stage checkpoint:** Start the application and diagnose a missing bean or invalid setting.
+
+### Stage 2: Build a clear HTTP boundary
+
+Create REST endpoints with DTOs, validation and controlled errors.
+
+4. [Spring dependency injection and REST APIs](spring-boot/04-spring-rest.md)
+5. [Request DTOs validation and consistent API errors](spring-boot/05-validation-errors.md)
+
+**Stage checkpoint:** Demonstrate successful creation and rejected input with documented responses.
+
+### Stage 3: Persist and secure business operations
+
+Apply transactions, persistence and authorization boundaries.
+
+6. [JPA Hibernate and Spring transactions](spring-boot/06-jpa-transactions.md)
+7. [Spring Security and reliable service boundaries](spring-boot/07-security-microservices.md)
+
+**Stage checkpoint:** Prove an invariant survives concurrent requests and unauthorized access is rejected.
+
+### Stage 4: Verify and operate the service
+
+Test application boundaries, inspect telemetry and complete a deployment capstone.
+
+8. [Spring Boot unit slice and integration testing](spring-boot/08-testing.md)
+9. [Observability with Actuator, metrics and tracing](spring-boot/09-observability-actuator.md)
+10. [Package deploy and defend a Spring Boot capstone](spring-boot/10-deployment-capstone.md)
+
+**Stage checkpoint:** Run the API acceptance cases and defend a failed deployment recovery plan.
 
 ## Node & MongoDB
 
@@ -263,7 +297,7 @@ Build on queues, recursion, hashing and heaps to reason about dependencies and r
 
 [Open this course syllabus](system-design/README.md)
 
-Before starting: [Performance suspense and production quality](react/10-performance-production.md) · [JPA Hibernate and Spring transactions](java/15-jpa-transactions.md) · [Java concurrency under real resource limits](java/18-concurrency-production.md).
+Before starting: [Performance suspense and production quality](react/10-performance-production.md) · [JPA Hibernate and Spring transactions](spring-boot/06-jpa-transactions.md) · [Java concurrency under real resource limits](java/16-concurrency-production.md).
 
 ### Stage 1: Shared design foundations
 
@@ -309,7 +343,7 @@ Combine frontend and backend reasoning only after studying both sides.
 
 [Open this course syllabus](interview/README.md)
 
-Readiness references for the matching subject: [Modules web delivery and debugging](javascript/17-modules-tooling-debugging.md) · [React machine coding and identity bugs](react/11-machine-coding.md) · [Observability with Actuator, metrics and tracing](java/19-observability-actuator.md) · [SSR uploads payments email and deployment](mongodb/08-production-integrations.md) · [Dynamic programming from state to recurrence](dsa/12-dynamic-programming.md) · [Case study collaborative notes and real-time chat](system-design/12-realtime-case-study.md).
+Readiness references for the matching subject: [Modules web delivery and debugging](javascript/17-modules-tooling-debugging.md) · [React machine coding and identity bugs](react/11-machine-coding.md) · [Observability with Actuator, metrics and tracing](spring-boot/09-observability-actuator.md) · [SSR uploads payments email and deployment](mongodb/08-production-integrations.md) · [Dynamic programming from state to recurrence](dsa/12-dynamic-programming.md) · [Case study collaborative notes and real-time chat](system-design/12-realtime-case-study.md).
 
 ### Stage 1: Language interview practice
 

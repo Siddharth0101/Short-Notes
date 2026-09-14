@@ -2,7 +2,7 @@
 id: java-streams-lambdas
 title: Lambdas streams and Optional
 track: java
-order: 9
+order: 10
 level: Intermediate
 minutes: 19
 summary: Lazy pipelines, reduction aur side effects ka clear mental model banao.
