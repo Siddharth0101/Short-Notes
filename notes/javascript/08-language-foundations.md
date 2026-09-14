@@ -5,15 +5,15 @@ track: javascript
 order: 8
 level: Foundation
 minutes: 22
-summary: Values, coercion, control flow, functions aur data validation ko practical examples se samjho.
+summary: Validation mein missing input, malformed input aur valid zero ko alag samjho.
 tags: variables, types, coercion, functions, fundamentals
 ---
 
-## Mental model
+## Mental model — simple soch
 
 JavaScript mein variable ek binding hai jo kisi value ko refer karti hai. Value ka type hota hai; variable ko permanently ek type assign nahi hota. Pehle input ko normalize karo, phir business rule lagao, aur last mein output format karo. Yeh teen steps mix karne se coercion bugs silently aa jaate hain. `const` binding ko reassign karne se rokta hai; object ke andar ki properties automatically immutable nahi banti. Naya code likhne se pehle "yeh value kis type ki honi chahiye" explicitly sochna, baad mein debug karne se zyada bugs abhi hi rok deta hai.
 
-> **Core takeaway:** Validation must distinguish missing, malformed, and valid zero input.
+> **Core takeaway:** Validation mein missing input, malformed input aur valid zero ko alag samjho.
 
 ## Values and decisions
 
@@ -76,7 +76,7 @@ Destructured parameter object se sirf named fields extract karta hai; extra fiel
 - `NaN === NaN` false hota hai; `Number.isNaN(value)` use karo.
 - Floating point decimal arithmetic exact currency arithmetic nahi hai. Paise/cents jaise integer units aur explicit rounding policy choose karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `Number(rawQuantity)` already ensures a whole number. **Why it breaks:** `Number("2.5")` valid `2.5` deta hai; agar sirf `Number.isFinite` check kiya jaaye to fractional quantity silently accept ho sakti hai. **Fix:** Conversion ke turant baad `Number.isInteger` explicitly check karo, sirf finite hone par mat ruko.
 - **Wrong assumption:** `==` aur `===` sirf style preference hai, behavior same hai. **Why it breaks:** `"" == 0` aur `null == undefined` dono `true` hain, lekin `"" === 0` `false` hai. Form input string type mein aata hai, isliye loose comparison unexpected branch le sakta hai. **Fix:** Strict equality default rakho; conversion chahiye to explicit `Number()`/`String()` call karo.
@@ -88,24 +88,24 @@ Real app mein yeh checkout form, signup form ya admin dashboard ke input fields 
 
 Discount calculator likho jo blank input, negative quantity, zero quantity aur invalid numeric text ko separately handle kare. Table mein input, expected result aur reason likho; phir implementation run karo. Validation ke baad calculation function ko pure rakho.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. `const` object mutate kaise ho sakta hai?** Binding constant hai, referenced object nahi. Nested immutability ke liye deliberate update discipline chahiye.
 
 **Q. `null` aur `undefined` mein difference?** Undefined usually missing/uninitialized value ko represent karta hai; null explicitly absent value communicate karta hai. API contract define karta hai ki kaunsa use hoga.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Design validation for a whole-number lesson count from a text field. Classify `''`, `'  '`, `'0'`, `'3.5'`, and `'four'`.
+**Apply:** Text field se nonnegative whole-number lesson count validate karo. `''`, `'  '`, `'0'`, `'3.5'`, `'four'` classify karo.
 
-> **Hint:** Check the trimmed string before numeric conversion, then check integer and range.
+> **Hint:** Pehle trimmed blank check, phir numeric conversion, integer aur range check karo.
 
-**Answer guide — compare after attempting:** Blank inputs are missing; `'0'` is valid; `'3.5'` and `'four'` are invalid. After rejecting blanks, use `Number`, `Number.isInteger`, and a nonnegative range check. State a maximum if the application requires one.
+**Answer guide — compare after attempting:** Blank inputs missing hain; `'0'` valid hai; `'3.5'` aur `'four'` invalid hain. Blanks reject karke Number, Number.isInteger aur >=0 check use karo. App ko maximum chahiye toh woh bhi define karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN JavaScript guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) language topics ka reference hai. [MDN equality comparisons](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Equality_comparisons_and_sameness) comparison edge cases explain karta hai.

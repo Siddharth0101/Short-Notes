@@ -5,19 +5,19 @@ track: spring-boot
 order: 2
 level: Intermediate
 minutes: 16
-summary: Understand bean creation scopes qualifiers and dependency ownership.
+summary: Constructor injection dependencies clear banata hai; singleton scope mutable state ko thread-safe nahi banata.
 tags: spring, beans, dependency-injection
 ---
 
-## Mental model
+## Mental model — simple soch
 
 ApplicationContext ek managed object graph banata hai. Bean simply woh object hai jiska creation aur lifecycle container manage karta hai. Dependencies constructor mein declare karne se object ki requirements visible rehti hain. Injected reference magic nahi hai: method invocation still ordinary Java hai unless an explicit proxy adds behavior.
 
-> **Core takeaway:** Constructor injection makes dependencies explicit; singleton scope does not make mutable state thread-safe.
+> **Core takeaway:** Constructor injection dependencies clear banata hai; singleton scope mutable state ko thread-safe nahi banata.
 
 ## Wire a feature
 
-Application excerpts for the generated Spring Web project. Put each class in its own file beneath the application package; imports are shown for Spring annotations.
+Yeh generated Spring Web app ke excerpts hain. Har class application package ke neeche separate file mein rakho; Spring annotation imports shown hain.
 
 ```java
 import org.springframework.stereotype.Service;
@@ -39,38 +39,38 @@ class LessonService {
 }
 ```
 
-For a single constructor, Spring can use it without an Autowired annotation. The formatter is created and supplied before the service can be used. In a plain unit test, `new LessonService(new LessonFormatter())` exercises the same logic without starting Boot. Null input is outside this small formatter's contract; validation is introduced in the HTTP lessons.
+Single constructor ko Spring Autowired ke bina use kar sakta hai. Service use hone se pehle formatter create/inject hota hai. Plain test mein `new LessonService(new LessonFormatter())` same logic Boot ke bina chalata hai. Null input is small formatter ke contract ke bahar hai; HTTP lessons mein validation aayegi.
 
 ## Registration and ambiguity
 
-Component stereotypes register scanned application classes. A Configuration class with a Bean method is useful when creating a library object you cannot annotate. Both approaches register objects in the same container; avoid registering the same implementation twice accidentally.
+Component stereotypes scanned classes register karte hain. Library class annotate nahi kar sakte toh Configuration class ka Bean method useful hai. Dono same container mein objects register karte hain; implementation accidentally twice register mat karo.
 
-If two beans implement the same interface, the injection point needs a deliberate selection. Qualifier identifies the intended candidate and Primary establishes a default among candidates. Qualifier values and bean names must match your actual registrations. Do not fix ambiguity by deleting a necessary implementation or arbitrarily choosing one without understanding its use.
+Same interface ki two beans hon toh intentional selection chahiye. Qualifier candidate identify, Primary default establish karta hai. Names/qualifiers actual registration se match hon. Ambiguity fix karne ke liye required implementation delete ya randomly select mat karo.
 
 ## Scope and lifecycle
 
-The default singleton is per bean definition per container, not one universal object for the entire JVM. Multiple HTTP requests can use the same service concurrently. Keep request-specific values in method parameters and local variables. A `currentUser` field in a singleton service can leak one request's state into another.
+Default singleton per-bean-definition per-container hai, entire JVM ka universal object nahi. Multiple HTTP requests same service concurrently use karti hain. Request data parameters/locals mein rakho. Singleton currentUser field ek request ka data doosri mein leak kar sakti hai.
 
-Use lifecycle callbacks for owned resources when necessary. A prototype bean requested once by a singleton does not become a fresh object on every method call. If you need repeated lookup or a request-scoped dependency, choose that mechanism explicitly and understand the proxy or provider involved.
+Owned resources ke liye required lifecycle callbacks use karo. Singleton ko once mila prototype har method call par new object nahi ban jaata. Repeated lookup/request scope chahiye toh provider/proxy mechanism deliberately choose aur samjho.
 
-Circular constructor dependencies cannot be created normally because each object requires the other first. Extract shared responsibility or reconsider the dependency direction rather than hiding the cycle with field injection.
+Circular constructor dependencies normally create nahi ho sakti: har object pehle doosra maangta hai. Shared responsibility extract ya dependency direction rethink karo; field injection se cycle hide mat karo.
 
 ## Practice
 
-Add a second formatter implementation behind an interface. Explain the ambiguity before selecting one explicitly. Construct the service manually to prove the formatting logic has no requirement for a running HTTP server.
+Interface ke peeche second formatter add karo. Explicit selection se pehle ambiguity explain karo. Service manually construct karke prove karo formatting ko running HTTP server nahi chahiye.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
 **Recall:** Does singleton scope serialize calls to a bean?
 
-**Apply:** A singleton service stores the last request's title in a field before formatting it. Request A stores Java, B stores Spring, then A formats the field. Trace the observed value and fix the design.
+**Apply:** Singleton service last request title field mein rakhti hai. A Java store karta hai, B Spring store karta hai, phir A field format karta hai. Result trace karke fix karo.
 
-> **Hint:** One shared instance means one shared field.
+> **Hint:** Ek shared instance ka matlab ek shared field hai.
 
-**Answer guide — compare after attempting:** A can format Spring because B overwrote the field. Pass the title directly to the formatter and retain no per-request mutable field. Constructor injection and final dependency references do not protect unrelated mutable fields from races.
+**Answer guide — compare after attempting:** A ko Spring mil sakta hai kyunki B ne field overwrite ki. Title formatter ko directly pass karo; per-request mutable field mat rakho. Constructor injection aur final dependency references unrelated mutable fields ki race nahi rokte.
 
 **Exit check:** Explain why the corrected service can handle independent requests without a lock around the entire method.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Official reference](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html).
+[Official reference yahan padho](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html).

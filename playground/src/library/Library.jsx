@@ -23,7 +23,7 @@ export function NoteRow({ note, index }) {
           <h3>{note.title}</h3>
           {note.visual && (
             <span className="visual-tag">
-              <Icon name="play" size={11} /> Animated walkthrough
+              <Icon name="play" size={11} /> Animated example
             </span>
           )}
         </div>
@@ -74,13 +74,13 @@ function ProgressBackup() {
     anchor.download = 'shortnotes-progress.json';
     anchor.click();
     URL.revokeObjectURL(url);
-    setMessage('Progress backup downloaded.');
+    setMessage('Progress backup download ho gaya.');
   }
   async function importData(event) {
     const file = event.target.files[0];
     if (!file) return;
     try {
-      if (file.size > 1000000) throw new Error('Please use a progress backup smaller than 1 MB.');
+      if (file.size > 1000000) throw new Error('1 MB se chhota progress backup use karo.');
       const value = JSON.parse(await file.text());
       if (
         value.version !== 1 ||
@@ -89,7 +89,7 @@ function ProgressBackup() {
             Array.isArray(value[key]) && value[key].every((item) => typeof item === 'string'),
         )
       )
-        throw new Error('This isn’t a valid Shortnotes progress backup.');
+        throw new Error('Yeh valid Shortnotes progress backup nahi hai.');
       importProgress(
         Object.fromEntries(
           ['saved', 'completed', 'known', 'recent'].map((key) => [
@@ -98,17 +98,19 @@ function ProgressBackup() {
           ]),
         ),
       );
-      setMessage('Backup merged with your current progress.');
+      setMessage('Backup current progress ke saath merge ho gaya.');
     } catch (error) {
-      setMessage(error.message || 'The backup could not be read.');
+      setMessage(error.message || 'Backup read nahi ho saka.');
     }
     event.target.value = '';
   }
   return (
     <div className="backup-panel">
       <div>
-        <strong>Your progress travels with you.</strong>
-        <p>Saved on this browser. Export a backup or merge one from another device.</p>
+        <strong>Apni progress ka backup rakho.</strong>
+        <p>
+          Progress is browser mein saved hai. Backup export karo ya doosre device ka merge karo.
+        </p>
         <span role="status">{message}</span>
       </div>
       <div className="button-group">
@@ -161,28 +163,28 @@ export default function Library({ saved = false, paths = false }) {
       <div className="page-eyebrow">
         <span className="small-line" />{' '}
         {saved
-          ? 'KEEP THE GOOD STUFF CLOSE'
+          ? 'IMPORTANT CONCEPTS SAVE RAKHO'
           : paths
-            ? 'A LITTLE STRUCTURE GOES A LONG WAY'
-            : 'YOUR KNOWLEDGE, ORGANIZED'}
+            ? 'STEP-BY-STEP PADHO'
+            : 'TUMHARE ORDERED NOTES'}
       </div>
       <div className="page-heading">
         <div>
           <h1>
             {saved
-              ? 'Your bookmarks'
+              ? 'Tumhare bookmarks'
               : paths
-                ? 'One step, then the next'
-                : selected?.name || 'The whole notebook'}
+                ? 'Ek step, phir agla'
+                : selected?.name || 'Poori notebook'}
             <span>.</span>
           </h1>
           <p>
             {saved
-              ? 'The ideas you want to come back to.'
+              ? 'Jin concepts ko dobara padhna hai, yahan rakho.'
               : paths
-                ? 'Follow the sequence. Practice as you go. Make the concepts yours.'
+                ? 'Order follow karo, saath practice karo, concept khud explain karo.'
                 : selected?.description ||
-                  'Choose a subject and follow its numbered stages from the first lesson.'}
+                  'Subject choose karke first lesson se numbered stages follow karo.'}
           </p>
         </div>
         <span className="count-pill">{filtered.length} chapters</span>
@@ -190,15 +192,15 @@ export default function Library({ saved = false, paths = false }) {
       {saved && <ProgressBackup />}
       {!saved && (
         <p className="learning-tip">
-          One course, one sequence: learn the concept, explore the source examples, then answer the
-          interview questions in the same chapter.
+          Ek course, ek order: concept padho, source example samjho aur usi chapter ke interview
+          questions khud attempt karo.
         </p>
       )}
       <div className="filter-toolbar">
         <label className="filter-search">
           <Icon name="search" size={18} />
           <input
-            placeholder="Search concepts, source examples, or interview questions…"
+            placeholder="Concepts, examples ya interview questions dhundo…"
             aria-label="Search this collection"
             value={query}
             onChange={(event) => update('q', event.target.value)}
@@ -226,7 +228,7 @@ export default function Library({ saved = false, paths = false }) {
       </div>
       <div className="filter-chips" aria-label="Filter subject">
         <button className={track === 'all' ? 'active' : ''} onClick={() => update('track', 'all')}>
-          All subjects
+          Saare subjects
         </button>
         {TRACKS.map((item) => (
           <button
@@ -243,9 +245,9 @@ export default function Library({ saved = false, paths = false }) {
         <div className="learning-tip">
           <Icon name="path" />
           <p>
-            <strong>A suggested rhythm:</strong> JavaScript → React → frontend design. Java → Spring
-            → backend design. Study DSA alongside either track. Har chapter ke baad bina notes dekhe
-            concept explain karo.
+            <strong>Padhne ka suggested route:</strong> JavaScript → React → frontend design. Java →
+            Spring → backend design. Dono mein se kisi route ke saath DSA padho. Har chapter ke baad
+            bina notes dekhe concept explain karo.
           </p>
         </div>
       )}
@@ -256,7 +258,7 @@ export default function Library({ saved = false, paths = false }) {
               <Icon name="file" size={18} />
               <span>
                 <strong>{resource.title}</strong>
-                <small>Existing PDF · opens in a new tab</small>
+                <small>Original PDF reference · new tab mein khulega</small>
               </span>
               <Icon name="external" size={17} />
             </a>
@@ -273,21 +275,23 @@ export default function Library({ saved = false, paths = false }) {
             </>
           )}
         </span>
-        <span>Course order · lesson numbers stay fixed when filtering</span>
+        <span>Course order · filter par lesson numbers same rahenge</span>
       </div>
       {filtered.length === 0 ? (
         <div className="empty-state">
           <Icon name={saved ? 'bookmark' : 'search'} size={32} />
           <h2>
-            {saved && !query && track === 'all' ? 'Make a little collection.' : 'No notes found.'}
+            {saved && !query && track === 'all'
+              ? 'Apne important chapters save karo.'
+              : 'Koi note nahi mila.'}
           </h2>
           <p>
             {saved
-              ? 'Bookmark any chapter to find it here.'
-              : 'Try a broader search or choose another subject.'}
+              ? 'Chapter bookmark karo, woh yahan mil jaega.'
+              : 'Search thoda broad karo ya doosra subject chuno.'}
           </p>
           <Link className="subtle-button" to="/library">
-            Explore all notes <Icon name="arrow" size={16} />
+            Saare notes kholo <Icon name="arrow" size={16} />
           </Link>
         </div>
       ) : !saved ? (

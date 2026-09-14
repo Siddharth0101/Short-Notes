@@ -5,16 +5,16 @@ track: system-design
 order: 7
 level: Intermediate
 minutes: 26
-summary: Domain boundaries, contracts aur concurrent writes ko deliberate design karo.
+summary: Service boundary business invariants enforce kare aur persistence decisions own kare.
 tags: java, api, data-modeling, consistency
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Backend business invariants ka authority hai. React buttons hide karne se authorization enforce nahi hoti. API design transport details ko stable use cases mein translate karta hai. Data model query needs and correctness requirements support kare; tables ko random entity nouns se create karna enough nahi.
 
-> **Core takeaway:** The service boundary should enforce business invariants and own persistence decisions.
+> **Core takeaway:** Service boundary business invariants enforce kare aur persistence decisions own kare.
 
 ## Begin with a modular service
 
@@ -131,7 +131,7 @@ Yeh classic congestion collapse hai: system throughput badhne ke bajaye ghatta h
 
 Pool sizing ka counter-intuitive part: pool badhana aksar galat fix hai. 100 connections database par 100 concurrent queries banati hain, aur ek 8-core database machine par 100 concurrent queries context switching aur lock contention se *sabki* latency badha deti hain. Bottleneck agar database CPU hai toh pool badhane se sirf queue database ke andar shift hota hai, jahan usse control karna aur mushkil hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `@Transactional` method ke andar REST call ya message publish karna theek hai kyunki sab ek hi logical operation hai. **Why it breaks:** Database transaction ab network latency ke barabar lambi ho jaati hai — connection aur row locks 200-2000 ms tak hold hote hain, jisse pool exhaust hota hai aur unrelated requests block ho jaati hain. Aur external call rollback nahi hoti: transaction fail hone par email ja chuka hota hai. **Fix:** External effect ko transaction ke bahar karo, ya outbox pattern se commit ke baad asynchronously trigger karo.
 - **Wrong assumption:** JPA entities ko directly REST response mein return karna DRY hai. **Why it breaks:** Lazy associations serialization ke dauran trigger hokar N+1 queries chalati hain (aur aksar `LazyInitializationException` deti hain), internal fields jaise `passwordHash` ya `internalNotes` accidentally leak ho sakte hain, aur koi bhi schema rename API contract todh deta hai. **Fix:** Explicit DTOs/projections use karo; repository se seedha DTO project karna aksar fastest bhi hota hai kyunki sirf needed columns aate hain.
@@ -139,7 +139,7 @@ Pool sizing ka counter-intuitive part: pool badhana aksar galat fix hai. 100 con
 - **Wrong assumption:** `PUT` idempotent hai isliye retry-safe hai, aur `POST` ko bas `PUT` bana do. **Why it breaks:** HTTP method ki idempotency ek *specification-level intent* hai, automatic implementation guarantee nahi. Ek `PUT /notes/42` jo internally `version = version + 1` karta hai, ya jo har call par audit event emit karta hai, retry par different state produce karega. **Fix:** Idempotency ko implementation mein enforce karo — absolute values set karo (increment nahi), aur side effects ko idempotency key se dedupe karo.
 - **Wrong assumption:** Soft delete (`deleted_at` column) safe default hai. **Why it breaks:** Har query ko `WHERE deleted_at IS NULL` yaad rakhna padta hai, aur ek bhoola hua filter deleted data ko wapas UI mein la deta hai. Unique constraints bhi todhte hain: user ne `alice@example.com` delete kiya, ab wahi email dobara register nahi ho sakta kyunki soft-deleted row constraint hold kar rahi hai. **Fix:** Soft delete ko deliberate choice banao jahan recovery/audit genuinely chahiye; us case mein partial unique index (`WHERE deleted_at IS NULL`) use karo aur filtering ko repository base layer par centralize karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Why not microservices immediately?** Team ownership, independently scaling workloads and deployment cadence can justify them. Otherwise distributed consistency, monitoring and operations additional costs hain that modular monolith avoid kar sakta hai.
 
@@ -157,19 +157,19 @@ Bookmark create/delete semantics document karo. Same version se two title update
 
 Uske baad pool exhaustion reproduce karo: pool size 5 set karo, ek endpoint mein transaction ke andar 500 ms sleep daalo, aur 50 concurrent requests bhejo — observe karo ki *unrelated* endpoints bhi slow ho gaye. Phir sleep ko transaction ke bahar nikalo aur difference dekho. Last mein idempotency table implement karke same POST 5 baar bhejo (parallel mein bhi), aur verify karo ki exactly ek row bani aur paanchon responses identical the.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Two requests reserve the last seat. Explain why checking availability and later inserting a reservation without coordination is unsafe.
+**Apply:** Do requests last seat reserve karti hain. Availability check aur later insert bina coordination unsafe kyun hain?
 
-> **Hint:** Both callers can observe availability before either writes.
+> **Hint:** Dono callers kisi bhi write se pehle available seat dekh sakte hain.
 
-**Answer guide — compare after attempting:** Use an atomic conditional update, suitable lock, or database constraint within the chosen transaction design. One request succeeds; the other gets a defined conflict/unavailable result. Check affected rows and test concurrent attempts. A cache cannot be the sole authority for scarce inventory.
+**Answer guide — compare after attempting:** Chosen transaction design mein atomic conditional update, suitable lock ya constraint use karo. Ek request success aur doosri defined unavailable/conflict de. Affected rows aur concurrent attempts test karo. Scarce inventory ka sole authority cache nahi ho sakta.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [HTTP semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [PostgreSQL isolation](https://www.postgresql.org/docs/current/transaction-iso.html)

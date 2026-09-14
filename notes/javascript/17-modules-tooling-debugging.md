@@ -5,15 +5,15 @@ track: javascript
 order: 17
 level: Advanced
 minutes: 26
-summary: Modules, HTTP delivery, build tools, debugging aur test boundaries ko connect karo.
+summary: Modules dependencies clear banate hain; delivery fail ho toh reproducible diagnosis phir bhi chahiye.
 tags: modules, tooling, http, debugging, testing, npm
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Source code authoring format hai; browser tak delivered code build aur network pipeline se guzarta hai. Module dependency graph define karta hai ki kaunsa code kis par depend karta hai. Bundler files combine/split karta hai, transpiler syntax transform karta hai, aur polyfill missing runtime behavior provide karta hai. In teen responsibilities ko interchangeable mat samjho.
 
-> **Core takeaway:** Module boundaries make dependencies explicit; delivery failures still need a reproducible diagnosis.
+> **Core takeaway:** Modules dependencies clear banate hain; delivery fail ho toh reproducible diagnosis phir bhi chahiye.
 
 ## Small module boundary
 
@@ -76,7 +76,7 @@ Conditional breakpoint sirf tab pause karta hai jab expression true ho — hundr
 
 Lockfile commit karne se dependency resolution reproducible hota hai; runtime version bhi document karo. Minification size reduce karti hai, code correctness prove nahi karti. Tree shaking side effects aur static analysis par depend karti hai; unused export hona zero bytes ki universal guarantee nahi hai. Linting suspicious patterns identify karti hai; integration behavior ke liye meaningful tests chahiye.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `.env` file mein secret key daalne se woh client-side bundle mein safe rehti hai. **Why it breaks:** Build tool jo bhi variable prefix-match karke inject karta hai (jaise `VITE_` ya `NEXT_PUBLIC_`) woh final JS bundle mein plaintext embed ho jaata hai, browser DevTools se directly readable. **Fix:** Secrets sirf server-side environment mein rakho; client ko sirf public config (jaise base URL) bhejo.
 - **Wrong assumption:** Dynamic `import()` se split kiya gaya code automatically preloaded rehta hai jab tak user use na kare. **Why it breaks:** Browser sirf tab visit karne par network request trigger karta hai; slow network par first time us feature ko open karna visible delay dikha sakta hai. **Fix:** Predictable next-step routes ko hover/idle time par explicitly prefetch karo.
@@ -88,7 +88,7 @@ Real app mein yeh exactly wahi decisions hain jo production React/Node app deplo
 
 Pricing logic ko pure module mein extract karo. Empty cart aur zero quantity test karo. Chart ko dynamic import se load karo aur network panel mein initial versus on-demand requests compare karo. Deliberately wrong import path add karke console aur network error relate karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Babel Promise API add kar deta hai?** Syntax transformation aur runtime API support alag hain; target environment aur polyfill strategy verify karo.
 
@@ -96,23 +96,23 @@ Pricing logic ko pure module mein extract karo. Empty cart aur zero quantity tes
 
 ## Capstone: resilient search client
 
-Build a browser search module with a pure result formatter, a request adapter, and a DOM controller. Keep cancellation and rendering ownership in the controller. Use a fake adapter whose response order you control before connecting a real API.
+Browser search module banao: pure formatter, request adapter aur DOM controller. Cancellation/rendering controller own kare. Real API se pehle response order control karne wala fake adapter lo.
 
 ### Acceptance criteria
 
-- Typing `a`, then `ab`, with responses arriving in reverse order renders only `ab`.
-- An empty query clears results and cancels pending work. A network failure has a retry action; cancellation does not display an error.
-- Mounting and disposing the widget twenty times leaves no extra listeners or active timers.
-- Render untrusted result titles as text. Include loading, empty, and error states.
-- Demonstrate a CPU-heavy transformation and measure the effect of moving it to a worker or yielding in bounded chunks.
+- `a` phir `ab` type karo; reverse responses par sirf ab render ho.
+- Empty query results clear aur pending work cancel kare. Network error par retry mile; cancellation ko error mat dikhao.
+- Widget twenty times mount/dispose karke extra listeners/timers na bachne do.
+- Untrusted titles text ke roop mein render karo; loading/empty/error states do.
+- CPU-heavy transformation measure karo; worker ya bounded chunks mein yield karne ke baad compare karo.
 
 ### Interview defense
 
-Explain the lifetime of every closure and resource, draw the request timeline, and distinguish debouncing from cancellation and concurrency control. A strong submission includes a deterministic race reproduction and a module boundary that allows the network to be replaced in tests. Stretch task: add a bounded cache and specify invalidation instead of caching indefinitely.
+Har closure/resource ki lifetime explain karo, request timeline draw karo, debounce/cancellation/concurrency ka difference batao. Deterministic race reproduction aur replaceable network boundary do. Stretch: bounded cache add karke invalidation define karo; indefinitely cache mat karo.
 
 ## Research notes: Imports are live read-only bindings
 
-An imported binding reflects exporter updates. Importers cannot assign a replacement to that binding. Cycles are not automatically invalid, but reading an uninitialized binding can fail.
+Imported binding exporter ke updates reflect karti hai; importer binding reassign nahi kar sakta. Cycles automatically invalid nahi, lekin uninitialized binding read fail ho sakti hai.
 
 ```js
 // score.mjs
@@ -126,27 +126,27 @@ award();
 console.log(before, score); // 0, 2
 ```
 
-Draw evaluation dependencies when debugging a cycle. Move shared pure logic to a lower-level module if it removes the cycle.
+Cycle debug karte waqt evaluation dependencies draw karo. Shared pure logic lower-level module mein move karke cycle remove ho sakti hai.
 
-**Interview check:** Why does before remain zero when score changes?
+**Interview check:** score badalne par bhi before zero kyun rehta hai?
 
-**Answer:** Assigning the current numeric value to a local constant creates a snapshot. It does not create another live import binding.
+**Answer:** Current numeric value local constant mein assign karne se snapshot banta hai; doosri live import binding nahi.
 
-**Practice:** Call award twice and trace the exporter and importer values.
+**Practice:** award do baar call karke exporter/importer values trace karo.
 
-[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A lazy-loaded screen fails only after deployment while existing screens work. Write the first three checks and a user recovery path.
+**Apply:** Lazy-loaded screen sirf deployment ke baad fail hoti hai, baaki screens chalti hain. First teen checks aur user recovery path likho.
 
-> **Hint:** Inspect the failing chunk request before changing component logic.
+> **Hint:** Component logic badalne se pehle failed chunk ki network request dekho.
 
-**Answer guide — compare after attempting:** Check the chunk URL/status, whether deployed HTML references available assets, and caching behavior across releases. Retain compatible assets or coordinate cache invalidation. Offer a deliberate reload/retry path with draft preservation where relevant; do not create an infinite automatic reload loop.
+**Answer guide — compare after attempting:** Chunk URL/status, HTML ke referenced assets ki availability aur releases ke across caching check karo. Compatible assets retain karo ya cache invalidation coordinate karo. Relevant drafts bachakar deliberate reload/retry do; infinite auto-reload loop mat banao.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 [MDN JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) module semantics explain karta hai. [MDN HTTP overview](https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview) web delivery ka reference hai.

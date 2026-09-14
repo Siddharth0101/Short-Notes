@@ -5,16 +5,16 @@ track: interview
 order: 6
 level: Advanced
 minutes: 38
-summary: End-to-end requirements, frontend behavior, backend invariants, and failure handling ka design defend karo.
+summary: Design ke decisions workload assumptions aur failure traces se samjhao, taaki tradeoffs ko check kiya ja sake.
 tags: system-design, interview, react, java, architecture
 visual: outbox-pattern
 ---
 
-## Mental model
+## Mental model — simple soch
 
 System design box drawing exercise se zyada requirements aur tradeoffs ka argument hai. User action se data persistence aur visible response tak complete path explain karo. React frontend ki loading, focus aur stale-state behavior backend retries aur consistency se connected hai.
 
-> **Core takeaway:** A design defense makes tradeoffs reviewable with workload assumptions and failure traces.
+> **Core takeaway:** Design ke decisions workload assumptions aur failure traces se samjhao, taaki tradeoffs ko check kiya ja sake.
 
 ## A 45-minute design structure
 
@@ -71,7 +71,7 @@ Each 0–2 score: requirements, API/data model, bottleneck analysis, failure han
 
 ## Practice and answer
 
-**Prompt:** Average arrival 200 requests/s, average response time 0.5 s. Rough average in-flight requests?
+**Prompt:** Average arrival 200 requests/s aur response time 0.5 s hai. Average in-flight requests roughly kitni hongi?
 
 **Answer:** Stable system mein Little's Law se approximately 100. Ye average hai, safe pool capacity prescription nahi; bursts, tail latency aur dependency limits ke liye headroom aur load tests chahiye.
 
@@ -81,49 +81,49 @@ Each 0–2 score: requirements, API/data model, bottleneck analysis, failure han
 
 ## Assessed mock: System design tradeoff round
 
-**Prompt:** Design a collaboration service from requirements through reconnect recovery.
+**Prompt:** Requirements se reconnect recovery tak collaboration service design karo.
 
-**Round structure:** Spend 5 minutes clarifying requirements and assumptions, 20 minutes implementing or drawing the core flow, 10 minutes investigating failures, and 5 minutes defending tradeoffs. These are practice targets, not a claim about any company's interview format.
+**Round structure:** 5 minute requirements/assumptions clear karo, 20 minute core flow implement/draw karo, 10 minute failures inspect karo, aur 5 minute tradeoffs defend karo. Yeh practice timings hain; kisi company ke exact interview format ka claim nahi.
 
-**Failure injection:** Expire a replay cursor, revoke access mid-session, and crash after commit before publishing.
+**Failure injection:** Replay cursor expire karo, session ke beech access revoke karo, aur commit ke baad publish se pehle crash karo.
 
-**Strong-answer evidence:** Explicit consistency scope, durable recovery, capacity estimates, and bounded slow-client behavior.
+**Strong-answer evidence:** Consistency scope, durable recovery, capacity estimate aur slow-client bounds dikhao.
 
-Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
+Correctness, concrete example, failure handling aur tradeoff reasoning ko 0–2 score do. 0=missing/incorrect; 1=plausible par untested; 2=trace, test ya invariant se demonstrated. Total achha ho lekin correctness gap ho toh revision abhi bhi chahiye.
 
-After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+Round ke baad first approach todne wala smallest counterexample likho, fix karo aur notes dekhe bina change bolkar samjhao. Mock repeat karne se pehle chapter ke answer-reveal questions se focused revision karo.
 
 ## Research notes: Expose assumptions and failure recovery
 
-Microsoft includes testing and problem-solving in its technical interview guidance.
+Linked Microsoft technical guidance mein testing aur problem-solving bhi assessment ka part hain.
 
-**Original practice round:** Design a job-processing service with status queries. Define acknowledgment, retry identity and retention before naming a queue product.
+**Original practice round:** Status queries wali job-processing service design karo. Queue product choose karne se pehle acknowledgement, retry identity aur retention define karo.
 
-**Failure injection:** Crash a worker after the business write but before acknowledgment; delay a dependency.
+**Failure injection:** Business write ke baad acknowledgement se pehle worker crash karo; ek dependency slow karo.
 
-**Evidence to bring:** Trace the durable state before and after replay. Distinguish transport redelivery from repeated business effects, then explain bounds on waiting and retries.
+**Evidence to bring:** Replay ke pehle/baad durable state trace karo. Transport redelivery aur duplicate business effect ka difference batao; waiting aur retries ki limits explain karo.
 
-The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+Employer source assessment approach ka reference hai. Yeh exercise original practice hai; reported company question nahi.
 
-**Interview check:** How should you review this round after attempting it?
+**Interview check:** Attempt ke baad is round ko review kaise karoge?
 
-**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+**Answer:** First failing example save karo, wrong assumption batao aur fix se behavior kaise badla dikhao. Jo demonstrate kiya aur jo extra time mein investigate karoge, unhe clearly identify karo.
 
-**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+**Practice:** Different failure ke saath repeat karo aur reasoning bolte jao.
 
-[Read the source — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Spend ten minutes designing a notes service for 1000 concurrent editors. Name three questions to resolve before selecting transport or storage.
+**Apply:** 1000 concurrent editors ke notes service ka das-minute design do. Transport ya storage choose karne se pehle kaunse teen sawal clear karoge?
 
-> **Hint:** Concurrent users alone do not specify event rate, document contention, or durability needs.
+> **Hint:** Concurrent users ki count se edit rate, same-document contention aur durability needs nahi pata chalti.
 
-**Answer guide — compare after attempting:** Ask edit frequency, same-document concurrency, and offline/conflict expectations. Derive traffic, choose a consistency model, and explain durable writes plus reconnect recovery. State one rejected alternative and its concrete cost. A diagram without these decisions is not enough to defend the design.
+**Answer guide — compare after attempting:** Edit frequency, ek document par simultaneous editors aur offline/conflict expectations pucho. Traffic derive karo; consistency, durable writes aur reconnect recovery decide karo. Ek rejected alternative ki concrete cost batao. Sirf boxes wala diagram in decisions ko replace nahi karta.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [AWS safe retries and idempotency](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/), [AWS transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html), aur [W3C combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) design details ke primary references hain.

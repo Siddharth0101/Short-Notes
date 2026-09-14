@@ -5,15 +5,15 @@ track: mongodb
 order: 4
 level: Intermediate
 minutes: 31
-summary: Models, validators, middleware, populate aur lean queries ke responsibilities clear karo.
+summary: Schema validation ek layer hai; concurrent writes ke rules DB constraints aur explicit update conditions se enforce hote hain.
 tags: mongoose, schemas, validation, populate, middleware, lean
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Mongoose MongoDB ke upar object modeling layer hai. Schema document structure aur application behavior define karta hai; model collection operations ka interface deta hai; document individual hydrated instance hota hai. Mongoose validation application boundary hai, MongoDB index/constraint alag database boundary hai. In dono ko interchangeable samajhne se concurrency bugs aate hain.
 
-> **Core takeaway:** Schema validation is one layer; database constraints and explicit write rules protect concurrent behavior.
+> **Core takeaway:** Schema validation ek layer hai; concurrent writes ke rules DB constraints aur explicit update conditions se enforce hote hain.
 
 ## Define a study topic model
 
@@ -108,30 +108,30 @@ Yeh pattern useful hai jab "many" side (Topic) already "one" side (User) ko refe
 
 Duplicate slug, missing author, invalid track aur too-large minutes create karke errors compare karo. Save aur query update paths par same rule test karo. Populate query ko projection ke saath inspect karo aur plain lean object ko document instance se compare karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Schema mein `required: true` lagane se database-level guarantee mil jaati hai jaise SQL `NOT NULL`. **Why it breaks:** Mongoose validation sirf Mongoose ke through hone wale writes par apply hoti hai — koi bhi direct driver insert, `mongosh` se manual write, ya migration script isse bypass kar sakta hai. **Fix:** Critical invariants ke liye MongoDB-level `$jsonSchema` collection validator bhi add karo jab guarantee application boundary se bahar bhi honi chahiye.
 - **Wrong assumption:** `findOneAndUpdate` document ke saare `pre("save")` hooks automatically chalayegi jaise `.save()` chalati hai. **Why it breaks:** Query middleware (`pre("findOneAndUpdate")`) aur document middleware (`pre("save")`) alag hooks hain; ek dusre ko automatically trigger nahi karta, isliye `.save()` mein likha gaya password-hashing jaisa logic query-style update se silently skip ho sakta hai. **Fix:** Har write-path (save vs query update) ke liye explicitly socho ki kaunse hooks chalne chahiye, aur zaroorat ho to dono jagah equivalent logic register karo ya update path ko avoid karke `.save()` consistently use karo.
 - **Wrong assumption:** `.lean()` lagाने से sirf performance milta hai, baaki sab same behave karta hai. **Why it breaks:** Lean object par virtuals (bina explicit option ke), instance methods, aur automatic getter transformations available nahi hote — code jo `doc.someVirtual` ya `doc.someMethod()` expect karta hai, silently `undefined`/error dega. **Fix:** Lean sirf un read paths par use karo jahan tumhe sirf plain data chahiye; jahan virtuals/methods chahiye, ya to hydrated document rakho ya `.lean({ virtuals: true })` explicitly enable karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Unique validator precheck enough hai?** Nahi. Two concurrent requests precheck pass kar sakti hain; unique database index authoritative protection deta hai.
 
 **Q. Populate referential integrity ensure karta hai?** Nahi. It resolves reads; missing/deleted references aur lifecycle rules application/schema design handle karta hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Two requests create users with the same email after both pass an application-level existence check. What prevents duplicate committed records?
+**Apply:** Same email ke do requests application existence check pass karke user create karti hain. Duplicate committed records kaun rokega?
 
-> **Hint:** A pre-check can race with another request.
+> **Hint:** Pre-check aur write ke beech doosri request aa sakti hai.
 
-**Answer guide — compare after attempting:** Use a database unique index on the canonical email representation and handle duplicate-key failure. Define normalization before writing. Mongoose validation or an existence query alone cannot serialize concurrent requests; test simultaneous submissions and an existing duplicate.
+**Answer guide — compare after attempting:** Canonical email representation par DB unique index rakho aur duplicate-key error handle karo. Normalization before write define karo. Mongoose validation/existence query alone concurrency serialize nahi karti. Simultaneous submissions aur existing duplicate dono test karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [Mongoose validation](https://mongoosejs.com/docs/validation.html) unique indexes aur update limitations explain karta hai. [Mongoose populate](https://mongoosejs.com/docs/populate.html) relationship queries ka reference hai.

@@ -5,21 +5,21 @@ track: java
 order: 16
 level: Advanced
 minutes: 25
-summary: Separate thread scheduling from database capacity and cancellation semantics.
+summary: Zyada tasks banane se DB connections ya downstream service ki capacity automatically nahi badhti.
 tags: java, concurrency, virtual-threads, executors, backpressure
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Threads execution schedule karte hain; they do not create database connections, CPU cores or downstream capacity. A service can accept thousands of concurrent requests and still have only twenty usable database connections. Bound the scarce resource explicitly instead of hoping the scheduler protects it.
 
-> **Core takeaway:** More runnable tasks do not create more database connections or downstream capacity.
+> **Core takeaway:** Zyada tasks banane se DB connections ya downstream service ki capacity automatically nahi badhti.
 
 ## Choose the bottleneck first
 
-CPU-bound work needs a concurrency level related to available cores and measurement. Blocking I/O can benefit from more concurrent tasks, including virtual threads on Java 21+, but the remote service still has limits. Virtual threads improve the cost of waiting; they do not make an individual SQL query faster.
+CPU-bound work ke concurrency level ko available cores aur measurement se choose karo. Blocking I/O mein more concurrent tasks, including Java 21+ virtual threads, useful ho sakti hain; remote capacity phir bhi limited hai. Virtual threads waiting cheaper banati hain, individual SQL query faster nahi.
 
-Avoid universal advice about synchronized pinning across JDK releases. Runtime behavior changed in newer JDKs. State the deployed version and profile it before replacing locking code. Keep critical sections small for correctness and contention reasons regardless of scheduling details.
+synchronized pinning ke liye har JDK par ek blanket rule mat lagao. Newer JDKs mein runtime behavior badla hai. Deployed version batao aur locking replace karne se pehle profile karo. Scheduling details kuch bhi hon, correctness/contention ke liye critical sections chhote rakho.
 
 ## Bound admission independently
 
@@ -48,52 +48,52 @@ final class PartnerGateway {
 }
 ```
 
-A permit is released only after successful acquisition. The finally block protects against normal returns and exceptions. The admission timeout bounds waiting for a slot; it does not bound the subsequent network call. In a multi-instance deployment, this is twenty calls per instance, not a global twenty-call guarantee.
+Permit sirf successful acquisition ke baad release karo. finally normal return aur exception dono mein cleanup karta hai. Admission timeout slot ka wait bound karta hai, subsequent network call ko nahi. Multiple app instances hon toh yeh twenty calls per instance hai, global twenty nahi.
 
 ## Failure ownership
 
-Future cancellation may request interruption; interrupt-aware code must cooperate. A database query or external server may continue after the caller gives up. If catching InterruptedException at a boundary that cannot rethrow it, usually restore interrupt status and return or abort work appropriately. Do not swallow interruption and continue an infinite retry loop.
+Future cancellation interruption request kar sakti hai; code ko cooperate karna hota hai. Caller give-up ke baad bhi DB query/external server continue kar sakta hai. InterruptedException propagate nahi kar sakte toh usually interrupt status restore karke work abort/return karo. Interruption swallow karke endless retry mat chalao.
 
-CompletableFuture makes composition convenient, but an async stage's executor matters. Blocking partner calls on a shared pool can delay unrelated work. Specify execution ownership, deadline propagation and what happens to sibling work when one result is no longer useful.
+CompletableFuture composition easy karti hai, lekin async stage ka executor matter karta hai. Shared pool par blocking calls unrelated work delay kar sakti hain. Executor ownership, deadline propagation aur unused sibling work ka cancellation behavior define karo.
 
 ## Practice
 
-Run fifty simulated callers against a limit of three. Track current and maximum active calls with atomics. Make one call throw and verify later callers can still acquire permits. Interrupt a waiter and verify the count does not increase incorrectly. Then simulate a slow dependency and explain admission rejection versus execution timeout in separate metrics.
+Limit three ke against fifty simulated callers chalao. Atomics se current/max active count rakho. Ek call throw karwao aur check karo later callers permit le sakein. Waiter interrupt karne par count galat na badhe. Slow dependency mein admission rejection aur execution timeout alag metrics se samjhao.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Why not pool virtual threads?** They are designed to be inexpensive task threads; pool or limit scarce resources separately. A virtual-thread-per-task executor is different from unlimited external work.
+**Virtual threads pool kyun nahi?** Woh inexpensive per-task threads ke liye bani hain. Scarce resources ko separately pool/limit karo. Virtual-thread-per-task ka matlab unlimited external work nahi.
 
-**Does volatile make count++ atomic?** No. Visibility does not combine read, add and write into one atomic operation; use appropriate synchronization or atomic operations.
+**volatile se count++ atomic hota hai?** Nahi. Visibility read/add/write ko ek atomic operation nahi banati. Suitable synchronization ya atomic counter use karo.
 
 ## Research notes: Virtual threads still need task ownership
 
-Virtual threads support many blocking tasks without one platform thread per task. They do not make CPU work faster or create downstream capacity. Define the task owner, deadline and cancellation policy.
+Virtual threads har blocking task ke liye dedicated platform thread ke bina many tasks support karti hain. CPU work faster ya downstream capacity larger nahi hoti. Task owner, deadline aur cancellation policy define karo.
 
-Interruption is cooperative. Propagate `InterruptedException` when appropriate, or restore interruption and exit deliberately when the method cannot propagate it. Catching and continuing forever defeats cancellation.
+Interruption cooperative hai. Suitable ho toh InterruptedException propagate karo; warna status restore karke deliberately exit karo. Catch karke forever continue karna cancellation defeat karta hai.
 
-Virtual threads are non-preview from Java 21. Pinning behavior is JDK-dependent; use guidance for the runtime you deploy.
+Virtual threads Java 21 se non-preview hain. Pinning behavior JDK-dependent hai; deployed runtime ki guidance follow karo.
 
-**Interview check:** Why can ten thousand virtual threads overload twenty database connections?
+**Interview check:** Ten thousand virtual threads twenty DB connections ko overload kyun kar sakti hain?
 
-**Answer:** Connections and database execution remain scarce. Bound admission to that resource, measure waiting and enforce deadlines. Cheap waiting threads do not increase downstream throughput.
+**Answer:** Connections aur DB execution scarce hain. Resource admission bound, waiting measure aur deadlines enforce karo. Cheap waiting threads downstream throughput nahi badhati.
 
-**Practice:** Cancel a blocked task and verify every owned resource is released.
+**Practice:** Blocked task cancel karke verify karo ki uska har owned resource release hua.
 
-[Read the source — Dev.java](https://dev.java/learn/new-features/virtual-threads/). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Dev.java](https://dev.java/learn/new-features/virtual-threads/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** There are 100 request tasks and a database pool of 10 connections. Describe what to measure before increasing the task count.
+**Apply:** 100 request tasks aur 10-connection DB pool hai. Tasks badhane se pehle kya measure karoge?
 
-> **Hint:** Separate waiting for a connection from executing a query.
+> **Hint:** Connection ke wait time ko query execution time se alag dekho.
 
-**Answer guide — compare after attempting:** Measure pool acquisition wait, active connections, query latency, timeouts, and throughput. At most 10 tasks can hold those connections simultaneously. Bound admission and use deadlines; increasing tasks can increase waiting without increasing completed work.
+**Answer guide — compare after attempting:** Pool acquisition wait, active connections, query latency, timeouts aur throughput measure karo. Ek waqt maximum 10 tasks connections hold kar sakti hain. Admission bound aur deadlines rakho. Tasks badhane se wait badh sakta hai bina completed work badhe.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Oracle virtual threads guide](https://docs.oracle.com/en/java/javase/26/core/virtual-threads.html) provides runtime-specific adoption guidance. [Semaphore API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Semaphore.html) defines acquisition behavior.
+[Oracle virtual threads guide](https://docs.oracle.com/en/java/javase/26/core/virtual-threads.html) runtime-specific guidance deti hai. [Semaphore API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Semaphore.html) mein acquisition behavior padho.

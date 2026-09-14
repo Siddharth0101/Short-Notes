@@ -1,18 +1,40 @@
-# Shortnotes
+# Shortnotes — poora developer course Hinglish mein
 
-A personal developer notebook with **Hinglish explanations and English technical terms**, worked examples, interview practice, and interactive visualizations.
+Yahan concepts **simple Roman Hinglish** mein samjhaye hain. Technical terms aur code identifiers English mein hain, taaki documentation, coding aur interviews mein wahi terms pehchaan sako. Har concept ko meaning → mechanism → example → galti → practice ke order mein padho.
 
-Start with the [structured reading index](notes/README.md), or run the app for search, bookmarks, learning paths, and progress tracking. The existing source notes and PDFs remain in their original locations.
+**92 chapters · 32 course stages · 142 linked source examples · 283 interview questions · 20 interactive visuals.**
 
-## Learn, practice, and review
+Shuru karne ke liye [poora syllabus](notes/README.md) kholo. Padhai ka tareeka [study guide](notes/STUDY_GUIDE.md) mein aur difficult terms ke easy meanings [Hinglish glossary](notes/GLOSSARY_HINGLISH.md) mein milenge.
 
-Every one of the **92 chapters** now includes a concise core takeaway and an original **Revision and practice lab**: recall, a topic-specific challenge, a hint, an answer guide, and an exit check. The 92 new labs complement the existing interactive interview bank. Exercises progress from output tracing and small implementations to concurrency, failure recovery, and design defenses.
+## Kya aur kis order mein padhna hai?
 
-Follow the [study guide](notes/STUDY_GUIDE.md) for session plans, a self-review rubric, a mistake-log worksheet, and stage deliverables. In the app, use the chapter table of contents to jump to **Revision and practice lab**. On GitHub, the same material is readable directly in each Markdown chapter.
+| Course | Chapters | Padhai ka flow |
+| --- | ---: | --- |
+| JavaScript | 17 | Variables → types/operators → decisions/loops → functions → arrays/objects → scope → browser → OOP → async/tooling |
+| React | 11 | JSX/props → state → rendering/identity → composition → effects → routing/shared state → server data/types → performance/practice |
+| Java | 16 | First program → control flow → classes → packages/interfaces → collections/JVM → builds/tests → SQL → concurrency |
+| Spring Boot | 10 | First app → beans/DI → configuration → REST/validation → JPA/security → testing → observability → deployment |
+| Node & MongoDB | 8 | Node/HTTP → Express → documents/CRUD → Mongoose → indexes/query plans → security → production |
+| DSA | 12 | Complexity → lists/stacks/queues → hashing → search/patterns → recursion/sorting → monotonic stacks → trees/heaps → graphs/DP |
+| System design | 12 | Requirements/scaling → React frontend → Java backend → complete case studies |
+| Interview playbooks | 6 | Related course ke baad language, application, algorithm aur design rounds |
 
-## Run the app
+Frontend ke liye JavaScript → React → frontend design follow karo. Backend ke liye Java → Spring Boot → backend design, ya JavaScript → Node/MongoDB route lo. DSA ko apne main track ke saath padh sakte ho. Syllabus mein har stage ke prerequisites aur checkpoint diye hain; beginner ho toh unhe skip mat karo.
 
-Requires Node.js 22.12+ (or a newer supported release).
+## Har chapter se kaise seekhna hai?
+
+1. Mental model padho: concept kya hai, kyun chahiye aur andar kaise chalta hai?
+2. Code chalane se pehle output predict karo. Har important step par state likho.
+3. Relevant visual mein next/previous controls se mechanism dekho, phir apne words mein samjhao.
+4. Revision lab ka **Recall** aur **Apply** khud attempt karo. Atko toh hint lo; uske baad answer guide compare karo.
+5. Ek normal case aur ek failure/boundary case check karo. Tab chapter complete mark karo.
+6. Interview answer pehle bolkar do; reveal karke reasoning aur tradeoff compare karo.
+
+Har chapter mein core takeaway aur topic-specific lab hai. Exercises output tracing se shuru hokar implementation, concurrency, recovery aur design defense tak jaati hain. Six technical course capstones mein failure scenarios/acceptance criteria aur six interview playbooks mein assessed mock rounds hain.
+
+## App chalao
+
+Node.js 22.12+ ya compatible newer supported release chahiye.
 
 ```bash
 cd playground
@@ -20,87 +42,50 @@ npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. For validation and a production preview:
+Vite terminal mein jo local URL de, browser mein kholo. Validation aur production preview ke liye:
 
 ```bash
 npm run check
 npm run preview
 ```
 
-## Follow the course order
+App mein search, numbered syllabus, learning paths, chapter ke previous/next links, bookmarks aur progress milti hai. Source examples related chapter ke andar expand hote hain; kuch examples ke apne interactive playground hain. Search chapter text, source titles/paths aur interview questions mein bhi dhundta hai.
 
-Start with the [course syllabus](notes/README.md). Both **All notes** and **Learning paths** show the same numbered stages, prerequisites and checkpoints. Lesson numbers remain fixed when searching. Each reader shows its course stage and the previous/next lesson. Numbered filenames follow that exact sequence; source examples are integrated into their related chapters.
+Progress isi browser ke local storage mein rehti hai. **Bookmarks** se JSON export karke backup rakho; doosre device par import karke merge kar sakte ho. Account ya automatic server sync nahi hai. Site data clear karne se local progress delete ho jaati hai. Purane source links owning chapter par redirect hote hain; source bookmarks migrate hote hain. Sirf source complete karne se poora chapter complete mark nahi hota.
 
-| Course | Lessons | Learning flow |
-| --- | ---: | --- |
-| JavaScript | 17 | Variables → types/operators → decisions → loops → functions → arrays/objects → collections/scope → browser → OOP → async/tooling |
-| React | 11 | JSX/props → state → rendering/identity → composition → effects → routing/shared state → server data/types → performance/practice |
-| Java | 16 | First program → control flow → classes → packages/interfaces → collections/JVM → builds/tests → SQL → concurrency |
-| Spring Boot | 10 | First application → beans/DI → configuration → REST/validation → JPA/security → testing → observability → deployment |
-| Node & MongoDB | 8 | Node/HTTP → Express → documents/CRUD → Mongoose → indexes/query plans → security → production |
-| DSA | 12 | Complexity → lists/stacks/queues → hashing → patterns/search → recursion/sorting → monotonic stacks → trees/heaps → graphs/DP |
-| System design | 12 | Requirements/scaling → React frontend → Java backend → integrated case studies |
-| Interview playbooks | 6 | Language rounds → application rounds → algorithms and design, after the corresponding course |
+## Interview practice aur visuals
 
-**92 study chapters, 142 integrated source examples, 283 interactive interview questions, and 20 visualizations.** Counts in the app are calculated from its content rather than maintained manually.
+[Answered workbook](notes/INTERVIEW_WORKBOOK.md) offline revision ke liye hai. App mein subject, topic aur difficulty filters, related reading, hidden answers aur follow-ups hain. Five-question mock session mein 15-minute pausable timer, talking-point drafts aur self-review milta hai. Session chhodne par temporary mock drafts clear ho jaate hain.
 
-New practical chapters add HTML/CSS, bounded async concurrency, React machine coding, TypeScript contracts, Java resource limits, SQL joins/windows, MongoDB query plans, monotonic stacks, and complete frontend/backend design rounds.
+Supplied checklist se 104 questions add hue aur 13 existing answers examples ke saath expand hue. Repeated topics same canonical question se linked hain. Workbook mein corrected premises aur supplied flexbox images ke original code solutions bhi hain. Practice scenarios kisi specific company mein poochhe jaane ka claim nahi karte.
 
-The interview section includes subject/difficulty filters, linked reading, hidden answers and follow-ups, plus a five-question mock session with a pausable 15-minute timer, written talking points, self-assessment, and an end-of-session review. Mock drafts are temporary and clear when leaving the session.
+20 visuals mein event loop, closures, React render/commit, Context, keys, Java references, synchronization, GC, request flow, caching, outbox, binary search, sorting, BFS, recursion, DP, Mongo indexes/aggregation, transaction race aur monotonic stack cover hote hain. Step controls, playback, reset aur speed se apni pace par dekho. Simplified model ki limits takeaway mein padho.
 
-The visual lab also includes React key identity, a last-seat transaction race, and a monotonic-stack trace. The visual lab covers the event loop, closures, React render/commit, React context propagation, Java object references, thread synchronization, mark-and-sweep garbage collection, Spring request flow, cache invalidation, the transactional outbox, binary search, bubble sort, BFS, the recursion call stack, dynamic programming, index lookup, and the aggregation pipeline. Each has step controls, playback, reset, speed selection, an explanation, and a takeaway. Relevant chapters expose a **Visualize it** tab. Existing custom playgrounds are accessible inside chapter examples.
-
-## Repository structure
+## Repo ka map
 
 ```text
-notes/                     New, ordered Markdown study chapters
-  javascript/              JavaScript learning path
-  react/                   React learning path
-  java/                    Java language and concurrency learning path
-  spring-boot/             Spring Boot application learning path
-  mongodb/                 Node, Express and MongoDB learning path
-  dsa/                     Data structures and algorithms
-  system-design/           React frontend and Java backend architecture
-  interview/               Subject-specific interview playbooks
-  README.md                Clickable chapter index
-  COURSE_COVERAGE.md        Topic mapping and course-edition limits
-01_JavaScript/             Preserved source notes and existing slides
-02_Dsa/                    Preserved DSA examples
-03_Frontend/               Preserved HTML/CSS and React material
-04_Backend/                Preserved Node, SQL, MongoDB, Java and slides
-05_Interview/              Existing interactive playgrounds and references
-06_System_Design/          Preserved system-design references
-playground/                React + Vite reading app and tests
+notes/                     Ordered Hinglish course chapters
+  README.md                Poora clickable syllabus
+  STUDY_GUIDE.md            Session plan, rubric aur mistake log
+  GLOSSARY_HINGLISH.md      Terms ke easy meanings aur examples
+  COURSE_COVERAGE.md        Topic mapping aur coverage ki limits
+  INTERVIEW_WORKBOOK.md     Questions, answers aur follow-ups
+01_JavaScript/             Original source examples aur slides
+02_Dsa/                    DSA source examples
+03_Frontend/               HTML/CSS aur React references
+04_Backend/                Node, SQL, MongoDB, Java aur slides
+05_Interview/              Existing playgrounds aur references
+06_System_Design/          System-design references
+playground/                React + Vite app aur tests
+scripts/                   Syllabus/workbook generators
 ```
 
-Use one structured course sequence: each chapter combines explanations, code, relevant source examples, and answer-reveal interview practice. Search includes chapter text, linked source titles/paths, and interview questions. Expand source examples inside the reader, or open their interactive playground. Existing PDFs are available in the course library. Old source links redirect to their owning chapter, and source bookmarks migrate to that chapter. Source-only completion is retained without marking an entire chapter complete.
+Numbered folders ke original source files aur PDF slides reference material hain; PDF pages ko Hinglish mein rewrite nahi kiya gaya. Structured Hinglish learning material `notes/` aur app ke course/interview sections mein padho.
 
-All 92 chapters include interview practice. Six technical course capstones provide failure scenarios and acceptance criteria; all six interview playbooks include an assessed mock round. The 26 new scenario questions are original practice material, with technical references where applicable, not claims about questions asked by specific companies.
+## References aur coverage
 
-## Supplied interview checklist
+[Primary source map](notes/RESEARCH_SOURCES.md) mein 30 sources aur 34 chapters ki research mapping hai, reviewed 13 September 2026. Sources mein MDN, React, TypeScript, Java, Spring, PostgreSQL, Node, MongoDB aur doosri primary documentation hai. Exact links chapters mein diye hain.
 
-[Open the answered interview workbook](notes/INTERVIEW_WORKBOOK.md). The bank now includes 104 additional questions across HTML, CSS, JavaScript, React, Redux, Node, MongoDB, Java/Spring, DSA, and system design, with 13 existing answers expanded instead of duplicated. Use **Interview topic** to select a focused practice area. Output puzzles show corrected code before answer reveal; answers support formatted examples and follow-ups.
+Course routes Jonas Schmedtmann ke JavaScript/React/Node-MongoDB, Telusko ke Java aur Colt Steele ke DSA topics ke original companions hain. Instructor names reference context hain; affiliation ka claim nahi. Exact enrolled editions aur complete lecture lists available nahi the, isliye broad topic coverage ko verified every-lecture reproduction mat samjho. [Coverage guide](notes/COURSE_COVERAGE.md) mein mapping aur lecture audit ki limits hain.
 
-The workbook records reused questions and corrected premises, with code solutions for both supplied Drive flexbox images and additional original flexbox exercises.
-
-## A useful study routine
-
-1. Follow either JavaScript → React → frontend design, or Java → Spring → backend design. Study DSA alongside either track.
-2. Read the mental model, trace the example, and try the exercise without looking at the answer.
-3. Use the visual lab for the hidden mechanics, then explain the concept aloud.
-4. Mark a chapter complete only after practicing. Use interview answers for comparison after making your own attempt.
-5. Bookmark weak topics. Export progress from **Bookmarks** to keep a backup or merge it on another device.
-
-Progress is stored in this browser's local storage. There is no account, server sync, or automatic cross-device backup. Clearing site data removes local progress; exported JSON can be imported again.
-
-## Researched additions
-
-[Open the curated source map](notes/RESEARCH_SOURCES.md): 30 primary sources support new explanations, worked examples and answered interview checks in 34 existing chapters across the original seven courses. Reviewed 13 September 2026. Sources include MDN, React, TanStack Query, TypeScript, Oracle/Dev.java, Spring, PostgreSQL, Node, Express, MongoDB, OWASP, MIT 6.006, AWS Builders’ Library, Google SRE, Supabase and employer interview guidance. The additions appear inside the existing reader and search, with no separate course collection.
-
-## Course references
-
-The learning paths are original topic companions to the courses you named: Jonas Schmedtmann for JavaScript, React, and Node/MongoDB; Telusko for Java; and Colt Steele for DSA. Instructor names are reference context, not affiliation.
-
-The exact enrolled course editions and complete lecture lists were not available. **This is broad topic coverage, not a verified every-lecture reproduction.** See [course coverage](notes/COURSE_COVERAGE.md) for the mapping and remaining lecture-audit requirements. New chapters link to primary documentation, and version-sensitive examples state their assumptions.
-
-See [the app guide](playground/README.md) for architecture and testing, and [CONTRIBUTING.md](CONTRIBUTING.md) for adding chapters.
+App architecture ke liye [app guide](playground/README.md), aur content add karne ke liye [contribution guide](CONTRIBUTING.md) padho.

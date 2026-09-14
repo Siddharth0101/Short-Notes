@@ -1,10 +1,10 @@
 # Interview Short Notes & Scenarios
 
-> Start with the [new structured study path](../notes/README.md#interview-playbooks). This folder preserves the original source notes and examples.
+> Pehle [ordered Hinglish course](../notes/README.md#interview-playbooks). Yahan original source notes aur examples references ke liye hain.
 
-This directory contains scenario-based questions, machine coding problems, and standard interview preparation notes — organized by **topic folders**.
+Is folder mein scenarios, machine-coding problems aur interview notes **topic folders** mein arranged hain.
 
-## Folder Structure
+## Folders ka map
 
 ```
 05_Interview/
@@ -14,20 +14,20 @@ This directory contains scenario-based questions, machine coding problems, and s
     03_Performance/           ← Memoization, debouncing, lazy loading (future)
 ```
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 ### React & Routing
 
 1. `03_Frontend/01_React_Routing/Jira_Modal_Refresh_Persist.jsx` — Jira-style modal reopen on page refresh using URL search params
 
-## How to Add a New Question
+## Naya question kaise add karein
 
-1. Pick or create a topic folder under `03_Frontend/` (e.g., `02_State_Management/`).
-2. Add your `.jsx` file inside that folder.
-3. Register it in `playground/src/scenarios/index.js` under the matching topic.
-4. Run the playground (`cd playground && npm run dev`) to test it live.
+1. Topic folder choose ya create karo: `03_Frontend/` (e.g., `02_State_Management/`).
+2. Us folder mein apni `.jsx` file add karo.
+3. Usse register karo: `playground/src/scenarios/index.js` matching topic ke andar.
+4. Run the playground (`cd playground && npm run dev`) aur live test karo.
 
-## Main Coverage
+## Yahan kya cover hai
 
 - URL state management & deep linking
 - System design and machine coding patterns

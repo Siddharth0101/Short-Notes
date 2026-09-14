@@ -5,19 +5,19 @@ track: spring-boot
 order: 8
 level: Intermediate
 minutes: 16
-summary: Choose tests by the boundary and prove failures as well as success.
+summary: Har important boundary ka test utne chhote setup mein karo jo uski real failure pakad sake.
 tags: spring, testing, integration
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Test ka scope us failure ke according choose karo jo detect karna hai. Pure Java unit test business decisions check karta hai. MVC slice request binding aur HTTP responses check karti hai. Integration test wiring aur real infrastructure behavior check karta hai. Har test mein full application load karna coverage ka proof nahi hai.
 
-> **Core takeaway:** Test each important boundary with the smallest setup that can expose its real failure.
+> **Core takeaway:** Har important boundary ka test utne chhote setup mein karo jo uski real failure pakad sake.
 
 ## Start without Spring
 
-JUnit Jupiter example. Place in src/test/java in a Maven project with JUnit support, such as the generated Boot test setup. This complete small example needs no application context or database.
+JUnit Jupiter example ko Maven/JUnit-supported project, jaise generated Boot setup, ke src/test/java mein rakho. Small complete example ko app context/DB nahi chahiye.
 
 ```java
 import org.junit.jupiter.api.Test;
@@ -36,36 +36,36 @@ class PagePolicyTest {
 }
 ```
 
-Run `./mvnw test`. These assertions prove the three decisions, but they cannot prove the controller calls this policy. In an application, move the policy to production code and test that actual implementation rather than duplicating it in the test.
+`./mvnw test` run karo. Assertions three decisions prove karti hain, controller policy call karta hai yeh nahi. Real app mein policy production code mein rakho aur actual implementation test karo; test mein duplicate mat likho.
 
 ## Verify the web boundary
 
-Use WebMvcTest for controller-focused testing with MockMvc, providing controlled collaborators for the service. Verify malformed input, field validation, response JSON and error advice. When security is present, configure an appropriate test identity and test rejection deliberately. An unexpected 401 can occur before the controller, so a status-only assertion may test the wrong layer.
+WebMvcTest plus MockMvc se controller-focused test aur controlled service collaborators do. Malformed input, validation, JSON/error advice check karo. Security ho toh test identity/rejection configure karo. Unexpected 401 controller se pehle aa sakta hai; status-only assertion wrong layer test kar sakti hai.
 
-Boot 4 reorganized focused testing modules and packages. Use the imports and test dependencies for your selected Boot version. Do not mix Boot 3 WebMvcTest import paths with a Boot 4 project. The official test reference explains the appropriate module layout; conceptually, the slice should load only the relevant web infrastructure.
+Boot 4 ne focused testing modules/packages reorganize kiye hain. Selected version ke imports/dependencies lo; Boot 3 WebMvcTest paths Boot 4 mein mix mat karo. Official test reference ka layout follow karo; conceptually slice relevant web infrastructure hi load kare.
 
 ## Test persistence and full requests
 
-A repository slice helps verify mapping and query behavior. For PostgreSQL-specific SQL, locking and constraints, use a PostgreSQL test instance such as a managed Testcontainers database rather than assuming an in-memory substitute behaves identically.
+Repository slice mapping/query behavior verify karti hai. PostgreSQL-specific SQL/locks/constraints ke liye PostgreSQL test instance, jaise Testcontainers, use karo. In-memory substitute identical behave karega assume mat karo.
 
-A SpringBootTest with a random server port can exercise real HTTP, serialization and application wiring. Requests execute on server threads; a transaction around the test method does not automatically roll back a separate server request. Clean data explicitly, isolate test databases or design unique fixtures. Avoid assertions that depend on test execution order.
+Random-port SpringBootTest real HTTP, serialization aur wiring check kar sakta hai. Server request separate thread par hoti hai; test-method transaction usse automatically rollback nahi karti. Explicit cleanup, isolated DB ya unique fixtures lo; execution-order-dependent assertions avoid karo.
 
 ## Practice
 
-Create a test plan for a lesson creation endpoint: one domain rule test, one invalid-request slice test, one unique-constraint database test and one HTTP success test. Name the bug each detects. Prefer observable outcomes over verifying every internal call.
+Lesson-create test plan do: domain rule, invalid-request slice, unique-constraint DB aur HTTP success test. Har test ka caught bug batao. Every internal call verify karne ke bajay observable outcomes dekho.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
 **Recall:** Can a mocked repository prove a SQL unique constraint exists?
 
-**Apply:** A random-port HTTP test leaves rows behind despite Transactional on the test. Explain the mechanism and make repeated runs independent.
+**Apply:** Random-port HTTP test par Transactional lagane ke baad bhi rows bachti hain. Mechanism samjhao aur repeated runs independent banao.
 
-> **Hint:** Compare the test thread with the server thread.
+> **Hint:** Test thread aur server request thread compare karo.
 
-**Answer guide — compare after attempting:** The HTTP handler commits its own transaction on a different thread. Use an isolated database or explicit cleanup and unique fixture identifiers. Add a second run to verify isolation. A passing assertion with leftover state is not a reliable test suite.
+**Answer guide — compare after attempting:** HTTP handler alag thread par apni transaction commit karta hai. Isolated DB ya explicit cleanup plus unique fixture IDs use karo. Doosra run karke isolation verify karo. Leftover state ke saath passing assertion reliable suite nahi banati.
 
 **Exit check:** Choose the minimum valid test scope for malformed JSON, a business calculation and a row-lock race.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Official reference](https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html).
+[Official reference yahan padho](https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html).

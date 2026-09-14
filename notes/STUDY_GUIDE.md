@@ -1,74 +1,77 @@
-# Study the notes, then prove you can use them
+# Aise padho ki concept khud samjha sako
 
-Start with the [course syllabus](README.md) and follow the prerequisites. Every chapter has a **core takeaway** near its mental model and a **Revision and practice lab** with a recall prompt, a specific application challenge, a hint, an answer guide, and an exit check. The lab supplements the chapter's worked examples and existing interview questions.
+[Course syllabus](README.md) se prerequisites aur lesson order follow karo. Har chapter ka **Mental model — simple soch** pehle padho. **Core takeaway** main mechanism ya rule hai. Examples ko dry-run karke **Revision and practice lab — khud karke samjho** attempt karo.
 
-Pehle khud attempt karo. A familiar-looking answer is not the same as an answer you can produce.
+Roman Hindi + English technical terms use hue hain: code mein `return`, `class`, `Promise`, `JOIN` wahi rahenge, explanation conversational Hinglish mein hogi. Kisi term ka meaning unclear ho toh [simple glossary](GLOSSARY_HINGLISH.md) dekho.
 
-## Choose a session
+## Har concept ko chaar sawalon se kholo
 
-These are suggested time boxes, not promises about how quickly a topic should be learned. Split a long chapter across sessions when needed.
+1. **Kya hai?** Apne words mein ek sentence bolo. Closure: function apne lexical environment ki bindings access kar sakta hai.
+2. **Kyun chahiye?** Kaunsi problem solve hoti hai? Counter ka private state global variable ke bina rakh sakte hain.
+3. **Kaise chalta hai?** Code ki har line ka state/output likho. Do factory calls ka count alag kyun hai, trace karo.
+4. **Kab tootega?** Assumption badlo. Count global karne par dono counters share karenge.
 
-| Available time | What to do | What to leave with |
+Analogy starting point hai; final explanation actual code/rule se do. “Class blueprint hai” ke baad fields, constructor aur independent instances dikhao.
+
+## Time ke hisaab se session chuno
+
+Yeh suggested time boxes hain; difficult chapter ko multiple sessions do.
+
+| Time | Kya karo | Session ke end mein |
 | --- | --- | --- |
-| 10 minutes | Recall one previously studied takeaway, retry its lab, compare with the guide | One corrected explanation or passing example |
-| 30 minutes | Read one concept section, trace its example, attempt the chapter lab | A small implementation or written decision with an edge case |
-| 60 minutes | Study the chapter, complete the lab, answer related interview questions | A working artifact and a list of assumptions you can defend |
+| 10 minutes | Purana takeaway recall, lab retry, answer compare | Ek corrected explanation |
+| 30 minutes | Ek concept, example dry-run, lab | Small implementation plus edge case |
+| 60 minutes | Chapter, lab, related interview questions | Working result aur assumptions ki list |
 
-## Use the same loop in every module
+## Same study loop repeat karo
 
-1. **Orient.** Read the title, summary, mental model, and core takeaway. Say what problem the concept helps solve.
-2. **Predict.** Before running a worked example, write its output or expected state transition. For architecture, predict what persists when one step fails.
-3. **Explain.** Trace the example line by line or decision by decision. If it surprises you, locate the first incorrect assumption.
-4. **Apply.** Attempt the revision lab without its answer guide. Use the hint only after writing an initial approach.
-5. **Check.** Compare the outcome and reasoning with the guide. Different implementations can be correct; check their contracts and assumptions.
-6. **Transfer.** Change an input or constraint and explain what changes. Examples include empty input, reordered responses, a duplicate event, or a tighter memory limit.
-7. **Record.** Save one mistake and a next review date. Mark the chapter complete when you can reproduce its reasoning and satisfy its practice criteria.
+1. Title, summary aur mental model se problem identify karo.
+2. Code run se **pehle output predict** karo. Design mein next step fail ho toh kya save bachega, likho.
+3. Har line/decision trace karo. Unexpected result ka first wrong assumption dhundo.
+4. Lab answer dekhe bina attempt karo. Pehla approach likhne ke baad hint lo.
+5. Answer ka result aur reason compare karo. Different implementation correct ho sakti hai agar contract satisfy hota ho.
+6. Input badlo: empty list, zero, duplicate, reverse responses, failed payment ya smaller memory limit.
+7. Ek mistake aur next review date note karo. Reason khud reproduce aur practice criteria satisfy kar sako tab complete mark karo.
 
-The Markdown answer guides are visible below their prompts. Stop scrolling while you attempt them. The app's existing interview cards provide answer reveal when you want a hidden-answer round.
+Markdown labs ke answers prompt ke neeche visible hain; attempt karte waqt scroll rok do. App ke interview cards mein answer reveal button hai.
 
-## Score evidence, not confidence
+## Apni understanding check karo
 
-Use this informal rubric after an attempt. It is a self-review tool, not a certification or a prediction of interview performance.
-
-| Dimension | 0 — revisit | 1 — developing | 2 — independent |
+| Dimension | 0 — dobara padho | 1 — help chahiye | 2 — khud kar sakte ho |
 | --- | --- | --- | --- |
-| Explanation | Cannot explain the mechanism | Explains with a hint | Explains with an original example |
-| Application | No working approach | Works with help or correction | Produces a correct result without the guide |
-| Edge cases | Checks only the supplied example | Finds a relevant boundary | Demonstrates the boundary and explains its outcome |
-| Reasoning | Repeats a rule without its assumptions | Names an assumption | Explains when the approach fails or needs changing |
+| Explanation | Mechanism clear nahi | Hint se explain | Apna example de sakte ho |
+| Application | Working approach nahi | Correction se result | Guide bina correct result |
+| Edge cases | Sirf given example | Boundary identify | Boundary ka outcome prove |
+| Reasoning | Rule rat rahe ho | Assumption bata sakte ho | Failure/alternative explain |
 
-A score of 6–8 is a useful signal to attempt the stage checkpoint, provided there is no unresolved correctness error. A score of 3–5 suggests another lab attempt. At 0–2, return to the worked example or prerequisite. These thresholds are a suggested routine; use the actual acceptance criteria as the final check.
+6–8 score par stage checkpoint try karo, lekin unresolved correctness error ho toh pehle fix karo. 3–5 par lab retry; 0–2 par worked example/prerequisite revisit. Yeh self-review routine hai, certification ya interview-result prediction nahi.
 
-## Keep a small mistake log
+## Small mistake log rakho
 
-Copy this into your own notebook. Record the cause, not only “got it wrong.” Browser bookmarks can hold weak chapters; this table is a manual worksheet, not an automatically saved app feature.
+Yeh apni notebook mein copy karo; automatically saved app feature nahi hai. App bookmarks weak chapters yaad rakhne mein help karte hain.
 
-| Chapter | My prediction | What happened | Wrong assumption | Smallest useful check | Review date |
+| Chapter | Meri prediction | Actual result | Wrong assumption | Next check | Review |
 | --- | --- | --- | --- | --- | --- |
-| React state | Two direct setters add two | The count increased by one | Both setters used different snapshots | Compare direct and functional updates from zero | Tomorrow |
-| Binary search | Any matching index is enough | The first duplicate was required | I did not define the boundary contract | Search for 2 in `[1,2,2,4]` | In three days |
-| Checkout | A timeout means payment failed | Payment status was uncertain | Network response and business outcome are identical | Retry with the same operation identity | Next session |
+| React state | Two setters se +2 | Sirf +1 | Same snapshot nahi samjha | Direct/functional compare | Kal |
+| Binary search | Koi bhi matching index | First duplicate required | Boundary contract missing | `[1,2,2,4]` mein 2 search | 3 din baad |
+| Checkout | Timeout means failed | Payment unknown | Response aur outcome same maane | Same operation ID retry | Next session |
 
-Try a first review in the next session, another a few days later, and another the following week. Move difficult topics earlier and easy topics later. Always attempt before rereading; adjust this schedule to your workload.
+Next session, kuch din baad aur next week recall try karo. Difficult topics jaldi revisit karo. Reread se pehle khud attempt karna important hai.
 
-## Finish a stage with a deliverable
+## Stage complete hone ka evidence
 
-Use the specific checkpoint in the course syllabus. A finished stage should leave something another person can inspect:
-
-| Track | Useful evidence |
+| Track | Kya dikha sakte ho |
 | --- | --- |
-| JavaScript | A function or browser interaction with predicted outputs and boundary inputs |
-| React | A UI demonstrating state ownership, identity, and loading/error behavior |
-| Java & Spring | Compilable code or a clearly labeled application excerpt, plus a contract or transaction check |
-| Node & MongoDB | A request/query trace, representative input, and a verified failure outcome |
-| DSA | An invariant or recurrence, a hand trace, complexity, and boundary checks |
-| System design | A workload estimate, contracts, a state model, and a failure/recovery trace |
-| Interview | A timed explanation, an example, a follow-up, and a specific correction |
+| JavaScript | Function/browser interaction ka trace aur boundary inputs |
+| React | Correct identity, state ownership, loading/error UI |
+| Java & Spring | Runnable code ya labeled excerpt plus contract/transaction check |
+| Node & MongoDB | Request/query trace aur verified failure behavior |
+| DSA | Invariant/recurrence, hand trace, time/space aur edge cases |
+| System design | Workload estimate, contracts, state model, recovery timeline |
+| Interview | Timed explanation, example, follow-up aur specific correction |
 
-For a design lab, write assumptions and acceptance criteria instead of pretending there is one universally correct architecture. For a coding lab, run the implementation in the environment stated by the chapter; a framework excerpt may need the surrounding application.
+Design question ka ek universal answer nahi: assumptions aur acceptance criteria likho. Coding lab stated environment mein run karo; framework excerpt ko surrounding app chahiye ho sakti hai.
 
-## Turn weak areas into your next session
+Weak area ke liye ek failed lab, ek related example aur ek interview question choose karo. Misconception repair karke changed input try karo. Course ke end mein capstone/mock complete karo; exposed weak chapters par wapas aao.
 
-Choose one failed lab, one nearby worked example, and one related interview question. Repair the underlying misconception, then try a changed input. At the end of a course, complete its capstone or assessed mock and return to the chapters exposed by that attempt.
-
-Use the [source map](RESEARCH_SOURCES.md) and each chapter's primary documentation links for deeper technical verification. The [coverage guide](COURSE_COVERAGE.md) explains the limits of the course mapping.
+[Source map](RESEARCH_SOURCES.md) further reading aur [coverage guide](COURSE_COVERAGE.md) lecture-mapping limits batata hai.

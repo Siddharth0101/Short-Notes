@@ -98,12 +98,12 @@ export default function Shell({ children }) {
     ['/saved', 'bookmark', 'Bookmarks'],
   ];
   const pageName = location.pathname.startsWith('/notes')
-    ? 'Your notebook'
+    ? 'Tumhari notebook'
     : navItems.find(([to]) => to === location.pathname)?.[2] || 'Original playground';
   return (
     <div className="workspace">
       <a className="skip-link" href="#main-content">
-        Skip to content
+        Seedha content par jao
       </a>
       {mobile && (
         <button
@@ -126,7 +126,7 @@ export default function Shell({ children }) {
           </span>
         </Link>
         <div className="workspace-label">
-          YOUR LEARNING SPACE <span>PERSONAL</span>
+          TUMHARA STUDY SPACE <span>PERSONAL</span>
         </div>
         <nav aria-label="Main navigation" className="main-nav">
           {navItems.map(([to, icon, label]) => (
@@ -147,7 +147,7 @@ export default function Shell({ children }) {
           ))}
         </nav>
         <div className="sidebar-section-label">
-          YOUR SUBJECTS <span>{TRACKS.length - 1}</span>
+          TUMHARE SUBJECTS <span>{TRACKS.length - 1}</span>
         </div>
         <nav aria-label="Subject navigation" className="subject-nav">
           {TRACKS.filter((t) => t.id !== 'interview').map((track) => (
@@ -166,7 +166,7 @@ export default function Shell({ children }) {
         <div className="sidebar-bottom">
           <div className="progress-widget">
             <div>
-              <span>A little, every day.</span>
+              <span>Roz thoda sa seekho.</span>
               <Icon name="sparkles" size={16} />
             </div>
             <p>
@@ -176,14 +176,14 @@ export default function Shell({ children }) {
               <div style={{ width: `${notes.length ? (done / notes.length) * 100 : 0}%` }} />
             </div>
             <Link to="/paths">
-              Keep the momentum <Icon name="arrow" size={14} />
+              Padhai jaari rakho <Icon name="arrow" size={14} />
             </Link>
           </div>
           <div className="profile">
             <span className="avatar">S</span>
             <div>
-              <strong>My notebook</strong>
-              <span>Curiosity, organized.</span>
+              <strong>Meri notebook</strong>
+              <span>Seekho, samjho, yaad rakho.</span>
             </div>
             <button
               className="icon-button theme-toggle"
@@ -223,7 +223,7 @@ export default function Shell({ children }) {
             <input
               ref={search}
               aria-label="Search all notes"
-              placeholder="Search anything…"
+              placeholder="Concept ya question dhundo…"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -245,17 +245,17 @@ export default function Shell({ children }) {
         </header>
         {storageError && (
           <div className="storage-notice" role="status">
-            Browser storage is unavailable. Progress works this session; export it from Bookmarks to
-            keep a backup.
+            Browser storage available nahi. Is session ki progress ka backup Bookmarks se export
+            karke rakho.
           </div>
         )}
         <main id="main-content" className="page-content">
           {children}
         </main>
         <footer className="app-footer">
-          <span>Made for understanding. Built for remembering.</span>
+          <span>Samajhne aur practice karne ke liye.</span>
           <span>
-            One concept at a time <span className="footer-dot">●</span>
+            Ek waqt ek concept <span className="footer-dot">●</span>
           </span>
         </footer>
       </div>

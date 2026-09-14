@@ -5,15 +5,15 @@ track: javascript
 order: 7
 level: Intermediate
 minutes: 26
-summary: Destructuring, collections, array pipelines aur immutable updates ke practical rules seekho.
+summary: Output ke shape se transformation choose karo: filter items chunta hai, map badalta hai, reduce accumulated result banata hai.
 tags: arrays, objects, map, set, destructuring, immutability
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Collection method choose karne se pehle desired output bolo. Har item transform karna hai to map, subset chahiye to filter, ek matching item chahiye to find, boolean answer chahiye to some/every, aur aggregate chahiye to reduce. Method chain ko fancy banane ke liye use mat karo; intermediate data ka meaning clear hona chahiye. Input mutate karne wala operation caller ki assumptions tod sakta hai.
 
-> **Core takeaway:** Choose a transformation by its output shape: filter selects, map transforms, reduce accumulates.
+> **Core takeaway:** Output ke shape se transformation choose karo: filter items chunta hai, map badalta hai, reduce accumulated result banata hai.
 
 ## Build a readable transformation
 
@@ -74,7 +74,7 @@ WeakMap key sirf object ho sakti hai, aur entry ko garbage collector reclaim kar
 - `find` missing result par undefined deta hai; direct property read crash kar sakta hai.
 - Long chains multiple intermediate arrays allocate kar sakti hain; performance concern ko profile karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `{ ...user, address: { ...user.address, city: "Pune" } }` ek full deep clone hai. **Why it breaks:** Sirf listed levels copy hote hain; agar `address` ke andar aur nested object hai (jaise geo coordinates), woh shared reference reh jaata hai aur mutate karne par original bhi change hoga. **Fix:** Har changed path ko explicitly spread karo, ya jab poora object plain serializable data ho to `structuredClone(user)` use karo.
 - **Wrong assumption:** Set duplicate objects ko apne aap remove kar dega agar unke fields same hain. **Why it breaks:** Set identity-based hai; `{id:1}` aur dusra `{id:1}` alag object references hain, dono store ho jaayenge. **Fix:** Id ke hisaab se dedupe karne ke liye `Map<id, item>` ya `filter` with a seen-ids `Set` of primitive ids use karo.
@@ -86,24 +86,24 @@ Real app mein yeh pattern order-history dashboard ka customer-wise grouping, adm
 
 Orders ko customer-wise group karo, totals calculate karo aur top two customers return karo. Empty input, repeated ids aur equal totals ke cases likho. Sorting mein deterministic tie-breaker add karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Spread deep clone hai?** Nahi; first level copy hota hai. Suitable structured data ke liye structuredClone useful ho sakta hai, lekin functions jaise values clone nahi hote.
 
 **Q. Map object se kab better hai?** Jab dynamic keys, non-string key identity, direct size aur entry iteration ki need ho. API JSON payload ke liye plain object usually simpler hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** From `[{name:'A',done:true},{name:'B',done:false},{name:'C',done:true}]`, produce the names of completed lessons without changing the input.
+**Apply:** `[{name:'A',done:true},{name:'B',done:false},{name:'C',done:true}]` se completed lesson names nikalo; input mutate mat karo.
 
-> **Hint:** Select records before transforming their shape.
+> **Hint:** Pehle matching records select karo, phir unka required field nikalo.
 
-**Answer guide — compare after attempting:** Use `lessons.filter(x => x.done).map(x => x.name)` to get `['A','C']`. An empty input gives `[]`. Check that the original array and records are unchanged; a transformation should not secretly alter the data being displayed elsewhere.
+**Answer guide — compare after attempting:** `lessons.filter(x => x.done).map(x => x.name)` se `['A','C']` milega. Empty input par `[]`. Original array aur records same rehne chahiye; hidden mutation doosri UI ko unexpectedly badal sakti hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN Array reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) mutation aur methods ka reference hai. [MDN keyed collections](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Keyed_collections) Map aur Set explain karta hai.

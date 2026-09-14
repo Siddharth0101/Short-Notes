@@ -5,15 +5,15 @@ track: javascript
 order: 4
 level: Foundation
 minutes: 12
-summary: Repeat a task with a clear start stopping condition and update.
+summary: Loop ko starting state, continue karne ka rule aur stop ki taraf progress chahiye.
 tags: fundamentals, js, loops
 ---
 
-## Mental model
+## Mental model — simple soch
 
-A loop repeats statements while a condition permits another iteration. Har iteration ke start par socho: what have I already processed, and what remains? A counter tracks position or repetition; an accumulator combines results. These are different responsibilities, even though both often use numeric variables.
+Loop condition allow karne tak statements repeat karta hai. Har iteration par pucho: kya process ho chuka, kya baaki hai? Counter position/repetitions ginta hai; accumulator results jodta hai. Jaise din counter hai aur total study minutes accumulator. Dono numeric ho sakte hain lekin unki responsibility alag hai.
 
-> **Core takeaway:** A loop needs a starting state, a continuation rule, and progress toward stopping.
+> **Core takeaway:** Loop ko starting state, continue karne ka rule aur stop ki taraf progress chahiye.
 
 ## Trace a for loop
 
@@ -28,34 +28,34 @@ for (let day = 1; day <= 3; day = day + 1) {
 // 3 6
 ```
 
-The initializer runs once. Before each iteration the condition is checked. If true, the body runs and then the update runs. After day becomes 4, the condition fails. At the start of each iteration, total contains the sum of the earlier days. This sentence is a simple invariant you can use to reason about correctness.
+Initializer ek baar chalta hai. Har iteration se pehle condition check; true ho toh body, phir update. day=4 par condition fail. Har iteration ke start par total earlier days ka sum hai. Yeh simple invariant correctness reason karne mein help karta hai.
 
 ## Other loop shapes
 
-A while loop separates initialization and update from the loop header. It is useful when repetition depends on a changing condition rather than a fixed count. Always identify what makes the loop stop. A do...while body runs at least once, which is a different contract. break exits the nearest loop; continue skips the rest of the current iteration. With a while loop, make sure continue does not skip the only update that can reach termination.
+while mein initialization/update header se alag hote hain; changing condition par repetition ho toh useful hai. Stop ka reason identify karo. do...while kam-se-kam ek baar body chalata hai. break nearest loop exit; continue current iteration ka rest skip karta hai. while mein continue only terminating update skip na kare.
 
-The variable declared with let inside the for header belongs to that loop's scope. You can reuse the name in another independent loop. Later, arrays will give you collections to traverse; for...of visits their values without a manual index when you do not need the position.
+for header ka let variable loop scope mein hota hai; independent next loop mein same naam reuse kar sakte ho. Arrays aane par for...of values visit karega; position ki need na ho toh manual index zaroori nahi.
 
 ## Practice
 
-Sum integers from 1 through 5 without writing the final result directly. Make a table with counter, total before and total after each iteration. Then change the task to numbers from 0 through 4 and explain the boundaries. Finally print only even numbers from 1 through 10 using the remainder operator and a condition.
+1–5 integers ka sum nikalo bina answer directly likhe. Counter, total-before aur total-after ki table banao. Phir range 0–4 karke boundaries samjhao. Finally remainder operator/condition se 1–10 ke even numbers print karo.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-You should recognize an off-by-one error and an update that never happens. Explain why total must be initialized outside the loop. Next, package a repeatable task into a function so callers can use it with different inputs.
+Off-by-one error aur missing update pehchano. Total loop ke bahar initialize kyun karna hai, batao. Next repeatable task ko function mein pack karke different inputs par use karenge.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Sum only positive values in `[3,-2,0,5]` with a loop. What should an empty array return, and what happens if the accumulator starts at 1?
+**Apply:** Loop se `[3,-2,0,5]` ki sirf positive values add karo. Empty array kya return kare? Accumulator 1 se start kiya toh kya badlega?
 
-> **Hint:** The accumulator should represent the sum before any items are processed.
+> **Hint:** Koi item process hone se pehle sum kya hai, usse initial accumulator decide karo.
 
-**Answer guide — compare after attempting:** Start the total at 0; add each value only when it is greater than 0. Results are 8 and 0. Starting at 1 biases every result, including the empty case. Visit each item once.
+**Answer guide — compare after attempting:** Total 0 se start karo; value>0 ho tab add karo. Results 8 aur empty input ke liye 0 hain. 1 se start karne par har result mein extra 1 aaega. Har item ek baar visit karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MDN loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration) explains loop forms and control statements.
+[MDN loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration) mein loop forms/control statements padho.

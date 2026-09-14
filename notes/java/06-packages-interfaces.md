@@ -5,19 +5,19 @@ track: java
 order: 6
 level: Intermediate
 minutes: 16
-summary: Organize Java code and replace dependencies through explicit contracts.
+summary: Chhote public contract ke peeche implementation rakho; constructor se required dependencies do.
 tags: packages, interfaces, encapsulation
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Package related types ka namespace hai. Interface behavior ka contract hai; implementation us behavior ko perform karti hai. Dono alag problems solve karte hain: package names collisions aur visibility organize karte hain, interface caller ko concrete implementation se separate karta hai. Start with a small notification feature before introducing any framework.
 
-> **Core takeaway:** Hide implementation details behind a small public contract and supply dependencies through constructors.
+> **Core takeaway:** Chhote public contract ke peeche implementation rakho; constructor se required dependencies do.
 
 ## Build a package from two files
 
-Java 17+ example. Save each public type in the named file, keeping package names and directory names aligned.
+Yeh Java 17+ example hai. Har public type named file mein save karo; package aur directories match honi chahiye.
 
 ```java
 // src/study/notify/Notifier.java
@@ -45,7 +45,7 @@ public class Main {
 }
 ```
 
-Compile from the project directory, then run using the fully qualified class name:
+Project directory se compile karo, phir fully qualified class name se run karo:
 
 ```text
 javac -d out src/study/notify/Notifier.java src/study/app/Main.java
@@ -53,34 +53,34 @@ java -cp out study.app.Main
 Completed: Packages
 ```
 
-The lambda implements the interface's single abstract method. StudyService receives an implementation; it never decides whether delivery uses a console, file or network. Constructor injection is ordinary Java, even without Spring. The nested service remains inside this example to keep the two-file exercise small.
+Lambda interface ka single abstract method implement karti hai. StudyService implementation receive karti hai; console/file/network delivery khud choose nahi karti. Constructor injection ordinary Java hai; Spring ke bina bhi hoti hai. Exercise ko two-file rakhne ke liye service yahan nested hai.
 
 ## Visibility is a design choice
 
-A public type can be used outside its package when the module also permits access. A top-level type without public has package access. Private members belong to their declaring class; protected also permits subclass access, with extra restrictions for access from other packages. Avoid treating protected as a universal permission to access another object's fields.
+Public type package ke bahar accessible ho sakta hai jab module bhi access allow kare. Top-level type par public na ho toh package access hota hai. Private members declaring class ke hain. protected subclass access bhi deta hai, lekin other-package access par extra restrictions hain. Ise kisi bhi object's field ki universal permission mat samjho.
 
-An import lets you use a simple type name; it does not load all instances or include subpackages. `import java.util.*` does not import `java.util.concurrent.*`. When two types share a simple name, qualify at least one explicitly. Public APIs should expose only the types callers actually need.
+Import simple type name use karne deta hai; instances load ya subpackages include nahi karta. `import java.util.*` se `java.util.concurrent.*` import nahi hota. Same simple name wale types mein kam-se-kam ek ko fully qualify karo. Public API mein caller ko required types hi expose karo.
 
 ## Contract versus inheritance
 
-An interface says what callers can request. Inheritance also shares an implementation and couples subclasses to superclass behavior. Prefer composition when you only need to replace a collaborator. Do not create an interface for every class automatically: use it where multiple implementations, testing seams or a meaningful boundary justify the extra concept.
+Interface caller ka contract batata hai. Inheritance implementation share karke subclass ko superclass behavior se couple bhi karti hai. Sirf collaborator replace karna ho toh composition consider karo. Har class ka interface blindly mat banao; meaningful boundary, multiple implementations ya testing seam ho tab justify karo.
 
 ## Practice
 
-Replace the console notifier with one that adds messages to a List. Complete two lessons and inspect the collected values. No changes should be required inside StudyService. Then try importing the nested StudyService from another package and explain why its visibility blocks access.
+Console notifier ko List mein messages add karne wale notifier se replace karo. Do lessons complete karke values dekho; StudyService ke andar change nahi chahiye. Nested StudyService ko other package se import karke visibility restriction explain karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
 **Recall:** What changes when a type is public instead of package-private?
 
-**Apply:** Record notifications for Packages and Interfaces in order, without printing from StudyService.
+**Apply:** StudyService se print kiye bina Packages aur Interfaces ki notifications order mein record karo.
 
-> **Hint:** The constructor expects behavior, not a particular delivery mechanism.
+> **Hint:** Constructor ko behavior chahiye, koi ek fixed delivery mechanism nahi.
 
-**Answer guide — compare after attempting:** Create `List<String> messages = new ArrayList<>();`, pass `messages::add` as the Notifier, and call complete twice. Expected values are `Completed: Packages` and `Completed: Interfaces`. The method reference's returned boolean can be discarded for this void contract. Import List and ArrayList in Main.
+**Answer guide — compare after attempting:** `List<String> messages = new ArrayList<>();` banao; Notifier ke liye `messages::add` pass karo aur complete do baar call karo. Expected strings `Completed: Packages`, `Completed: Interfaces` hain. Is void contract mein method-reference ka boolean result discard ho sakta hai. Main mein List aur ArrayList import karo.
 
 **Exit check:** Add a third implementation without modifying StudyService and explain which type each caller depends on.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Official reference](https://dev.java/learn/packages/).
+[Official reference yahan padho](https://dev.java/learn/packages/).

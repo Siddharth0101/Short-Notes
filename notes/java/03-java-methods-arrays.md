@@ -5,15 +5,15 @@ track: java
 order: 3
 level: Foundation
 minutes: 12
-summary: Pass inputs return results and process a fixed-size collection.
+summary: Java argument ki value copy karta hai; copied reference bhi same mutable object ko point kar sakta hai.
 tags: fundamentals, java, methods, arrays
 ---
 
-## Mental model
+## Mental model — simple soch
 
-A method describes an operation with named parameters and a declared return type. An array stores a fixed number of values of a specified element type. These let you replace repeated statements with a reusable calculation. Start with static methods in the Main class so instance creation can be learned separately in the next lesson.
+Method named parameters aur declared return type ke saath operation define karta hai. Array fixed count mein specified type ki values rakhta hai. Dono repeated statements ko reusable calculation banate hain. Abhi Main ke static methods use karo; next lesson mein instance creation seekhenge.
 
-> **Core takeaway:** Java passes argument values; an object reference value can still point at shared mutable data.
+> **Core takeaway:** Java argument ki value copy karta hai; copied reference bhi same mutable object ko point kar sakta hai.
 
 ## A complete calculation
 
@@ -36,34 +36,34 @@ public class Main {
 }
 ```
 
-The parameter sessions names the received array reference. The caller supplies the argument. return gives the calculated int back to the caller; printing alone would not return that value. A method declared void does not return a result value. Keep the sum within int range for this introductory exercise; overflow handling belongs in the foundations review.
+sessions parameter received array reference ka local naam hai; caller argument supply karta hai. return calculated int caller ko deta hai; print karne se result return nahi hota. void method result value return nahi karta. Is exercise mein sum int range ke andar assume karo; overflow later review mein hai.
 
 ## Arrays and text
 
-Array indexes start at zero and end at length minus one. Access outside that range throws an exception, rather than silently creating another element. A freshly allocated int array contains zeroes. The enhanced for loop visits each value; use an indexed loop when position matters. An array cannot grow in place; resizable collections come later.
+Array indices 0 se length-1 tak hain. Bahar access exception deta hai, naya element silently create nahi karta. New int array initially zeroes se filled hota hai. Enhanced for har value visit karta hai; position chahiye toh indexed loop lo. Array in-place grow nahi hota; resizable collections later aayengi.
 
-Strings are immutable text values. Use equals for content comparison rather than ==, which compares reference identity for objects. Calling a method on null fails, so make absence handling part of the input contract. For a known literal, "done".equals(status) safely returns false if status is null.
+Strings immutable text hain. Content compare karne ke liye equals use karo; objects par == reference identity compare karta hai. null par method call fail hoti hai, isliye absence ka contract define karo. Known literal se `"done".equals(status)` status null ho tab safely false deta hai.
 
 ## Practice
 
-Write a method that counts sessions lasting at least 20 minutes. Test an empty array, a single matching session and mixed values. Then create a method that returns a greeting instead of printing it. Call that method from main and print its returned value. Explain why the calculation is easier to reuse when it does not own console output.
+Kam-se-kam 20-minute sessions count karne ka method likho. Empty, single matching aur mixed arrays test karo. Greeting print karne ke bajay return karne ka method banao; main se result print karo. Console output own na karne se calculation reuse kyun easy hai, samjhao.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-Distinguish parameter from argument and return value from side effect. Next, group state and behavior into an instance with a constructor.
+Parameter/argument aur return value/side effect alag samjhao. Next state aur behavior ko constructor se banne wale instance mein group karenge.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A method sets `values[0] = 9` and then assigns `values = new int[]{7}`. Starting from `{1,2}`, what does the caller observe?
+**Apply:** Method pehle `values[0] = 9` karta hai, phir `values = new int[]{7}`. Caller ka original array `{1,2}` ho toh use kya dikhega?
 
-> **Hint:** Distinguish changing the referenced array from replacing the local parameter.
+> **Hint:** Shared array ko mutate karna aur local parameter ko reassign karna alag actions hain.
 
-**Answer guide — compare after attempting:** The caller's array becomes `{9,2}`. Element mutation reaches the shared array, while reassignment changes only the method's local reference. Java is still pass-by-value; the copied value in this case is a reference.
+**Answer guide — compare after attempting:** Caller ko `{9,2}` dikhega. Element change shared array tak pahunchta hai; naya array assign karne se sirf local reference badalta hai. Java pass-by-value hi hai: yahan copied value ek reference hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Dev.java arrays](https://dev.java/learn/arrays/) and [classes and objects](https://dev.java/learn/classes-objects/) provide language reference material.
+[Dev.java arrays](https://dev.java/learn/arrays/) aur [classes and objects](https://dev.java/learn/classes-objects/) se in concepts ka reference padho.

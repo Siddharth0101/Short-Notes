@@ -6,11 +6,11 @@ Auth, error handling, SSR, and advanced features are app-layer topics, but in
 this course they are built on the MongoDB Natours project, so they live here
 for reading flow.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_MONGO_DB/README.md`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - NoSQL document database concepts
 - MongoDB and Mongoose

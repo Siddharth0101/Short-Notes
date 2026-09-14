@@ -1,10 +1,10 @@
 # SQL Short Notes
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_POSTGRES/README.md`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - SQL relational database concepts
 - PostgreSQL fundamentals and advanced features

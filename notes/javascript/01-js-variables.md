@@ -5,15 +5,15 @@ track: javascript
 order: 1
 level: Foundation
 minutes: 12
-summary: Start here: name a value, read it, and update it.
+summary: Binding value ka naam hoti hai; assignment pehle right side calculate karke left side ki binding update karta hai.
 tags: fundamentals, js, variables
 ---
 
-## Mental model
+## Mental model — simple soch
 
-Variable ek naam hai jisse program value ko refer karta hai. Start with a single value before thinking about functions, objects or a framework. JavaScript statements execute in order. You can try these examples in the browser developer console or in a JavaScript file executed with Node. Run one small example at a time so you can predict every line.
+Variable ek naam hai jisse program value ko refer karta hai. Jaise notebook par subject ka label hota hai, binding se value ko naam milta hai; yeh analogy object cloning imply nahi karti. Pehle ek value samjho, phir functions/objects par jao. Statements order mein chalti hain. Browser developer console ya Node ki JavaScript file mein ek small example run karo. Har line se pehle output predict karo.
 
-> **Core takeaway:** A binding names a value; assignment evaluates the right side before replacing the left side.
+> **Core takeaway:** Binding value ka naam hoti hai; assignment pehle right side calculate karke left side ki binding update karta hai.
 
 ## Declare before reading
 
@@ -26,34 +26,34 @@ completed = completed + 1;
 console.log(completed); // 1
 ```
 
-const declares a binding you will not reassign. let declares one you intend to update. The equals sign assigns a value; it does not ask whether two values are equal. In completed = completed + 1, read the old value on the right, calculate the result, and store it on the left. console.log displays a value so you can inspect what happened.
+const aisi binding declare karta hai jise reassign nahi karoge; let changing value ke liye hai. `=` assignment hai, equality question nahi. `completed = completed + 1` mein pehle right ka old completed padho, 1 add karo, phir result left mein rakho. console.log se value dekhkar har step inspect kar sakte ho.
 
 ## Naming and initialization
 
-Use names that explain meaning: completedLessons is clearer than x. Names are case-sensitive, so score and Score are different bindings. A name cannot start with a digit or use a reserved keyword. Initialize a binding when you can. A let declaration without an initializer has the value undefined until assigned; reading a binding before its declaration is a different situation and produces an error.
+Meaningful names rakho: completedLessons, x se clearer hai. Names case-sensitive hain; score aur Score alag hain. Naam digit se start ya reserved keyword nahi ho sakta. Possible ho toh declare karte waqt initialize karo. `let x;` declaration ke baad x undefined hai; declaration se pehle x padhna alag case hai aur error deta hai.
 
-Prefer const unless reassignment is needed. Older courses also show var; learn to recognize it, but its function-scoped behavior belongs in the later scope lesson. You do not need hoisting terminology to write these first examples correctly.
+Reassignment required na ho toh const prefer karo. Old code mein var pehchano; uska function-scoped behavior later scope lesson mein padhenge. First examples likhne ke liye abhi hoisting terminology ratna zaroori nahi.
 
 ## Practice
 
-Create a constant courseName and a changing lessonsRead count. Increase lessonsRead twice and predict the output after each statement. Try reassigning courseName and read the error. Then fix your design: should the course name really change, or should that binding remain constant? Avoid changing const to let merely to silence an error without thinking about the intended behavior.
+Fixed courseName aur changing lessonsRead banao. Count do baar badhao; har statement ka output predict karo. courseName reassign karke error padho. Phir decide karo name actually changeable chahiye ya fixed. Sirf error chupane ke liye const ko let mat karo.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-You should be able to explain declaration, initialization and reassignment separately. Write three statements that turn an initial score of 4 into 7 without typing 7 directly. Next, study the types of values these names can hold.
+Declaration, initialization aur reassignment separately samjhao. Three statements se score 4 ko 7 banao bina directly 7 assign kiye. Next values ke types padhenge.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Start with `let minutes = 10`. Add 5, then double it. Predict both values. Which declaration should hold an unchanging course name?
+**Apply:** `let minutes = 10` se shuru karo. Pehle 5 add karo, phir double karo. Dono outputs predict karo. Fixed course name ke liye kaunsi declaration use hogi?
 
-> **Hint:** Trace one assignment at a time.
+> **Hint:** Ek waqt ek assignment trace karo; har line ke baad current value likho.
 
-**Answer guide — compare after attempting:** The intermediate value is 15 and the final value is 30. Use `const courseName = 'JavaScript'` for the name. Changing the count needs `let`; declaring a name and assigning a new value are separate operations.
+**Answer guide — compare after attempting:** Pehle 15, phir 30 milega. Name ke liye `const courseName = 'JavaScript'` rakho. Changing count ko let chahiye. Declaration naam banati hai; reassignment existing binding ki value badalti hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MDN grammar and types](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types) covers declarations and values.
+[MDN grammar and types](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types) mein declarations aur values padho.

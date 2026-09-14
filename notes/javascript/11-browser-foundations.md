@@ -5,21 +5,21 @@ track: javascript
 order: 11
 level: Foundation
 minutes: 25
-summary: Connect semantic markup, layout and browser work to real interface failures.
+summary: Semantic HTML meaning aur built-in interaction deta hai; CSS uski layout/style decide karta hai.
 tags: html, css, accessibility, browser, layout
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Browser UI teen connected contracts hai: HTML describes meaning, CSS describes presentation, and JavaScript adds behavior. Framework components eventually produce these same browser primitives. A button-looking div does not acquire native keyboard behavior, and a React render does not necessarily cause a browser paint.
 
-> **Core takeaway:** Semantic HTML supplies interaction behavior; CSS determines layout without changing meaning.
+> **Core takeaway:** Semantic HTML meaning aur built-in interaction deta hai; CSS uski layout/style decide karta hai.
 
 ## The rendering path
 
-Parse HTML into DOM and CSS into style rules; resolve computed styles; lay out geometry; paint visual content; composite layers when appropriate. Changes can invalidate different amounts of work. Updating width may trigger layout, while transform often avoids layout, but compositor behavior depends on browser and element details. Measure the actual trace instead of assuming every animation is cheap.
+Browser HTML se DOM, CSS se style rules banata hai; computed styles resolve, geometry layout, content paint aur suitable layers composite karta hai. Width update layout trigger kar sakti hai; transform often layout avoid karta hai, lekin exact behavior browser/element par depend hai. Actual trace measure karo.
 
-Reading geometry after changing styles can force synchronous layout. Batch reads before writes when practical. An animation that moves a thousand elements may remain expensive even if individual transforms are composited; layer memory and rasterization still cost resources.
+Styles change ke baad geometry read karna synchronous layout force kar sakta hai. Possible ho toh reads pehle batch karo, phir writes. Thousand composited transforms bhi costly ho sakte hain; layer memory aur rasterization resources leti hain.
 
 ## A resilient card layout
 
@@ -54,27 +54,27 @@ button:focus-visible, input:focus-visible {
 }
 ```
 
-The inner min prevents a minimum column width from overflowing a narrow container. min-width: 0 allows a grid or flex child to shrink below its content's automatic minimum where needed. Test long unbroken titles; ordinary short demo text hides overflow bugs.
+Inner min minimum column ko narrow container se overflow hone se rokta hai. min-width:0 flex/grid child ko automatic content minimum se neeche shrink karne deta hai. Long unbroken titles test karo; short demo text overflow chupa deti hai.
 
 ## Cascade and positioning traps
 
-Specificity matters after origin, importance and cascade-layer ordering. Adding more selectors can mask a flawed styling boundary. Prefer scoped component styles and a documented token layer. Flexbox distributes along one main axis; grid handles two-dimensional placement. Neither tool replaces semantic DOM order.
+Specificity se pehle origin, importance aur cascade-layer order matter karte hain. More selectors weak style boundary ko hide kar sakte hain. Scoped styles aur documented tokens use karo. Flexbox one main axis distribute karta hai; grid two-dimensional placement. Dono semantic DOM order replace nahi karte.
 
-position: absolute uses its containing block, not always the viewport. A transformed ancestor can change containing-block behavior for positioned descendants. z-index operates inside stacking contexts: a child cannot escape its parent's context just by using a huge number. Debug ancestor contexts before increasing numbers.
+position:absolute containing block use karta hai, always viewport nahi. Transformed ancestor positioned descendants ka containing block badal sakta hai. z-index stacking context ke andar work karta hai; huge number se child parent context escape nahi karta. Pehle ancestor contexts debug karo.
 
 ## Practice
 
-Build the layout above with one 200-character title. Check 320px width and 200% zoom. Navigate without a mouse, submit using Enter, and verify the input has a visible label. Add a modal and explain focus entry, Escape, background interaction and focus restoration before choosing an implementation. Keep native elements where their behavior matches your requirement.
+Layout mein 200-character title do. 320px width aur 200% zoom check karo. Keyboard se navigate, Enter se submit aur visible input label verify karo. Modal ke liye focus entry, Escape, background interaction aur focus return define karo. Requirement match ho toh native elements use karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Why can min-width: 0 fix an overflowing flex item?** It permits shrinking below the automatic content minimum; it does not arbitrarily hide content.
+**min-width:0 overflow fix kyun kar sakta hai?** Flex item automatic content minimum se neeche shrink kar sakta hai; content ko arbitrarily hide nahi karta.
 
-**Does display: none preserve accessibility exposure?** The hidden subtree is generally removed from layout and the accessibility tree. Choose hiding behavior according to the interaction, not appearance alone.
+**display:none par accessibility exposure bachta hai?** Hidden subtree generally layout aur accessibility tree dono se remove hota hai. Hiding behavior interaction ke hisaab se choose karo, sirf appearance se nahi.
 
 ## Research notes: Semantic HTML before custom interaction
 
-Use an anchor for navigation and a button for an action. A clickable `div` requires extra keyboard, focus and accessibility behavior.
+Navigation ke liye anchor, action ke liye button lo. Clickable div mein keyboard, focus aur accessibility behavior khud add karna padta hai.
 
 ```html
 <label for="course-search">Find a course</label>
@@ -83,28 +83,28 @@ Use an anchor for navigation and a button for an action. A clickable `div` requi
 <a href="/library">Browse all courses</a>
 ```
 
-Placeholder text is not a persistent visible label. Start with native behavior, then add styling.
+Placeholder persistent visible label nahi hai. Pehle native behavior sahi karo, phir styling add karo.
 
-**Interview check:** What can be missing from a control that only handles click on a div?
+**Interview check:** Sirf div ke click handler mein kya missing ho sakta hai?
 
-**Answer:** Keyboard activation, focusability, and an accessible role or name may be absent. Prefer the correct native element and preserve its behavior while styling it.
+**Answer:** Keyboard activation, focusability aur accessible role/name missing ho sakte hain. Correct native element choose karo aur style karte waqt behavior preserve karo.
 
-**Practice:** Navigate and activate the example using only a keyboard.
+**Practice:** Sirf keyboard se example navigate aur activate karo.
 
-[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Sketch a lesson card with a heading, description, and an action that expands details. How will it work with keyboard input and at a narrow width?
+**Apply:** Heading, description aur expand-details action wala lesson card banao. Keyboard aur narrow screen par behavior samjhao.
 
-> **Hint:** An action is a button; navigation is a link.
+> **Hint:** Action ke liye button aur navigation ke liye link use karo.
 
-**Answer guide — compare after attempting:** Use a real button with an accessible name and an expanded-state indicator tied to the controlled content. Keep visible focus and a flexible card width. Verify activation with Enter and Space and check that long text wraps without hiding the action.
+**Answer guide — compare after attempting:** Accessible name wala real button use karo; expanded state ko controlled content se associate karo. Visible focus aur flexible width rakho. Enter/Space activation test karo; long text wrap ho aur action hide na ho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MDN CSS guide](https://developer.mozilla.org/en-US/docs/Web/CSS) and [HTML reference](https://developer.mozilla.org/en-US/docs/Web/HTML) provide the browser primitives behind these examples.
+[MDN CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) aur [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML) mein examples ke browser primitives padho.

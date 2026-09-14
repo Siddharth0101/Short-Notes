@@ -5,7 +5,7 @@ Telusko Java, Spring Boot, Microservices bootcamp style notes.
 These files follow the same style as the Node/Frontend notes in this repo:
 short Hinglish explanations, important rules, and compact Java/Spring examples.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_COURSE_INTRODUCTION/Course_Overview.java`
 2. `02_CORE_JAVA/Core_Java_Basics.java` — Variables, Data Types, Literals, Type Conversion, Casting, Operators, OOPs Basics, Keywords
@@ -26,7 +26,7 @@ short Hinglish explanations, important rules, and compact Java/Spring examples.
 17. `08_SPRING_AI/Spring_AI_Intro.java`
 18. `09_DOCKER_MICROSERVICES/Docker_Microservices.java`
 
-## Main Coverage
+## Yahan kya cover hai
 
 ### Core Java
 - JDK, JRE, JVM architecture

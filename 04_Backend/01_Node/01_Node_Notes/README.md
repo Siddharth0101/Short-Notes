@@ -5,7 +5,7 @@ Jonas Schmedtmann Node.js, Express bootcamp style notes.
 These files follow the same style as the JavaScript/Frontend notes in this repo:
 short Hinglish explanations, important rules, and compact JavaScript examples.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_COURSE_OVERVIEW/Jonas_Node_Course_Map.js`
 2. `02_NODE_FOUNDATIONS/Node_NPM_Core_Modules.js`
@@ -18,7 +18,7 @@ short Hinglish explanations, important rules, and compact JavaScript examples.
 9. `09_SQL/README.md`
 10. `10_NO_SQL/README.md`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - Node.js, NPM, core modules, file system, web server
 - Backend web basics, HTTP, APIs, static/dynamic websites

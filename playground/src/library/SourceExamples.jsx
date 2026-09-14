@@ -43,17 +43,17 @@ function Example({ reference }) {
       {open && (
         <div className="source-example-body">
           <p className="source-caption">
-            Course example · {reference.language} · Snippets may need their own runtime or project
-            setup.
+            Course example · {reference.language} · Snippet ko apna runtime ya project setup chahiye
+            ho sakta hai.
           </p>
           {reference.originalUrl && (
             <Link className="text-button" to={reference.originalUrl}>
-              Open interactive playground →
+              Interactive playground kholo →
             </Link>
           )}
           {error ? (
             <p role="alert">
-              Example could not load.{' '}
+              Example load nahi hua.{' '}
               <button className="text-button" onClick={() => setAttempt(attempt + 1)}>
                 Retry
               </button>
@@ -61,7 +61,7 @@ function Example({ reference }) {
           ) : body ? (
             <Markdown idPrefix={anchor}>{body}</Markdown>
           ) : (
-            <p role="status">Loading example…</p>
+            <p role="status">Example load ho raha hai…</p>
           )}
         </div>
       )}
@@ -72,8 +72,8 @@ export default function SourceExamples({ references }) {
   if (!references.length) return null;
   return (
     <section className="source-examples" aria-labelledby="source-examples">
-      <h2 id="source-examples">Source examples and walkthroughs</h2>
-      <p>Expand an example to connect the lesson to the course code.</p>
+      <h2 id="source-examples">Source examples — step-by-step samjho</h2>
+      <p>Example kholo aur lesson ko actual code se connect karo.</p>
       {references.map((reference) => (
         <Example key={reference.id} reference={reference} />
       ))}

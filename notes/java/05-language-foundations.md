@@ -5,16 +5,16 @@ track: java
 order: 5
 level: Foundation
 minutes: 16
-summary: Types, conversions, control flow aur strings ko predictable rules se samjho.
+summary: Destination type bada karne se pehle ho chuki arithmetic ka type nahi badalta.
 tags: types, casting, strings, arrays
 visual: java-memory
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Java program ko compiler pehle bytecode mein translate karta hai, phir JVM execute karti hai. JDK development tools aur runtime capabilities provide karta hai. Java ki strength compile-time contracts hain: variable ka declared type decide karta hai ki kaunse operations legal hain. `var` local type inference hai; variable dynamically typed nahi ho jata. Examples Java 21-compatible syntax use karte hain unless otherwise stated.
 
-> **Core takeaway:** Widening the destination does not widen arithmetic already performed.
+> **Core takeaway:** Destination type bada karne se pehle ho chuki arithmetic ka type nahi badalta.
 
 ## Types and conversions
 
@@ -90,7 +90,7 @@ Cast ab explicit nahi likhna padta; `text` variable sirf tab scope mein hota hai
 
 Request validation code mein yeh foundations directly dikhte hain: incoming JSON field ka type check karna (`instanceof` pattern matching se safe cast), status codes ko `switch` expression se map karna, aur SQL templates ko text block mein readable rakhna. Ek chhota casting bug — jaise discount percentage ko `int` mein truncate kar dena — production mein silently wrong invoice amount generate kar sakta hai, isliye yeh "basic" rules hi first line of defense hain.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Is Java pass by reference?** Nahi. Java always pass by value hai. Object argument mein reference value ki copy pass hoti hai. Method shared object mutate kar sakta hai, caller ki reference variable reassign nahi kar sakta.
 
@@ -102,19 +102,19 @@ Request validation code mein yeh foundations directly dikhte hain: incoming JSON
 
 Temperature converter likho jisme integer-division bug intentionally introduce karke fix karo. Ek array ka min/max find karo, empty input ka behavior document karo. Phir reference reassignment aur object mutation ke outputs execution se pehle predict karo. Last mein ek status-code mapper ko purane colon-style `switch` se likho, ek fallthrough bug intentionally introduce karo, phir arrow-style expression se rewrite karke bug class ko eliminate karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Why can `long total = 100000 * 100000;` be wrong? Repair it and state the expected result.
+**Apply:** `long total = 100000 * 100000;` galat kyun ho sakta hai? Fix karke expected result likho.
 
-> **Hint:** At least one operand must already be long.
+> **Hint:** Multiplication shuru hone se pehle ek operand long hona chahiye.
 
-**Answer guide — compare after attempting:** Both original operands are int, so their multiplication overflows before assignment. `long total = 100000L * 100000;` yields 10000000000. Consider the maximum intermediate value, not just the final variable type.
+**Answer guide — compare after attempting:** Dono original operands int hain; assignment se pehle multiplication overflow ho jaati hai. `long total = 100000L * 100000;` se 10000000000 milega. Sirf final variable nahi, intermediate calculation ki maximum value bhi dekho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Java language basics](https://dev.java/learn/language-basics/)
 - [Java conversion specification](https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html)

@@ -5,15 +5,15 @@ track: java
 order: 10
 level: Intermediate
 minutes: 19
-summary: Lazy pipelines, reduction aur side effects ka clear mental model banao.
+summary: Stream pipeline transformation dikhaye; hidden shared mutation se reasoning aur parallel execution dono mushkil hote hain.
 tags: streams, lambdas, optional, collectors
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Lambda behavior ko value ki tarah pass karne ka compact syntax hai. Stream collection nahi, data processing pipeline hai: source, intermediate transformations, terminal operation. Stream use karna automatically multithreaded execution nahi banata. Pipeline ko mathematical transformation jaisa rakho: input se output, minimal hidden mutation.
 
-> **Core takeaway:** Stream pipelines should express transformations without hidden shared mutation.
+> **Core takeaway:** Stream pipeline transformation dikhaye; hidden shared mutation se reasoning aur parallel execution dono mushkil hote hain.
 
 ## Functional interfaces
 
@@ -103,7 +103,7 @@ Parallel streams small inputs pe slower ho sakte hain because splitting, schedul
 
 Report/analytics endpoints mein `groupingBy` + `averagingInt`/`summingLong` combination bahut common hai — jaise "topic ke hisaab se average score" ya "day ke hisaab se order count". `Optional` service layer mein repository lookups ke return type ke roop mein dikhta hai (`Optional<Note>` se `orElseThrow(NoteNotFoundException::new)`), jabki DTO fields mein Optional generally avoid kiya jaata hai kyunki JSON serialization awkward ho jaati hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Map versus flatMap?** Map har input ko one output value banata hai. FlatMap har input se produced stream ko flatten karta hai, jaise orders se order lines.
 
@@ -117,7 +117,7 @@ Duplicate-free tags alphabetically return karo. Then second-highest distinct sco
 
 ## Research notes: Keep the source when traversing twice
 
-A stream describes processing and is consumed by a terminal operation. Retain the collection or a stream-producing function for independent traversals.
+Stream processing describe karti hai aur terminal operation se consume hoti hai. Independent traversals ke liye original collection ya fresh-stream factory rakho.
 
 ```java
 var values = java.util.List.of(2, 4, 7);
@@ -126,29 +126,29 @@ int total = values.stream().mapToInt(Integer::intValue).sum();
 System.out.println(even + ":" + total); // 2:13
 ```
 
-Keep transformations free of shared mutable side effects. Parallel processing is a workload and concurrency decision.
+Transformations mein shared mutable side effects avoid karo. Parallel processing workload aur concurrency ka decision hai, sirf syntax change nahi.
 
-**Interview check:** Why should count and sum not reuse the same Stream variable?
+**Interview check:** count aur sum ke liye same Stream variable reuse kyun nahi karna chahiye?
 
-**Answer:** The first terminal operation consumes it. Create another stream from the source or design a suitable single-pass reduction when warranted.
+**Answer:** First terminal operation stream consume kar deti hai. Source se fresh stream banao ya suitable single-pass reduction design karo.
 
-**Practice:** Explain the risks of mutating a shared ArrayList from parallel forEach.
+**Practice:** Parallel forEach se shared ArrayList mutate karne ki risk explain karo.
 
-[Read the source — Dev.java](https://dev.java/learn/api/streams/). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Dev.java](https://dev.java/learn/api/streams/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Replace a stream that appends into an external ArrayList with a pipeline producing names of active users. Why is parallelizing the original dangerous?
+**Apply:** External ArrayList mein append karne wali stream ko active users ke names return karne wali pipeline banao. Original ko parallel karna risky kyun hai?
 
-> **Hint:** Collect the result through the stream operation itself.
+> **Hint:** Result stream ke collection operation se nikalo.
 
-**Answer guide — compare after attempting:** Filter active users, map to names, then collect using the required result-list contract. Concurrent writes to an ordinary shared ArrayList are unsafe. Also clarify whether callers need a mutable result; Java's Stream.toList returns an unmodifiable list.
+**Answer guide — compare after attempting:** Active users filter karo, names map karo aur required list contract ke hisaab se collect karo. Ordinary shared ArrayList mein concurrent writes unsafe hain. Result mutable chahiye ya nahi, clear karo: `Stream.toList()` unmodifiable list deta hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Stream learning path](https://dev.java/learn/api/streams/)
 - [Stream API contract](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html)

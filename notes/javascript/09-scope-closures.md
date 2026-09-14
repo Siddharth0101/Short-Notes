@@ -5,16 +5,16 @@ track: javascript
 order: 9
 level: Intermediate
 minutes: 26
-summary: Call stack, lexical scope, hoisting, TDZ aur closure lifetime ko step by step trace karo.
+summary: Closure apni lexical bindings access kar sakta hai; separate factory calls apna-apna state bana sakti hain.
 tags: scope, closures, hoisting, execution-context, memory
 visual: closures
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Function call hone par execution context stack par aata hai. Function apne variables ke liye pehle local scope, phir definition ke surrounding lexical scopes search karta hai. Caller ka scope automatically access nahi hota. Closure function aur uske accessible lexical environment ka combination hai. Function return hone ke baad bhi captured bindings reachable hain to environment alive reh sakta hai.
 
-> **Core takeaway:** A closure retains access to its lexical bindings; separate factory calls can own separate state.
+> **Core takeaway:** Closure apni lexical bindings access kar sakta hai; separate factory calls apna-apna state bana sakti hain.
 
 ## Trace an independent counter
 
@@ -104,7 +104,7 @@ console.log(fastSquare(5)); // cached
 
 Closures private state, memoization, event handlers aur function factories mein useful hain. Higher-order function function ko accept ya return karta hai. IIFE ek function ko immediately execute karke scope bana sakta hai; modules mein manual IIFE ki need frequently kam ho jaati hai. Callback registered reh gaya to captured large object bhi reachable reh sakta hai. Listener removal, subscription cleanup aur cache size limit memory management ka part hain.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Closure variable ki value creation time par "snapshot" ho jaati hai. **Why it breaks:** Closure binding capture karta hai, value nahi — agar shared binding baad mein mutate hoti hai (jaise `var` loop mein), sab callbacks final value dekhte hain, apna-apna captured value nahi. **Fix:** Per-iteration binding chahiye to `let`/`const` use karo, ya explicit IIFE/helper function se naya scope banao.
 - **Wrong assumption:** `typeof possiblyUndeclared` hamesha safe hai, ReferenceError kabhi nahi dega. **Why it breaks:** TDZ mein pade `let`/`const` binding par `typeof` bhi throw karta hai; yeh sirf truly undeclared identifiers ke liye safe hai. **Fix:** Variable ko use se pehle explicitly declare/initialize karo; "typeof guard" pattern ko TDZ case mein rely mat karo.
@@ -116,7 +116,7 @@ Real app mein yeh dynamic list ke event handlers (har row ka apna id/index), API
 
 `createAttemptLimiter(max)` banao jo remaining attempts private rakhe aur `tryOnce()` return kare. Do instances interleave karke independence prove karo. Phir reset method add karo aur explain karo ki returned methods same count kaise share karte hain.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Closure function return hone ke baad kaise work karta hai?** Stack frame end hota hai, lekin reachable lexical bindings ko garbage collector reclaim nahi karta.
 
@@ -141,28 +141,28 @@ r.advance();
 console.log(r.live(), r.snapshot()); // 1, "Revision 0"
 ```
 
-Both readers are closures. One reads the changing number; the other reads a string computed earlier.
+Dono readers closures hain. Ek changing number ki binding read karta hai; doosra pehle calculated string read karta hai.
 
-**Interview check:** Why does the snapshot stay unchanged even though both readers are closures?
+**Interview check:** Dono closures hone par bhi snapshot same kyun rehta hai?
 
-**Answer:** The numeric binding changed, but the earlier string was not recomputed. Calculate the label inside the reader for a current label; capture deliberately when historical state is required.
+**Answer:** Number binding badli, earlier string recalculate nahi hui. Current label chahiye toh reader ke andar calculate karo; historical state chahiye tab deliberately snapshot capture karo.
 
-**Practice:** Move label creation into snapshot(), then predict the output.
+**Practice:** Label creation snapshot() ke andar move karo aur output predict karo.
 
-[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Build two counters starting at zero. Call the first twice and the second once. Predict outputs and explain why a single global count changes the behavior.
+**Apply:** Zero se start hone wale do counters banao. First ko do baar, second ko ek baar call karo. Outputs batao aur global count ka effect samjhao.
 
-> **Hint:** Declare the count inside the factory and return a function that increments it.
+> **Hint:** Count factory ke andar declare karo aur use increment karne wali function return karo.
 
-**Answer guide — compare after attempting:** `function makeCounter() { let n = 0; return () => ++n; }` gives 1, 2, 1 across those calls. Each factory invocation creates its own binding. A global binding would be shared, producing 1, 2, 3 instead.
+**Answer guide — compare after attempting:** `function makeCounter() { let n = 0; return () => ++n; }` se calls ka output 1, 2, 1 hai. Har factory invocation n ki nayi binding banati hai. Global binding share hoti toh output 1, 2, 3 hota.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures) lexical environments ka reference hai. [MDN execution model](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model) stack aur jobs explain karta hai.

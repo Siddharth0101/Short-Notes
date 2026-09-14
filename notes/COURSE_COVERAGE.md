@@ -1,14 +1,14 @@
-# Course coverage and reading order
+# Course coverage aur padhne ka order
 
-The definitive reading order is the [course syllabus](README.md). Each course now has numbered stages, prerequisites, lessons and checkpoints. Chapter filenames and frontmatter order match this syllabus; stable chapter IDs preserve app bookmarks and links.
+Padhne ka order [course syllabus](README.md) mein hai. Har course ke numbered stages, prerequisites, lessons aur checkpoints follow karo. Stable chapter IDs bookmarks/links preserve karte hain.
 
-JavaScript starts with variables, types/operators, decisions, loops, functions, and arrays/objects before collections and scope. Java starts with a runnable program, typed variables, control flow, methods/arrays and classes before advanced core Java and Spring. React begins with JSX/props and state. DSA introduces linear structures and hashing before patterns, then recursion, sorting, trees, heaps, graphs and DP. Node/MongoDB progresses through HTTP, Express, documents, schemas, query performance, security and deployment. System design separates shared foundations, React architecture, Java architecture and integrated case studies.
+JavaScript mein variables se async/tooling, Java mein first program se concurrency, React mein JSX se production tak seekho. DSA mein basic structures se patterns, recursion, trees, graphs aur DP tak badho. Node/MongoDB mein HTTP se deployment; system design mein requirements, frontend/backend aur integrated cases padho. Har stage previous foundation par build hoti hai.
 
-## Instructor context
+## Instructor references ka matlab
 
-These original study notes are topic companions to Jonas Schmedtmann’s JavaScript, React and Node/MongoDB courses, Telusko’s Java material, and Colt Steele’s DSA material. Exact enrolled editions and complete lecture lists were not supplied. This is a prerequisite-based learning order, not a verified reproduction of an instructor’s every lecture. The 11 new beginner lessons fill learning prerequisites; they are not claims about additional course lectures.
+Yeh original notes Jonas Schmedtmann ke JavaScript/React/Node, Telusko ke Java aur Colt Steele ke DSA topics ke companions hain. Exact enrolled editions aur complete lecture lists supplied nahi thi. Repo ka syllabus ordered hai, lekin instructor ki har lecture ka verified reproduction claim nahi hai. Beginner lessons learning prerequisites fill karti hain.
 
-## Course maps
+## Har course ka map
 
 - [JavaScript](javascript/README.md)
 - [React](react/README.md)
@@ -19,6 +19,6 @@ These original study notes are topic companions to Jonas Schmedtmann’s JavaScr
 - [System design](system-design/README.md)
 - [Interview playbooks](interview/README.md)
 
-## Verification still needed for every-lecture coverage
+## Har instructor lecture verify karne ke liye kya chahiye
 
-Record the exact course URL, edition/update date, section title and lecture title from the enrolled syllabus. Map each lecture to covered, partial, practice-only or pending. Instructor projects and exercise variants have not been reproduced wholesale. Existing source notes and PDFs remain preserved under their original numbered folders. Technical chapters include official documentation for further study.
+Exact course URL, edition/update date, section aur lecture titles enrolled syllabus se chahiye. Har lecture ko covered/partial/practice-only/pending map karna hoga. Instructor projects/exercises wholesale reproduce nahi kiye gaye. Original PDF slides reference files hain; Hinglish teaching chapters notes/ mein padho. Further study ke official links har chapter mein hain.

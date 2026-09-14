@@ -1,15 +1,15 @@
-# Adding and maintaining notes
+# Notes add aur maintain kaise karein
 
-Write clear Hinglish explanations with English technical terms. Keep headings and code identifiers in English. Prefer an original example, a reason it works, a mistake to avoid, and an exercise over a list of API names.
+Explanation **simple Roman Hinglish** mein likho. Technical terms, API names aur code identifiers English mein rakho. Sirf English paragraph ke aage “samjho” lagana translation nahi hai: poori reasoning natural Hinglish mein samjhao. Original example, uske chalne ka reason, common mistake aur practice task do.
 
-## Add a chapter
+## Naya chapter
 
-Create `notes/<track>/<order>-<topic>.md`. Valid tracks are `javascript`, `react`, `java`, `spring-boot`, `mongodb`, `dsa`, `system-design`, and `interview`.
+`notes/<track>/<order>-<topic>.md` banao. Valid tracks: `javascript`, `react`, `java`, `spring-boot`, `mongodb`, `dsa`, `system-design`, `interview`.
 
 ```yaml
 ---
 id: js-example-topic
-title: A useful chapter title
+title: Ek useful chapter title
 track: javascript
 order: 9
 level: Intermediate
@@ -20,35 +20,45 @@ visual: event-loop
 ---
 ```
 
-Use a globally unique permanent ID, a unique positive order within its track, and `Foundation`, `Intermediate`, or `Advanced` for level. `tags` is a comma-separated line. Keep metadata on single lines; this repository uses a small frontmatter parser, not full YAML. `visual` is optional and must match `playground/src/lib/visualIds.js`.
+ID globally unique aur permanent ho. Track ke andar order positive aur unique ho. Level `Foundation`, `Intermediate` ya `Advanced` rakho; yeh machine-readable values hain. Metadata single line par rakho: parser full YAML nahi hai. `tags` comma-separated hain. Optional `visual` ko `playground/src/lib/visualIds.js` ke ID se match karna chahiye.
 
-Follow this body structure:
+Chapter ka structure:
 
-1. `## Mental model`: what it means and when it helps. End it with a concise `> **Core takeaway:**` that states the key mechanism or decision.
-2. Concept sections: assumptions, examples, tradeoffs, and gotchas.
-3. Fenced code: use `js`, `jsx`, `java`, `sql`, or `text` accurately. Label application excerpts and required dependencies.
-4. `## Practice` or `## Practice and answer`: tasks that require recall and application.
-5. `## Revision and practice lab`: include **Recall**, a chapter-specific **Apply** challenge, a **Hint**, an **Answer guide — compare after attempting**, and an **Exit check**. Supply an expected result, a trace, or observable acceptance criteria. State assumptions; do not reuse a generic challenge across unrelated chapters.
-6. Interview questions: explain why, not just what.
-7. Primary sources: link the exact documentation supporting version-sensitive claims.
+1. `## Mental model — simple soch`: kya, kyun aur kab? Ek short `> **Core takeaway:**` mein main mechanism/decision do.
+2. Concept sections: assumptions, step-by-step example, tradeoff aur failure case.
+3. Fenced code: sahi language (`js`, `jsx`, `java`, `sql`, `text`) aur required runtime/dependencies batao.
+4. Practice: recall ke saath application karwao.
+5. `## Revision and practice lab — khud karke samjho`: Recall, topic-specific Apply, Hint, attempt ke baad Answer guide aur Exit check. Expected output, trace ya observable acceptance criteria do.
+6. Interview questions: answer ka “kyun” bhi samjhao.
+7. Primary sources: version-sensitive claim ke supporting documentation ka exact link do.
 
-Never claim a code excerpt is runnable by itself if it needs a framework, schema, component, or dependency that is not included. Avoid outdated blanket rules such as “all primitives live on the stack” or “REST APIs never need CSRF protection.”
+Chapter aur prerequisites se lab solve ho sakna chahiye. Beginner exercise mein future concept bina explanation use mat karo. Same generic exercise har chapter mein repeat mat karo. Framework/schema/dependency missing ho toh excerpt ko standalone runnable mat bolo. “All primitives stack par hote hain” jaise blanket rules se bacho.
 
-## Add interview questions
+## Syllabus ka order
 
-Extend `playground/src/data/interviewQuestions.js` with a unique `id`, valid subject `track`, `level`, `question`, explanatory `answer`, challenging `followUp`, and string-array `tags`. Questions should test understanding, debugging, implementation, or tradeoffs. Keep the answer clear, using Hinglish where helpful. For practical scenarios, add a `noteId` referencing a study chapter; the app uses it for the related-reading link. The supplementary bank lives in `playground/src/data/advancedQuestions.js` and is included by the main bank.
+`notes/curriculum.json` har stage ke prerequisites, ordered lesson IDs, goal aur checkpoint define karta hai. Har chapter exactly once aaye. Sequence badle toh numeric filename aur frontmatter order align karo, stable ID preserve karo aur moved-file links update karo.
 
-## Add visualizations
+Repo root se `node scripts/sync-curriculum.mjs` chalao. Generated syllabus, per-course READMEs aur coverage guide manually edit mat karo. Course READMEs navigation hain; study chapters nahi.
 
-Register the topic ID in `src/lib/visualIds.js`, add its metadata and narrative in `src/data/visuals.js`, and implement custom state rendering in `src/library/VisualLab.jsx` only when needed. Algorithm traces belong in `src/lib/traces.js`. Support pause, next/previous step, reset, and speed controls. Explain simplifications explicitly. Respect reduced-motion settings.
+## Interview bank aur workbook
 
-Test algorithm invariants and boundary cases rather than checking only one demonstration input. Never substitute an unrelated visualization for an unsupported topic.
+Main bank `playground/src/data/interviewQuestions.js` hai. Extra scenarios `scenarioQuestions.js`, advanced questions `advancedQuestions.js`, Java/Spring additions `courseQuestions.js` aur supplied-checklist additions `requestedQuestions.js` mein hain.
 
-## Preserve source material
+Question mein unique `id`, valid `track`, `level`, `question`, deep `answer`, challenging `followUp` aur string-array `tags` do. Precise placement ke liye `noteId`, focused filter ke liye valid `topic`, researched concept ke liye primary source link do. Questions debugging, reasoning, implementation aur tradeoffs test karein.
 
-Keep original source files under the numbered folders. Add curated chapters under `notes/` instead of replacing source references with short summaries. Correct precise errors in old notes when verified. Do not reproduce unavailable course lectures or label broad topic coverage as verified complete course coverage.
+Already covered learning objective ko canonical question se reuse karo; missing example ho toh answer expand karo. `answerAdditions` existing IDs ke targeted expansions rakhta hai. Optional `promptCode` answer reveal se pehle dikhta hai: runtime assumptions batao, intended output prompt mein leak mat karo. Code fences dono app aur GitHub mein readable honi chahiye. Ek observed timer order ko universal guarantee mat bolo. IDs preserve karo, taaki confidence tracking bachi rahe.
 
-## Validate
+Bank/checklist badalne ke baad `node scripts/sync-interviews.mjs` chalao. Yeh workbook regenerate karta hai. Inaccessible source/image ko inspect kiya hua mat batao; pending status clear rakho. Employer-specific frequency ke unsupported claims mat add karo.
+
+## Source examples aur visuals
+
+Numbered folders mein original references rakho. Curated explanations `notes/` mein do; source ko short summary se replace mat karo. Verified precise error correct kar sakte ho. Original PDFs ki language clearly label karo. Unavailable course lectures reproduce karne ya verified every-lecture coverage ka claim mat karo.
+
+`catalog.js` se discovered har source ka explicit owner `sourceChapters.json` mein ho. Topic ke hisaab se assign karo, folder ke hisaab se blindly nahi. Reader expansion par source load karta hai. Old IDs aliases rahenge; unrelated separate source collection mat banao. Har chapter ke saath relevant interview practice attach karo.
+
+Visual ID `src/lib/visualIds.js` mein register karo; metadata/narrative `src/data/visuals.js` mein aur algorithm traces `src/lib/traces.js` mein rakho. Custom rendering chahiye toh `src/library/VisualLab.jsx` update karo. Previous/next, pause, reset, speed aur reduced-motion support preserve karo. Simplifications aur assumptions samjhao. Unsupported topic ke badle unrelated visual mat dikhao.
+
+## Verify karo
 
 ```bash
 cd playground
@@ -56,28 +66,6 @@ npm run format
 npm run check
 ```
 
-Update the clickable reading index in `notes/README.md` when adding or reordering chapters. Check light/dark themes, a narrow viewport, keyboard navigation, long code blocks, and direct URL reloads for UI changes.
+Algorithm invariants aur empty/boundary cases check karo. Exercise ko answer dekhe bina attempt karo; numeric results aur claimed failure verify karo. Design answer ko ek defensible approach bolo jab alternatives possible hain. Revision takeaway short rakho; detail concept section mein do. Raw HTML disclosure current Markdown renderer support nahi karta; hidden answers ke liye existing cards hain.
 
-## Keep the course order consistent
-
-`notes/curriculum.json` defines every course stage, its prerequisite chapters, ordered lesson IDs and checkpoint. Every chapter must appear exactly once. When changing the sequence, align the chapter's numeric filename and frontmatter `order`, preserving its stable `id` so bookmarks and app links continue to work. Update relative Markdown links when moving files.
-
-Run `node scripts/sync-curriculum.mjs` from the repository root to regenerate the main syllabus, per-course README files and coverage guide. Do not hand-edit generated syllabus documents. `npm run check` validates that generated documents, IDs, filenames and metadata agree. Course README files are navigation documents, not study chapters.
-
-## Unified course content
-
-Every source file discovered by `catalog.js` must have an explicit chapter owner in `playground/src/data/sourceChapters.json`. Assign by topic, including shared SQL/frontend topics across folder boundaries. The reader loads examples on expansion; do not reintroduce a separate source-note collection. Old source IDs remain aliases. Every chapter needs relevant interview practice; use an explicit `noteId` for precise placement of new questions, and include primary documentation links for externally researched concepts. New scenarios belong in `scenarioQuestions.js`; dedicated Java/Spring course additions live in `courseQuestions.js`; avoid unsupported company-frequency claims. Verify source mapping, old links/bookmarks, search, and inline practice with the app tests.
-
-## Review the learning experience
-
-Use the [study guide](notes/STUDY_GUIDE.md) as the learner-facing routine. Keep revision takeaways short and put detailed reasoning in concept sections. A lab should be solvable using the chapter and its prerequisites. Beginner exercises should not require tools or concepts introduced later without explanation.
-
-Attempt the exercise separately from its answer guide. Check numeric examples, empty/boundary inputs, and any claimed failure outcome. Label design answers as one defensible approach when alternatives exist. Keep answers readable in both GitHub Markdown and the app; raw HTML disclosure elements are not supported by the current app Markdown renderer. Existing interview cards provide hidden answers.
-
-## Maintain the supplied interview checklist
-
-`playground/src/data/requestedQuestions.js` holds the original additions and targeted answer expansions keyed by existing question IDs. Reuse a canonical question when its learning objective is already covered; expand its answer when the requested example is missing. Give each addition an explicit chapter `noteId`, a topic from `interviewTopics.js`, a difficulty, an original answer, a follow-up, and a primary technical reference. Optional `promptCode` is Markdown displayed before answer reveal; label runtime assumptions and keep intended output out of the prompt.
-
-Question answers support Markdown code fences. Use complete runnable examples when practical and label framework or multi-file excerpts. Do not present one observed timer order as a portable guarantee. Preserve stable IDs so confidence tracking continues to work.
-
-Run `node scripts/sync-interviews.mjs` after editing the bank or checklist mappings. It regenerates `notes/INTERVIEW_WORKBOOK.md`; `npm run check` verifies it stays synchronized. Keep inaccessible image exercises explicitly pending until the actual images are available.
+UI changes par light/dark themes, narrow viewport, keyboard, long code blocks aur direct URL reload check karo. Source mapping, old links/bookmarks, search aur inline practice tests pass hone chahiye. [Study guide](notes/STUDY_GUIDE.md) learner ki routine ka reference hai; [glossary](notes/GLOSSARY_HINGLISH.md) mein new difficult terms ke easy meanings add kar sakte ho.

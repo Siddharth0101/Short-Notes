@@ -4,9 +4,9 @@
     "stages": [
       {
         "id": "javascript-1",
-        "title": "Start with the language",
-        "goal": "Learn one small concept at a time, starting with variables.",
-        "checkpoint": "Calculate the total study minutes for an array of lessons using a function, loop and condition.",
+        "title": "Language ki shuruaat",
+        "goal": "Variables se start karke ek waqt ek chhota concept samjho.",
+        "checkpoint": "Function, loop aur condition se lessons array ke total study minutes nikalo.",
         "chapters": [
           "js-variables",
           "js-types-operators",
@@ -18,9 +18,9 @@
       },
       {
         "id": "javascript-2",
-        "title": "Work with data and scope",
-        "goal": "Transform collections, validate input, then understand bindings and built-in utilities.",
-        "checkpoint": "Explain a closure and build a validated calculation without accidental string concatenation.",
+        "title": "Data aur scope samjho",
+        "goal": "Collections transform, input validate aur bindings/built-in utilities samjho.",
+        "checkpoint": "Closure explain karo aur accidental string concatenation ke bina validated calculation banao.",
         "chapters": [
           "js-modern-data-collections",
           "js-language-foundations",
@@ -30,9 +30,9 @@
       },
       {
         "id": "javascript-3",
-        "title": "Build browser interactions",
-        "goal": "Learn HTML/CSS structure before manipulating the DOM.",
-        "checkpoint": "Build a keyboard-accessible list with delegated actions.",
+        "title": "Browser mein interactions banao",
+        "goal": "DOM manipulate karne se pehle HTML/CSS structure seekho.",
+        "checkpoint": "Keyboard-accessible list banao jiske actions delegation se handle hon.",
         "chapters": [
           "javascript-browser-foundations",
           "js-dom-events-browser"
@@ -40,9 +40,9 @@
       },
       {
         "id": "javascript-4",
-        "title": "Understand objects and design",
-        "goal": "Learn receivers and prototypes before the OOP project.",
-        "checkpoint": "Explain this for three call sites and implement the small state-machine project.",
+        "title": "Objects aur design samjho",
+        "goal": "OOP project se pehle this receiver aur prototypes samjho.",
+        "checkpoint": "Three call sites ka this explain karke small state-machine project implement karo.",
         "chapters": [
           "js-this-prototypes-classes",
           "js-oop-mini-project"
@@ -50,9 +50,9 @@
       },
       {
         "id": "javascript-5",
-        "title": "Handle asynchronous work and delivery",
-        "goal": "Progress from promises and fetching to concurrency limits and modules.",
-        "checkpoint": "Handle a failed request, cap concurrent work, and explain how the app reaches the browser.",
+        "title": "Async work aur delivery sambhalo",
+        "goal": "Promises/fetch se concurrency limits aur modules tak badho.",
+        "checkpoint": "Failed request handle, active work cap aur browser tak app delivery explain karo.",
         "chapters": [
           "js-async-event-loop",
           "javascript-async-patterns",
@@ -71,9 +71,9 @@
     "stages": [
       {
         "id": "react-1",
-        "title": "Components before architecture",
-        "goal": "Start with JSX and props, add state, then understand rendering and identity.",
-        "checkpoint": "Build an editable list whose drafts remain attached to the correct items.",
+        "title": "Pehle components samjho",
+        "goal": "JSX/props se start, phir state, rendering aur identity seekho.",
+        "checkpoint": "Editable list mein drafts correct items ke saath attached rakho.",
         "chapters": [
           "react-jsx-props",
           "react-state-forms",
@@ -82,9 +82,9 @@
       },
       {
         "id": "react-2",
-        "title": "Reuse UI and synchronize safely",
-        "goal": "Learn composition, then effects, refs and custom hooks.",
-        "checkpoint": "Extract a reusable component and clean up a cancellable effect.",
+        "title": "UI reuse aur safe synchronization",
+        "goal": "Composition ke baad effects, refs aur custom hooks seekho.",
+        "checkpoint": "Reusable component extract karo aur cancellable effect cleanup karo.",
         "chapters": [
           "react-composition-styling",
           "react-effects-custom-hooks"
@@ -92,9 +92,9 @@
       },
       {
         "id": "react-3",
-        "title": "Connect a complete application",
-        "goal": "Add navigation, shared state, server-state caching and typed boundaries.",
-        "checkpoint": "Build a routed page with explicit cache identity and validated API data.",
+        "title": "Complete application jodo",
+        "goal": "Navigation, shared state, server cache aur typed boundaries add karo.",
+        "checkpoint": "Clear cache identity aur validated API data wali routed page banao.",
         "chapters": [
           "react-routing-url-state",
           "react-context-reducer-redux",
@@ -104,9 +104,9 @@
       },
       {
         "id": "react-4",
-        "title": "Measure and practice",
-        "goal": "Profile production behavior before the machine-coding exercise.",
-        "checkpoint": "Demonstrate stale-request protection, keyboard behavior and one measured improvement.",
+        "title": "Measure karke practice karo",
+        "goal": "Machine coding se pehle production behavior profile karo.",
+        "checkpoint": "Stale-request protection, keyboard behavior aur ek measured improvement dikhao.",
         "chapters": [
           "react-performance-production",
           "react-machine-coding"
@@ -119,9 +119,9 @@
     "stages": [
       {
         "id": "java-1",
-        "title": "Write your first Java programs",
-        "goal": "Run main, declare variables, make decisions, write methods, and create instances.",
-        "checkpoint": "Compile a learner program with two independent objects and a method that processes an array.",
+        "title": "Pehla Java program likho",
+        "goal": "main run, variables declare, decisions, methods aur instances banao.",
+        "checkpoint": "Two independent objects aur array-processing method wala learner program compile karo.",
         "chapters": [
           "java-first-program",
           "java-decisions-loops",
@@ -132,9 +132,9 @@
       },
       {
         "id": "java-2",
-        "title": "Build a reliable core model",
-        "goal": "Extend basic classes with OOP, collections, exceptions, streams and memory reasoning.",
-        "checkpoint": "Choose a collection, preserve equality contracts and close an owned resource.",
+        "title": "Reliable core model banao",
+        "goal": "Basic classes par OOP, collections, exceptions, streams aur memory reasoning build karo.",
+        "checkpoint": "Suitable collection choose, equality contract preserve aur owned resource close karo.",
         "chapters": [
           "java-packages-interfaces",
           "java-object-model",
@@ -146,9 +146,9 @@
       },
       {
         "id": "java-3",
-        "title": "Build test and persist",
-        "goal": "Set up builds and tests before database access and SQL concurrency exercises.",
-        "checkpoint": "Test a JDBC operation and explain a join and an atomic inventory update.",
+        "title": "Build, test aur data save karo",
+        "goal": "Database/SQL concurrency se pehle builds aur tests setup karo.",
+        "checkpoint": "JDBC operation test karo; join aur atomic inventory update explain karo.",
         "chapters": [
           "java-maven-testing",
           "java-jdbc-sql",
@@ -157,9 +157,9 @@
       },
       {
         "id": "java-4",
-        "title": "Reason about concurrency and resource limits",
-        "goal": "Understand thread safety, virtual threads and bounded resources.",
-        "checkpoint": "Demonstrate a race-safe operation and explain where backpressure is needed.",
+        "title": "Concurrency aur resource limits samjho",
+        "goal": "Thread safety, virtual threads aur bounded resources seekho.",
+        "checkpoint": "Race-safe operation dikhao aur backpressure ki need explain karo.",
         "chapters": [
           "java-concurrency",
           "java-concurrency-production"
@@ -176,9 +176,9 @@
     "stages": [
       {
         "id": "spring-boot-1",
-        "title": "Start and configure an application",
-        "goal": "Learn Boot startup, bean wiring and typed configuration.",
-        "checkpoint": "Start the application and diagnose a missing bean or invalid setting.",
+        "title": "Application start aur configure karo",
+        "goal": "Boot startup, bean wiring aur typed config samjho.",
+        "checkpoint": "App start karke missing bean/invalid setting diagnose karo.",
         "chapters": [
           "spring-boot-first-application",
           "spring-beans-di",
@@ -187,9 +187,9 @@
       },
       {
         "id": "spring-boot-2",
-        "title": "Build a clear HTTP boundary",
-        "goal": "Create REST endpoints with DTOs, validation and controlled errors.",
-        "checkpoint": "Demonstrate successful creation and rejected input with documented responses.",
+        "title": "Clear HTTP boundary banao",
+        "goal": "DTOs, validation aur controlled errors ke saath REST endpoints banao.",
+        "checkpoint": "Successful creation aur rejected input ke documented responses dikhao.",
         "chapters": [
           "java-spring-rest",
           "spring-validation-errors"
@@ -197,9 +197,9 @@
       },
       {
         "id": "spring-boot-3",
-        "title": "Persist and secure business operations",
-        "goal": "Apply transactions, persistence and authorization boundaries.",
-        "checkpoint": "Prove an invariant survives concurrent requests and unauthorized access is rejected.",
+        "title": "Business operations save aur secure karo",
+        "goal": "Transactions, persistence aur authorization boundaries apply karo.",
+        "checkpoint": "Concurrent requests mein invariant bache aur unauthorized access reject ho, prove karo.",
         "chapters": [
           "java-jpa-transactions",
           "java-security-microservices"
@@ -207,9 +207,9 @@
       },
       {
         "id": "spring-boot-4",
-        "title": "Verify and operate the service",
-        "goal": "Test application boundaries, inspect telemetry and complete a deployment capstone.",
-        "checkpoint": "Run the API acceptance cases and defend a failed deployment recovery plan.",
+        "title": "Service verify aur operate karo",
+        "goal": "Boundaries test, telemetry inspect aur deployment capstone complete karo.",
+        "checkpoint": "API acceptance cases run karke failed-deployment recovery defend karo.",
         "chapters": [
           "spring-testing",
           "java-observability-actuator",
@@ -227,9 +227,9 @@
     "stages": [
       {
         "id": "mongodb-1",
-        "title": "Understand the server request",
-        "goal": "Start with Node and HTTP, then learn Express routing and errors.",
-        "checkpoint": "Trace a request through middleware to a controlled response.",
+        "title": "Server request samjho",
+        "goal": "Node/HTTP ke baad Express routing aur errors seekho.",
+        "checkpoint": "Request ko middleware se controlled response tak trace karo.",
         "chapters": [
           "mongo-node-runtime-http",
           "mongo-express-rest-errors"
@@ -237,9 +237,9 @@
       },
       {
         "id": "mongodb-2",
-        "title": "Store and model data",
-        "goal": "Learn documents and CRUD before introducing Mongoose schemas.",
-        "checkpoint": "Choose embedding or references for a concrete access pattern and validate writes.",
+        "title": "Data ka model banao",
+        "goal": "Mongoose schema se pehle documents aur CRUD samjho.",
+        "checkpoint": "Actual read pattern se embedding/references choose aur writes validate karo.",
         "chapters": [
           "mongo-documents-crud-modeling",
           "mongo-mongoose-validation-relations"
@@ -247,9 +247,9 @@
       },
       {
         "id": "mongodb-3",
-        "title": "Query efficiently",
-        "goal": "Learn indexes and aggregation, then inspect query plans and bounded streaming.",
-        "checkpoint": "Explain the winning plan for a tenant-scoped query and stream a large export.",
+        "title": "Efficient queries likho",
+        "goal": "Indexes/aggregation ke baad plans aur bounded streaming inspect karo.",
+        "checkpoint": "Tenant query ka winning plan explain aur large export stream karo.",
         "chapters": [
           "mongo-indexes-aggregation-transactions",
           "mongodb-query-production-lab"
@@ -257,9 +257,9 @@
       },
       {
         "id": "mongodb-4",
-        "title": "Secure and ship",
-        "goal": "Add authentication and authorization before payment/upload/deployment integration.",
-        "checkpoint": "Reject unauthorized resource access and recover safely from a duplicate webhook.",
+        "title": "Secure karke deploy karo",
+        "goal": "Payments/uploads/deployment se pehle authentication/authorization add karo.",
+        "checkpoint": "Unauthorized access reject aur duplicate webhook se safely recover karo.",
         "chapters": [
           "mongo-auth-security",
           "mongo-production-integrations"
@@ -275,9 +275,9 @@
     "stages": [
       {
         "id": "dsa-1",
-        "title": "Understand cost and basic structures",
-        "goal": "Start with complexity, lists/stacks/queues, and hashing before pattern-based problems.",
-        "checkpoint": "Choose an array, queue or map and justify operation costs.",
+        "title": "Cost aur basic structures samjho",
+        "goal": "Patterns se pehle complexity, lists/stacks/queues aur hashing seekho.",
+        "checkpoint": "Array, queue ya map choose karke operation cost justify karo.",
         "chapters": [
           "dsa-complexity",
           "dsa-linear-structures",
@@ -286,9 +286,9 @@
       },
       {
         "id": "dsa-2",
-        "title": "Learn reusable problem-solving patterns",
-        "goal": "Use familiar structures for counters, pointers and search; then introduce recursion and sorting.",
-        "checkpoint": "State a binary-search invariant and trace a recursive call before coding.",
+        "title": "Reusable problem-solving patterns seekho",
+        "goal": "Counters/pointers/search ke baad recursion aur sorting padho.",
+        "checkpoint": "Code se pehle binary-search invariant aur recursive call trace karo.",
         "chapters": [
           "dsa-patterns",
           "dsa-searching",
@@ -298,9 +298,9 @@
       },
       {
         "id": "dsa-3",
-        "title": "Handle ordered candidates and hierarchies",
-        "goal": "Apply stack invariants, then learn trees and heaps before graphs.",
-        "checkpoint": "Prove the stack bound and implement a heap-based top-k solution.",
+        "title": "Ordered candidates aur hierarchy samjho",
+        "goal": "Stack invariant apply, phir trees/heaps, uske baad graphs seekho.",
+        "checkpoint": "Stack ka complexity bound prove aur heap-based top-k implement karo.",
         "chapters": [
           "dsa-monotonic-stack-lab",
           "dsa-trees",
@@ -309,9 +309,9 @@
       },
       {
         "id": "dsa-4",
-        "title": "Solve graph and dynamic-programming problems",
-        "goal": "Build on queues, recursion, hashing and heaps to reason about dependencies and repeated subproblems.",
-        "checkpoint": "Choose BFS versus Dijkstra, then derive a DP state and recurrence.",
+        "title": "Graphs aur DP solve karo",
+        "goal": "Queues, recursion, hashing/heaps se dependencies aur repeated subproblems samjho.",
+        "checkpoint": "BFS/Dijkstra choose karo, phir DP state/recurrence derive karo.",
         "chapters": [
           "dsa-graphs",
           "dsa-dynamic-programming"
@@ -328,9 +328,9 @@
     "stages": [
       {
         "id": "system-design-1",
-        "title": "Shared design foundations",
-        "goal": "Clarify requirements and capacity before choosing scaling and caching components.",
-        "checkpoint": "State workload, latency, freshness and correctness assumptions for a service.",
+        "title": "Design ki common foundation",
+        "goal": "Scaling/cache choose karne se pehle requirements/capacity clear karo.",
+        "checkpoint": "Workload, latency, freshness aur correctness assumptions likho.",
         "chapters": [
           "design-requirements-capacity",
           "design-scaling-caching"
@@ -338,9 +338,9 @@
       },
       {
         "id": "system-design-2",
-        "title": "React frontend architecture",
-        "goal": "Design rendering, state and performance before the frontend interview case.",
-        "checkpoint": "Design an accessible catalog with URL state, caching and stale-request handling.",
+        "title": "React frontend architecture samjho",
+        "goal": "Frontend case se pehle rendering, state aur performance design karo.",
+        "checkpoint": "URL state, cache aur stale-request handling wala accessible catalog banao.",
         "chapters": [
           "design-react-architecture",
           "design-react-data-state",
@@ -350,9 +350,9 @@
       },
       {
         "id": "system-design-3",
-        "title": "Java backend architecture",
-        "goal": "Design APIs and data boundaries, then messaging, reliability and operations.",
-        "checkpoint": "Explain a reservation invariant, retry identity and failure recovery timeline.",
+        "title": "Java backend architecture samjho",
+        "goal": "API/data boundaries ke baad messaging, reliability aur operations padho.",
+        "checkpoint": "Reservation invariant, retry identity aur failure timeline explain karo.",
         "chapters": [
           "design-java-api-data",
           "design-messaging-reliability",
@@ -362,9 +362,9 @@
       },
       {
         "id": "system-design-4",
-        "title": "End-to-end case studies",
-        "goal": "Combine frontend and backend reasoning only after studying both sides.",
-        "checkpoint": "Walk through checkout and real-time reconnection failures without losing durable state.",
+        "title": "End-to-end case studies karo",
+        "goal": "Dono sides padhkar frontend/backend reasoning combine karo.",
+        "checkpoint": "Checkout/reconnect failure mein durable state bachne ka flow trace karo.",
         "chapters": [
           "design-commerce-case-study",
           "design-realtime-case-study"
@@ -384,9 +384,9 @@
     "stages": [
       {
         "id": "interview-1",
-        "title": "Language interview practice",
-        "goal": "Use the playbook for the language you have finished studying.",
-        "checkpoint": "Explain an output question and defend a design choice without reading the answer.",
+        "title": "Language interview practice karo",
+        "goal": "Jo language course complete kiya, uska playbook lo.",
+        "checkpoint": "Answer dekhe bina output explain aur design choice defend karo.",
         "chapters": [
           "interview-javascript",
           "interview-java"
@@ -394,9 +394,9 @@
       },
       {
         "id": "interview-2",
-        "title": "Application interview practice",
-        "goal": "Move from language reasoning to frontend and data-backed application scenarios.",
-        "checkpoint": "Complete one machine-coding or query-design drill with error cases.",
+        "title": "Application interview practice karo",
+        "goal": "Language se frontend aur database-backed scenarios par badho.",
+        "checkpoint": "Errors ke saath ek machine-coding/query-design drill complete karo.",
         "chapters": [
           "interview-react",
           "interview-mongodb"
@@ -404,9 +404,9 @@
       },
       {
         "id": "interview-3",
-        "title": "Algorithms and architecture practice",
-        "goal": "Use these rounds after the corresponding DSA or design course.",
-        "checkpoint": "State an invariant in a coding round and a measurable requirement in a design round.",
+        "title": "Algorithms aur architecture practice karo",
+        "goal": "Related DSA/design course ke baad yeh rounds karo.",
+        "checkpoint": "Coding mein invariant aur design mein measurable requirement batao.",
         "chapters": [
           "interview-dsa",
           "interview-system-design"

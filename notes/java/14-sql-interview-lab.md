@@ -5,18 +5,18 @@ track: java
 order: 14
 level: Advanced
 minutes: 25
-summary: Solve reporting queries and concurrency failures behind Java APIs.
+summary: LEFT JOIN unmatched left rows bachata hai, lekin baad ka WHERE filter unhe phir hata sakta hai.
 tags: sql, postgres, joins, windows, transactions
 visual: transaction-race
 ---
 
-## Mental model
+## Mental model — simple soch
 
 SQL set-oriented hai: first decide what one output row represents. Most wrong joins come from mixing grains, such as one customer with many orders and many payments, then aggregating the multiplied result. Java mapping cannot repair an incorrect relational query.
 
-Assume PostgreSQL with customers(id, name) and orders(id, customer_id, total, created_at). total is a decimal amount in one stated currency. Production schemas should make currency and nullability explicit.
+PostgreSQL assume karo: customers(id,name), orders(id,customer_id,total,created_at). total ek specified currency ka decimal amount hai. Production schema mein currency aur nullability explicit rakho.
 
-> **Core takeaway:** A LEFT JOIN preserves unmatched left rows only if later filtering does not remove them.
+> **Core takeaway:** LEFT JOIN unmatched left rows bachata hai, lekin baad ka WHERE filter unhe phir hata sakta hai.
 
 ## Top two orders per customer
 
@@ -35,7 +35,7 @@ WHERE rn <= 2
 ORDER BY customer_id, rn;
 ```
 
-ROW_NUMBER selects at most two rows per customer. RANK or DENSE_RANK expresses a different tie contract and can return more rows. id makes equal totals deterministic. Window ordering does not guarantee final result ordering, so the outer ORDER BY remains necessary.
+ROW_NUMBER per customer maximum two rows choose karta hai. RANK/DENSE_RANK ka tie contract alag hai aur zyada rows de sakta hai. Equal totals par id deterministic tie-breaker hai. Window ka ordering final result sort guarantee nahi karta; outer ORDER BY bhi chahiye.
 
 ## Preserve customers without orders
 
@@ -48,11 +48,11 @@ LEFT JOIN orders o
 GROUP BY c.id;
 ```
 
-COUNT(o.id) ignores the null-extended row. COUNT(*) would count it. Moving the date condition into WHERE removes customers without matching orders, changing the outer-join requirement. If timestamps represent real instants, use an agreed timezone-aware type and boundary; the literal here assumes a timestamp without timezone schema.
+COUNT(o.id) NULL-extended row ignore karta hai; COUNT(*) use count karega. Date condition WHERE mein move karne se no-matching-order customers hat jaate hain. Real instants store hon toh agreed timezone-aware type/boundary lo; yahan literal timestamp-without-timezone schema assume karta hai.
 
 ## A transaction is not a concurrency policy
 
-Two buyers can both read stock = 1 and both decide to purchase. Prefer an atomic conditional update for this invariant:
+Do buyers stock=1 read karke dono purchase decide kar sakte hain. Is invariant ke liye atomic conditional update use karo:
 
 ```sql
 UPDATE inventory
@@ -61,23 +61,23 @@ WHERE product_id = $1 AND stock > 0
 RETURNING stock;
 ```
 
-Zero returned rows means no reservation occurred. Insert the reservation or order in the same transaction when they share a database boundary. A transaction wrapper around a read-then-write sequence does not automatically prevent every anomaly; isolation level and the statements themselves matter.
+Zero returned rows ka matlab reservation nahi hui. Same DB boundary ho toh reservation/order usi transaction mein insert karo. Read-then-write ko transaction wrap kar dena har anomaly automatically nahi rokta; isolation aur actual statements matter karte hain.
 
-PostgreSQL Read Committed uses statement snapshots. Serializable transactions may abort and require retrying the complete transaction. External side effects such as emails must not be repeated blindly inside a retryable transaction. Use an outbox or other explicit handoff.
+PostgreSQL Read Committed statement snapshots use karta hai. Serializable transaction abort ho sakti hai; complete transaction retry karni pad sakti hai. Email jaise external effects retry mein blindly repeat mat karo; outbox ya explicit handoff rakho.
 
 ## Practice
 
-Create fixtures for a customer with no orders, tied totals and two payments per order. Predict each query result before executing it. Explain why joining payments before summing order totals doubles values. Then run two concurrent reservation transactions for the last unit and assert exactly one succeeds; a sequential test cannot expose this race.
+No-order customer, tied totals aur per-order two payments ke fixtures banao. Query run se pehle output predict karo. Payments join ke baad order total sum double kyun hota hai, samjhao. Last unit ke liye two concurrent reservations chalao; exactly one success assert karo. Sequential test yeh race expose nahi karta.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Why is DISTINCT a suspicious join fix?** It can hide a grain error while leaving aggregates wrong. Correct the relationship or pre-aggregate each one-to-many side.
+**DISTINCT se join fix suspicious kyun hai?** Row-grain bug hide ho sakta hai aur aggregate phir bhi wrong reh sakta hai. Relationship correct karo ya har one-to-many side pre-aggregate karo.
 
-**How do you make JPA pagination predictable?** Define a deterministic order, inspect generated SQL and avoid assuming collection fetch joins paginate parent rows cleanly.
+**JPA pagination predictable kaise banegi?** Deterministic order define karo, generated SQL dekho aur collection fetch join parent pagination cleanly karega, yeh assume mat karo.
 
 ## Research notes: Read estimates alongside actual query work
 
-`EXPLAIN` reports a plan; `EXPLAIN ANALYZE` executes the query. Compare row estimates with actual counts and inspect repeated work.
+EXPLAIN plan batata hai; EXPLAIN ANALYZE query execute bhi karta hai. Estimated/actual row counts aur repeated work compare karo.
 
 ```sql
 -- Local fixture with realistic tenant sizes:
@@ -88,28 +88,28 @@ ORDER BY created_at DESC, id DESC
 LIMIT 25;
 ```
 
-A sequential scan may be reasonable when most rows are needed. Large estimation errors can suggest a poor scan or join choice. ANALYZE on a write performs the write; experiment on disposable fixtures.
+Most rows chahiye hon toh sequential scan reasonable ho sakta hai. Large estimation mismatch poor scan/join choice indicate kar sakti hai. Write par ANALYZE actual write karega; disposable fixtures par experiment karo.
 
-**Interview check:** Why inspect loops when a plan node looks cheap?
+**Interview check:** Plan node cheap dikhe toh loops kyun inspect karein?
 
-**Answer:** A cheap node repeated many times can dominate total work. Interpret per-loop measurements together with execution count and the parent plan.
+**Answer:** Cheap work bahut baar repeat hokar total cost dominate kar sakta hai. Per-loop timing ko execution count aur parent plan ke saath padho.
 
-**Practice:** Compare plans for a tiny tenant and a tenant owning most rows.
+**Practice:** Tiny tenant aur most-rows-owning tenant ke plans compare karo.
 
-[Read the source — PostgreSQL](https://www.postgresql.org/docs/current/using-explain.html). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — PostgreSQL](https://www.postgresql.org/docs/current/using-explain.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Customers A and B exist; only A has a paid order. Return both customers with a paid-order count. Where should the paid-status condition go?
+**Apply:** Customers A aur B hain; sirf A ka ek paid order hai. Dono ko paid-order count ke saath return karo. Paid-status condition kahan rakho?
 
-> **Hint:** A WHERE predicate on the joined order can remove B's null-extended row.
+> **Hint:** Joined order par WHERE condition B ki NULL wali row remove kar sakti hai.
 
-**Answer guide — compare after attempting:** Put the status condition in the join condition, group by customer identity, and count a non-null order ID. A gets 1 and B gets 0. COUNT(*) would count B's preserved row as 1, which is not the number of matching orders.
+**Answer guide — compare after attempting:** Status condition JOIN ke ON mein rakho, customer identity se group karo aur non-null order ID count karo. A=1, B=0 milega. COUNT(*) B ki preserved row ko bhi 1 ginega; woh matching orders ki count nahi hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[PostgreSQL transaction isolation](https://www.postgresql.org/docs/18/transaction-iso.html) and [window functions tutorial](https://www.postgresql.org/docs/18/tutorial-window.html) describe these query and concurrency rules.
+[PostgreSQL transaction isolation](https://www.postgresql.org/docs/18/transaction-iso.html) aur [window functions](https://www.postgresql.org/docs/18/tutorial-window.html) mein query/concurrency rules padho.

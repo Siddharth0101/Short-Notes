@@ -5,16 +5,16 @@ track: interview
 order: 1
 level: Intermediate
 minutes: 24
-summary: Language mechanics, async behavior, and practical browser coding ko explain aur defend karo.
+summary: Achhe language answer mein output prediction, andar ka mechanism aur ek changed example teeno hote hain.
 tags: javascript, interview, closures, event-loop, coding
 visual: event-loop
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Interview mein definition recall ke saath prediction aur debugging test hota hai. Strong answer ka flow hai: rule batao, chhota example do, edge case discuss karo, phir practical use connect karo. Output question mein code run karne se pehle execution trace likho; guess correct hone se reasoning prove nahi hoti.
 
-> **Core takeaway:** A strong language answer combines a prediction, the mechanism, and a changed example.
+> **Core takeaway:** Achhe language answer mein output prediction, andar ka mechanism aur ek changed example teeno hote hain.
 
 ## A focused mock session
 
@@ -32,7 +32,7 @@ Interview mein definition recall ke saath prediction aur debugging test hota hai
 
 **Why does an arrow function behave differently as a method?** Arrow apna dynamic `this` nahi banata, outer scope ka `this` use karta hai. Object literal ke andar arrow likhne se object automatically receiver nahi banta. Regular method ko detach karne par call-site change hota hai, isliye uska `this` bhi change ho sakta hai.
 
-**What prints below?**
+**Neeche kya print hoga?**
 
 ```js
 console.log('A');
@@ -85,49 +85,49 @@ Har dimension ko 0–2 score do: semantics, example, edge cases, implementation,
 
 ## Assessed mock: JavaScript debugging round
 
-**Prompt:** Implement a cancellable search controller, trace a microtask sequence, and explain a retained closure.
+**Prompt:** Cancellable search controller banao, microtask sequence trace karo aur retained closure samjhao.
 
-**Round structure:** Spend 5 minutes clarifying requirements and assumptions, 20 minutes implementing or drawing the core flow, 10 minutes investigating failures, and 5 minutes defending tradeoffs. These are practice targets, not a claim about any company's interview format.
+**Round structure:** 5 minute requirements/assumptions clear karo, 20 minute core flow implement/draw karo, 10 minute failures inspect karo, aur 5 minute tradeoffs defend karo. Yeh practice timings hain; kisi company ke exact interview format ka claim nahi.
 
-**Failure injection:** Reverse two network responses; remove and recreate the widget; include a zero-valued input.
+**Failure injection:** Do network responses ka completion order reverse karo; widget remove/recreate karo; zero-valued input do.
 
-**Strong-answer evidence:** Correct queue model, explicit ownership, stale-result protection, and a cleanup demonstration.
+**Strong-answer evidence:** Correct queue model, clear ownership, stale-result protection aur working cleanup dikhao.
 
-Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
+Correctness, concrete example, failure handling aur tradeoff reasoning ko 0–2 score do. 0=missing/incorrect; 1=plausible par untested; 2=trace, test ya invariant se demonstrated. Total achha ho lekin correctness gap ho toh revision abhi bhi chahiye.
 
-After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+Round ke baad first approach todne wala smallest counterexample likho, fix karo aur notes dekhe bina change bolkar samjhao. Mock repeat karne se pehle chapter ke answer-reveal questions se focused revision karo.
 
 ## Research notes: Explain the contract before coding
 
-Amazon emphasizes applying fundamentals to problems rather than memorizing details.
+Linked Amazon guidance fundamentals ko problems par apply karne par focus karti hai; sirf details ratna learning goal nahi hai.
 
-**Original practice round:** Implement a trailing debounce that preserves the receiver and supports cancellation. State whether calls return a result or merely schedule work.
+**Original practice round:** Receiver preserve karne wala trailing debounce banao jisme cancellation ho. Calls result return karti hain ya sirf work schedule, contract mein clear karo.
 
-**Failure injection:** Cancel before the delay, call twice rapidly, then change the receiver.
+**Failure injection:** Delay se pehle cancel karo, rapidly do calls karo, phir receiver change karo.
 
-**Evidence to bring:** A good test checks the final arguments, receiver identity, zero calls after cancellation and explicit timer cleanup.
+**Evidence to bring:** Final arguments, receiver identity, cancellation ke baad zero calls aur timer cleanup verify karo.
 
-The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+Employer source assessment approach ka reference hai. Yeh exercise original practice hai; reported company question nahi.
 
-**Interview check:** How should you review this round after attempting it?
+**Interview check:** Attempt ke baad is round ko review kaise karoge?
 
-**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+**Answer:** First failing example save karo, wrong assumption batao aur fix se behavior kaise badla dikhao. Jo demonstrate kiya aur jo extra time mein investigate karoge, unhe clearly identify karo.
 
-**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+**Practice:** Different failure ke saath repeat karo aur reasoning bolte jao.
 
-[Read the source — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Give a two-minute explanation of why two factory-created counters can be independent. Then change the example so they intentionally share state.
+**Apply:** Do factory-created counters independent kyun hain, do minute mein samjhao. Phir example badalkar unse intentionally shared state use karwao.
 
-> **Hint:** Identify the exact binding captured by each returned function.
+> **Hint:** Har returned function exactly kis binding ko access karta hai, woh identify karo.
 
-**Answer guide — compare after attempting:** Independent counters capture bindings from separate factory calls; shared counters capture one outer binding. Show a short call trace for both, including their different outputs. Score the answer on mechanism and evidence, not use of the word closure alone.
+**Answer guide — compare after attempting:** Separate factory calls separate bindings banati hain; shared counters ek outer binding read karte hain. Dono ka short call trace aur alag outputs dikhao. Sirf closure word bolna kaafi nahi; mechanism aur evidence bhi do.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [MDN closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures), [JavaScript execution model](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model), aur [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) semantics ke references hain.

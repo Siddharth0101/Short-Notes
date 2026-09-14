@@ -5,17 +5,17 @@ track: dsa
 order: 10
 level: Intermediate
 minutes: 33
-summary: Priority ordering, heap repair, top-k selection, and heapify ko implement karo.
+summary: Size-k min-heap ab tak dekhi gayi k largest values rakh sakta hai; root retained values mein sabse chhota hota hai.
 tags: heap, priority-queue, top-k, heapify
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Priority queue ka contract hai “next highest-priority item do.” Binary min-heap is contract ko complete binary tree mein implement karta hai: har parent apne children se smaller ya equal hai. Root minimum hai, lekin siblings ya unrelated subtrees globally sorted nahi hote.
 
 Array index `i` ke children `2*i + 1` aur `2*i + 2`, parent `floor((i - 1)/2)` hote hain. Complete shape tree ki height O(log n) rakhti hai. Insertion last position par karke bubble up karo; extraction mein last item root par laakar sink down karo.
 
-> **Core takeaway:** A bounded min-heap can retain the k largest values seen so far.
+> **Core takeaway:** Size-k min-heap ab tak dekhi gayi k largest values rakh sakta hai; root retained values mein sabse chhota hota hai.
 
 ## A numeric min-heap
 
@@ -196,7 +196,7 @@ Complexity: build O(n) + n extractions × O(log n) = **O(n log n) worst case gua
 
 Phir bhi production sorts heapsort ko default nahi banate, kyunki uska memory access pattern jumpy hai (`i → 2i+1`), jo cache-hostile hai — quicksort ka sequential partition scan practically 2–3× tez hota hai. Isiliye C++ ka introsort quicksort se shuru karta hai aur **sirf** tab heapsort par switch karta hai jab recursion depth suspicious ho jaaye: average-case speed bhi mil gayi aur worst-case guarantee bhi. Yeh "best asymptotics ≠ best choice" ka ek precise example hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Heap ka array sorted hota hai, ya kam se kam partially sorted order deta hai. **Why it breaks:** Heap property sirf **parent-child** relation par constraint lagati hai, siblings ya cousins ke beech koi order nahi hai. `[2, 5, 3, 9, 7]` valid min-heap hai lekin sorted nahi. `heap.values` ko sorted output ki tarah return karna silently galat hai. **Fix:** Sorted output chahiye toh sab elements pop karo (O(n log n)) ya heapsort chalao. Aur "heap se k-th element read kar lunga index se" wali soch bhi isi galatfehmi se aati hai.
 - **Wrong assumption:** k largest elements ke liye max-heap use karna chahiye. **Why it breaks:** Max-heap ka root sabse bada candidate hai, jise tum kabhi evict nahi karoge — operation jo chahiye woh hai "current k candidates mein se sabse kamzor nikalo", aur woh min-heap ka root hai. Max-heap ke saath tumhe poore n elements heap mein daalne padenge (O(n) space) aur k baar pop karna padega. **Fix:** k **largest** ke liye size-k **min**-heap; k **smallest** ke liye size-k **max**-heap. Ulta lagta hai, isliye har baar ek line mein reason bolo.
@@ -241,17 +241,17 @@ Observability mein two-heap median pattern aur top-k heaps roz use hote hain: "t
 
 **Answer:** Kyunki operations alag hain. `push` element ko leaf par daal kar **upar** bubble karta hai, aur root tak ka path har element ke liye O(log n) ho sakta hai — aur zyadatar elements leaves par hain, so zyadatar pushes full-height work karte hain. Bottom-up `heapify` har node ko **neeche** sink karta hai, aur zyadatar nodes leaves ke paas hain jahan bache hue levels bahut kam hain. Sum `Σ n·h/2^(h+1)` converge karke O(n) deta hai. Same structure, ulta direction, alag total — isiliye bulk construction aur incremental insertion ko alag cost karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Keep the three largest values from `[5,1,9,2,8,7]`. What does the root represent after processing, and is the heap array sorted?
+**Apply:** `[5,1,9,2,8,7]` se teen largest values rakho. End mein root kya hoga? Kya heap array fully sorted hoga?
 
-> **Hint:** Discard the smallest retained candidate whenever size exceeds k.
+> **Hint:** Size k se zyada hote hi retained candidates ka minimum hata do.
 
-**Answer guide — compare after attempting:** The retained values are 7, 8, and 9; the min-heap root is 7, the third-largest value. Heap storage is not a fully sorted list. Processing costs O(n log k) with O(k) space for positive bounded k; define behavior for k = 0.
+**Answer guide — compare after attempting:** 7, 8, 9 bachenge; root 7 yani third-largest value hoga. Heap array fully sorted nahi hota, sirf heap property follow karta hai. Positive bounded k ke liye O(n log k) time aur O(k) space. k=0 ka behavior alag define karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

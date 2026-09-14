@@ -5,26 +5,26 @@ track: react
 order: 11
 level: Advanced
 minutes: 25
-summary: Build a searchable interface while reasoning about state ownership and request races.
+summary: Machine coding mein explicit states, stable identity aur edge cases ka visible handling important hai.
 tags: machine-coding, identity, keys, requests, accessibility
 visual: react-identity
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Machine coding round mein working happy path sirf starting point hai. Strong solution has a small state model, clear component contracts, predictable identity and observable failure states. Write acceptance criteria before styling. For a search interface, clarify minimum query length, keyboard behavior, loading state, empty results and what happens when old responses arrive late.
 
-> **Core takeaway:** Machine coding rewards explicit states, stable identity, and observable edge-case handling.
+> **Core takeaway:** Machine coding mein explicit states, stable identity aur edge cases ka visible handling important hai.
 
 ## Model state before components
 
-Keep input text separate from the selected result. A selected entity ID represents identity; a label is only presentation and may not be unique. Result data belongs to the query that produced it. Do not show results from query A under the heading for query B without an explicit stale-data indication.
+Input text aur selected result separate rakho. Entity ID identity hai; label presentation hai aur duplicate ho sakta hai. Result us query ka hai jisne produce kiya. Query B ke heading ke neeche A ka data dikhao toh explicit stale indication chahiye.
 
-For rows with editable drafts, use stable entity keys. Index keys associate state with position: after sorting or deleting, a draft can appear on another row. Random keys force remounts, losing input state and focus. Deliberately changing a key is useful when switching between independent editing sessions, provided losing the previous draft is intended.
+Editable rows ke stable entity keys rakho. Index keys position se state jodti hain, sorting/delete ke baad draft wrong row par ja sakta hai. Random keys remount karke input/focus lose karti hain. New independent editing session ke liye key deliberately badal sakte ho agar old draft discard intended ho.
 
 ## A latest-request guard
 
-This hook illustrates request ownership; it is not a complete combobox or caching library.
+Yeh hook request ownership ka example hai; complete combobox/cache library nahi.
 
 ```jsx
 import { useEffect, useState } from 'react';
@@ -58,50 +58,50 @@ export function useResults(query) {
 }
 ```
 
-The identity check prevents a one-render stale result before the next effect runs. Cleanup prevents an old request from committing after a new query owns the view. Abort saves unnecessary work where supported; the guard expresses correctness independently of cancellation timing.
+Identity check next effect se pehle one-render stale result rokta hai. Cleanup old request ko new query-owned view overwrite karne se rokta hai. Supported cancellation work bacha sakti hai; correctness guard cancellation timing se independent hai.
 
 ## Acceptance checklist
 
-Use a labeled input and real buttons. For a true combobox, implement the full relevant ARIA pattern, including active-option semantics and keyboard behavior; adding a role alone is incomplete. Handle IME composition before triggering selection on Enter. Announce status changes without announcing every keystroke unnecessarily.
+Labeled input aur real buttons lo. True combobox ke liye complete relevant ARIA/keyboard pattern implement karo; sirf role enough nahi. Enter selection se pehle IME composition handle karo. Status announce karo bina har keystroke unnecessarily announce kiye.
 
 ## Practice
 
-Build search with deterministic fake responses: A takes 900ms, AB takes 100ms. Verify AB remains visible. Delete the first editable row and ensure the second row keeps its own draft. Test network rejection, empty query, unmount during a request and duplicate labels. Explain which tests exercise behavior rather than component internals.
+Fake responses A=900ms, AB=100ms se test karo; AB visible rahe. First editable row delete par second ka draft same rahe. Rejection, empty query, request-during-unmount aur duplicate labels test karo. Kaunsa test behavior check karta hai, explain karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Is debounce enough to prevent stale results?** No. It reduces request frequency but does not guarantee completion order.
+**Debounce stale results rokta hai?** Nahi. Frequency kam karta hai, completion order guarantee nahi.
 
-**When should a component key change intentionally?** When a new identity should receive fresh local state, such as switching recipients in a draft editor with an explicit discard policy.
+**Key intentionally kab badle?** Jab new identity ko fresh local state chahiye, jaise explicit discard policy ke saath draft recipient switch karna.
 
 ## Capstone: searchable editable data table
 
-Build a table with URL filters, stable row IDs, an editable draft, and a paginated request adapter. Start with twenty fake records and deterministic delayed responses. Then add loading, empty, error, and permission-denied states.
+URL filters, stable IDs, editable draft aur paginated adapter wali table banao. Twenty fake records/deterministic delay se start, phir loading/empty/error/permission-denied states add karo.
 
 ### Acceptance criteria
 
-- Start editing a row, sort the table, and verify the draft remains attached to that record.
-- Change filters during a slow request; the stale response must not replace the current result.
-- Reload a shared URL and use browser back/forward: committed filters and page restore correctly.
-- Every form field has a label. Sorting and editing work by keyboard, and focus returns sensibly after closing the editor.
-- A failed optimistic update restores the appropriate prior state without discarding newer edits.
-- Measure a specific expensive render before adding memoization or virtualization.
+- Row edit karke sort karo; draft same record ka rahe.
+- Slow request ke beech filter change; stale response current result replace na kare.
+- Shared URL reload aur Back/Forward se committed filters/page restore hon.
+- Har field label ho; sorting/editing keyboard se chale aur editor close par sensible focus return ho.
+- Failed optimistic update appropriate prior state restore kare bina newer edits discard kiye.
+- Memoization/virtualization se pehle specific expensive render measure karo.
 
 ### Interview defense
 
-Draw the owners of URL state, local draft state, and server data. Explain why copying all props into state creates synchronization work. Compare rendering ten thousand rows with windowing, including keyboard navigation and screen-reader tradeoffs. Deliver a short screen recording plus tests for identity, request races, and navigation; a static happy-path screenshot is insufficient evidence.
+URL state, local draft aur server data ke owners draw karo. Props-to-state copies ka sync cost explain karo. Ten-thousand rows versus windowing mein keyboard/screen-reader tradeoffs compare karo. Identity/races/navigation tests aur short recording do; static happy-path screenshot enough evidence nahi.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Search for A, then B. B returns first and A returns last. Specify the visible result and a test that proves your implementation handles this ordering.
+**Apply:** Search A, phir B kiya. B pehle aur A baad mein return hota hai. Visible result aur deterministic test define karo.
 
-> **Hint:** Control promise resolution order in a test.
+> **Hint:** Test mein promise resolution ka order khud control karo.
 
-**Answer guide — compare after attempting:** Only B should remain visible. Track request identity or use equivalent stale-response protection, with cancellation where supported. Resolve B before A in a deterministic test and assert the displayed query/result remains B. Also ensure an old failure cannot overwrite B's successful state.
+**Answer guide — compare after attempting:** Sirf B visible rehna chahiye. Request identity ya equivalent stale-response protection rakho; supported ho toh cancellation bhi. Test mein B ko A se pehle resolve karo aur final query/result B assert karo. Purani failure bhi B ki success overwrite na kare.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 [React identity and state](https://react.dev/learn/preserving-and-resetting-state) and [WAI combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) explain the relevant contracts.

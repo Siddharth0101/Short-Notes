@@ -5,16 +5,16 @@ track: dsa
 order: 7
 level: Intermediate
 minutes: 40
-summary: Compare bubble, selection, insertion, merge, quick, heap, and radix sorting with explicit tradeoffs.
+summary: Stable sort equal sort-key wale items ka pehle wala relative order bachata hai.
 tags: sorting, merge-sort, quick-sort, radix-sort, stability
 visual: sorting
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Sorting ek order establish karti hai jisse duplicate grouping, interval scanning aur binary search easy ho jaate hain. Algorithm ko comparisons, moves, memory, stability aur key assumptions se judge karo. **Stable** ka matlab equal-key records ka original relative order preserve hona hai.
 
-> **Core takeaway:** Stability preserves the input order of items with equal sort keys.
+> **Core takeaway:** Stable sort equal sort-key wale items ka pehle wala relative order bachata hai.
 
 ## Choosing an algorithm
 
@@ -278,7 +278,7 @@ Do lessons yahan interview-worthy hain. Pehla, **primitives ke liye stability ma
 
 Doosra, introsort ka fallback ek beautiful engineering pattern hai: quicksort ka average-case speed lo, lekin recursion depth `2 log n` cross karte hi heapsort par switch karke O(n²) worst case ko structurally impossible bana do. Adversarial input se protection randomization se bhi milti hai, lekin introsort worst-case **guarantee** deta hai, probabilistic assurance nahi. Jab latency SLO matter karti ho (p99, real-time systems), guarantee probability se better hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `array.sort()` numbers ko numerically sort karta hai. **Why it breaks:** Bina comparator ke `sort` har element ko string mein convert karke lexicographic compare karta hai, so `[10, 9, 1]` se `[1, 10, 9]` milta hai. Chhote test data (single-digit numbers) par yeh bug dikhta hi nahi, aur production mein do-digit values aate hi surface karta hai. **Fix:** Numbers ke liye hamesha `(a, b) => a - b` do; strings ke liye locale-aware ordering chahiye toh `localeCompare` use karo.
 - **Wrong assumption:** Sorting hamesha O(n log n) hai, so radix sort ka O(dn) claim galat hai. **Why it breaks:** O(n log n) lower bound sirf **comparison-based** sorting par apply hota hai — woh decision-tree argument hai (n! possible outputs ko distinguish karne ke liye log(n!) = Ω(n log n) comparisons chahiye). Radix sort comparisons karta hi nahi; woh key ki digit structure exploit karta hai, isliye bound uspar lagu nahi hota. **Fix:** Bound ko uske precondition ke saath quote karo. Aur radix ka apna caveat bolo: d (digit count) key ki bit-width par depend karta hai, aur bade universes par d khud log n ke order ka ho sakta hai.
@@ -321,17 +321,17 @@ Product-level examples bhi wahi tradeoffs dikhate hain: leaderboards ke liye top
 
 **Answer:** Comparator boolean return kar raha hai, jo `1`/`0` mein coerce hota hai — negative value kabhi return hi nahi hoti. Sort ke liye "a, b se pehle aata hai" wali information hi missing hai, so behavior implementation-defined hai aur output aksar input jaisa hi (`[3, 1, 2]`) reh jaata hai. Correct comparator `(a, b) => a - b` hai, jo teenon cases (negative, zero, positive) return karta hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Records are `(A,2)`, `(B,1)`, `(C,2)` and are sorted by the number. What does a stable sort guarantee, and when does that matter?
+**Apply:** Records `(A,2)`, `(B,1)`, `(C,2)` ko number se sort karo. Stable result kya hoga aur yeh guarantee kab useful hai?
 
-> **Hint:** Only equal-key relative order is constrained by stability.
+> **Hint:** Stability sirf equal-key items ke aapas ke order ki guarantee deti hai.
 
-**Answer guide — compare after attempting:** A stable result is `(B,1)`, `(A,2)`, `(C,2)`. A stays before C. This matters when prior order carries meaning, such as earlier sorting by another field. Stability is distinct from runtime complexity and from whether sorting mutates its input.
+**Answer guide — compare after attempting:** Stable result `(B,1)`, `(A,2)`, `(C,2)` hai: A, C se pehle rahega. Pehle kisi aur field se sorting hui ho toh yeh order meaningful ho sakta hai. Stability, runtime complexity aur input mutate hone ka behavior teen alag properties hain.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

@@ -5,15 +5,15 @@ track: javascript
 order: 5
 level: Foundation
 minutes: 12
-summary: Name a reusable calculation and keep its inputs and output explicit.
+summary: Return value caller ko aage calculation karne deti hai; console.log sirf information dikhata hai.
 tags: fundamentals, js, functions
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Function ek reusable operation hai. A parameter names an input inside its definition; an argument supplies the actual value at a call site. A return statement sends a value back to the caller and ends that function call. Printing a value is not the same as returning it: a caller cannot calculate with a console message.
 
-> **Core takeaway:** A return value lets callers compose work; logging only displays information.
+> **Core takeaway:** Return value caller ko aage calculation karne deti hai; console.log sirf information dikhata hai.
 
 ## One operation many inputs
 
@@ -26,7 +26,7 @@ const tuesday = lessonMinutes(3, 10);
 console.log(monday + tuesday); // 60
 ```
 
-Each call receives its own parameters. The return value becomes the value of the call expression. You can store it, pass it into another calculation or print it. Without an explicit return value, a normal function returns undefined. A return exits the current call, not the entire program.
+Har call ko apne parameters milte hain. Return result call expression ki value banta hai; store, calculate ya print kar sakte ho. Explicit return value na ho toh normal function undefined deti hai. return current call exit karta hai, entire program nahi.
 
 ## Build with familiar statements
 
@@ -41,30 +41,30 @@ function sumThrough(last) {
 console.log(sumThrough(4)); // 10
 ```
 
-The accumulator belongs to this function call. Calling sumThrough again starts with a new total. For now, assume a non-negative whole-number input; validation will be combined with functions in the foundations checkpoint. Stating that assumption is better than silently promising support for every possible value.
+Accumulator is function call ka local state hai. sumThrough dobara call karoge toh naya total start hoga. Abhi nonnegative whole-number input assume karo; validation later checkpoint mein combine hogi. Har possible value support karne ka silent promise mat karo.
 
-A function expression stores a function value in a binding. An arrow function is another syntax, such as const double = value => value * 2. Learn basic inputs and returns first; receiver behavior and closures have dedicated later lessons. Default parameters supply a fallback when an argument is undefined, not for every falsy value.
+Function expression function value ko binding mein store karti hai. Arrow bhi syntax hai: `const double = value => value * 2`. Pehle inputs/returns seekho; this aur closures later hain. Default parameter sirf undefined par fallback deta hai, har falsy value par nahi.
 
 ## Practice
 
-Write rectangleArea(width, height), call it twice and combine the results. Replace return with console.log temporarily and observe what the caller receives. Restore the return, then implement a function that counts how many integers from 1 through n are even. Use the loop and decision lessons you have already completed.
+rectangleArea(width,height) likho; do calls ke results add karo. return temporarily console.log se replace karke caller ka received result dekho. Return restore karo; phir 1–n ke even integers count function banao using loops/conditions.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-Explain the difference between a function definition and a function call. Next, use arrays and objects to represent several related values rather than inventing a separate variable for each one.
+Function definition aur function call ka difference samjhao. Next related values ko arrays/objects mein rakhenge, har item ka separate variable nahi banayenge.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Write `studyTotal(days, minutesPerDay)` and use its result to calculate two learners' combined minutes. Check `(3,20)` and `(0,20)`.
+**Apply:** `studyTotal(days, minutesPerDay)` likho aur do learners ke total minutes add karo. `(3,20)` aur `(0,20)` check karo.
 
-> **Hint:** Return the multiplication so another expression can use it.
+> **Hint:** Multiplication return karo, taaki doosri expression result use kar sake.
 
-**Answer guide — compare after attempting:** `function studyTotal(days, minutesPerDay) { return days * minutesPerDay; }` returns 60 and 0 for the stated nonnegative numeric inputs. Add two calls to get the combined total. A function that only logs gives the caller `undefined`.
+**Answer guide — compare after attempting:** `function studyTotal(days, minutesPerDay) { return days * minutesPerDay; }` given nonnegative numeric inputs par 60 aur 0 deta hai. Combined total ke liye do calls add karo. Sirf log karne wali function caller ko undefined return karti hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MDN functions guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions) covers definitions, calls and parameters.
+[MDN functions guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions) mein definitions, calls aur parameters padho.

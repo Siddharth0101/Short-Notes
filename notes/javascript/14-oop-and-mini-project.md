@@ -5,15 +5,15 @@ track: javascript
 order: 14
 level: Advanced
 minutes: 24
-summary: Encapsulation, inheritance, polymorphism aur abstraction ko object/class dono style mein dekho, phir sabko ek chhote banking state machine mein combine karo.
+summary: Encapsulation ka purpose valid state transitions bachana hai; sirf fields hide karna kaafi nahi.
 tags: oop, encapsulation, inheritance, polymorphism, abstraction, classes, closures, capstone
 ---
 
-## Mental model
+## Mental model — simple soch
 
 JavaScript "classes only" language nahi hai — OOP yahan object model, prototypes aur classes teeno se express ho sakta hai. Char pillars — encapsulation, inheritance, polymorphism, abstraction — Java jaisi strict class hierarchy ki demand nahi karte; plain object, closure aur `class` syntax teeno inhe achieve kar sakte hain. Design decision hamesha yeh hona chahiye: "kaunsa mechanism is specific problem ke liye simplest hai," na ki "sab kuch class banao." Yeh chapter pehle char pillars ko chhote independent examples se dikhata hai, phir unhe ek single synthesis project mein jodta hai jahan closures, `this` binding, classes aur array methods ek saath kaam karte hain.
 
-> **Core takeaway:** Encapsulation protects valid transitions, rather than merely hiding fields.
+> **Core takeaway:** Encapsulation ka purpose valid state transitions bachana hai; sirf fields hide karna kaafi nahi.
 
 ## Encapsulation: hiding internal state
 
@@ -151,7 +151,7 @@ class TransactionLedger {
 
 Caller `totalFor("deposit")` call karta hai bina yeh jaane ki andar `filter` aur `reduce` chal rahe hain. Kal agar implementation ek indexed Map ya database query se replace ho jaaye, public contract same rehta hai — yehi abstraction ka real value hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Private class fields (`#balance`) automatically deep-freeze bhi kar dete hain related object graph ko. **Why it breaks:** Private field sirf uske apne direct access ko restrict karta hai; agar `#balance` khud ek mutable object/array store karta hai, uska returned reference (jaise `get transactions() { return this.#log; }`) still directly mutable ho sakta hai bahar se. **Fix:** Getter se hamesha copy return karo (`return [...this.#log]`), original reference kabhi expose mat karo.
 - **Wrong assumption:** Inheritance hamesha code reuse ka best tarika hai. **Why it breaks:** Multiple unrelated features (logging, retries, notifications) ko ek hi class hierarchy mein inherit karne ki koshish karne se fragile, deeply nested classes ban jaati hain jahan ek chhota change upar-niche sab kuch todh sakta hai. **Fix:** "is-a" relationship genuinely true ho tabhi extend karo; feature-mixing ke liye composition (wrapper functions/objects) prefer karo.
@@ -238,24 +238,24 @@ Kuch cheezein jo yeh example jaanbujh kar exercise karta hai:
 
 `Bank` class mein `closeAccount(id)` add karo jo balance zero hone par hi allow kare, warna throw kare. Phir `monthlyInterest(rate)` method add karo jo har account par `deposit` call kare based on current balance, aur verify karo ki `totalAssets()` correctly badhta hai. Last mein `bank.deposit` ko without binding kisi array `.map()` callback mein pass karke crash reproduce karo, phir fix karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. JavaScript "true" OOP language hai jaise Java?** JavaScript prototype-based object model use karta hai; `class` syntax usi model par ergonomic layer hai. Char pillars achieve ho sakte hain, lekin mechanism (prototypes/closures) Java ki class-based nominal typing se fundamentally different hai.
 
 **Q. Composition ko inheritance se kab prefer karoge?** Jab relationship "is-a" nahi, "has-a"/"can-do" ho, ya jab multiple independent features (logging, retry, caching) ek object mein combine karni ho. Deep inheritance chains fragile hoti hain; composition flat aur mix-and-match rehta hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** An account has balance 100. Specify outcomes for withdrawing 30, then 80, then -5. How will callers know a withdrawal was rejected?
+**Apply:** Balance 100 hai. Pehle 30, phir 80, phir -5 withdraw karo. Har step ka result aur rejected withdrawal ki notification define karo.
 
-> **Hint:** Validate the amount and available balance before mutating state.
+> **Hint:** Amount aur available balance validate karne ke baad hi state mutate karo.
 
-**Answer guide — compare after attempting:** The first withdrawal leaves 70. Reject the next two and retain 70: one exceeds the balance and the other is not a positive amount. Return a documented result or throw a documented error. A rejected transition must leave the account unchanged.
+**Answer guide — compare after attempting:** First withdrawal ke baad 70. Next dono reject: 80 balance se zyada aur -5 positive amount nahi hai. Balance 70 hi rahe. Documented result return karo ya documented error throw karo; rejected transition state nahi badalni chahiye.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN Object-oriented JavaScript](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Object_building_practice) prototypes aur classes dono style explain karta hai. [MDN private class features](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties) encapsulation ka current syntax reference hai.

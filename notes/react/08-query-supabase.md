@@ -5,15 +5,15 @@ track: react
 order: 8
 level: Advanced
 minutes: 30
-summary: Query keys, staleness, mutations, optimistic updates aur backend access policies ko connect karo.
+summary: Query key cached result ki identity hai; freshness aur authorization alag concerns hain.
 tags: tanstack-query, server-state, caching, supabase, mutations
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Server state ka owner remote system hai; client ke paas uski temporary cached copy hoti hai. Loading boolean aur array se shuru kar sakte ho, lekin freshness, retries, race conditions, deduplication aur invalidation quickly complex ho jaate hain. Query library cache lifecycle manage karti hai. Client UI state aur server cache ko separate rakho, jaise selected tab local hai lekin fetched bookings remote data hain.
 
-> **Core takeaway:** A query key identifies a cached result; freshness and authorization are separate concerns.
+> **Core takeaway:** Query key cached result ki identity hai; freshness aur authorization alag concerns hain.
 
 ## Query key defines identity
 
@@ -124,7 +124,7 @@ Ek admin dashboard mein table pagination, search aur sort filters saath-saath ch
 
 Track filter switch karke cache behavior observe karo. Mutation ke baad list update verify karo. Network offline karo, retry behavior inspect karo aur optimistic rollback demonstrate karo. Do users ke data separation ko backend policy tests se verify karo. Dependent query implement karo jahan second query sirf first query ka result mil jaane ke baad `enabled` ho, aur verify karo ki `isPending` state correctly dikhti hai jab tak dependency resolve nahi hoti.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Stale data unusable hai?** Nahi. Stale cache display ho sakti hai while refresh happens; stale freshness metadata hai.
 
@@ -132,30 +132,30 @@ Track filter switch karke cache behavior observe karo. Mutation ke baad list upd
 
 ## Research notes: Freshness and retention are different clocks
 
-In TanStack Query v5, `staleTime` controls freshness and `gcTime` controls removal of inactive cached data. Stale does not mean deleted. Stale queries can refetch on mount, focus or reconnect; inactive entries default to five minutes of retention.
+TanStack Query v5 mein staleTime freshness aur gcTime inactive data removal control karta hai. Stale ka matlab deleted nahi. Stale query mount/focus/reconnect par refetch kar sakti hai; browser mein inactive cache retention default five minutes hai.
 
-With `staleTime: 60_000`, a result may become stale after sixty seconds while remaining cached. Staleness alone does not start periodic polling. Choose the policy from the product's freshness requirement.
+staleTime:60_000 par sixty seconds baad data stale hokar bhi cache mein reh sakta hai. Stale hone se periodic polling start nahi hoti. Product ki freshness need se policy choose karo.
 
-**Interview check:** Does gcTime: 0 guarantee fresh data while a query stays mounted?
+**Interview check:** Mounted query par gcTime:0 fresh data guarantee karta hai?
 
-**Answer:** No. Garbage collection applies to inactive queries. It is not a freshness or authorization policy; configure refetch behavior separately and enforce access at the server.
+**Answer:** Nahi; GC inactive queries par apply hoti hai. Yeh freshness/auth policy nahi. Refetch alag configure aur server access independently enforce karo.
 
-**Practice:** Log mount, unmount, refocus and reconnect requests on a timestamped timeline.
+**Practice:** Mount/unmount/refocus/reconnect requests timestamped timeline par log karo.
 
-[Read the source — TanStack Query](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — TanStack Query](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Two users request page 1 of their own notes. Explain the bug in key `['notes',1]` and specify a better cache identity.
+**Apply:** Do users apni notes ka page 1 maangte hain. `['notes',1]` key mein kya bug hai? Better key do.
 
-> **Hint:** Include every input that changes the result, including the user boundary.
+> **Hint:** Result badalne wale har input ko include karo, user boundary bhi.
 
-**Answer guide — compare after attempting:** Use an identity such as `['notes', userId, {page:1, filter}]` and clear or isolate user data on session changes. Backend access rules must independently enforce ownership. A correct key prevents cache collisions but does not authorize a database read.
+**Answer guide — compare after attempting:** `['notes', userId, {page:1, filter}]` jaisi key use karo. Session change par user data clear/isolate karo. Backend ownership independently enforce kare. Correct key collision rokti hai; woh database read authorize nahi karti.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [TanStack Query important defaults](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults) cache timing explain karta hai. [Supabase Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) authorization policy ka reference hai.

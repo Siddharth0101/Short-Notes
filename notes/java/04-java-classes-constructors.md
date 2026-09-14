@@ -5,15 +5,15 @@ track: java
 order: 4
 level: Foundation
 minutes: 12
-summary: Create independent instances before studying inheritance and polymorphism.
+summary: Constructor valid object banata hai; methods ko uske invariants, yani valid state ke rules, bachane chahiye.
 tags: fundamentals, java, classes, constructors
 ---
 
-## Mental model
+## Mental model — simple soch
 
-A class defines the state and behavior of a kind of object. An instance is one concrete object created from that definition. Two learners can use the same class and still have different names and progress. Pehle independent instances samjho; inheritance and interfaces make more sense after this foundation.
+Class object ki structure aur behavior define karti hai. Instance us definition se bana actual object hai. Class ko admission-form format samjho aur instances ko Asha/Ravi ke filled forms: format same, data alag. Dono learners ka name/progress independent ho sakta hai. Pehle yeh independence samjho, phir inheritance/interfaces easy lagenge.
 
-> **Core takeaway:** Constructors establish valid instances; methods should preserve their invariants.
+> **Core takeaway:** Constructor valid object banata hai; methods ko uske invariants, yani valid state ke rules, bachane chahiye.
 
 ## Create two independent objects
 
@@ -36,7 +36,7 @@ class Learner {
 }
 ```
 
-Inside the main method of your Main class, use:
+Main class ke main method ke andar yeh use karo:
 
 ```java
 Learner first = new Learner("Asha");
@@ -46,34 +46,34 @@ System.out.println(first.summary()); // Asha: 1
 System.out.println(second.summary()); // Ravi: 0
 ```
 
-Place both classes in Main.java with only Main declared public for this exercise. The constructor has the class name and no return type. It initializes the object; it is not an ordinary method that returns the new instance. this.name refers to the field of the current instance, distinguishing it from the parameter name.
+Dono classes Main.java mein rakho; is exercise mein sirf Main public ho. Constructor ka naam class jaisa hota hai aur return type nahi hota. Woh object initialize karta hai; normal method ki tarah new instance return nahi karta. this.name current instance ka field hai, parameter name se alag.
 
 ## Ownership and access
 
-private keeps fields behind the class's methods. Encapsulation means the object can control valid updates rather than allowing callers to write arbitrary state. A getter and setter for every field is not automatically good encapsulation. Expose operations that match the domain, such as completeLesson, and later add validation when the domain requires it.
+private fields ko class ke methods ke through control karne deta hai. Encapsulation ka matlab arbitrary updates rok kar valid changes allow karna hai. Har field ka getter/setter banana automatically good encapsulation nahi. completeLesson jaise domain operation expose karo; need ke hisaab se validation add karo.
 
-An instance field belongs to an object. A static field belongs to the class rather than one learner; making completed static would accidentally share the counter. Assigning first to another reference does not clone it. Java passes argument values, including reference values, by value; a called method may still mutate the same referenced object.
+Instance field particular object ki hoti hai. static field class ki shared field hoti hai; completed static karoge toh learners count share karenge. first ko doosre reference mein assign karna clone nahi banata. Java reference value bhi copy karke pass karta hai; method phir bhi same referenced object mutate kar sakta hai.
 
 ## Practice
 
-Create two learners and complete different numbers of lessons. Verify their counters stay independent. Add a rename operation only after deciding whether names should be changeable; final currently prevents reassignment. Then explain what changes when two variables refer to the same learner instead of two separately constructed learners.
+Do learners banao aur alag numbers of lessons complete karo; counters independent check karo. Rename add karne se pehle decide karo name changeable hona chahiye ya nahi; abhi final reassignment rokta hai. Phir two objects aur same object ko refer karne wale two variables compare karo.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-Explain class, instance, constructor, field and method without using them interchangeably. Next, review language edge cases and then learn interfaces, composition, equality and polymorphism.
+Class, instance, constructor, field aur method ka meaning alag samjhao. Next language edge cases review karke interfaces, composition, equality aur polymorphism padho.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Design a learner with a name and completed count. Reject a negative starting count, then create two learners and increment only one.
+**Apply:** Name aur completed count wala learner banao. Negative starting count reject karo. Do learners banao aur sirf ek ka count badhao.
 
-> **Hint:** Keep instance fields separate and validate before assignment.
+> **Hint:** Instance fields alag rakho; assignment se pehle validation karo.
 
-**Answer guide — compare after attempting:** Use private instance fields, validate the constructor count, and expose a completion method rather than arbitrary unchecked writes. The second learner's count stays unchanged. A static count would incorrectly share the total across all learners unless that was explicitly intended.
+**Answer guide — compare after attempting:** Private instance fields rakho, constructor count validate karo aur unchecked writes ke bajay completion method do. Doosre learner ka count same rahega. static count sab learners mein share hoga; yeh tabhi sahi hai jab shared total intentionally chahiye.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Dev.java classes and objects](https://dev.java/learn/classes-objects/) explains instance construction and member access.
+[Dev.java classes and objects](https://dev.java/learn/classes-objects/) mein instance construction aur member access padho.

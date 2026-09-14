@@ -93,9 +93,9 @@ function Simulator({ visual }) {
         return [
           ...binarySearchTrace(values, 42),
           {
-            title: 'Fetch the matching document',
+            title: 'Matching document fetch karo',
             explanation:
-              'Index entry se document reference mila. A non-covered query fetches that document. This simplified unique-SKU example returns one match.',
+              'Index entry se document reference mila. Non-covered query us document ko fetch karti hai. Is simplified unique-SKU example mein ek match hai.',
             lanes: [
               { name: 'Index', items: ['sku: 42 → document #6'] },
               { name: 'Collection', items: ['{ sku: 42, name: "Notebook" }'] },
@@ -104,11 +104,11 @@ function Simulator({ visual }) {
           },
         ];
       return values.slice(0, 6).map((value, i) => ({
-        title: value === 42 ? 'Found the matching document' : `Scan document ${i + 1}`,
+        title: value === 42 ? 'Matching document mil gaya' : `Scan document ${i + 1}`,
         explanation:
           value === 42
-            ? 'findOne-style lookup can stop at the first match. A general find query may continue scanning for more matches.'
-            : 'No supporting index in this example. Har document ko check karna pad raha hai.',
+            ? 'findOne-style lookup pehle match par ruk sakta hai. General find query aur matches ke liye scan continue kar sakti hai.'
+            : 'Is example mein supporting index nahi hai. Har document check karna pad raha hai.',
         cells: values.map((v, j) => ({
           value: v,
           label: `doc ${j + 1}`,
@@ -304,7 +304,7 @@ function Simulator({ visual }) {
               setStep(step + 1);
             }}
           >
-            Next step <Icon name="next" size={16} />
+            Agla step <Icon name="next" size={16} />
           </button>
         </div>
         <div className="step-position">
@@ -336,18 +336,18 @@ function Simulator({ visual }) {
       <div className="visual-takeaway">
         <Icon name="sparkles" size={20} />
         <div>
-          <strong>The idea to take with you</strong>
+          <strong>Yeh main baat yaad rakho</strong>
           <p>{visual.takeaway}</p>
           {visual.source && (
             <a href={visual.source} target="_blank" rel="noreferrer">
-              Read the official reference ↗
+              Official reference padho ↗
             </a>
           )}
         </div>
       </div>
       <details className="visual-code">
         <summary>
-          <Icon name="code" size={16} /> See the code behind the concept
+          <Icon name="code" size={16} /> Concept ka code dekho
         </summary>
         <Markdown>
           {'```' +
@@ -403,7 +403,7 @@ export default function VisualLab({ embedded = false, topic }) {
                 setParams({ track: nextTrack, topic: first.id });
               }}
             >
-              <option value="all">All subjects</option>
+              <option value="all">Saare subjects</option>
               {Object.values(trackById)
                 .filter((item) => VISUALS.some((v) => v.track === item.id))
                 .map((item) => (

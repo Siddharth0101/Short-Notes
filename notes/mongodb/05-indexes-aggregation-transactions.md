@@ -5,16 +5,16 @@ track: mongodb
 order: 5
 level: Advanced
 minutes: 35
-summary: Query plans padho, pipelines design karo aur consistency ke liye correct atomic boundary choose karo.
+summary: Atomic conditional update ek document ke invariant ko check aur change ek saath karke bacha sakti hai.
 tags: indexes, aggregation, transactions, geospatial, explain, performance
 visual: aggregation-pipeline
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Index collection ka extra ordered lookup structure hai. Read ko faster banane ki cost storage, memory aur every relevant write par maintenance hai. Index existing query pattern ke liye design karo, sirf har field par index add mat karo. Aggregation documents ko stages se process karti hai. Transaction multiple writes ko common commit/rollback boundary deti hai; slow data model ko automatically fast nahi banati.
 
-> **Core takeaway:** An atomic conditional update can guard a single-document invariant.
+> **Core takeaway:** Atomic conditional update ek document ke invariant ko check aur change ek saath karke bacha sakti hai.
 
 ## Index around an actual query
 
@@ -89,7 +89,7 @@ GeoJSON Point coordinates `[longitude, latitude]` order mein hote hain. Spherica
 
 Single document operation already atomic hoti hai. Multiple account/booking documents ko jointly change karna ho to replica-set/sharded deployment par supported transactions use karo; standalone server transaction environment nahi hai. Driver transaction callback retry ho sakta hai, isliye external email/payment call us callback mein directly mat rakho. Session har participating operation ko pass karo. External side effects ke liye outbox plus idempotent worker pattern useful hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `explain()` mein `IXSCAN` dikhne ka matlab hai query already optimal hai. **Why it breaks:** Index scan phir bhi bahut saare keys examine karke thode documents return kar sakta hai, jaise low-selectivity leading field ya sort stage jo memory mein separately ho raha ho (`SORT` stage without index support). **Fix:** `totalKeysExamined`/`totalDocsExamined`/`nReturned` ka ratio dekho aur stage tree mein `SORT`/`FETCH` stages ka cost bhi inspect karo, sirf top-level scan type par mat ruko.
 - **Wrong assumption:** `$match` pipeline mein jahan bhi likho, order matter nahi karta kyunki MongoDB "smart optimizer" hai. **Why it breaks:** Optimizer kuch reordering karta hai, lekin `$match` ko `$lookup`/`$unwind` ke baad likhna (jab pehle likha ja sakta tha) unnecessary intermediate documents process karwa sakta hai — bade collections par yeh real performance difference banata hai. **Fix:** Selective `$match`/`$sort` stages ko jitna ho sake pipeline mein early rakho taaki baad ke stages kam data par kaam karein.
@@ -99,7 +99,7 @@ Single document operation already atomic hoti hai. Multiple account/booking docu
 
 Ten-thousand sample sessions par report run karo. Index se pehle/baad same query plan compare karo. Duplicate sort timestamps add karke cursor tie-breaker test karo. Simulated transaction failure se verify karo ki half-completed booking persist nahi hoti.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Index har query fast karega?** Nahi. Selectivity, prefix, sort, projection aur workload matter karte hain; writes costlier ho sakti hain.
 
@@ -107,7 +107,7 @@ Ten-thousand sample sessions par report run karo. Index se pehle/baad same query
 
 ## Research notes: Match the version you actually read
 
-An atomic update does not make separate read-then-replace operations race-free. Match the expected version in the write filter.
+Atomic update separate read-then-replace workflow ko race-free nahi banati. Write filter mein expected version match karo.
 
 ```js
 const result = await orders.updateOne(
@@ -119,28 +119,28 @@ if (result.matchedCount === 0) {
 }
 ```
 
-A conflict requires a fresh decision. Include tenant and authorization constraints at the real repository boundary.
+Conflict par fresh decision chahiye. Actual repository boundary par tenant/authorization constraints include karo.
 
-**Interview check:** Does single-document atomicity cover a multi-document workflow?
+**Interview check:** Single-document atomicity multi-document workflow cover karti hai?
 
-**Answer:** No. Individual operations can be atomic while the overall workflow is partially applied. Use an appropriate transaction or explicit recovery when the invariant spans documents.
+**Answer:** Nahi. Individual operations atomic hokar bhi complete workflow partial ho sakta hai. Invariant multiple documents par ho toh suitable transaction ya explicit recovery design karo.
 
-**Practice:** Race two writes with the same version and inspect matchedCount.
+**Practice:** Same version ke saath two writes race karwao aur matchedCount dekho.
 
-[Read the source — MongoDB](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MongoDB](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A document has stock 1. Two buyers each try to purchase one. Specify the update filter, operation, and success signal.
+**Apply:** Stock 1 hai aur do buyers ek-ek item kharid rahe hain. Filter, update aur success signal define karo.
 
-> **Hint:** Combine eligibility and decrement in the same write.
+> **Hint:** Eligibility aur decrement same write mein rakho.
 
-**Answer guide — compare after attempting:** Filter by product ID and stock at least 1, then decrement stock by 1 with $inc. Only one concurrent operation can match successfully after the decrement; check the matched/modified result. This protects the document's stock, while related multi-document work needs its own consistency design.
+**Answer guide — compare after attempting:** Product ID plus stock>=1 filter use karo; `$inc` se -1 karo. Pehla successful decrement stock zero karega; doosri operation match nahi karegi. Matched/modified result check karo. Related multi-document work ke liye separate consistency design chahiye.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MongoDB compound indexes](https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/) prefix rules explain karta hai. [Aggregation pipelines](https://www.mongodb.com/docs/manual/core/aggregation-pipeline/) stages aur [MongoDB transactions](https://www.mongodb.com/docs/manual/core/transactions/) atomic boundaries ka reference hain.

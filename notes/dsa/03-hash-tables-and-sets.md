@@ -5,17 +5,17 @@ track: dsa
 order: 3
 level: Intermediate
 minutes: 29
-summary: Hashing assumptions, collision handling, equality, and lookup-driven algorithms samjho.
+summary: Hashing extra storage use karke key lookup fast banati hai; speed hash distribution aur load par depend karti hai.
 tags: hashing, map, set, collisions, two-sum
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Hash table key ko hash value aur phir bucket location mein map karta hai. Different keys same location par aa sakti hain: ise collision kehte hain. Hash match equality prove nahi karta, isliye collision ke baad actual key comparison zaroori hai.
 
 Good distribution aur controlled load factor ke under typical hash operations expected O(1) ho sakte hain. Adversarial collisions ya unsuitable implementation mein worst case O(n) ho sakta hai. Hashing long string key ka cost bhi key length par depend kar sakta hai; har key ko automatically unit-size mat samjho.
 
-> **Core takeaway:** Hashing trades additional storage for efficient key lookup under its assumptions.
+> **Core takeaway:** Hashing extra storage use karke key lookup fast banati hai; speed hash distribution aur load par depend karti hai.
 
 ## Collision strategies
 
@@ -134,7 +134,7 @@ Languages jahan yeh guarantee nahi hai (ya jab interviewer explicitly kahe "Map 
 
 Design lesson generalizable hai: **jab ek structure se do alag access patterns chahiye, do structures ko synchronized rakho.** Wahi idea indexed heap (heap + position map), two-heap median, aur database mein secondary indexes ke peeche hai. Cost yeh hai ki dono structures ko har mutation par consistently update karna padta hai — ek jagah update bhool jaana silent corruption hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `map.get(key)` ka `undefined` return karna matlab key absent hai. **Why it breaks:** Stored value khud `undefined` ho sakti hai, so presence aur absence indistinguishable ho jaate hain. `counts.get(k) === undefined ? 1 : …` jaise patterns is ambiguity par silently galat branch le sakte hain. **Fix:** Presence ke liye `map.has(key)` use karo, aur default chahiye toh `map.get(k) ?? 0` likho — `??` sirf `null`/`undefined` par fire karta hai, `0` ya `''` par nahi (jabki `||` unpar bhi fire karta hai, jo counting code mein classic bug hai).
 - **Wrong assumption:** Frequency counting ke liye plain object `{}` Map jitna safe hai. **Why it breaks:** Object keys strings mein coerce hote hain, so `1` aur `'1'` collide karte hain aur `obj[{a:1}]` sab objects ke liye `'[object Object]'` ban jaata hai. Aur inherited prototype keys hazard hain: `counts['constructor']` ek function return karta hai, `counts['toString']` bhi — `if (counts[word])` truthy nikal aata hai bina kisi count ke. **Fix:** `Map` use karo (arbitrary key types, no prototype chain), ya `Object.create(null)` se prototype-less object banao.
@@ -179,31 +179,31 @@ Distributed systems mein **consistent hashing** keys ko nodes par map karta hai 
 
 ## Research notes: Expected and amortized are different guarantees
 
-Doubling capacity spreads resizing work across many inserts: copied capacities form a geometric sum. Growing by one can repeatedly copy almost the entire structure.
+Capacity double karne par resizing ka work bahut saare inserts mein spread hota hai. Copied sizes 1+2+4+8… geometric sum banate hain. Sirf ek slot badhaoge toh baar-baar lagbhag poora structure copy karna pad sakta hai.
 
-Amortized cost concerns a sequence of operations. Expected hashing cost depends on assumptions about hash distribution. “Always O(1)” removes both qualifications.
+Amortized cost poori operation sequence ka average bound hai. Expected hashing cost hash distribution ki assumptions par depend karti hai. “Hamesha O(1)” bolne se yeh dono conditions chup jaati hain.
 
-Trace eight insertions with capacities 1, 2, 4, 8; list copy counts. Compare growth through every integer capacity.
+Capacity 1,2,4,8 par eight insertions trace karo aur har resize ki copies gino. Phir 1,2,3,4… capacity growth se compare karo.
 
-**Interview check:** Can one insertion be linear despite constant amortized insertion?
+**Interview check:** Amortized insertion constant ho tab bhi kya ek particular insertion linear ho sakta hai?
 
-**Answer:** Yes. One resize may copy the contents, while total resizing work across geometric growth is linear in the number of inserts. Amortized cost does not bound individual-operation latency.
+**Answer:** Haan. Ek resize saara content copy kar sakta hai; geometric growth ke across total copies inserts ke proportion mein rehti hain. Amortized bound ek individual operation ki latency guarantee nahi hai.
 
-**Practice:** Explain why separate shrink and grow thresholds prevent resize thrashing.
+**Practice:** Grow aur shrink ke thresholds alag rakhne se repeated resizing, yani thrashing, kyun kam hoti hai? Example se samjhao.
 
-[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/160b3b5f9da2e03815ca1e6ee0dba62a_MIT6_006F11_lec09.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/160b3b5f9da2e03815ca1e6ee0dba62a_MIT6_006F11_lec09.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Find the first repeated value in `[4,2,4,2]` while scanning left to right. Why must you test membership before insertion?
+**Apply:** `[4,2,4,2]` ko left-to-right scan karke pehli repeated value nikalo. Insert karne se pehle membership check kyun karoge?
 
-> **Hint:** The first duplicate encountered is determined by scan order.
+> **Hint:** Pehla repeat scan order se decide hota hai, sabse chhoti value se nahi.
 
-**Answer guide — compare after attempting:** Keep a Set; check each value, then add unseen values. Return 4 at the third item. Empty and all-distinct inputs return the chosen no-duplicate result. Expected time is O(n), extra space O(n); specify equality semantics for nonprimitive inputs.
+**Answer guide — compare after attempting:** Set rakho. Har value ko pehle check karo; unseen ho toh add karo. Third item par 4 pehle se milta hai, isliye answer 4. Empty ya all-distinct input par chosen no-duplicate result do. Expected time O(n), extra space O(n). Objects ke liye equality ka meaning bhi define karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

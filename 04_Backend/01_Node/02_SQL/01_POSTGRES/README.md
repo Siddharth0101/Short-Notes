@@ -5,7 +5,7 @@ Stephen Grider's SQL and PostgreSQL: The Complete Developer's Guide — short no
 These files follow the same style as the MongoDB/Jonas notes in this repo:
 short Hinglish explanations, important rules, and compact SQL examples inside JS comment blocks.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_SQL_BASICS/SQL_Fundamentals.js`
 2. `02_FILTERING_SORTING/Filtering_Sorting_Operators.js`
@@ -21,7 +21,7 @@ short Hinglish explanations, important rules, and compact SQL examples inside JS
 12. `12_MIGRATIONS_TESTING/Migrations_Parallel_Testing.js`
 13. `13_DATABASE_INTERNALS/Database_Internals.js`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - SQL basics, CRUD, data types, PostgreSQL setup (pgAdmin, psql)
 - Filtering, sorting, comparison operators, NULL handling

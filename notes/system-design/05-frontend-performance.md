@@ -5,16 +5,16 @@ track: system-design
 order: 5
 level: Intermediate
 minutes: 24
-summary: Speed ko measure karo aur keyboard, motion aur failure states ko design ka part banao.
+summary: Performance aur accessibility user ke observable outcomes hain; unke measurable targets define karo.
 tags: performance, accessibility, web-vitals, react
 visual: react-render
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Fast frontend ka matlab sirf small bundle nahi. Content jaldi visible ho, interactions responsive hon, layout stable rahe and user task complete kar sake. Accessibility same reliability goal ka part hai: keyboard, screen reader or reduced-motion preference ke saath interface usable rehna chahiye.
 
-> **Core takeaway:** Performance and accessibility are observable user outcomes with explicit budgets.
+> **Core takeaway:** Performance aur accessibility user ke observable outcomes hain; unke measurable targets define karo.
 
 ## Measure user experience
 
@@ -89,7 +89,7 @@ Native button and link correct semantics provide karte hain. Dialog mein accessi
 
 Motion disable hone par meaning static labels and state descriptions se available rahe. Long simulation screen reader ko every frame announce na kare; meaningful step updates announce karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `useMemo`/`useCallback` har jagah laga dene se app fast hoti hai. **Why it breaks:** Dono ka apna cost hai — dependency array har render par compare hoti hai, memoized value memory mein retain hoti hai, aur ek unstable dependency (inline object/array) memoization ko har baar invalidate karke pure overhead bana deti hai. Aur agar child `memo` se wrapped nahi hai toh `useCallback` se koi re-render bachta hi nahi. **Fix:** Pehle Profiler se measure karo ki kaun sa component actually expensive hai; memoization ko genuinely costly computation aur genuinely memoized children tak limit rakho.
 - **Wrong assumption:** Virtualization long list ka universal fix hai. **Why it breaks:** Virtualized list mein browser ka Ctrl+F kaam nahi karta (off-screen rows DOM mein nahi hain), keyboard focus scroll ke saath unmount hone par lose ho sakta hai, aur screen reader ko total count/position clearly nahi milta — matlab performance win accessibility regression ke saath aata hai. **Fix:** Virtualize karne se pehle poochho ki list itni badi kyun hai; pagination ya better filtering aksar behtar product answer hai. Virtualize karo toh `aria-setsize`/`aria-posinset` expose karo aur keyboard navigation explicitly test karo.
@@ -97,7 +97,7 @@ Motion disable hone par meaning static labels and state descriptions se availabl
 - **Wrong assumption:** Third-party scripts (analytics, chat widget, A/B testing) performance ko zyada affect nahi karte kyunki wo `async` load hote hain. **Why it breaks:** `async` sirf download ko non-blocking banata hai; execute hone par wo script main thread ko utna hi block karti hai, aur A/B testing scripts toh aksar deliberately render block karti hain taaki flicker na ho. Ek 80 KB chat widget INP ko 200 ms se 500 ms le jaa sakti hai bina kisi app code change ke. **Fix:** Har third-party ko explicit budget do, unhe defer/lazy karo (chat widget user interaction par load ho), aur regularly measure karo ki unka main-thread contribution kitna hai.
 - **Wrong assumption:** Accessibility ek final QA checklist item hai. **Why it breaks:** Focus management, semantics aur keyboard flow component structure se determine hote hain — `<div onClick>` ko baad mein accessible banana matlab component rewrite karna, aur modal ka focus trap retrofit karna usually poori dialog architecture touch karta hai. **Fix:** Native elements se start karo (`button`, `a`, `dialog`, `label`), aur har interactive component ke acceptance criteria mein keyboard path shuru se likho.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **What do you optimize first?** Slow user journey measure karke largest bottleneck identify karta hoon. Network, CPU, rendering and server delay different fixes demand karte hain.
 
@@ -115,19 +115,19 @@ Slow device emulation pe reader profile karo. Keyboard-only search-to-chapter jo
 
 Phir ek budget table apne project ke liye banao: top 8 dependencies ki compressed sizes list karo aur decide karo kaun sa initial bundle mein rehna deserve karta hai. Uske baad artificial long task inject karo (ek 400 ms synchronous loop ek `setInterval` mein) aur button click karke INP degradation observe karo — phir usse `requestIdleCallback` ya chunked loop mein todh kar difference measure karo. Last mein ek API ko 5 s delay par mock karke verify karo ki page partial content dikhata hai, infinite spinner nahi.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A data grid looks fast on your laptop but is slow and hard to use on a phone. Define a small validation matrix and one success signal.
+**Apply:** Grid laptop par fast hai, phone par slow aur hard-to-use. Chhoti validation matrix aur success signal do.
 
-> **Hint:** Vary device capability, network, and input method.
+> **Hint:** Device capability, network aur input method change karke dekho.
 
-**Answer guide — compare after attempting:** Test a narrow viewport, slower CPU/network, and keyboard navigation with realistic row counts. Measure input-to-visible-update time and loading behavior; verify focus, labels, and error recovery. Set a target from the product requirement and compare before/after results rather than declaring the desktop demo sufficient.
+**Answer guide — compare after attempting:** Realistic rows ke saath narrow viewport, slower CPU/network aur keyboard test karo. Input-to-visible-update timing, loading, focus, labels aur error recovery verify karo. Product requirement se target set karke before/after compare karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Web Vitals](https://web.dev/articles/vitals)
 - [WAI ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)

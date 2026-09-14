@@ -5,25 +5,25 @@ track: spring-boot
 order: 1
 level: Intermediate
 minutes: 16
-summary: Understand Spring versus Boot and trace a small HTTP application.
+summary: Boot application context aur server tayyar karta hai; registered components actual requests handle karte hain.
 tags: spring, boot, startup
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Spring dependencies aur application objects manage karta hai. Spring Boot common setup ko simplify karta hai through starters, auto-configuration and executable packaging. Boot business logic nahi likhta: tumhara controller ab bhi HTTP contract define karta hai. Pehle ek request successfully trace karo, phir database aur security add karo.
 
-> **Core takeaway:** Boot prepares an application context and server; your registered components handle the request.
+> **Core takeaway:** Boot application context aur server tayyar karta hai; registered components actual requests handle karte hain.
 
 ## Create the project deliberately
 
-Use Spring Initializr at https://start.spring.io with Maven, Java, Java 21, and a compatible supported stable Boot release. Add Spring Web. Keep the generated wrapper, build file and dependency versions together. These examples use the servlet MVC model and Jakarta-era Boot APIs; Boot 3 and Boot 4 have different starter/test module layouts, so retain the dependencies generated for your selected version instead of copying a version from an unrelated tutorial.
+Spring Initializr https://start.spring.io par Maven, Java, Java 21 aur compatible supported stable Boot release choose karo; Spring Web add karo. Generated wrapper/build/dependencies together rakho. Examples servlet MVC aur Jakarta-era APIs use karte hain. Boot 3/4 starter/test layouts different hain; selected version ki generated dependencies retain karo, unrelated tutorial ki versions mix mat karo.
 
-Put the application in `com.example.study` and controller in the same package or a child package. In a generated Maven project, Java files live under `src/main/java` and properties under `src/main/resources`. Tests belong under `src/test/java`.
+Application `com.example.study` mein, controller same ya child package mein rakho. Maven project mein Java `src/main/java`, properties `src/main/resources`, tests `src/test/java` mein hoti hain.
 
 ## A complete application pair
 
-Save these as separate files under `src/main/java/com/example/study` in that generated project.
+Generated project mein `src/main/java/com/example/study` ke andar inhe separate files mein save karo.
 
 ```java
 package com.example.study;
@@ -51,30 +51,30 @@ public class GreetingController {
 }
 ```
 
-Run `./mvnw spring-boot:run` from the project directory. On Windows use `mvnw.cmd`. Request `http://localhost:8080/api/greeting`; expect HTTP 200 and JSON with a message field. The generated build supplies framework dependencies; these files cannot compile with plain javac alone.
+Project directory se `./mvnw spring-boot:run` chalao; Windows par mvnw.cmd. `http://localhost:8080/api/greeting` request par HTTP 200 aur message field wala JSON expect karo. Framework dependencies generated build deta hai; plain javac alone se yeh files compile nahi hongi.
 
 ## Trace startup and the request
 
-The main method starts Boot. Component scanning discovers the controller below the application package. Auto-configuration considers the classpath and registered beans to configure MVC and the embedded server. A request reaches the servlet infrastructure, routing selects the handler, and message conversion serializes the returned record.
+main Boot start karta hai. Component scan application package ke neeche controller discover karti hai. Auto-configuration classpath/registered beans dekhkar MVC aur embedded server setup karti hai. Request servlet infrastructure tak aati hai, routing handler choose karti hai, converter returned record ko JSON banata hai.
 
-A 404 often means the route or component scan is wrong. A port-in-use startup failure means the process never began serving successfully. Read the first meaningful exception and its cause before randomly adding annotations. A controller outside the scan package is not automatically discovered just because it compiles.
+404 aksar wrong route ya missing component scan ka sign hai. Port-in-use startup failure mein server successfully serve hi nahi hua. Random annotations se pehle first meaningful exception/cause padho. Compile hone se out-of-scan controller automatically register nahi hota.
 
 ## Practice
 
-Add GET `/api/course` returning a record with name Java and lessons 1. Verify the JSON types: lessons should be numeric. Request a nonexistent route and compare its status to the valid route.
+GET `/api/course` add karo jo name Java aur lessons 1 ka record return kare. JSON mein lessons number hona chahiye. Nonexistent route ka status valid route se compare karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
 **Recall:** Which responsibilities belong to Boot and which belong to the controller?
 
-**Apply:** Move GreetingController into `com.other` without changing scan configuration. Predict the request result, then restore it under `com.example.study.web` with the matching package declaration.
+**Apply:** GreetingController ko scan configuration badle bina `com.other` mein move karo. Request result predict karo; phir matching package ke saath `com.example.study.web` mein restore karo.
 
-> **Hint:** Default scanning begins at the application class package.
+> **Hint:** Default scanning application class ke package se neeche shuru hoti hai.
 
-**Answer guide — compare after attempting:** The out-of-tree controller is not registered by the default scan, so its route is absent and the request normally returns 404. Restoring it beneath the application package makes discovery possible again. Changing only the URL cannot register a missing bean.
+**Answer guide — compare after attempting:** Default scan out-of-tree controller register nahi karegi; mapping absent hogi aur request normally 404 degi. Application package ke neeche restore karne se discovery possible hoti hai. Sirf URL badalne se missing bean register nahi hota.
 
 **Exit check:** Explain the full path from main to the JSON response and distinguish startup failure from routing failure.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Official reference](https://spring.io/guides/gs/spring-boot/).
+[Official reference yahan padho](https://spring.io/guides/gs/spring-boot/).

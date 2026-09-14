@@ -6,11 +6,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'Are HTML tags and elements the same? How do attributes fit in?',
+    question: 'HTML tag/element same hain? Attributes ka role kya hai?',
     answer:
-      'A tag is markup syntax such as `<p>` or `</p>`. An element is the document structure represented by that markup, including its content and attributes. Attributes configure an element or provide metadata; they are written on its start tag.\n\n```html\n<p class="summary" lang="en">Study one concept.</p>\n```\n\nHere `p` is the element type, the two tags delimit it, and class/lang are attributes. DOM properties are a related runtime interface, not always an exact reflection of markup attributes.',
-    followUp:
-      "How do an input's value attribute and its current value property differ after typing?",
+      'Tag markup syntax hai, jaise `<p>`/`</p>`; element us markup se represented structure hai including content/attributes. Attributes start tag par configuration/metadata dete hain. Neeche p element type aur class/lang attributes hain. DOM properties runtime interface hain; har property markup attribute ka exact mirror nahi. Input typing se current value change hoti hai, original value attribute necessarily nahi.\n\n```html\n<p class="summary" lang="en">Study one concept.</p>\n```',
+    followUp: 'Typing ke baad input value attribute/current property ka difference kya hai?',
     tags: ['html', 'html-elements'],
     sources: [
       {
@@ -25,10 +24,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What are void elements, and do they have closing tags?',
+    question: 'Void elements kya hain; closing tags hote hain?',
     answer:
-      'Void HTML elements cannot contain child content and must not have end tags. Examples include `img`, `input`, `br`, `hr`, `meta`, `link`, `source`, `track`, `area`, `base`, `col`, `embed`, and `wbr`.\n\n```html\n<img src="lesson.webp" alt="A learner drawing a graph">\n<input name="email" type="email">\n```\n\nThe slash in `<img />` does not give HTML a general self-closing-element mechanism. A non-void `<div />` does not behave like a closed div in HTML parsing.',
-    followUp: 'Why can using `<script />` break the rest of an HTML document?',
+      'Void elements child content/end tag nahi rakhte. img,input,br,hr,meta,link,source,track,area,base,col,embed,wbr examples hain. `<img />` ka slash HTML mein general self-closing mechanism nahi banata. Non-void `<div />` parsed closed div nahi hai. Isliye script jaisa non-void tag proper closing tag maangta hai; warna baaki markup wrong parse ho sakta hai.\n\n```html\n<img src="lesson.webp" alt="A learner drawing a graph">\n<input name="email" type="email">\n```',
+    followUp: '`<script />` rest HTML document kyun tod sakta hai?',
     tags: ['html', 'html-void'],
     sources: [
       {
@@ -43,11 +42,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do ordered, unordered, and description lists differ?',
+    question: 'Ordered, unordered aur description lists ka difference?',
     answer:
-      'Use `ol` when sequence or ranking matters, `ul` when order is not the meaning, and `dl` for name/value or term/description groups. Styling bullets away does not remove list semantics.\n\n```html\n<ol><li>Read</li><li>Practice</li></ol>\n<ul><li>Java</li><li>React</li></ul>\n<dl><dt>Closure</dt><dd>A function with access to lexical bindings.</dd></dl>\n```\n\nUse li inside ol/ul; dl uses dt and dd. Multiple terms or descriptions can belong to a group where meaningful.',
-    followUp:
-      'Would a navigation menu require an ordered list merely because its links appear in a row?',
+      'Sequence/rank important ho toh ol; order meaning na ho toh ul; term-description/name-value group ke liye dl. ol/ul ke andar li, dl mein dt/dd use karo. Bullets CSS se hide karne par semantics nahi hatati. Meaningful group mein multiple terms/descriptions ho sakte hain. Menu visually row mein hone se ordered-list semantics automatically required nahi hoti.\n\n```html\n<ol><li>Read</li><li>Practice</li></ol>\n<ul><li>Java</li><li>React</li></ul>\n<dl><dt>Closure</dt><dd>A function with access to lexical bindings.</dd></dl>\n```',
+    followUp: 'Menu links row mein hain, isliye ol required hai?',
     tags: ['html', 'html-lists'],
     sources: [
       {
@@ -62,10 +60,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What is class, and how does it differ from id?',
+    question: 'class aur id ka difference kya hai?',
     answer:
-      'A class is a reusable space-separated token used for styling or selection; an element can have several. An id identifies one element within a document and should be unique there. IDs also support fragment navigation and label relationships.\n\n```html\n<label for="course-search">Find a course</label>\n<input id="course-search" class="field field-wide">\n```\n\nCSS uses `.field` for class selection and `#course-search` for the ID. Avoid styling everything with IDs because that increases specificity and makes reuse harder.',
-    followUp: 'What breaks if two inputs have the same ID referenced by a label?',
+      'class reusable space-separated tokens hain; element multiple classes rakh sakta hai. id document mein unique element identity hai; fragment navigation aur label association mein use hoti hai. CSS .field class, #course-search ID select karta hai. Har styling ID se karne par specificity/reuse cost badhti hai. Duplicate label-target IDs accessibility association ambiguous bana sakte hain.\n\n```html\n<label for="course-search">Find a course</label>\n<input id="course-search" class="field field-wide">\n```',
+    followUp: 'Label referenced ID two inputs share karein toh kya tootega?',
     tags: ['html', 'html-id-class'],
     sources: [
       {
@@ -80,10 +78,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do strong and b differ, and how do em and i differ?',
+    question: 'strong/b aur em/i ka difference kya hai?',
     answer:
-      '`strong` marks importance, seriousness, or urgency; `b` draws attention without that extra importance. `em` expresses stress emphasis, while `i` marks text in an alternate voice or convention, such as a technical term. Browser bold/italic defaults are presentation, not their definitions.\n\n```html\n<p><strong>Save your draft before resetting.</strong></p>\n<p>I asked for <em>one</em> example.</p>\n<p>The term <i>lexical scope</i> describes lookup by source nesting.</p>\n```\n\nUse CSS when the requirement is purely visual.',
-    followUp: 'How can moving em within a sentence change its meaning without changing any words?',
+      'strong importance/seriousness/urgency dikhata hai; b extra importance bina attention deta hai. em stress emphasis, i alternate voice/convention jaise technical term mark karta hai. Default bold/italic style definition nahi. Sirf visual style chahiye toh CSS lo. em kis word par hai usse spoken stress aur intended meaning badal sakta hai, words same rehkar bhi.\n\n```html\n<p><strong>Save your draft before resetting.</strong></p>\n<p>I asked for <em>one</em> example.</p>\n<p>The term <i>lexical scope</i> describes lookup by source nesting.</p>\n```',
+    followUp: 'Same words mein em position change meaning kaise badal sakti hai?',
     tags: ['html', 'html-emphasis'],
     sources: [
       {
@@ -98,11 +96,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question:
-      'What belongs in head and body, and how do header, nav, main, aside, and footer shape a page?',
+    question: 'head/body mein kya aata hai; header/nav/main/aside/footer ka role?',
     answer:
-      '`head` contains document metadata such as title, charset, stylesheet links, and suitable scripts. `body` contains page content. A body-level header typically introduces the site/page; nav groups major navigation; main contains the dominant content; aside holds tangential content; footer contains closing information. Article is independently meaningful content; section is a thematic grouping, usually with a heading.\n\n```html\n<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Notes</title></head>\n<body><header><h1>Study notes</h1></header><nav aria-label="Main"><a href="/">Home</a></nav><main><article><h2>Closures</h2><p>One concept...</p></article></main><footer>About this collection</footer></body></html>\n```\n\nThese elements do not prescribe pixel positions; CSS controls layout.',
-    followUp: 'When could an article contain its own header and footer?',
+      'head metadata: title, charset, CSS links, suitable scripts. body actual page content. header introduction, nav major navigation, main dominant content, aside related-tangential content, footer closing info. article independently meaningful unit; section thematic grouping usually heading ke saath. Article apna header/footer rakh sakta hai. Yeh semantic roles pixel position prescribe nahi karte; layout CSS decide karti hai.\n\n```html\n<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Notes</title></head>\n<body><header><h1>Study notes</h1></header><nav aria-label="Main"><a href="/">Home</a></nav><main><article><h2>Closures</h2><p>One concept...</p></article></main><footer>About this collection</footer></body></html>\n```',
+    followUp: 'Article ka apna header/footer kab ho sakta hai?',
     tags: ['html', 'html-document'],
     sources: [
       {
@@ -117,10 +114,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'Can one web page be embedded in another?',
+    question: 'Ek webpage doosri mein embed kaise karoge?',
     answer:
-      'An iframe embeds another browsing context. Give it a descriptive title and a deliberately limited permission/sandbox policy. The embedded server can refuse framing through its security headers, and cross-origin rules normally prevent arbitrary access to its DOM.\n\n```html\n<iframe src="/demo.html" title="Binary search demonstration" loading="lazy"></iframe>\n```\n\nFor cross-origin cooperation, use a carefully checked postMessage contract rather than trying to bypass isolation. An iframe is heavier than an ordinary component.',
-    followUp: 'Which checks should a message receiver perform on origin and payload?',
+      'iframe separate browsing context embed karta hai. Descriptive title aur deliberate limited sandbox/permissions do. Embedded server security headers se framing refuse kar sakta hai; cross-origin rules arbitrary DOM access rokti hain. Cooperation postMessage contract se karo: expected origin/source aur payload validate karo. Iframe ordinary component se heavier hai; isolation bypass karne ki approach mat lo.\n\n```html\n<iframe src="/demo.html" title="Binary search demonstration" loading="lazy"></iframe>\n```',
+    followUp: 'Message receiver origin/payload ke kaunse checks kare?',
     tags: ['html', 'html-iframe'],
     sources: [
       {
@@ -135,11 +132,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question:
-      "How does an anchor's href work, what do target values mean, and how is link different from a?",
+    question: 'href/target kaise work karte hain aur link versus a kya hai?',
     answer:
-      'An anchor creates a navigable hyperlink through href. `_self` uses the current context, `_blank` opens a new context, `_parent` uses the parent, and `_top` uses the top-level context; a named target can reuse a named context. A `link` element describes a resource relationship, such as a stylesheet, and is usually placed in head.\n\n```html\n<link rel="stylesheet" href="/styles.css">\n<a href="/notes" target="_blank" rel="noopener">Open notes</a>\n<a href="#practice">Jump to practice</a>\n```\n\nUse a button for an action without navigation. Consider whether a new tab is actually helpful.',
-    followUp: 'Why is href="#" a poor substitute for a real button action?',
+      'Anchor href navigation banata hai. _self current, _blank new, _parent parent, _top top-level context; named target existing named context reuse kar sakta hai. link element stylesheet jaisi resource relationship batata hai, usually head mein hota hai. Navigation bina action ke liye button lo. New tab user ke liye useful hai ya nahi, deliberately decide karo.\n\n```html\n<link rel="stylesheet" href="/styles.css">\n<a href="/notes" target="_blank" rel="noopener">Open notes</a>\n<a href="#practice">Jump to practice</a>\n```',
+    followUp: 'Action ke liye href="#" weak substitute kyun hai?',
     tags: ['html', 'html-links'],
     sources: [
       {
@@ -154,12 +150,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question:
-      'When should scripts go in head or body, and how do defer, async, and modules change loading?',
+    question: 'Scripts head/body mein kab; defer/async/modules loading kaise badalte hain?',
     answer:
-      'A classic external script without async/defer blocks parsing where encountered. Moving it near the end of body lets earlier markup parse first. Head plus defer downloads in parallel and executes deferred classic scripts after parsing in document order, before DOMContentLoaded. Async executes when ready, so dependencies cannot rely on document order. Module scripts are deferred by default unless async changes scheduling.\n\n```html\n<script src="/app.js" defer></script>\n<script type="module" src="/main.js"></script>\n```\n\nUse async for genuinely independent work; avoid loading the same application through both examples.',
-    followUp:
-      'Why can an async script fail when it immediately queries an element later in the document?',
+      'Classic external script without async/defer encountered position par parsing block karta hai. Body-end se earlier DOM pehle parse hota hai. Head+defer parallel download, parse ke baad document-order execution, DOMContentLoaded se pehle. async ready hote hi execute, order guarantee nahi. Modules default deferred hain unless async scheduling badle. Independent work ke liye async; same app dono example ways se load mat karo.\n\n```html\n<script src="/app.js" defer></script>\n<script type="module" src="/main.js"></script>\n```',
+    followUp: 'Async script later DOM element query karke fail kyun ho sakti hai?',
     tags: ['html', 'html-scripts'],
     sources: [
       {
@@ -174,10 +168,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do HTML forms work, and which default behaviors matter?',
+    question: 'HTML forms aur important defaults kaise work karte hain?',
     answer:
-      'A form submits successful named controls to its action URL; method defaults to GET, and an omitted action targets the current document. A button inside a form defaults to submit unless its type says otherwise. Browser validation can stop invalid submission; disabled controls are not submitted. An Enter key can trigger implicit submission depending on the controls.\n\n```html\n<form action="/search" method="get">\n  <label for="q">Search</label><input id="q" name="q" required>\n  <button type="submit">Find</button>\n  <button type="button">Show help</button>\n</form>\n```\n\nA client submit handler can call preventDefault to implement an alternative flow; server validation remains necessary.',
-    followUp: 'Why would removing name from the input make the submitted query disappear?',
+      'Form successful named controls action URL ko submit karta hai. Default method GET; omitted action current document. Form button default submit, unless type specify karo. Disabled controls submit nahi hote; browser validation submission rok sakti hai. Enter implicit submit controls par depend hai. Client preventDefault alternative flow de sakta hai, lekin server validation phir bhi required hai.\n\n```html\n<form action="/search" method="get">\n  <label for="q">Search</label><input id="q" name="q" required>\n  <button type="submit">Find</button>\n  <button type="button">Show help</button>\n</form>\n```',
+    followUp: 'Input ka name hatane par submitted query kyun disappear hogi?',
     tags: ['html', 'html-forms'],
     sources: [
       {
@@ -192,11 +186,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How can HTML interactions be handled with JavaScript?',
+    question: 'HTML interaction JavaScript se kaise handle karoge?',
     answer:
-      "Inline event attributes exist, but addEventListener usually separates behavior cleanly, allows multiple listeners, and supports explicit cleanup. Use the event object to inspect the action; prefer semantic controls.\n\n```html\n<button id=\"practice\" type=\"button\">Practice</button>\n<script>\nconst button = document.querySelector('#practice');\nconst start = () => console.log('Starting a round');\nbutton.addEventListener('click', start);\n// On teardown: button.removeEventListener('click', start);\n</script>\n```\n\nRegister after the element exists. Use the same function identity when removing a listener.",
-    followUp:
-      'Why does removeEventListener with a freshly created arrow function not remove this listener?',
+      "Inline event attributes possible hain; addEventListener behavior separate, multiple listeners aur cleanup support karta hai. Semantic control use karo aur element exist hone ke baad listener register karo. Event object se action inspect karo. Remove ke liye same callback identity chahiye; fresh arrow same body hone par bhi different function hai. Owner destroy par cleanup karo.\n\n```html\n<button id=\"practice\" type=\"button\">Practice</button>\n<script>\nconst button = document.querySelector('#practice');\nconst start = () => console.log('Starting a round');\nbutton.addEventListener('click', start);\n// On teardown: button.removeEventListener('click', start);\n</script>\n```",
+    followUp: 'Fresh arrow se listener removal kyun nahi hoga?',
     tags: ['html', 'html-events'],
     sources: [
       {
@@ -211,10 +204,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What did HTML5 improve, and what were its major goals?',
+    question: 'HTML5 ke major goals/improvements kya the?',
     answer:
-      'The HTML5 effort standardized interoperable parsing and web-application features while keeping compatibility with existing web content. Semantic landmarks, native audio/video, richer form controls, and canvas reduced reliance on custom markup or plugins. Modern HTML continues as a Living Standard; it is not a frozen list of new tags. Browser capabilities such as storage and workers belong to the broader web platform and should not all be described as HTML tags. Choose features for accessibility and behavior, then verify support for your audience.',
-    followUp: 'Why is saying that HTML5 replaced JavaScript an incorrect conclusion?',
+      'HTML5 effort ne compatible parsing aur web-app features standardize kiye: semantic landmarks, native audio/video, richer forms, canvas. Existing content compatibility important thi. Modern HTML Living Standard hai, frozen new-tags list nahi. Storage/workers broader web platform hain, HTML tags nahi. Features accessibility/behavior se choose aur audience support verify karo. HTML5 JavaScript replace nahi karta; structure aur behavior complementary hain.',
+    followUp: 'HTML5 ne JavaScript replace kiya, yeh claim wrong kyun?',
     tags: ['html', 'html-evolution'],
     sources: [
       {
@@ -229,10 +222,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do audio and video work, and what do source and track add?',
+    question: 'audio/video kaise work karte hain; source/track kya add karte hain?',
     answer:
-      'Audio/video provide native playback; source offers candidate formats, and track supplies timed text such as captions through WebVTT. Controls expose playback UI. Autoplay is restricted by browser policy, so it is not a reliable prerequisite for understanding a page.\n\n```html\n<video controls preload="metadata" poster="preview.webp">\n  <source src="lesson.webm" type="video/webm">\n  <source src="lesson.mp4" type="video/mp4">\n  <track kind="captions" src="lesson-en.vtt" srclang="en" label="English" default>\n  <a href="lesson.mp4">Download the lesson</a>\n</video>\n```\n\nProvide meaningful captions/transcripts and consider network cost. Audio uses the same source-selection idea without visual frames.',
-    followUp: 'Why does a fallback paragraph inside video not replace the need for captions?',
+      'audio/video native playback, source candidate formats, track WebVTT captions jaise timed text deta hai. controls playback UI expose karta hai. Autoplay browser policy se restricted hai; page understanding us par depend na ho. Meaningful captions/transcripts aur network cost consider karo. Video fallback text unsupported player ke liye hai; supported playback mein speech captions ki need phir bhi hai.\n\n```html\n<video controls preload="metadata" poster="preview.webp">\n  <source src="lesson.webm" type="video/webm">\n  <source src="lesson.mp4" type="video/mp4">\n  <track kind="captions" src="lesson-en.vtt" srclang="en" label="English" default>\n  <a href="lesson.mp4">Download the lesson</a>\n</video>\n```',
+    followUp: 'Fallback paragraph captions replace kyun nahi karta?',
     tags: ['html', 'html-media'],
     sources: [
       {
@@ -247,12 +240,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question:
-      'What is the relationship between header and h1? Does HTML5 require an h1 inside every header?',
+    question: 'header/h1 ka relation kya hai; har header mein h1 required hai?',
     answer:
-      'Header groups introductory content; h1 is a heading rank. They are independent concepts: a header may include a logo, navigation, or heading, and an h1 does not require a header parent. Do not rely on the old proposed automatic section-outline algorithm to reinterpret multiple h1 elements. Use a clear top-level page heading and explicit h2/h3 hierarchy for subsections.\n\n```html\n<header><h1>Java revision</h1><p>Practice by topic</p></header>\n<main><section><h2>Collections</h2><h3>Hash maps</h3></section></main>\n```',
-    followUp:
-      'How would you verify that heading navigation makes sense without looking at font sizes?',
+      'header introductory content group karta hai; h1 heading rank hai. Header logo/nav/heading rakh sakta hai; h1 ko header parent required nahi. Old proposed automatic outline algorithm par multiple h1 reinterpret karne ke liye rely mat karo. Clear page heading aur explicit h2/h3 hierarchy lo. Heading navigation meaning se test karo, font sizes se nahi.\n\n```html\n<header><h1>Java revision</h1><p>Practice by topic</p></header>\n<main><section><h2>Collections</h2><h3>Hash maps</h3></section></main>\n```',
+    followUp: 'Font size dekhe bina heading navigation kaise verify karoge?',
     tags: ['html', 'html-headings'],
     sources: [
       {
@@ -267,11 +258,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'What does native drag-and-drop provide, and how can an image be draggable?',
+    question: 'Native drag-drop kya deta hai; image draggable kaise?',
     answer:
-      "Drag-and-drop supports data transfer through drag events and DataTransfer. Images are generally draggable by default; set draggable explicitly when it is part of your contract. A drop target normally cancels dragover's default behavior to accept a drop.\n\n```html\n<img id=\"tile\" src=\"tile.webp\" alt=\"Graph lesson\" draggable=\"true\">\n<script>\ndocument.querySelector('#tile').addEventListener('dragstart', event => {\n  event.dataTransfer.setData('text/plain', 'lesson-graph');\n});\n</script>\n```\n\nValidate dropped data and offer a keyboard/touch-friendly alternative such as Move up/Move down buttons. Dragging is an enhancement, not the only route to an action.",
-    followUp:
-      'Why should a drop handler not trust HTML or a URL merely because it came from a drag event?',
+      'Drag events/DataTransfer data transfer dete hain. Images generally default draggable hain; contract mein explicit draggable rakho. Drop accept karne ke liye normally dragover default cancel karo. Dropped HTML/URL validate karo; event se aane par trusted nahi bante. Keyboard/touch alternative, jaise Move up/down, do. Dragging enhancement ho, action ka only accessible route nahi.\n\n```html\n<img id="tile" src="tile.webp" alt="Graph lesson" draggable="true">\n<script>\ndocument.querySelector(\'#tile\').addEventListener(\'dragstart\', event => {\n  event.dataTransfer.setData(\'text/plain\', \'lesson-graph\');\n});\n</script>\n```',
+    followUp: 'Drag event ka HTML/URL automatically trusted kyun nahi?',
     tags: ['html', 'html-drag'],
     sources: [
       {
@@ -286,10 +276,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'How do CSS sizing, srcset/sizes, and picture make images responsive?',
+    question: 'CSS sizing, srcset/sizes/picture responsive images kaise banate hain?',
     answer:
-      'CSS constrains layout; srcset plus sizes lets the browser choose a suitable source for the rendered width and pixel density; picture supports art direction or format alternatives. Include dimensions to reserve aspect ratio and avoid unexpected shifts.\n\n```html\n<img src="notes-800.webp" srcset="notes-400.webp 400w, notes-800.webp 800w" sizes="(max-width: 600px) 100vw, 600px" width="800" height="450" alt="Notes arranged by topic" style="max-width:100%;height:auto">\n```\n\nThe sizes value should reflect the actual layout. Use a picture/source media condition when a phone needs a different crop, not merely fewer bytes.',
-    followUp: 'Why can width:100% still download an unnecessarily huge source image?',
+      'CSS layout size, srcset/sizes suitable width-density source selection, picture alternate crop/format choose karne mein help karte hain. Width/height se aspect-ratio space reserve karke shifts roko. sizes actual rendered layout reflect kare. Phone ka crop alag chahiye toh picture media lo; sirf fewer bytes nahi. width:100% alone downloaded source size optimize nahi karta.\n\n```html\n<img src="notes-800.webp" srcset="notes-400.webp 400w, notes-800.webp 800w" sizes="(max-width: 600px) 100vw, 600px" width="800" height="450" alt="Notes arranged by topic" style="max-width:100%;height:auto">\n```',
+    followUp: 'width:100% par bhi huge image download kyun ho sakti hai?',
     tags: ['html', 'html-responsive-images'],
     sources: [
       {
@@ -304,10 +294,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'What does an HTML5 manifest file mean today, and how is it different from AppCache?',
+    question: 'Web app manifest aur old AppCache ka difference kya hai?',
     answer:
-      'The historical html manifest attribute configured Application Cache, an obsolete mechanism that should not be used for new work. A modern web app manifest is JSON describing application identity, icons, start URL, and display preferences; link it from head. It does not cache requests by itself.\n\n```html\n<link rel="manifest" href="/app.webmanifest">\n```\n\nA service worker can implement an explicit offline caching strategy. Define update behavior and offline limits separately from install metadata.',
-    followUp: 'What would still fail offline if you added only a web app manifest?',
+      'Old html manifest attribute Application Cache configure karta tha; AppCache obsolete hai. Modern web app manifest JSON mein app identity/icons/start URL/display preferences deta hai aur head se link hota hai. Woh requests cache nahi karta. Offline caching ke liye service-worker strategy, update behavior aur offline limits alag define karo. Install metadata aur offline guarantee same nahi.\n\n```html\n<link rel="manifest" href="/app.webmanifest">\n```',
+    followUp: 'Sirf manifest add karke offline mein kya fail rahega?',
     tags: ['html', 'html-manifest'],
     sources: [
       {
@@ -322,11 +312,10 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What are data attributes and how are they accessed?',
+    question: 'Data attributes kya hain aur access kaise karte hain?',
     answer:
-      "Custom data-* attributes attach small application-specific string values to elements without inventing invalid standard attributes. JavaScript exposes them through dataset with camel-cased names. They are visible to page scripts/users, so they are not a secret store.\n\n```html\n<button data-lesson-id=\"42\">Open lesson</button>\n<script>\nconst button = document.querySelector('[data-lesson-id]');\nconsole.log(button.dataset.lessonId); // '42', a string\n</script>\n```\n\nValidate and convert values when needed. Do not use data attributes as a substitute for accessible labels.",
-    followUp:
-      'How would data-max-count map to a dataset property, and how would you validate it as a number?',
+      "data-* small app-specific string values valid custom attributes mein rakhta hai. dataset camelCase naam deta hai: data-max-count→dataset.maxCount. Scripts/users inhe read kar sakte hain, secrets store mat karo. Required values validate/convert karo; blank aur malformed number alag handle karo. Data attribute accessible label ka substitute nahi hai; UI semantics separately rakho.\n\n```html\n<button data-lesson-id=\"42\">Open lesson</button>\n<script>\nconst button = document.querySelector('[data-lesson-id]');\nconsole.log(button.dataset.lessonId); // '42', a string\n</script>\n```",
+    followUp: 'data-max-count ka dataset naam aur numeric validation kya hogi?',
     tags: ['html', 'html-data'],
     sources: [
       {
@@ -341,11 +330,11 @@ export const requestedQuestions = [
     topic: 'html',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'What is Shadow DOM? Give an original example and explain its limits.',
+    question: 'Shadow DOM kya hai? Example aur limits samjhao.',
     answer:
-      "Shadow DOM creates an encapsulated DOM subtree attached to a host, often used in web components. Its style scope helps isolate internals from page styles, while slots can project light-DOM content. It is different from React's render representation and is not a security boundary.\n\n```js\nconst host = document.createElement('div');\nconst shadow = host.attachShadow({mode: 'open'});\nshadow.innerHTML = '<style>p { color: teal; }</style><p>Local styling</p>';\ndocument.body.append(host);\n```\n\nThis browser example inserts only fixed trusted markup. Do not interpolate untrusted strings into innerHTML.",
+      "Shadow DOM host se attached encapsulated subtree hai, often web components mein. Style scope internals isolate karta hai; slots light-DOM content project karte hain. React render representation se alag aur security boundary nahi. Composed events/inherited CSS boundaries cross kar sakte hain. Example fixed trusted markup use karta hai; untrusted string innerHTML mein interpolate mat karo.\n\n```js\nconst host = document.createElement('div');\nconst shadow = host.attachShadow({mode: 'open'});\nshadow.innerHTML = '<style>p { color: teal; }</style><p>Local styling</p>';\ndocument.body.append(host);\n```",
     followUp:
-      'How do composed events and inherited properties complicate the idea of complete isolation?',
+      'Composed events/inherited properties complete isolation claim ko kaise limit karte hain?',
     tags: ['html', 'html-shadow-dom'],
     sources: [
       {
@@ -360,11 +349,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do inline, block, inline-block, flex, and grid display differ?',
+    question: 'inline, block, inline-block, flex aur grid ka difference?',
     answer:
-      'Display determines box generation and layout participation. In normal flow, block boxes generally start a new line, inline boxes participate in line layout, and inline-block participates inline while allowing box sizing. Flex and grid establish layouts for direct children, usually with block-level outer participation unless an inline variant is chosen. `display:none` generates no box. These are CSS behaviors, not permanent HTML-element categories; CSS can change the default. There is no useful fixed count of all display modes.\n\n```css\n.badge { display: inline-block; padding: .25rem .5rem; }\n.cards { display: grid; grid-template-columns: repeat(2, 1fr); }\n```',
-    followUp:
-      'Why does assigning width to an ordinary non-replaced inline span not behave like assigning width to a block?',
+      'display box generation/layout participation decide karta hai. Normal block new line, inline line flow, inline-block inline participation plus box sizing deta hai. Flex/grid direct children layout banate hain; outer display normally block, inline variants possible. display:none no box. Yeh permanent HTML categories nahi, CSS behavior hai. Modes ki fixed count ratne se better exact layout contract samjho.\n\n```css\n.badge { display: inline-block; padding: .25rem .5rem; }\n.cards { display: grid; grid-template-columns: repeat(2, 1fr); }\n```',
+    followUp: 'Normal inline span par width block jaisa kyun behave nahi karti?',
     tags: ['css', 'css-display'],
     sources: [
       {
@@ -379,11 +367,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'How do static, relative, absolute, fixed, and sticky positioning differ?',
+    question: 'static, relative, absolute, fixed, sticky ka difference?',
     answer:
-      "`position` is a CSS property, not an HTML attribute. Static follows normal flow; relative keeps its original space while offsets move its painted box. Absolute leaves normal flow and uses its containing block, often the nearest positioned ancestor. Fixed commonly uses the viewport, but ancestors such as transformed elements can establish its containing block. Sticky remains in flow and sticks at an inset within its scrolling constraints.\n\n```css\n.card { position: relative; }\n.badge { position: absolute; top: .5rem; right: .5rem; }\n.toolbar { position: sticky; top: 0; }\n```\n\nAbsolute positioning does not reserve the badge's original space.",
-    followUp:
-      'Why might sticky fail when the relevant ancestor has no room for the element to move?',
+      'position CSS property hai. static normal flow; relative original space preserve karke visually offset. absolute flow se bahar aur containing block, often positioned ancestor, use karta hai. fixed commonly viewport, lekin transformed ancestor containing block ban sakta hai. sticky flow mein rehta aur scroll constraints/inset par stick karta hai. Absolute badge original space reserve nahi karta.\n\n```css\n.card { position: relative; }\n.badge { position: absolute; top: .5rem; right: .5rem; }\n.toolbar { position: sticky; top: 0; }\n```',
+    followUp: 'Ancestor mein movement room na ho toh sticky kyun fail dikhega?',
     tags: ['css', 'css-position'],
     sources: [
       {
@@ -398,10 +385,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do display:none, visibility:hidden, and opacity:0 differ?',
+    question: 'display:none, visibility:hidden, opacity:0 ka difference?',
     answer:
-      "Display:none removes the element's generated box, so its layout space disappears. Visibility:hidden normally retains layout space but hides the element and prevents normal interaction/focus. Opacity:0 keeps a transparent box that can still receive pointer events or focus unless you change those separately. Display:none and visibility:hidden also normally hide content from the accessibility tree.\n\n```css\n.removed { display: none; }\n.reserved { visibility: hidden; }\n.transparent { opacity: 0; }\n```\n\nChoose based on layout, interaction, and accessibility, not only appearance.",
-    followUp: 'Why can an invisible opacity-zero overlay make visible buttons seem broken?',
+      'display:none generated box/layout space hataata hai. visibility:hidden generally space rakhta par visibility/normal interaction/focus hataata hai. opacity:0 transparent box rakhta jo separately disabled na ho toh pointer/focus receive kar sakta hai. First two generally accessibility tree se bhi hide hote hain. Choice mein layout, interaction aur accessibility teeno dekho; transparent overlay clicks block kar sakti hai.\n\n```css\n.removed { display: none; }\n.reserved { visibility: hidden; }\n.transparent { opacity: 0; }\n```',
+    followUp: 'Invisible opacity-zero overlay visible buttons block kyun kar sakti hai?',
     tags: ['css', 'css-hidden'],
     sources: [
       {
@@ -416,11 +403,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What is a stylesheet, and what are the three common ways to apply CSS in HTML?',
+    question: 'Stylesheet kya hai aur HTML mein CSS apply karne ke three ways?',
     answer:
-      'A stylesheet is a collection of CSS rules. An external file is linked with link, an internal stylesheet lives in style, and inline declarations live in an element\'s style attribute. External CSS is reusable and cacheable; internal CSS can be page-specific; inline declarations are local but harder to manage at scale.\n\n```html\n<link rel="stylesheet" href="/site.css">\n<style>.note { padding: 1rem; }</style>\n<p class="note" style="color:teal">Practice daily</p>\n```\n\nCSS also offers imports and programmatic APIs; the three-way answer is a common organization model, not a complete count of mechanisms.',
-    followUp:
-      'Why does loading an external stylesheet later not automatically override every inline declaration?',
+      'Stylesheet CSS rules ka collection hai. External link reusable/cacheable file; internal style page-specific; inline style element-local but scale par harder maintain. CSS imports/programmatic APIs bhi hain; “three ways” common organization model hai, exhaustive mechanism count nahi. Later external CSS normal inline declaration automatically override nahi karti; full cascade precedence apply hoti hai.\n\n```html\n<link rel="stylesheet" href="/site.css">\n<style>.note { padding: 1rem; }</style>\n<p class="note" style="color:teal">Practice daily</p>\n```',
+    followUp: 'Later external stylesheet har inline declaration override kyun nahi karti?',
     tags: ['css', 'css-stylesheets'],
     sources: [
       {
@@ -435,11 +421,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'What is CSS specificity, and where does !important fit in the cascade?',
+    question: 'Specificity kya hai aur !important cascade mein kahan fit hota hai?',
     answer:
-      'Specificity compares selector weights after relevant cascade decisions such as origin, importance, and layer order. Compare ID selectors, then classes/attributes/pseudo-classes, then element/pseudo-element selectors lexicographically. Equal weights in the same cascade context use order of appearance. Inline styles have special precedence over normal stylesheet declarations; !important is a declaration flag, not an extra specificity digit.\n\n```css\np.note { color: teal; } /* 0 IDs, 1 class, 1 type */\n#intro { color: purple; } /* 1 ID wins in the same normal layer */\n```\n\n`:where()` contributes zero specificity; selectors like :is() take argument specificity. Prefer simpler selectors and deliberate layers over escalating !important.',
-    followUp:
-      'Why can a more specific selector still lose to a declaration in a higher-priority cascade layer?',
+      'Specificity se pehle origin, importance aur layer order decide hota hai. Phir IDs, class/attribute/pseudo-class, element/pseudo-element weights lexicographically compare karo. Same context/equal weight mein later wins. Inline normal stylesheet se special precedence rakhta hai; !important flag hai, extra specificity digit nahi. :where zero; :is arguments ki specificity leta hai. Simple selectors/layers prefer karo.\n\n```css\np.note { color: teal; } /* 0 IDs, 1 class, 1 type */\n#intro { color: purple; } /* 1 ID wins in the same normal layer */\n```',
+    followUp: 'More-specific selector higher-priority layer se kyun haar sakta hai?',
     tags: ['css', 'css-specificity'],
     sources: [
       {
@@ -454,11 +439,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What is the CSS box model, and how does box-sizing change width?',
+    question: 'Box model aur box-sizing width ko kaise affect karte hain?',
     answer:
-      "From inside outward, a box has content, padding, border, and margin. With content-box, width sizes the content; padding and border add to its border-box width. With border-box, declared width includes padding and border; margin remains outside.\n\n```css\n.card { width: 200px; padding: 20px; border: 2px solid; margin: 10px; }\n.compact { box-sizing: border-box; }\n```\n\nThe default card's border box is 244px wide. With border-box it is 200px and its content is 156px. Margins are not added inside the declared width.",
-    followUp:
-      'How do vertical margin collapsing and inline layout make naive total-height arithmetic misleading?',
+      'Andar se content→padding→border→margin. content-box width sirf content, padding/border extra. border-box width content+padding+border include, margin outside. Example default card border-box width 244px; border-box mode mein total 200px aur content 156px. Margins declared width ke andar nahi aati. Vertical height mein margin collapse/inline behavior simple addition ko affect kar sakte hain.\n\n```css\n.card { width: 200px; padding: 20px; border: 2px solid; margin: 10px; }\n.compact { box-sizing: border-box; }\n```',
+    followUp: 'Margin collapsing/inline layout simple total-height arithmetic kyun todte hain?',
     tags: ['css', 'css-box'],
     sources: [
       {
@@ -473,11 +457,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do you center a block inside another element or in the viewport?',
+    question: 'Element ko parent/viewport mein center kaise karoge?',
     answer:
-      'For two-axis centering, make the parent flex and center on its main and cross axes. A definite available height or min-height is needed to see vertical centering. For horizontal centering alone, a narrower block can use auto inline margins.\n\n```html\n<main class="screen"><div class="card">Revision</div></main>\n<style>\nbody { margin: 0; }\n.screen { min-height: 100vh; min-height: 100dvh; display: flex; justify-content: center; align-items: center; }\n.card { width: min(90%, 24rem); padding: 1rem; box-sizing: border-box; }\n</style>\n```\n\nUse min-height rather than clipping growing content to a fixed height.',
-    followUp:
-      'What changes when flex-direction becomes column, and why does this example still center both axes?',
+      'Two-axis centering ke liye flex parent mein justify-content aur align-items center karo. Vertical centering dikhne ke liye available height/min-height chahiye. Sirf horizontal narrower block ko margin-inline:auto de sakte ho. Growing content clip na ho isliye min-height useful hai. flex-direction axes swap karega; dono axes center hain toh center result preserve rahega.\n\n```html\n<main class="screen"><div class="card">Revision</div></main>\n<style>\nbody { margin: 0; }\n.screen { min-height: 100vh; min-height: 100dvh; display: flex; justify-content: center; align-items: center; }\n.card { width: min(90%, 24rem); padding: 1rem; box-sizing: border-box; }\n</style>\n```',
+    followUp: 'flex-direction column par axes kya badlenge; example phir bhi center kyun hai?',
     tags: ['css', 'css-center'],
     sources: [
       {
@@ -492,11 +475,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'How can borders create a CSS triangle?',
+    question: 'Borders se CSS triangle kaise banta hai?',
     answer:
-      'A zero-size box with thick borders shows triangular border regions. Make three sides transparent and give the remaining border a color. This is appropriate for decoration; meaningful icons still need an accessible name or accompanying text.\n\n```html\n<span class="triangle" aria-hidden="true"></span>\n<style>\n.triangle { display: inline-block; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 14px solid teal; }\n</style>\n```\n\nThe colored bottom border forms an upward-pointing triangle. SVG or clip-path may be easier for complex, scalable shapes.',
-    followUp:
-      'How would you make the triangle point right without rotating the whole surrounding layout?',
+      'Zero-size box ke thick borders triangular regions banate hain. Three borders transparent, remaining colored rakho. Colored bottom border upward triangle deta hai; right-pointing ke liye left border color karo aur others adjust karo. Decoration ke liye suitable; meaningful icon ka accessible name/text bhi chahiye. Complex scalable shape mein SVG/clip-path clearer ho sakta hai.\n\n```html\n<span class="triangle" aria-hidden="true"></span>\n<style>\n.triangle { display: inline-block; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 14px solid teal; }\n</style>\n```',
+    followUp: 'Whole layout rotate kiye bina triangle right-pointing kaise banega?',
     tags: ['css', 'css-triangle'],
     sources: [
       {
@@ -511,11 +493,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What are pseudo-elements, and how do they differ from pseudo-classes?',
+    question: 'Pseudo-element aur pseudo-class ka difference?',
     answer:
-      "Pseudo-elements select a part of an element or a generated box, such as ::first-letter, ::before, ::after, and ::selection. Pseudo-classes select an element based on a state or relationship, such as :hover or :focus-visible.\n\n```css\n.required::after { content: ' *'; color: darkred; }\nbutton:focus-visible { outline: 3px solid teal; }\n```\n\nGenerated content should not be the only way to communicate essential information. For a required field, also use real labeling and the appropriate form semantics.",
-    followUp:
-      'Why is ::before not a dependable way to attach essential text to a void input element?',
+      "Pseudo-elements element part/generated box select karte hain: ::first-letter, ::before, ::after, ::selection. Pseudo-classes state/relationship select karti hain, jaise :hover/:focus-visible. Essential information sirf generated content mein mat rakho. Required form field real label aur form semantics se express karo. Void input ke before/after par dependable essential text attach karna reliable approach nahi.\n\n```css\n.required::after { content: ' *'; color: darkred; }\nbutton:focus-visible { outline: 3px solid teal; }\n```",
+    followUp: 'Void input par essential text ke liye ::before reliable kyun nahi?',
     tags: ['css', 'css-pseudo'],
     sources: [
       {
@@ -530,11 +511,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'What are the main flexbox container and item properties?',
+    question: 'Flex container/item ki main properties kya hain?',
     answer:
-      'On the container: display:flex establishes the layout; flex-direction sets the main axis; flex-wrap allows lines; flex-flow combines both; justify-content distributes main-axis space; align-items aligns items on the cross axis; align-content distributes multiple lines; gap sets gutters. On items: order changes visual order; flex-grow distributes positive free space; flex-shrink distributes shrinkage weighted by basis; flex-basis sets the starting main size; flex combines these; align-self overrides alignment.\n\n```css\n.row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }\n.main { flex: 1 1 16rem; min-width: 0; }\n.tools { flex: 0 0 auto; }\n```\n\nVisual reordering does not automatically change reading or keyboard order.',
-    followUp:
-      'Why might a long unbreakable child require min-width:0 even when flex-shrink is enabled?',
+      'Container: display:flex layout; direction main axis; wrap multiple lines; flow shorthand; justify main-axis space; align-items cross-axis items; align-content multiple lines; gap gutters. Item: order visual order; grow positive space; shrink basis-weighted shrinkage; basis starting main size; flex shorthand; align-self individual alignment. Visual reorder reading/keyboard order automatically nahi badalta. Long child ko min-width:0 chahiye ho sakta hai.\n\n```css\n.row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }\n.main { flex: 1 1 16rem; min-width: 0; }\n.tools { flex: 0 0 auto; }\n```',
+    followUp: 'flex-shrink ke baad bhi long child ko min-width:0 kyun chahiye ho sakta hai?',
     tags: ['css', 'css-flex'],
     sources: [
       {
@@ -549,11 +529,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'Build a responsive header and an equal-width card row with flexbox.',
+    question: 'Flexbox se responsive header aur equal-width cards banao.',
     answer:
-      'This additional original exercise practices application layout beyond the two supplied image exercises. The header needs a brand on the left and wrapping actions on the right; cards should share space and wrap on narrow screens.\n\n```html\n<header class="bar"><strong>Shortnotes</strong><nav class="actions" aria-label="Main"><a href="/">Read</a><a href="/practice">Practice</a></nav></header>\n<section class="cards" aria-label="Courses"><article>JavaScript</article><article>React</article><article>Java</article></section>\n<style>\n.bar,.actions,.cards { display:flex; gap:1rem; flex-wrap:wrap; }\n.bar { justify-content:space-between; align-items:center; }\n.cards > article { flex:1 1 14rem; min-width:0; padding:1rem; border:1px solid; }\n</style>\n```\n\nCheck 320px width, long link labels, zoom, and keyboard order. Explain why the basis allows wrapping.',
-    followUp:
-      'How would you keep only the final card from stretching without hard-coding viewport widths?',
+      'Yeh supplied images se alag original layout exercise hai. Header mein brand left, wrapping actions right; cards available space share aur narrow screen par wrap karein. Neeche basis/grow se layout banti hai; browser width fixed assumptions mat rakho. 320px, long link labels, zoom aur keyboard order test karo. Last card stretch rule ko deliberate item styling se choose karo.\n\n```html\n<header class="bar"><strong>Shortnotes</strong><nav class="actions" aria-label="Main"><a href="/">Read</a><a href="/practice">Practice</a></nav></header>\n<section class="cards" aria-label="Courses"><article>JavaScript</article><article>React</article><article>Java</article></section>\n<style>\n.bar,.actions,.cards { display:flex; gap:1rem; flex-wrap:wrap; }\n.bar { justify-content:space-between; align-items:center; }\n.cards > article { flex:1 1 14rem; min-width:0; padding:1rem; border:1px solid; }\n</style>\n```',
+    followUp: 'Viewport hard-code bina sirf last card ka stretching kaise rokoge?',
     tags: ['css', 'css-flex-lab'],
     sources: [
       {
@@ -568,11 +547,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What are vh and vw, and when do dynamic viewport units help?',
+    question: 'vh/vw kya hain; dynamic viewport units kab useful hain?',
     answer:
-      'One vw is one percent of the viewport width; one vh is one percent of its height reference. Mobile browser controls make the visible space change, so svh, lvh, and dvh distinguish small, large, and dynamic viewport heights. Prefer flexible min-height for screens that can grow.\n\n```css\n.page { min-height: 100vh; min-height: 100dvh; }\n.title { font-size: clamp(1.5rem, 4vw, 3rem); }\n```\n\nUsing 100vw for an ordinary block can cause horizontal overflow where the width includes scrollbar space; width:100% often fits the parent better.',
-    followUp:
-      'Why should viewport-based font sizing usually include sensible minimum and maximum values?',
+      '1vw viewport width ka 1%; 1vh height reference ka 1%. Mobile controls visible space badalti hain; svh/lvh/dvh small/large/dynamic viewport heights distinguish karte hain. Growing screens par flexible min-height prefer karo. Ordinary block ka 100vw scrollbar space include karke horizontal overflow la sakta hai; width:100% parent fit karta hai. Font scaling sensible min/max se bound karo.\n\n```css\n.page { min-height: 100vh; min-height: 100dvh; }\n.title { font-size: clamp(1.5rem, 4vw, 3rem); }\n```',
+    followUp: 'Viewport font size mein sensible min/max kyun chahiye?',
     tags: ['css', 'css-viewport'],
     sources: [
       {
@@ -587,11 +565,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'Which property selects the font face, and when should float be used?',
+    question: 'Font face kaunsi property choose karti hai; float kab use karein?',
     answer:
-      "Font-family selects an ordered list of typefaces with a generic fallback. @font-face defines a downloadable font resource; font-weight and font-style select variants. Float is useful when text should wrap around media; flex/grid are usually clearer for whole-page or application layouts.\n\n```css\nbody { font-family: 'Study Sans', system-ui, sans-serif; }\n.article { display: flow-root; }\n.article img { float: inline-start; width: 8rem; margin-inline-end: 1rem; }\n```\n\nFlow-root establishes a formatting context that contains the float. The named custom font needs its own loaded definition if used.",
-    followUp:
-      'Why does float-based page layout require different clearing/containment reasoning from a flex row?',
+      "font-family ordered typeface list plus generic fallback choose karta hai. @font-face downloadable resource define; weight/style variants choose karte hain. Text ko image ke around wrap karna ho toh float useful; full app layout mein flex/grid often clearer. flow-root float contain karne ka formatting context deta hai. Custom named font tab milega jab uski definition/resource load ho.\n\n```css\nbody { font-family: 'Study Sans', system-ui, sans-serif; }\n.article { display: flow-root; }\n.article img { float: inline-start; width: 8rem; margin-inline-end: 1rem; }\n```",
+    followUp: 'Float layout ko flex se different clearing/containment kyun chahiye?',
     tags: ['css', 'css-fonts-float'],
     sources: [
       {
@@ -606,10 +583,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'What do div, p; div p; div ~ p; div + p; and div > p select?',
+    question: 'div, p; div p; div ~ p; div + p; div > p kya select karte hain?',
     answer:
-      '`div, p` selects either type. `div p` selects p descendants at any depth. `div ~ p` selects p siblings after a div with the same parent. `div + p` selects a p immediately following a div sibling. `div > p` selects direct p children.\n\n```html\n<div><p>A</p><section><p>B</p></section></div>\n<p>C</p><p>D</p>\n```\n\nFor this fragment, descendants match A/B, direct children match A, adjacent siblings match C, and subsequent siblings match C/D. The comma list includes the div and all four paragraphs.',
-    followUp: 'Would moving D into a section preserve its match for div ~ p?',
+      '`div, p` dono types; `div p` any-depth p descendants; `div ~ p` same-parent later p siblings; `div + p` immediately-next p sibling; `div > p` direct p children select karta hai. Example descendants A/B, direct A, adjacent C, later C/D; comma div plus all four p leta hai. D ko nested section mein move karoge toh same-parent sibling relation tootegi.\n\n```html\n<div><p>A</p><section><p>B</p></section></div>\n<p>C</p><p>D</p>\n```',
+    followUp: 'D ko section mein move karne par div ~ p match rahega?',
     tags: ['css', 'css-selectors'],
     sources: [
       {
@@ -624,10 +601,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Foundation',
-    question: 'How do CSS2 and CSS3 differ? Is CSS3 one current version?',
+    question: 'CSS2/CSS3 ka difference; kya CSS3 single current version hai?',
     answer:
-      'CSS2 was largely a single specification, with CSS2.1 clarifying its behavior. Later CSS development became modular: selectors, backgrounds, color, layout, and other modules advance at independent levels. Features often grouped under CSS3 include media queries, rounded borders, transitions, and richer selectors. Flexbox and grid have their own specifications. Calling a feature CSS3 is less useful than naming the module and checking its actual browser support. Use progressive enhancement when unsupported features would otherwise block basic use.',
-    followUp: 'Why does a selector at Level 4 not imply every other CSS module is also at Level 4?',
+      'CSS2 largely single spec thi, CSS2.1 ne behavior clarify kiya. Later CSS modular hai: selectors/color/layout/background independent levels par evolve karte hain. Media queries, rounded borders, transitions often CSS3 bucket mein bolte hain; flex/grid ki own specs hain. Module name/support check meaningful hai. Unsupported enhancement se basic use block na ho, progressive enhancement rakho.',
+    followUp: 'Selectors Level 4 ka matlab every module Level 4 kyun nahi?',
     tags: ['css', 'css-evolution'],
     sources: [
       {
@@ -642,11 +619,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'How would you optimize website asset loading without breaking the experience?',
+    question: 'UX preserve karke asset loading optimize kaise karoge?',
     answer:
-      'Measure the critical rendering path first. Ship appropriately sized/compressed images, subset fonts where suitable, compress and cache versioned static assets, and split optional code. Lazy-load below-the-fold images but prioritize a likely largest-contentful image. Use defer/modules for appropriate scripts; preload only resources proven critical.\n\n```html\n<img src="chart.webp" width="640" height="360" loading="lazy" alt="Topic completion chart">\n```\n\nThis example is for a noncritical image. Excessive preloads compete for bandwidth; smaller transfer size alone does not prove faster interaction.',
-    followUp:
-      'What would you inspect if JavaScript downloaded quickly but the page still remained unresponsive?',
+      'Pehle critical rendering path measure karo. Suitable sized/compressed images, useful font subsets, compressed/cacheable versioned assets aur optional code splitting use karo. Below-fold image lazy, likely LCP image priority. Appropriate defer/modules; proven-critical resources hi preload. Example noncritical image ka hai. Excess preload bandwidth compete karta hai; small transfer size alone responsive interaction prove nahi karti.\n\n```html\n<img src="chart.webp" width="640" height="360" loading="lazy" alt="Topic completion chart">\n```',
+    followUp: 'JS download fast lekin page unresponsive: kya inspect karoge?',
     tags: ['css', 'css-assets'],
     sources: [
       {
@@ -661,11 +637,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Foundation',
-    question:
-      'What does a let loop with six delayed callbacks print? What if sample is never called?',
+    question: 'Six delayed callbacks wala let loop kya print karega? sample call na ho toh?',
     answer:
-      'Correct the casing to console.log and call the function; a definition alone prints nothing. In an ordinary run, invoking this schedules logs 0 through 5 after at least the requested delay. Each let iteration has its own binding.\n\n```js\nfunction sample() {\n  for (let i = 0; i <= 5; i++) setTimeout(() => console.log(i), 1000);\n}\nsample();\n```\n\nChanging let to var makes these callbacks share one function-scoped i, whose final value is 6. Delays are scheduling thresholds, not precise appointment times.',
-    followUp: 'Why does using i < 5 change both the number of callbacks and the final var value?',
+      'console.log casing repair karke function call karo; definition alone nothing print karti hai. Ordinary run mein requested delay ke baad 0–5 eligible logs hain. Har let iteration ki binding alag. var karne par shared function-scoped i ki final value 6 sab callbacks dekhengi. Delay earliest scheduling threshold hai, exact appointment time nahi; i<5 se count/final value badalti hai.\n\n```js\nfunction sample() {\n  for (let i = 0; i <= 5; i++) setTimeout(() => console.log(i), 1000);\n}\nsample();\n```',
+    followUp: 'i<5 se callback count/final var value dono kyun badlenge?',
     tags: ['javascript', 'js-loop-output'],
     promptCode:
       '```js\nfunction sample() {\n  for (let i = 0; i <= 5; i++) {\n    setTimeout(() => console.log(i), 1000);\n  }\n}\nsample();\n```',
@@ -682,11 +657,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Foundation',
-    question:
-      'A timer logs a after two seconds and synchronous code logs b. How can a precede b without another timer?',
+    question: 'Timer a ko 2s baad, sync code b log karta hai. Extra timer bina a pehle kaise?',
     answer:
-      "Initially the output is b then a: the current script completes before the timer callback. Put both ordered operations in the existing callback, or await one promise that is resolved by that timer.\n\n```js\nsetTimeout(() => {\n  console.log('a');\n  console.log('b');\n}, 2000);\n```\n\nBoth now occur after the delay, in a/b order. If b must execute elsewhere, expose a completion promise instead of attempting to block the thread. Correct identifiers are setTimeout and console, with lowercase initials.",
-    followUp: 'Can this guarantee execution at exactly 2000 milliseconds under a busy event loop?',
+      "Original mein b then a, kyunki script timer se pehle finish hoti hai. Existing callback mein ordered operations rakho ya us timer ki completion promise await karo. Neeche dono delay ke baad a,b order mein hain. b elsewhere chahiye toh completion promise expose karo; thread block mat karo. Correct names setTimeout/console lowercase hain; exact 2000ms guarantee nahi.\n\n```js\nsetTimeout(() => {\n  console.log('a');\n  console.log('b');\n}, 2000);\n```",
+    followUp: 'Busy event loop par exact 2000ms guarantee kar sakte ho?',
     tags: ['javascript', 'js-timer-order'],
     promptCode: "```js\nsetTimeout(() => console.log('a'), 2000);\nconsole.log('b');\n```",
     sources: [
@@ -702,12 +676,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Foundation',
-    question:
-      'What are promises, what are their three states, and how do they compare with callbacks?',
+    question: 'Promises kya hain, three states aur callbacks se comparison kya hai?',
     answer:
-      'A callback is a function supplied for another operation to invoke; it can be synchronous or asynchronous and may be invoked many times by an event API. A promise represents one eventual settlement: pending, fulfilled, or rejected. It provides a composable result/error channel through then/catch/finally. Promise executors run synchronously; attached reactions run asynchronously.\n\n```js\nconst result = new Promise(resolve => resolve(21));\nresult.then(value => value * 2).then(console.log); // 42\n```\n\nResolved is not a fourth state: resolving with another pending promise can adopt its future outcome. Promises do not automatically cancel work or replace ongoing event subscriptions.',
-    followUp:
-      'Why can forgetting to return an inner promise break both sequencing and error handling?',
+      'Callback invoke karne ke liye supplied function hai; sync/async ya events mein repeatedly call ho sakti hai. Promise one eventual outcome hai: pending/fulfilled/rejected; then/catch/finally composable channel dete hain. Executor sync, reactions async. Resolved fourth state nahi: pending promise adopt ho sakti hai. Promises automatic cancellation/ongoing subscriptions replace nahi karti; inner promise return karo taaki chain complete work observe kare.\n\n```js\nconst result = new Promise(resolve => resolve(21));\nresult.then(value => value * 2).then(console.log); // 42\n```',
+    followUp: 'Inner promise return bhoolne se sequencing/errors kyun tootenge?',
     tags: ['javascript', 'js-promise-basics'],
     sources: [
       {
@@ -722,10 +694,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Foundation',
-    question: 'What is printed when a promise rejects with an object containing msg?',
+    question: 'Promise msg-object se reject ho toh kya print hoga?',
     answer:
-      "After repairing the supplied syntax, rejection skips the fulfillment handler and reaches catch. The output is Something went wrong. The catch callback below returns undefined, so the promise produced by catch fulfills with undefined unless another error is thrown.\n\n```js\nconst task = new Promise((resolve, reject) => {\n  reject({msg: 'Something went wrong'});\n});\ntask.then(value => console.log(value)).catch(error => console.log(error.msg));\n```\n\nAn Error object usually gives better stack information than a plain object. The original mismatched brackets/casing would cause a syntax or identifier error rather than this intended trace.",
-    followUp: 'What changes if the catch handler throws a new Error after logging?',
+      "Syntax repair ke baad rejection fulfillment handler skip karke catch tak jaati hai. Output `Something went wrong` hai. Catch callback undefined return karta hai, toh catch-produced promise undefined se fulfill hoti hai unless new error throw ho. Error object better stack context deta hai. Original brackets/casing galat hon toh intended trace se pehle syntax/identifier error aa sakti hai.\n\n```js\nconst task = new Promise((resolve, reject) => {\n  reject({msg: 'Something went wrong'});\n});\ntask.then(value => console.log(value)).catch(error => console.log(error.msg));\n```",
+    followUp: 'Catch log ke baad new Error throw kare toh kya badlega?',
     tags: ['javascript', 'js-rejection-output'],
     promptCode:
       "```js\nconst task = new Promise((resolve, reject) => {\n  reject({msg: 'Something went wrong'});\n});\ntask.then(value => console.log(value))\n  .catch(error => console.log(error.msg));\n```",
@@ -742,12 +714,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Intermediate',
-    question:
-      'After await delay(6000), a ten-second timer is scheduled and second is logged. What is the timeline?',
+    question: 'await delay(6000) ke baad ten-second timer aur second log: timeline kya hai?',
     answer:
-      "Assume delay returns a promise settled by its timer and the code runs inside an async function or an ES module. After roughly six seconds, second logs and the ten-second timer has just been scheduled; first is eligible around sixteen seconds from the original start, not ten.\n\n```js\nconst delay = ms => new Promise(resolve => setTimeout(resolve, ms));\nasync function run() {\n  await delay(6000);\n  setTimeout(() => console.log('first'), 10000);\n  console.log('second');\n}\nrun();\n```\n\nActual execution can be later under load. An undefined delay helper or await in an unsupported syntactic context changes the problem into an error.",
-    followUp:
-      'What timeline results if the ten-second timer is scheduled before awaiting the six-second delay?',
+      "Assume delay timer-settled promise hai aur async function/ES module mein run hai. Around 6s par second log aur ten-second timer schedule; first original start se around 16s eligible hai, 10s nahi. Load par later run ho sakta hai. Helper undefined ya await invalid context ho toh timing puzzle ke bajay error hai. Timer pehle schedule hota toh windows overlap karti.\n\n```js\nconst delay = ms => new Promise(resolve => setTimeout(resolve, ms));\nasync function run() {\n  await delay(6000);\n  setTimeout(() => console.log('first'), 10000);\n  console.log('second');\n}\nrun();\n```",
+    followUp: 'Ten-second timer six-second await se pehle schedule ho toh?',
     tags: ['javascript', 'js-delay-output'],
     promptCode:
       "```js\nconst delay = ms => new Promise(resolve => setTimeout(resolve, ms));\nasync function run() {\n  await delay(6000);\n  setTimeout(() => console.log('first'), 10000);\n  console.log('second');\n}\nrun();\n```",
@@ -764,12 +734,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Intermediate',
-    question:
-      'Why does await setTimeout not wait for the callback, and how do you repair the a/b/c/d/e example?',
+    question: 'await setTimeout callback wait kyun nahi karta; a/b/c/d/e repair kaise?',
     answer:
-      "Assume ordinary browser timer APIs. setTimeout returns a handle, not a promise for completion. Await wraps that value and resumes through a microtask; it does not wait for the timer's callback. Corrected original code normally logs a, b, e, d, c with delays 1000 and 0.\n\n```js\nconst delay = ms => new Promise(resolve => setTimeout(resolve, ms));\nasync function fun1() {\n  console.log('a');\n  console.log('b');\n  await delay(1000); console.log('c');\n  await delay(0); console.log('d');\n  console.log('e');\n}\nfun1();\n```\n\nThe repaired version logs a, b, c, d, e. Await pauses this async function, not the entire JavaScript thread.",
-    followUp:
-      'Why is top-level await valid in ES modules even though ordinary non-async function bodies cannot use await?',
+      "Ordinary browser setTimeout handle deta hai, completion promise nahi. Await handle ko wrap karke microtask se resume karta hai; callback ka wait nahi. Corrected original normally a,b,e,d,c deta hai for 1000/0 delays. Repaired promise-based version a,b,c,d,e hai. Await is async function pause karta hai, whole thread nahi. ES module top-level await valid context hai.\n\n```js\nconst delay = ms => new Promise(resolve => setTimeout(resolve, ms));\nasync function fun1() {\n  console.log('a');\n  console.log('b');\n  await delay(1000); console.log('c');\n  await delay(0); console.log('d');\n  console.log('e');\n}\nfun1();\n```",
+    followUp: 'ES module mein top-level await valid, normal function mein kyun nahi?',
     tags: ['javascript', 'js-await-timers'],
     promptCode:
       "```js\n// Ordinary browser timers; predict before repairing.\nasync function fun1() {\n  console.log('a');\n  console.log('b');\n  await setTimeout(() => console.log('c'), 1000);\n  await setTimeout(() => console.log('d'), 0);\n  console.log('e');\n}\nfun1();\n```",
@@ -786,11 +754,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Intermediate',
-    question: 'What is callback hell, and when do async/await improve the design?',
+    question: 'Callback hell kya hai; async/await design kab improve karte hain?',
     answer:
-      'Deeply nested dependent callbacks mix success paths, repeated error handling, and control flow. Promises expose returnable operations; async/await lets a function express a dependent sequence with ordinary try/catch. Use it when you want to consume promise-based results clearly, while keeping independent work concurrent when appropriate.\n\n```js\n// Application excerpt: these three helpers return promises.\nasync function enroll(userId) {\n  const user = await loadUser(userId);\n  const course = await chooseCourse(user);\n  return saveEnrollment(user.id, course.id);\n}\n```\n\nA callback API must be correctly adapted first. Await does not convert arbitrary callback registration into completion waiting, and callbacks remain appropriate for repeated events.',
-    followUp:
-      'Which operations could run concurrently if choosing a course no longer depended on loading the user?',
+      'Nested dependent callbacks success/error/control-flow mix kar deti hain. Promises returnable operations, async/await try/catch ke saath dependent sequence readable banate hain. Independent operations suitable ho toh concurrent rakho. Callback API ko pehle correctly adapt karo; await arbitrary registration ko completion wait nahi banata. Repeated events ke liye callbacks appropriate hain; every callback promise mein replace karna goal nahi.\n\n```js\n// Application excerpt: these three helpers return promises.\nasync function enroll(userId) {\n  const user = await loadUser(userId);\n  const course = await chooseCourse(user);\n  return saveEnrollment(user.id, course.id);\n}\n```',
+    followUp: 'Course selection user load se independent ho toh kya parallel chalega?',
     tags: ['javascript', 'js-callback-hell'],
     sources: [
       {
@@ -805,11 +772,10 @@ export const requestedQuestions = [
     topic: 'node',
     noteId: 'mongo-node-runtime-http',
     level: 'Intermediate',
-    question: 'What is process.nextTick, and how does it differ from setImmediate?',
+    question: 'process.nextTick aur setImmediate ka difference?',
     answer:
-      "Both are Node-specific scheduling APIs. nextTick queues work for a next-tick checkpoint after the current JavaScript operation, before proceeding through ordinary event-loop phases. setImmediate runs in the check phase and permits the loop to progress. Recursive nextTick scheduling can starve I/O.\n\n```js\n// Run as a CommonJS .cjs file.\nprocess.nextTick(() => console.log('tick'));\nsetImmediate(() => console.log('immediate'));\nconsole.log('sync');\n// sync, tick, immediate\n```\n\nDo not generalize this into an unconditional ordering against every promise callback: ES-module evaluation and work already executing inside microtasks affect that comparison.",
-    followUp:
-      'Why is nextTick a poor mechanism for breaking a long CPU task into responsive chunks?',
+      "Dono Node-specific scheduling APIs hain. nextTick current JS operation ke baad checkpoint mein ordinary event-loop phases se pehle queued work chalata hai. setImmediate check phase mein loop progress allow karta hai. Recursive nextTick I/O starve kar sakta hai. Promise order ki blanket guarantee mat banao: ES-module evaluation aur already-running microtasks context badalte hain. Browser standard APIs nahi hain.\n\n```js\n// Run as a CommonJS .cjs file.\nprocess.nextTick(() => console.log('tick'));\nsetImmediate(() => console.log('immediate'));\nconsole.log('sync');\n// sync, tick, immediate\n```",
+    followUp: 'Long CPU task responsive chunks ke liye nextTick weak kyun hai?',
     tags: ['node', 'node-nexttick'],
     sources: [
       {
@@ -824,11 +790,10 @@ export const requestedQuestions = [
     topic: 'node',
     noteId: 'mongo-node-runtime-http',
     level: 'Intermediate',
-    question: 'What is the order of setImmediate, setTimeout(0), and synchronous logging in Node?',
+    question: 'Node mein setImmediate, setTimeout(0), sync log ka order?',
     answer:
-      "Correct the names to setImmediate, setTimeout, and console.log. Third logs first. At top-level, the relative order of the immediate and zero-delay timer is not a portable guarantee; it depends on timing and event-loop context.\n\n```js\n// Node script\nsetImmediate(() => console.log('first'));\nsetTimeout(() => console.log('second'), 0);\nconsole.log('third');\n```\n\nWhen both are scheduled inside an ordinary I/O callback, the immediate is expected before that newly scheduled timer. Specify the context instead of memorizing one output from one execution. Browser JavaScript does not provide standard setImmediate/process.nextTick APIs.",
-    followUp:
-      'How would you rewrite this as an I/O-callback experiment without claiming the top-level result is deterministic?',
+      "Names setImmediate,setTimeout,console.log correct karo. Third sync log pehle. Top-level immediate versus zero-timer order portable guarantee nahi; timing/context par depend hai. Ordinary I/O callback ke andar dono schedule hon toh immediate newly-scheduled timer se pehle expected hai. Ek observed run memorize mat karo. Browser mein standard setImmediate/process.nextTick available nahi.\n\n```js\n// Node script\nsetImmediate(() => console.log('first'));\nsetTimeout(() => console.log('second'), 0);\nconsole.log('third');\n```",
+    followUp: 'Top-level deterministic claim bina I/O-callback experiment kaise banaoge?',
     tags: ['node', 'node-immediate-output'],
     promptCode:
       "```js\n// Run in Node, not a browser.\nsetImmediate(() => console.log('first'));\nsetTimeout(() => console.log('second'), 0);\nconsole.log('third');\n```",
@@ -845,11 +810,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-modern-data-collections',
     level: 'Foundation',
-    question: 'How do forEach, map, filter, and reduce differ?',
+    question: 'forEach/map/filter/reduce ka difference kya hai?',
     answer:
-      'forEach performs a callback for each visited item and returns undefined; map builds transformed items; filter retains items passing a predicate; reduce carries an accumulator into the next step.\n\n```js\nconst minutes = [5, 10, 15];\nconsole.log(minutes.map(n => n * 2)); // [10,20,30]\nconsole.log(minutes.filter(n => n >= 10)); // [10,15]\nconsole.log(minutes.reduce((sum, n) => sum + n, 0)); // 30\nconsole.log(minutes.forEach(n => n + 1)); // undefined\n```\n\nNone of these examples mutate the array, but your callback can still mutate referenced objects. Use an explicit initial accumulator so an empty array has a defined reduction result.',
-    followUp:
-      'Why does forEach with an async callback not return a promise that waits for every callback?',
+      'forEach visited items par callback chala kar undefined; map transformed array; filter matching items; reduce accumulated result deta hai. Examples input array mutate nahi karte, lekin callback referenced objects mutate kar sakta hai. Explicit initial accumulator se empty reduce defined rahega. Async forEach callback promises ignore hoti hain; sequence ke liye for...of, concurrent wait ke liye map/combinator lo.\n\n```js\nconst minutes = [5, 10, 15];\nconsole.log(minutes.map(n => n * 2)); // [10,20,30]\nconsole.log(minutes.filter(n => n >= 10)); // [10,15]\nconsole.log(minutes.reduce((sum, n) => sum + n, 0)); // 30\nconsole.log(minutes.forEach(n => n + 1)); // undefined\n```',
+    followUp: 'Async forEach all-callback completion promise kyun nahi return karta?',
     tags: ['javascript', 'js-array-methods'],
     sources: [
       {
@@ -864,10 +828,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-modern-data-collections',
     level: 'Foundation',
-    question: "How can you count an object's properties and print values without keys?",
+    question: 'Object properties count aur values-only print kaise?',
     answer:
-      "Ordinary objects have no general length property. Object.keys counts own enumerable string-keyed properties; Object.values returns their values; Object.entries returns key/value pairs. These do not include inherited or symbol-keyed properties. Reflect.ownKeys includes all own string and symbol keys, including non-enumerable ones.\n\n```js\nconst progress = {java: 3, react: 5};\nconsole.log(Object.keys(progress).length); // 2\nfor (const value of Object.values(progress)) console.log(value); // 3, 5\n```\n\nDefine which kind of property you mean before claiming an object's length.",
-    followUp: 'Why could for...in print values that Object.values omits?',
+      'Ordinary object ki universal length nahi. Object.keys own enumerable string keys; values unki values; entries pairs deta hai. Inherited/symbol properties exclude hoti hain. Reflect.ownKeys all own strings/symbols, non-enumerable bhi include karta hai. Pehle property category define karo. for...in inherited enumerable strings visit kar sakta hai, isliye Object.values se result different ho sakta hai.\n\n```js\nconst progress = {java: 3, react: 5};\nconsole.log(Object.keys(progress).length); // 2\nfor (const value of Object.values(progress)) console.log(value); // 3, 5\n```',
+    followUp: 'for...in Object.values se extra values kyun de sakta hai?',
     tags: ['javascript', 'js-object-enumeration'],
     sources: [
       {
@@ -882,10 +846,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-modern-data-collections',
     level: 'Foundation',
-    question: 'What does typeof return for an array, and how do you reliably detect arrays?',
+    question: 'Array ka typeof kya hai; reliable detection kaise?',
     answer:
-      "An array is an object, so typeof [] is 'object'. Use Array.isArray to test array identity; it works across realms such as iframes, unlike an instanceof Array check tied to one realm's constructor. Array-like values and typed arrays are separate categories.\n\n```js\nconsole.log(typeof []); // 'object'\nconsole.log(Array.isArray([])); // true\nconsole.log(Array.isArray({0: 'a', length: 1})); // false\nconsole.log(Array.isArray(new Uint8Array(2))); // false\n```\n\nHaving indexed properties and length is not proof of being an Array.",
-    followUp: 'When would Array.from be useful even when Array.isArray returns false?',
+      "Array object hai, isliye typeof []='object'. Array.isArray actual array detect aur cross-realm iframe arrays bhi support karta hai; instanceof Array particular realm constructor se tied hai. Array-like aur typed arrays separate categories hain. Indexed properties/length enough proof nahi. Array.from iterable/array-like ko actual array convert karne mein useful hai jab isArray false ho.\n\n```js\nconsole.log(typeof []); // 'object'\nconsole.log(Array.isArray([])); // true\nconsole.log(Array.isArray({0: 'a', length: 1})); // false\nconsole.log(Array.isArray(new Uint8Array(2))); // false\n```",
+    followUp: 'Array.isArray false ho tab Array.from kab useful hai?',
     tags: ['javascript', 'js-array-check'],
     sources: [
       {
@@ -900,11 +864,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-modern-data-collections',
     level: 'Intermediate',
-    question:
-      'Explain ten ES2015 features with original examples, without mixing in later additions.',
+    question: 'Ten ES2015 features examples se samjhao; later features mix mat karo.',
     answer:
-      "ES6 means ES2015. Ten useful features are block-scoped bindings, arrows, template literals, destructuring, default parameters, rest parameters, iterable spread, classes, modules, and promises.\n\n```js\nlet read = 0; const target = 3; // block-scoped bindings\nconst double = n => n * 2; // lexical-this arrow\nconst label = `Read ${read}/${target}`; // interpolation\nconst [first] = [8, 9]; // destructuring\nconst greet = (name = 'Learner') => name; // default\nconst count = (...items) => items.length; // rest\nconst copy = [...[1, 2]]; // iterable spread\nclass Lesson { constructor(id) { this.id = id; } }\nconst ready = Promise.resolve('ready');\n```\n\nFor the tenth feature, one module can `export const goal = 3;` and another can `import {goal} from './goal.js';`. These are separate module files. Async/await and object spread arrived later; do not label them ES2015. Defaults apply to undefined, not null, and spread is shallow.\n\nExplain each mechanism before presenting its syntax:\n\n1. **Bindings:** let allows reassignment, const does not; both follow block scope and temporal-dead-zone rules.\n2. **Arrows:** compact function expressions retain lexical this, useful for callbacks, but cannot serve as constructors.\n3. **Template literals:** interpolate expressions and preserve literal line breaks; they do not automatically sanitize HTML.\n4. **Destructuring:** extract named or positional values into bindings; missing fields may use explicit defaults.\n5. **Default parameters:** supply a value for an omitted or undefined argument; passing null does not activate the default.\n6. **Rest parameters:** collect remaining arguments into an actual array so normal array operations can be used.\n7. **Iterable spread:** expand iterable values into calls or arrays; copying an array still shares nested object references.\n8. **Classes:** organize constructor and prototype methods with class syntax; they still use the prototype model and class method bodies are strict.\n9. **Modules:** make imports/exports explicit and provide module scope; consumers observe live exported bindings.\n10. **Promises:** represent one eventual settlement and compose results/errors; constructing a promise does not make CPU work run in another thread.",
-    followUp: 'Choose three features and explain one limitation or surprising behavior of each.',
+      "ES6=ES2015. Ten features: block bindings, arrows, templates, destructuring, defaults, rest parameters, iterable spread, classes, modules, promises. Neeche code dry-run karo. Module feature ke liye separate files mein `export const goal=3` aur `import {goal} from './goal.js'` lo. Async/await aur object spread later additions hain.\n\n1. let reassign ho sakta, const nahi; dono block scope/TDZ follow karte hain.\n2. Arrow lexical this rakhti hai, constructor nahi banti.\n3. Template expressions/newlines allow karti hai, HTML sanitize nahi.\n4. Destructuring named/positional values nikalti hai; missing ke defaults explicit hon.\n5. Parameter default omitted/undefined par, null par nahi.\n6. Rest remaining arguments ka actual array banata hai.\n7. Iterable spread calls/arrays expand; nested references shared rehti hain.\n8. Class constructor/prototype methods organize karti hai; method bodies strict hain.\n9. Modules scope/dependencies aur live exported bindings dete hain.\n10. Promise one outcome compose karti hai; CPU ko another thread nahi bhejti.\n\n```js\nlet read = 0; const target = 3; // block-scoped bindings\nconst double = n => n * 2; // lexical-this arrow\nconst label = `Read ${read}/${target}`; // interpolation\nconst [first] = [8, 9]; // destructuring\nconst greet = (name = 'Learner') => name; // default\nconst count = (...items) => items.length; // rest\nconst copy = [...[1, 2]]; // iterable spread\nclass Lesson { constructor(id) { this.id = id; } }\nconst ready = Promise.resolve('ready');\n```",
+    followUp: 'Three features ki ek-ek limitation/surprise batao.',
     tags: ['javascript', 'js-es6'],
     sources: [
       {
@@ -920,11 +883,10 @@ export const requestedQuestions = [
     noteId: 'js-functions',
     level: 'Foundation',
     question:
-      'What is a function definition, and how do declarations, expressions, anonymous functions, and higher-order functions differ?',
+      'Function definition, declaration, expression, anonymous aur higher-order ka difference?',
     answer:
-      'A definition supplies parameters and executable behavior; calling the function runs it with arguments. A declaration binds a name using declaration syntax; an expression produces a function value, which may be anonymous or named. A higher-order function accepts or returns functions.\n\n```js\nfunction square(n) { return n * n; } // declaration\nconst triple = function (n) { return n * 3; }; // anonymous expression\nfunction transform(value, operation) { return operation(value); }\nconsole.log(transform(4, square)); // 16\nconsole.log(transform(4, triple)); // 12\n```\n\nPassing square is different from passing square(4), which would pass the result. Callback describes a role, not a separate syntax.',
-    followUp:
-      'Why can a named function expression help with recursion and debugging while keeping its inner name local?',
+      'Definition parameters/behavior likhti hai; call arguments ke saath execute karti hai. Declaration named binding banati hai; expression function value produce karti hai, named ya anonymous. Higher-order function functions accept/return karti hai. square pass karna function deta hai; square(4) pass karna result deta hai. Callback role hai, separate syntax nahi. Named expression inner name se recursion/debugging help karti hai.\n\n```js\nfunction square(n) { return n * n; } // declaration\nconst triple = function (n) { return n * 3; }; // anonymous expression\nfunction transform(value, operation) { return operation(value); }\nconsole.log(transform(4, square)); // 16\nconsole.log(transform(4, triple)); // 12\n```',
+    followUp: 'Named expression recursion/debugging help karke inner name local kaise rakhti hai?',
     tags: ['javascript', 'js-function-forms'],
     sources: [
       {
@@ -939,11 +901,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-functions',
     level: 'Intermediate',
-    question: 'What is an IIFE, and when can one still be useful?',
+    question: 'IIFE kya hai aur ab bhi kab useful hai?',
     answer:
-      'An immediately invoked function expression creates a function value and calls it at once. It can isolate temporary bindings or support an async entry point in a context without top-level await. Modules and block scope now solve many historical global-variable problems.\n\n```js\nconst initialTotal = (() => {\n  const minutes = [5, 10];\n  return minutes.reduce((sum, n) => sum + n, 0);\n})();\nconsole.log(initialTotal); // 15\n```\n\nThe temporary minutes binding is internal. An async IIFE returns a promise whose errors still need handling.',
-    followUp:
-      'Why can starting an IIFE immediately after another expression require a semicolon boundary?',
+      'IIFE function expression ko turant call karti hai. Temporary bindings isolate ya top-level await unavailable context mein async entry bana sakti hai. Modules/block scope many old global-variable problems solve karte hain. Example minutes local hai. Async IIFE promise return karti hai; rejection handle karna zaroori hai. Previous expression ke saath accidentally join na ho, semicolon boundary rakho.\n\n```js\nconst initialTotal = (() => {\n  const minutes = [5, 10];\n  return minutes.reduce((sum, n) => sum + n, 0);\n})();\nconsole.log(initialTotal); // 15\n```',
+    followUp: 'Previous expression ke baad IIFE ko semicolon boundary kyun chahiye ho sakti hai?',
     tags: ['javascript', 'js-iife'],
     sources: [
       {
@@ -958,11 +919,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-functions',
     level: 'Intermediate',
-    question: 'What is memoization? Implement it and explain when the cache is wrong.',
+    question: 'Memoization implement karo aur invalid cache cases samjhao.',
     answer:
-      'Memoization reuses a function result for an input already evaluated. It is valid only if the key captures everything affecting the result and the cached outcome remains appropriate. This single-number example is intentionally narrower than a universal memoizer.\n\n```js\nfunction memoizeNumber(fn) {\n  const cache = new Map();\n  return n => {\n    if (!cache.has(n)) cache.set(n, fn(n));\n    return cache.get(n);\n  };\n}\nconst square = memoizeNumber(n => n * n);\nconsole.log(square(4), square(4)); // 16, 16\n```\n\nMap.has correctly handles cached zero/undefined values. Unbounded distinct inputs retain memory; mutable external dependencies make this cache stale.',
-    followUp:
-      'What eviction and key strategy would you need for a user-specific, asynchronous query?',
+      'Memoization same input ka previous result reuse karti hai. Key mein all result-affecting inputs aur freshness policy honi chahiye. Example single-number function ka hai, universal memoizer nahi. Map.has cached zero/undefined distinguish karta hai. Unbounded inputs memory retain; mutable external dependency stale result la sakti hai. User-specific async work mein identity, rejected-result policy aur eviction explicitly design karo.\n\n```js\nfunction memoizeNumber(fn) {\n  const cache = new Map();\n  return n => {\n    if (!cache.has(n)) cache.set(n, fn(n));\n    return cache.get(n);\n  };\n}\nconst square = memoizeNumber(n => n * n);\nconsole.log(square(4), square(4)); // 16, 16\n```',
+    followUp: 'User-specific async query ke keys/eviction kaise design karoge?',
     tags: ['javascript', 'js-memoization'],
     sources: [
       {
@@ -977,10 +937,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-this-prototypes-classes',
     level: 'Intermediate',
-    question: 'When should you use call, apply, or bind?',
+    question: 'call/apply/bind kab use karoge?',
     answer:
-      "Call invokes a regular function with an explicit this and separate arguments. Apply invokes it with an explicit this and an array-like argument list. Bind returns a new function with a bound receiver and optionally leading arguments; it does not invoke immediately.\n\n```js\nfunction total(extra) { return this.minutes + extra; }\nconst learner = {minutes: 20};\nconsole.log(total.call(learner, 5)); // 25\nconsole.log(total.apply(learner, [7])); // 27\nconst later = total.bind(learner, 10);\nconsole.log(later()); // 30\n```\n\nThese methods cannot replace an arrow's lexical this. Store a bound callback if you later need its identity for removal.",
-    followUp: 'Why do two independent bind calls create callbacks that are not strictly equal?',
+      'call regular function ko explicit this/separate args se invoke karta hai. apply same receiver plus array-like args leta hai. bind new function with fixed receiver/optional leading args return karta hai; immediately invoke nahi karta. Arrow ka lexical this inse replace nahi hota. Removal ke liye bound callback store karo; two bind calls two different identities banati hain.\n\n```js\nfunction total(extra) { return this.minutes + extra; }\nconst learner = {minutes: 20};\nconsole.log(total.call(learner, 5)); // 25\nconsole.log(total.apply(learner, [7])); // 27\nconst later = total.bind(learner, 10);\nconsole.log(later()); // 30\n```',
+    followUp: 'Two independent bind calls ke callbacks strictly equal kyun nahi?',
     tags: ['javascript', 'js-call-apply-bind'],
     sources: [
       {
@@ -995,10 +955,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-this-prototypes-classes',
     level: 'Foundation',
-    question: 'What are three common ways to create objects, and what do prototype methods do?',
+    question: 'Objects create karne ke three ways aur prototype methods ka role?',
     answer:
-      "Object literals create a direct record; Object.create selects a prototype; constructor functions/classes create instances with shared prototype behavior. There are more than three possible APIs, so this is a teaching grouping.\n\n```js\nconst literal = {title: 'Arrays'};\nconst behavior = {label() { return this.title; }};\nconst inherited = Object.create(behavior); inherited.title = 'Trees';\nclass Lesson { constructor(title) { this.title = title; } label() { return this.title; } }\nconsole.log(inherited.label(), new Lesson('Graphs').label()); // Trees Graphs\n```\n\nObject.prototype methods such as toString/isPrototypeOf are inherited behavior. Object.keys/create/hasOwn are static Object methods, not methods stored on every object's prototype. Null-prototype objects inherit none of Object.prototype.",
-    followUp: 'Why is Object.hasOwn(obj, key) safer than assuming obj.hasOwnProperty is callable?',
+      "Object literal direct record; Object.create chosen prototype; constructor/class shared prototype behavior ke instances banate hain. Yeh three teaching groups hain, all APIs ki fixed count nahi. Object.prototype ka toString/isPrototypeOf inherited behavior; Object.keys/create/hasOwn static methods hain. Null-prototype object inherited methods nahi rakhta. Isliye obj.hasOwnProperty callable assume karne ke bajay Object.hasOwn safer hai.\n\n```js\nconst literal = {title: 'Arrays'};\nconst behavior = {label() { return this.title; }};\nconst inherited = Object.create(behavior); inherited.title = 'Trees';\nclass Lesson { constructor(title) { this.title = title; } label() { return this.title; } }\nconsole.log(inherited.label(), new Lesson('Graphs').label()); // Trees Graphs\n```",
+    followUp: 'obj.hasOwnProperty callable assume karne se Object.hasOwn safer kyun hai?',
     tags: ['javascript', 'js-create-objects'],
     sources: [
       {
@@ -1013,11 +973,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-this-prototypes-classes',
     level: 'Intermediate',
-    question: 'What is method chaining, and how is it different from a prototype chain?',
+    question: 'Method chaining versus prototype chain kya hai?',
     answer:
-      'Method chaining calls methods on the result of the previous method. A fluent mutable API often returns this; an immutable API may return a new value. A prototype chain instead governs inherited property lookup.\n\n```js\nconst progress = {\n  minutes: 0,\n  add(n) { this.minutes += n; return this; },\n  reset() { this.minutes = 0; return this; }\n};\nconsole.log(progress.add(5).add(10).minutes); // 15\n```\n\nThis example is intentionally mutable. Document validation and mutation rather than assuming fluent syntax makes the API safe.',
-    followUp:
-      'How would you rewrite add to return a fresh value, and how would that change aliasing behavior?',
+      'Method chaining previous method ke result par next method call karti hai. Mutable fluent API often this return, immutable version new value return karti hai. Prototype chain inherited property lookup ka mechanism hai, chaining se alag. Example intentionally mutable hai; validation/mutation contract document karo. Fresh-return version aliases ka existing object mutate nahi karega, caller ko result retain karna hoga.\n\n```js\nconst progress = {\n  minutes: 0,\n  add(n) { this.minutes += n; return this; },\n  reset() { this.minutes = 0; return this; }\n};\nconsole.log(progress.add(5).add(10).minutes); // 15\n```',
+    followUp: 'add fresh value return kare toh aliasing kya badlegi?',
     tags: ['javascript', 'js-method-chaining'],
     sources: [
       {
@@ -1032,11 +991,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-this-prototypes-classes',
     level: 'Foundation',
-    question: 'Does JavaScript pass objects by reference? Show mutation versus reassignment.',
+    question: 'JS object passing mein mutation/reassignment ka difference dikhao.',
     answer:
-      "JavaScript passes values. For objects, that value refers to an object, so caller and callee can reach the same mutable object. Reassigning the parameter does not reassign the caller's variable; calling this pass-by-reference without that distinction is misleading.\n\n```js\nfunction revise(note) {\n  note.done = true;\n  note = {done: false};\n}\nconst original = {done: false};\nrevise(original);\nconsole.log(original.done); // true\n```\n\nTo deliver a replacement object, return it and explicitly assign the returned value at the call site.",
-    followUp:
-      'What changes when you pass a number instead of an object to a function that reassigns its parameter?',
+      'JavaScript values pass karta hai. Object value object ko refer karti hai, toh caller/callee same mutable object access kar sakte hain. Parameter reassign caller variable reassign nahi karta. Is difference bina pass-by-reference bolna misleading hai. Replacement chahiye toh new object return aur call site par assign karo. Primitive number reassign sirf local parameter badlega.\n\n```js\nfunction revise(note) {\n  note.done = true;\n  note = {done: false};\n}\nconst original = {done: false};\nrevise(original);\nconsole.log(original.done); // true\n```',
+    followUp: 'Object ki jagah number pass karke parameter reassign ho toh?',
     tags: ['javascript', 'js-pass-values'],
     sources: [
       {
@@ -1051,10 +1009,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-types-operators',
     level: 'Foundation',
-    question: 'How do null, undefined, NaN, and JavaScript value types differ?',
+    question: 'null, undefined, NaN aur value types ka difference?',
     answer:
-      "Values have types; variables can later hold a value of another type. Primitive types are undefined, null, boolean, number, bigint, string, and symbol; objects form the other major category. Undefined often means absent/uninitialized-to-a-value; null is an explicit empty-value convention. NaN is a number value representing an invalid numeric result, not its own type.\n\n```js\nconsole.log(null === undefined); // false\nconsole.log(null == undefined); // true\nconsole.log(typeof null); // 'object', historical behavior\nconsole.log(typeof NaN); // 'number'\nconsole.log(Number.isNaN(Number('notes'))); // true\n```\n\nPrefer Number.isNaN for a noncoercing NaN check. The special null/undefined loose comparison does not mean they are identical.",
-    followUp: 'Why does NaN === NaN return false, while Object.is(NaN, NaN) returns true?',
+      "Types values ke hain; variable later different type hold kar sakta hai. Primitives undefined,null,boolean,number,bigint,string,symbol; objects doosri main category. undefined often missing/unassigned-to-value; null explicit absence convention. NaN invalid numeric result ka number value hai, own type nahi. Number.isNaN noncoercing check deta hai. null==undefined special comparison unki identical identity/type prove nahi karti.\n\n```js\nconsole.log(null === undefined); // false\nconsole.log(null == undefined); // true\nconsole.log(typeof null); // 'object', historical behavior\nconsole.log(typeof NaN); // 'number'\nconsole.log(Number.isNaN(Number('notes'))); // true\n```",
+    followUp: 'NaN===NaN false lekin Object.is(NaN,NaN) true kyun?',
     tags: ['javascript', 'js-null-types'],
     sources: [
       {
@@ -1069,11 +1027,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-types-operators',
     level: 'Foundation',
-    question: 'What are escape sequences, and why are they used?',
+    question: 'Escape sequences kya hain aur kyun use hoti hain?',
     answer:
-      "Escape sequences represent characters that would otherwise end a string or are awkward to write literally, such as quotes, newlines, tabs, and backslashes. The source representation and resulting characters are different layers.\n\n```js\nconst quoted = 'It\\'s time to study';\nconst folder = 'C:\\\\notes';\nconsole.log(quoted); // It's time to study\nconsole.log(folder); // C:\\notes\n```\n\nA backslash followed by n represents a newline in a normal string literal; a doubled backslash followed by n represents the visible characters backslash and n. Template literals can contain actual line breaks.",
-    followUp:
-      'Why do JSON strings, JavaScript source strings, and regular expressions require attention to different escaping layers?',
+      "Escapes quotes,newline,tab,backslash jaise characters source mein represent karte hain. Source representation aur actual characters alag layers hain. Normal string mein backslash+n newline, escaped backslash+n literal slash-n deta hai. Template actual line breaks allow karti hai. JSON ke andar JS ya regex embed ho toh har layer ka escaping separately samjho; printed output se verify karo.\n\n```js\nconst quoted = 'It\\'s time to study';\nconst folder = 'C:\\\\notes';\nconsole.log(quoted); // It's time to study\nconsole.log(folder); // C:\\notes\n```",
+    followUp: 'JSON, JS source aur regex ke escaping layers alag kyun samajhne hain?',
     tags: ['javascript', 'js-escape'],
     sources: [
       {
@@ -1088,10 +1045,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-loops',
     level: 'Foundation',
-    question: 'How do break and continue differ?',
+    question: 'break aur continue ka difference?',
     answer:
-      'Break exits the nearest applicable loop (or switch); continue skips the rest of the current loop iteration and proceeds to its next iteration step. They do not return from the containing function.\n\n```js\nfor (const n of [1, 2, 3, 4, 5]) {\n  if (n === 2) continue;\n  if (n === 4) break;\n  console.log(n);\n}\n// 1, 3\n```\n\nIn a while loop, skipping an update with continue can create an infinite loop. In nested loops, unlabeled break affects only the nearest loop.',
-    followUp: 'How would you stop processing entirely by returning from a function instead?',
+      'break nearest applicable loop/switch exit; continue current iteration ka rest skip karke next iteration step par jaata hai. Dono containing function return nahi karte. Nested loops ka unlabeled break sirf nearest loop exit karta hai. while mein continue terminating update skip kare toh infinite loop ho sakta hai. Entire function processing stop karni ho toh return use karo.\n\n```js\nfor (const n of [1, 2, 3, 4, 5]) {\n  if (n === 2) continue;\n  if (n === 4) break;\n  console.log(n);\n}\n// 1, 3\n```',
+    followUp: 'Function return karke whole processing kaise stop karoge?',
     tags: ['javascript', 'js-break-continue'],
     sources: [
       {
@@ -1106,10 +1063,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-dom-events-browser',
     level: 'Intermediate',
-    question: 'How do capturing, bubbling, preventDefault, and stopPropagation differ?',
+    question: 'Capture, bubble, preventDefault, stopPropagation ka difference?',
     answer:
-      "Capture visits ancestors toward the target; bubbling visits ancestors away from it for events that bubble. StopPropagation stops further propagation but does not cancel the browser's default action. PreventDefault cancels a cancelable default action, but does not stop propagation; passive listeners cannot cancel it.\n\n```js\n// Browser excerpt: list is an existing element containing buttons.\nlist.addEventListener('click', event => {\n  const button = event.target.closest('button[data-id]');\n  if (button && list.contains(button)) console.log(button.dataset.id);\n});\nlist.addEventListener('click', () => console.log('capture'), {capture: true});\n```\n\nFor a button click, the ancestor capture listener runs before its bubble listener. stopImmediatePropagation additionally stops later listeners on the same target.",
-    followUp: 'Why does stopPropagation on a link click not reliably prevent navigation?',
+      "Capture ancestors se target ki taraf; bubbling target se ancestors ki taraf for bubbling events. stopPropagation next propagation rokti hai, default navigation nahi. preventDefault cancelable browser action rokti hai, propagation nahi; passive listener cancel nahi kar sakta. stopImmediatePropagation same target ke later listeners bhi rokta hai. Example ancestor capture listener bubble se pehle chalega.\n\n```js\n// Browser excerpt: list is an existing element containing buttons.\nlist.addEventListener('click', event => {\n  const button = event.target.closest('button[data-id]');\n  if (button && list.contains(button)) console.log(button.dataset.id);\n});\nlist.addEventListener('click', () => console.log('capture'), {capture: true});\n```",
+    followUp: 'Link propagation stop karne se navigation necessarily kyun nahi rukti?',
     tags: ['javascript', 'js-event-phases'],
     sources: [
       {
@@ -1124,12 +1081,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-dom-events-browser',
     level: 'Intermediate',
-    question:
-      'When should you use localStorage, sessionStorage, IndexedDB, cookies, or an in-memory value?',
+    question: 'localStorage/sessionStorage/IndexedDB/cookies/memory kab choose karoge?',
     answer:
-      "LocalStorage is synchronous string storage scoped to origin and typically survives sessions; sessionStorage is also synchronous/string-based but scoped to origin and a page session, surviving reloads in that tab. IndexedDB supports asynchronous structured data and larger offline datasets. Memory is useful for temporary state. Cookies can accompany matching HTTP requests, making them useful for server sessions; they have size and policy constraints.\n\n```js\nlocalStorage.setItem('theme', 'dark');\nsessionStorage.setItem('draftTitle', 'Closures');\n```\n\nHandle unavailable storage/quota errors. For session cookies consider HttpOnly, Secure, SameSite, expiry, and CSRF policy; JavaScript-readable storage is exposed to injected scripts. Persistence is not a guarantee against user deletion or browser eviction.",
-    followUp:
-      'Why should a server session identifier not be chosen for localStorage just because it is convenient?',
+      "localStorage synchronous origin-scoped strings, generally sessions ke across; sessionStorage origin+tab page-session scoped, reload survive. IndexedDB async structured/large data; memory temporary state. Cookies matching HTTP requests ke saath ja sakti hain, server sessions mein useful. Storage/quota failure handle karo. Session cookie ke HttpOnly/Secure/SameSite/expiry/CSRF rules define karo. JS-readable storage injected scripts se exposed; persistence deletion/eviction guarantee nahi.\n\n```js\nlocalStorage.setItem('theme', 'dark');\nsessionStorage.setItem('draftTitle', 'Closures');\n```",
+    followUp: 'Session ID ko convenience ke liye localStorage mein kyun na rakho?',
     tags: ['javascript', 'js-browser-storage'],
     sources: [
       {
@@ -1144,10 +1099,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-dom-events-browser',
     level: 'Intermediate',
-    question: 'What are Web Workers, and how do they communicate with the page?',
+    question: 'Web Workers kya hain aur page se kaise communicate karte hain?',
     answer:
-      "Workers run scripts in another execution context, useful for CPU-heavy tasks without monopolizing the page's main JavaScript thread. They cannot directly access the page DOM; messages exchange structured-cloned or transferable data.\n\n```js\n// main.js, served over HTTP(S)\nconst worker = new Worker('./worker.js');\nworker.onmessage = event => console.log(event.data);\nworker.postMessage([3, 5]);\n// worker.js, a separate file\nself.onmessage = event => self.postMessage(event.data.reduce((a, b) => a + b, 0));\n```\n\nThe result is 8. Account for startup and transfer overhead, errors, stale requests, and termination; a worker is not automatically faster for tiny tasks.",
-    followUp: 'When would transferring an ArrayBuffer be better than cloning a large payload?',
+      "Worker another execution context mein scripts chalata hai, CPU-heavy work main thread monopolize nahi karta. Direct page DOM access nahi; structured-cloned/transferable messages use karo. Example result 8 hai. Startup/transfer cost, errors, stale results aur termination account karo. Tiny task worker mein automatically faster nahi. ArrayBuffer transfer ownership deta hai; sender ka usable buffer state badal sakta hai.\n\n```js\n// main.js, served over HTTP(S)\nconst worker = new Worker('./worker.js');\nworker.onmessage = event => console.log(event.data);\nworker.postMessage([3, 5]);\n// worker.js, a separate file\nself.onmessage = event => self.postMessage(event.data.reduce((a, b) => a + b, 0));\n```",
+    followUp: 'Large ArrayBuffer clone ke bajay transfer kab better hai?',
     tags: ['javascript', 'js-workers'],
     sources: [
       {
@@ -1162,11 +1117,10 @@ export const requestedQuestions = [
     topic: 'javascript',
     noteId: 'js-modules-tooling-debugging',
     level: 'Intermediate',
-    question: 'When would you choose Axios over fetch or Node HTTP clients?',
+    question: 'Axios, fetch ya Node HTTP client kab choose karoge?',
     answer:
-      "Axios provides conveniences such as interceptors, configured instances, response transformation, and status-based rejection by default. Fetch is a standard platform API available in browsers and modern Node; it normally fulfills on HTTP error status, so check response.ok. Node http/https are lower-level streaming primitives, while clients such as Got have their own Node-focused features. Popularity is not evidence that one is universally best.\n\n```js\nasync function loadNotes() {\n  const response = await fetch('/api/notes');\n  if (!response.ok) throw new Error(`HTTP ${response.status}`);\n  return response.json();\n}\n```\n\nChoose using runtime, cancellation, retry policy, bundle cost, and team needs. Neither library makes unsafe retries or authorization correct automatically.",
-    followUp:
-      'How would you centralize authentication/error policy without retrying a non-idempotent request blindly?',
+      "Axios interceptors/configured instances/transforms aur default status-based rejection deta hai. Fetch browsers/modern Node ka standard API; HTTP error par normally fulfill hota hai, response.ok check karo. Node http/https lower-level streams; Got jaisi clients apni Node features deti hain. Runtime, cancellation, retry, bundle/team need se choose karo. Popularity universal best proof nahi; auth/idempotency tumhe design karni hai.\n\n```js\nasync function loadNotes() {\n  const response = await fetch('/api/notes');\n  if (!response.ok) throw new Error(`HTTP ${response.status}`);\n  return response.json();\n}\n```",
+    followUp: 'Auth/error policy centralize karke unsafe blind retries kaise avoid karoge?',
     tags: ['javascript', 'js-axios'],
     sources: [
       {
@@ -1181,12 +1135,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-jsx-props',
     level: 'Foundation',
-    question:
-      'What is React, how does a library differ from a framework, and when does React help over vanilla JavaScript?',
+    question: 'React kya hai; library/framework difference aur vanilla JS ke upar benefit kab?',
     answer:
-      'React is a UI library: components describe output from props/state and React coordinates updates. A framework typically supplies a broader application structure and conventions for routing, data loading, and delivery. React can be used inside such a framework. Its component model helps coordinate complex changing interfaces; a small static page may need little or no React.\n\n```jsx\nfunction Progress({done, total}) {\n  return <p>{done} of {total} lessons</p>;\n}\n```\n\nThis is a React component excerpt. Changing its inputs updates its description; you do not manually locate and rewrite that paragraph. React is not inherently faster than every well-written DOM implementation.',
-    followUp:
-      'What additional choices are still needed to turn this UI library into a production application?',
+      'React UI library hai: props/state se components output describe karte hain, React updates coordinate karta hai. Framework broader routing/data-loading/delivery conventions de sakta hai; React uske andar use ho sakta hai. Complex changing UI mein component model helpful, small static page ko little/no React chahiye ho sakta hai. Example component excerpt hai; React har manual DOM implementation se inherently faster nahi.\n\n```jsx\nfunction Progress({done, total}) {\n  return <p>{done} of {total} lessons</p>;\n}\n```',
+    followUp: 'Production app ke liye UI library ke alawa kaunse decisions chahiye?',
     tags: ['react', 'react-library'],
     sources: [
       {
@@ -1201,11 +1153,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-jsx-props',
     level: 'Foundation',
-    question: 'What is JSX, how does it run, why use className, and what does Babel do?',
+    question: 'JSX kaise run hota hai, className kyun, Babel ka role kya?',
     answer:
-      "JSX is syntax for describing element trees in JavaScript; a build transform converts it to JavaScript calls understood by React's runtime. Browsers do not generally execute raw JSX. Babel is one possible transformation tool, but other compilers can transform JSX too; Babel is not React itself and transpilation is not a universal runtime polyfill. React DOM uses className as its conventional prop for CSS classes.\n\n```jsx\nconst title = 'Closures';\nconst heading = <h2 className=\"lesson-title\">{title}</h2>;\n```\n\nCurly braces contain expressions. React escapes ordinary string content; dangerouslySetInnerHTML is a separate trust-sensitive API. Avoid reducing className's explanation to an absolute claim that modern JavaScript can never use class as a property name.",
-    followUp:
-      'What is the difference between transforming new syntax and providing a missing runtime API?',
+      'JSX element-tree syntax hai; build transform React-runtime-compatible JS calls banata hai. Browser raw JSX generally execute nahi karta. Babel possible transformer hai, React itself nahi; other compilers bhi JSX transform karte hain. Transpilation missing runtime APIs ka universal polyfill nahi. className React DOM ka conventional CSS-class prop hai. Braces expressions; normal strings escape hoti hain, dangerouslySetInnerHTML separate trust boundary hai.\n\n```jsx\nconst title = \'Closures\';\nconst heading = <h2 className="lesson-title">{title}</h2>;\n```',
+    followUp: 'Syntax transformation aur missing runtime API provide karna kaise alag hain?',
     tags: ['react', 'react-jsx-babel'],
     sources: [
       {
@@ -1220,10 +1171,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-jsx-props',
     level: 'Foundation',
-    question: 'How do props differ from state, and what is the children prop?',
+    question: 'Props/state ka difference aur children kya hai?',
     answer:
-      'Props are inputs from a parent; state is data owned by a component whose updates can trigger renders. A child should not mutate received objects to change the parent\'s state. Children is the prop containing nested content, useful for reusable wrappers that should not know every content type.\n\n```jsx\nfunction Panel({title, children}) {\n  return <section><h2>{title}</h2>{children}</section>;\n}\nfunction App() {\n  return <Panel title="Practice"><p>Explain one closure.</p></Panel>;\n}\n```\n\nPanel owns the shell while its caller supplies content. Children can be various React nodes, not necessarily one element or always an array.',
-    followUp: 'When would a named actions prop be clearer than putting all content into children?',
+      'Props parent inputs; state component-owned changing data hai jiske updates render schedule kar sakte hain. Child received object mutate karke parent update na kare. children nested content prop hai, reusable shells ke liye useful. Panel outer structure own karta, caller content supply. Children one element ya array tak limited nahi, various React nodes ho sakte hain. Distinct actions slot clearer contract de sakta hai.\n\n```jsx\nfunction Panel({title, children}) {\n  return <section><h2>{title}</h2>{children}</section>;\n}\nfunction App() {\n  return <Panel title="Practice"><p>Explain one closure.</p></Panel>;\n}\n```',
+    followUp: 'Saara content children ke bajay named actions slot kab clearer hai?',
     tags: ['react', 'react-props-children'],
     sources: [
       {
@@ -1238,11 +1189,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-jsx-props',
     level: 'Foundation',
-    question: 'What are fragments, and what DOM element do they add?',
+    question: 'Fragments kya hain aur kaunsa DOM element add karte hain?',
     answer:
-      "A Fragment groups siblings in a React return value without adding a wrapper DOM element. It avoids extra boxes that might disturb flex/grid or invalidly wrap table/list structures. The short syntax cannot receive a key; use the explicit Fragment form for keyed groups.\n\n```jsx\nimport {Fragment} from 'react';\nfunction Glossary({items}) {\n  return <dl>{items.map(item => <Fragment key={item.id}><dt>{item.term}</dt><dd>{item.meaning}</dd></Fragment>)}</dl>;\n}\n```\n\nThe DOM contains dl, dt, and dd, with no fragment node. A real div is still appropriate when you need a layout box, semantics, or an event/attribute target.",
-    followUp:
-      'Why can replacing a div with a fragment alter a flex layout even when the visible text stays the same?',
+      "Fragment siblings group karta hai bina extra DOM wrapper. Extra div flex/grid layout ya table/list structure badal sakta hai. Short fragment syntax key nahi leti; keyed groups ke liye explicit Fragment use karo. Example DOM dl/dt/dd hai, fragment node nahi. Layout box, semantics ya event/attribute target required ho toh actual element appropriate hai.\n\n```jsx\nimport {Fragment} from 'react';\nfunction Glossary({items}) {\n  return <dl>{items.map(item => <Fragment key={item.id}><dt>{item.term}</dt><dd>{item.meaning}</dd></Fragment>)}</dl>;\n}\n```",
+    followUp: 'div→fragment se text same rehkar flex layout kyun badal sakti hai?',
     tags: ['react', 'react-fragments'],
     sources: [
       {
@@ -1257,12 +1207,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-state-forms',
     level: 'Foundation',
-    question:
-      'What does useState accept and return, and when should a value be state rather than a normal variable?',
+    question: 'useState kya accept/return karta hai; normal variable ke bajay state kab?',
     answer:
-      "UseState accepts an initial value or initializer function and returns a two-item array: the current render's state and a setter. Local variables are recreated during render and changing them does not request a new render. Use state for changing information that affects output; derive cheap values from existing inputs instead of storing redundant copies.\n\n```jsx\nimport {useState} from 'react';\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  const doubled = count * 2;\n  return <button onClick={() => setCount(n => n + 1)}>{count} / {doubled}</button>;\n}\n```\n\nInitializers/updaters should be pure. Use a ref for persistent mutable data whose changes should not themselves request a render.",
-    followUp:
-      'Why does changing the initial-value argument after the first render not automatically reset existing state?',
+      "useState initial value/initializer leta hai aur current-render state plus setter ki two-item array deta hai. Normal locals render par recreate aur mutation se render request nahi hoti. Output-affecting changing data state mein rakho; cheap derived values duplicate store mat karo. Initializer/updater pure hon. Persistent mutable non-render-trigger data ke liye ref; changed initial argument existing state reset nahi karta.\n\n```jsx\nimport {useState} from 'react';\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  const doubled = count * 2;\n  return <button onClick={() => setCount(n => n + 1)}>{count} / {doubled}</button>;\n}\n```",
+    followUp: 'First render ke baad initial argument badalna existing state reset kyun nahi karta?',
     tags: ['react', 'react-usestate'],
     sources: [
       {
@@ -1277,11 +1225,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-state-forms',
     level: 'Intermediate',
-    question: 'How do parent-to-child, child-to-parent, and sibling communication work?',
+    question: 'Parent-child aur sibling communication kaise hoti hai?',
     answer:
-      "Parents pass props down. Children report intent through callbacks passed as props; the parent updates owned state. Siblings can share state lifted to their closest appropriate common ancestor, which then passes each sibling the data/actions it needs.\n\n```jsx\nimport {useState} from 'react';\nfunction Editor({value, onChange}) {\n  return <input aria-label=\"Topic\" value={value} onChange={e => onChange(e.target.value)} />;\n}\nfunction Preview({value}) { return <p>{value}</p>; }\nfunction Workspace() {\n  const [topic, setTopic] = useState('Arrays');\n  return <><Editor value={topic} onChange={setTopic}/><Preview value={topic}/></>;\n}\n```\n\nProp drilling means passing data through layers that do not use it. Composition or context can reduce this, but direct props are often clearest for short paths.",
-    followUp:
-      'How would you avoid lifting a temporary input value to a global store unnecessarily?',
+      "Parent props down bhejta hai; child prop-callback se intent report, parent owned state update karta hai. Siblings closest suitable common ancestor ki lifted state share kar sakte hain. Har sibling ko needed data/actions hi do. Prop drilling unused intermediate layers se passing hai; composition/context reduce kar sakte hain. Short path direct props clear hain; temporary input unnecessarily global mat karo.\n\n```jsx\nimport {useState} from 'react';\nfunction Editor({value, onChange}) {\n  return <input aria-label=\"Topic\" value={value} onChange={e => onChange(e.target.value)} />;\n}\nfunction Preview({value}) { return <p>{value}</p>; }\nfunction Workspace() {\n  const [topic, setTopic] = useState('Arrays');\n  return <><Editor value={topic} onChange={setTopic}/><Preview value={topic}/></>;\n}\n```",
+    followUp: 'Temporary input ko unnecessarily global store mein lift karne se kaise bachoge?',
     tags: ['react', 'react-communication'],
     sources: [
       {
@@ -1296,12 +1243,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-components-rendering',
     level: 'Intermediate',
-    question:
-      "What are DOM, virtual DOM, reconciliation, render, and commit? When is a function component's return evaluated?",
+    question: 'DOM, virtual DOM, reconciliation, render/commit kya; return kab evaluate hota hai?',
     answer:
-      "The browser DOM is the live document. React's element descriptions are often called a virtual DOM; reconciliation compares descriptions using type, position, and keys to decide what work to perform. During render, React calls components and evaluates their return expressions. During commit, it applies the selected changes to the host DOM. Calling a component does not guarantee a DOM mutation or even that that render will commit.\n\n```jsx\nfunction Status({count}) {\n  const label = count > 0 ? 'Started' : 'New';\n  return <p>{label}</p>;\n}\n```\n\nChanging count from 1 to 2 can rerender this component while its displayed label stays Started. Rendering may be repeated, interrupted, or abandoned, so keep it pure.",
-    followUp:
-      'Why is a network write inside the component body unsafe even if a developer observes only one commit?',
+      "DOM live browser document hai. React element descriptions ko virtual DOM bolte hain; reconciliation type/position/keys se work decide karti hai. Render mein functions/returns evaluate; commit mein selected host-DOM changes apply. Component call DOM mutation ya commit guarantee nahi. Example count1→2 par label Started same. Render repeat/interrupt/abandon ho sakta hai, isliye network writes/purity matters.\n\n```jsx\nfunction Status({count}) {\n  const label = count > 0 ? 'Started' : 'New';\n  return <p>{label}</p>;\n}\n```",
+    followUp: 'Sirf one commit dikhe tab bhi component-body network write unsafe kyun hai?',
     tags: ['react', 'react-render-lifecycle'],
     sources: [
       {
@@ -1316,12 +1261,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-components-rendering',
     level: 'Intermediate',
-    question:
-      'When does a function component rerender, and what are its mount/update/unmount phases?',
+    question: 'Function component rerender kab; mount/update/unmount kya?',
     answer:
-      "State updates can schedule renders; parent rendering normally renders children too unless React can skip them; a consumed context change or subscribed external-store change can also trigger work. A prop does not independently mutate the child: it arrives through a parent's new render. Equal-state updates and memoization may allow bailouts. Mount introduces an identity, updates preserve or replace it, and unmount removes it and cleans up owned effects.\n\n```jsx\nimport {useEffect} from 'react';\nfunction Room({id}) {\n  useEffect(() => {\n    console.log('setup', id);\n    return () => console.log('cleanup', id);\n  }, [id]);\n  return <p>Room {id}</p>;\n}\n```\n\nThis logs cleanup for the old committed id before the new setup, plus final cleanup on removal. It is a synchronization example, not an exact replacement for every historical class lifecycle method.",
-    followUp:
-      'Why can development Strict Mode show an extra setup/cleanup sequence without a user-visible unmount?',
+      "Own state, normally parent render, consumed context aur subscribed external store work trigger kar sakte hain. Props parent's new render se aati hain, independently child mutate nahi karti. Equal-state bailout/memoization skip possible. Mount identity create, update preserve/replace, unmount remove/cleanup karta hai. Example old committed id cleanup then new setup; historical every class lifecycle ka exact replacement nahi.\n\n```jsx\nimport {useEffect} from 'react';\nfunction Room({id}) {\n  useEffect(() => {\n    console.log('setup', id);\n    return () => console.log('cleanup', id);\n  }, [id]);\n  return <p>Room {id}</p>;\n}\n```",
+    followUp: 'Dev Strict Mode extra setup/cleanup bina visible unmount kyun dikha sakta hai?',
     tags: ['react', 'react-rerender-triggers'],
     sources: [
       {
@@ -1336,12 +1279,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-effects-custom-hooks',
     level: 'Intermediate',
-    question:
-      'What are Hooks, how do they differ from ordinary functions, and what are their rules?',
+    question: 'Hooks kya hain, ordinary functions se difference aur rules kya?',
     answer:
-      'Hooks let React components and custom hooks use React features such as state and effects. For ordinary hooks such as useState/useEffect, call them at the top level of function components or custom hooks, not in loops, branches, handlers, or ordinary utilities. Stable call order lets React associate hook state with the correct call across renders.\n\n```jsx\nfunction Summary({visible}) {\n  const [count, setCount] = useState(0); // useState imported from React\n  if (!visible) return null;\n  return <button onClick={() => setCount(n => n + 1)}>{count}</button>;\n}\n```\n\nThe hook must occur before the conditional return. The newer use API has documented exceptions permitting conditional/loop calls; do not apply that exception to useState/useEffect.',
-    followUp:
-      'Why is naming an ordinary utility useSomething insufficient to make conditional hook calls inside it safe?',
+      'Hooks React components/custom hooks ko state/effects features dete hain. Ordinary useState/useEffect top-level call karo, loops/branches/handlers/utilities mein nahi. Stable call order React ko state slots associate karne deta hai. Conditional return se pehle hook call ho. Newer use API documented conditional/loop exceptions rakhti hai; useState/useEffect par woh exception apply nahi. Naam alone hook rules safe nahi banata.\n\n```jsx\nfunction Summary({visible}) {\n  const [count, setCount] = useState(0); // useState imported from React\n  if (!visible) return null;\n  return <button onClick={() => setCount(n => n + 1)}>{count}</button>;\n}\n```',
+    followUp: 'Utility ka naam useSomething rakhna conditional hook calls safe kyun nahi banata?',
     tags: ['react', 'react-hook-rules'],
     sources: [
       {
@@ -1356,11 +1297,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-effects-custom-hooks',
     level: 'Intermediate',
-    question: "What are useEffect's two arguments, what can it return, and when does cleanup run?",
+    question: 'useEffect ke two arguments, return aur cleanup timing kya?',
     answer:
-      "The first argument is setup logic for synchronization; it may return a cleanup function. The optional second argument lists reactive dependencies. Omitted dependencies mean after each relevant commit; an empty array describes no reactive dependencies; listed values are compared with Object.is. Cleanup runs before setup for changed dependencies and on unmount. Effects run on the client and should not be used to derive ordinary render data.\n\n```jsx\nuseEffect(() => {\n  const onResize = () => console.log(window.innerWidth);\n  window.addEventListener('resize', onResize);\n  return () => window.removeEventListener('resize', onResize);\n}, []); // useEffect imported; inside a component/custom hook\n```\n\nDo not make the effect callback async: its promise is not cleanup. Start asynchronous work inside it with an explicit cancellation/error policy. Timing relative to paint depends on the trigger; avoid an unconditional after-paint rule.",
-    followUp:
-      'How would a roomId-dependent subscription differ from this dependency-free browser listener?',
+      "First argument synchronization setup hai, optional cleanup return kar sakta hai. Second reactive dependency list: omit toh relevant commits ke baad; [] no reactive deps; listed values Object.is compare. Changed deps par old cleanup/new setup, unmount par cleanup. Effects client par; ordinary derived data ke liye nahi. Callback async mat banao: promise cleanup nahi. Inner async work ka cancellation/error contract define karo; paint timing unconditional nahi.\n\n```jsx\nuseEffect(() => {\n  const onResize = () => console.log(window.innerWidth);\n  window.addEventListener('resize', onResize);\n  return () => window.removeEventListener('resize', onResize);\n}, []); // useEffect imported; inside a component/custom hook\n```",
+    followUp: 'roomId-dependent subscription dependency-free listener se kaise alag hogi?',
     tags: ['react', 'react-effect-contract'],
     sources: [
       {
@@ -1375,11 +1315,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-composition-styling',
     level: 'Foundation',
-    question: 'What are common ways to style React components, and what tradeoffs do they have?',
+    question: 'React styling ke common ways aur tradeoffs kya hain?',
     answer:
-      'Options include ordinary stylesheets via className, CSS Modules for scoped class names, inline style objects for dynamic declarations, utility classes, and CSS-in-JS tools. Their runtime cost, scoping, extraction, and framework requirements vary. React itself does not require one of them.\n\n```jsx\nfunction Meter({percent}) {\n  const bounded = Math.max(0, Math.min(100, percent));\n  return <div className="meter"><span style={{display: \'block\', width: `${bounded}%`}}>Progress</span></div>;\n}\n```\n\nSupply the meter stylesheet in the application. Inline objects use camel-cased properties and cannot directly express stylesheet selectors such as :hover or media queries. Validate dynamic values at their boundary.',
-    followUp:
-      'When would a CSS custom property be cleaner than regenerating many inline declarations?',
+      'Options plain CSS/className, scoped CSS Modules, inline dynamic styles, utility classes, CSS-in-JS hain. Scoping/runtime/extraction/framework costs vary; React ek compulsory method nahi deta. Example ko application meter stylesheet chahiye. Inline keys camelCase; :hover/media selectors directly express nahi hote. Dynamic values validate karo; many dynamic declarations ke liye CSS custom properties simpler ho sakti hain.\n\n```jsx\nfunction Meter({percent}) {\n  const bounded = Math.max(0, Math.min(100, percent));\n  return <div className="meter"><span style={{display: \'block\', width: `${bounded}%`}}>Progress</span></div>;\n}\n```',
+    followUp: 'Many inline declarations regenerate karne se CSS custom property kab cleaner hai?',
     tags: ['react', 'react-styling'],
     sources: [
       {
@@ -1394,10 +1333,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-composition-styling',
     level: 'Intermediate',
-    question: 'What is a higher-order component, and how does it compare with a custom hook?',
+    question: 'HOC kya hai aur custom hook se kaise compare karoge?',
     answer:
-      'A higher-order component is a function that accepts a component and returns another component, usually wrapping rendering behavior or injecting props. A custom hook shares stateful logic without creating a wrapper component. Both should preserve a clear public contract.\n\n```jsx\nfunction withLoading(View) {\n  return function LoadingView({loading, ...props}) {\n    return loading ? <p role="status">Loading…</p> : <View {...props}/>;\n  };\n}\nfunction Lessons({items}) { return <ul>{items.map(x => <li key={x.id}>{x.title}</li>)}</ul>; }\nconst LoadableLessons = withLoading(Lessons);\n```\n\nCreate the wrapper outside another component\'s render so its identity stays stable. This simple wrapper does not promise to forward every ref or static property.',
-    followUp: 'When would composition through children be simpler than introducing this HOC?',
+      'HOC component accept karke wrapper component return karta hai, rendering wrap/props inject kar sakta hai. Custom hook wrapper bina stateful logic share karta hai. Dono ka public contract clear ho. Wrapper other component ke render ke bahar create karo taaki identity stable rahe. Example every ref/static property automatically forward promise nahi karta. Simple structure reuse mein children composition enough ho sakti hai.\n\n```jsx\nfunction withLoading(View) {\n  return function LoadingView({loading, ...props}) {\n    return loading ? <p role="status">Loading…</p> : <View {...props}/>;\n  };\n}\nfunction Lessons({items}) { return <ul>{items.map(x => <li key={x.id}>{x.title}</li>)}</ul>; }\nconst LoadableLessons = withLoading(Lessons);\n```',
+    followUp: 'Is HOC ke bajay children composition kab simpler hai?',
     tags: ['react', 'react-hoc'],
     sources: [
       {
@@ -1412,11 +1351,10 @@ export const requestedQuestions = [
     topic: 'react',
     noteId: 'react-routing-url-state',
     level: 'Intermediate',
-    question: 'What does React Router provide, and how should sibling routes share data?',
+    question: 'React Router kya deta hai; sibling routes data kaise share karein?',
     answer:
-      'React Router maps URLs to UI and coordinates navigation. Use it when different screens need addresses, nested layouts, parameters, or browser history. A router is not a general replacement for shared state: URL parameters suit shareable filters, a layout/context suits shared client state, and a server cache suits remote data.\n\n```jsx\n// Declarative React Router app excerpt\nimport {BrowserRouter, Routes, Route, Link, useParams} from \'react-router-dom\';\nfunction Lesson() { const {id} = useParams(); return <p>Lesson {id}</p>; }\nfunction App() { return <BrowserRouter><Link to="/lessons/42">Open</Link><Routes><Route path="/lessons/:id" element={<Lesson/>}/></Routes></BrowserRouter>; }\n```\n\nDo not add BrowserRouter inside an app already wrapped by one. Navigation state can carry contextual data, but direct visits/new links need an independent way to load essential data.',
-    followUp:
-      'How would a filter encoded in the URL behave differently from an unsaved editor draft during Back navigation?',
+      'Router URLs ko UI se map aur navigation coordinate karta hai: addresses, nested layouts, params/history. General shared-state replacement nahi. Shareable filters URL, shared client state layout/context, remote data server cache mein. Already wrapped app ke andar another BrowserRouter mat add karo. Navigation state contextual data de sakti hai; direct link par essential data independently load hona chahiye.\n\n```jsx\n// Declarative React Router app excerpt\nimport {BrowserRouter, Routes, Route, Link, useParams} from \'react-router-dom\';\nfunction Lesson() { const {id} = useParams(); return <p>Lesson {id}</p>; }\nfunction App() { return <BrowserRouter><Link to="/lessons/42">Open</Link><Routes><Route path="/lessons/:id" element={<Lesson/>}/></Routes></BrowserRouter>; }\n```',
+    followUp: 'Back par URL filter aur unsaved draft ka behavior kaise alag hai?',
     tags: ['react', 'react-router'],
     sources: [
       {
@@ -1431,12 +1369,10 @@ export const requestedQuestions = [
     topic: 'redux',
     noteId: 'react-context-reducer-redux',
     level: 'Intermediate',
-    question:
-      'What are Redux and Flux, and is Redux always better than Context or limited to React?',
+    question: 'Redux/Flux kya hain; Redux always better ya React-only hai?',
     answer:
-      'Flux describes a unidirectional data-flow architecture. Redux provides a store with dispatched actions and reducers computing next state; it can be used without React. Its core ideas are a central state tree per store, updates expressed as actions, and pure reducers. React Context distributes values; Redux adds a state-update model, subscriptions/selectors, middleware, and tooling. Neither is universally better. Keep transient local state local; use a shared store when coordination and tooling justify it. Server-state caches solve a related but different problem. Redux Toolkit is the normal starting point for new Redux code.',
-    followUp:
-      'What concrete requirements would justify Redux for an app already using context and a server-data cache?',
+      'Flux unidirectional data flow hai. Redux store/action/reducer se next state compute karta hai; React ke bina bhi use ho sakta hai. Context value distribute; Redux update model, subscriptions/selectors, middleware/tooling add karta hai. Neither universally better. Temporary state local; coordination/tooling justify kare tab shared store. Server cache related but separate problem solve karti hai. New Redux code ka normal starting point Toolkit hai.',
+    followUp: 'Context/server-cache wali app mein Redux ko kaunsi concrete need justify karegi?',
     tags: ['redux', 'redux-purpose'],
     sources: [
       {
@@ -1451,10 +1387,10 @@ export const requestedQuestions = [
     topic: 'redux',
     noteId: 'react-context-reducer-redux',
     level: 'Intermediate',
-    question: 'What are Redux actions and reducers? Show initial state and a state transition.',
+    question: 'Redux action/reducer kya; initial state aur transition dikhao.',
     answer:
-      "An action describes an event with a type and usually a payload. A reducer receives previous state plus action and returns next state. Initial state handles the undefined input used during initialization. This plain reducer example makes immutable copying explicit.\n\n```js\nconst initialState = {minutes: 0};\nfunction reducer(state = initialState, action) {\n  switch (action.type) {\n    case 'study/added': return {...state, minutes: state.minutes + action.payload};\n    default: return state;\n  }\n}\nconsole.log(reducer(undefined, {type: 'study/added', payload: 5})); // {minutes:5}\n```\n\nRedux Toolkit createSlice lets case reducers use draft-mutation syntax through Immer; that is different from mutating a plain Redux state object.",
-    followUp: 'Why must an unknown action return the existing state rather than undefined?',
+      "Action type aur usually payload se event describe karta hai. Reducer previous state/action lekar next state return karta hai. Initialization ke undefined input par initial state use hoti hai; unknown action existing state return kare. Plain reducer immutable copying dikhata hai. Toolkit createSlice Immer draft mutation syntax allow karta hai; ordinary Redux object mutate karna same cheez nahi.\n\n```js\nconst initialState = {minutes: 0};\nfunction reducer(state = initialState, action) {\n  switch (action.type) {\n    case 'study/added': return {...state, minutes: state.minutes + action.payload};\n    default: return state;\n  }\n}\nconsole.log(reducer(undefined, {type: 'study/added', payload: 5})); // {minutes:5}\n```",
+    followUp: 'Unknown action existing state return kyun kare, undefined kyun nahi?',
     tags: ['redux', 'redux-actions-reducers'],
     sources: [
       {
@@ -1469,11 +1405,10 @@ export const requestedQuestions = [
     topic: 'redux',
     noteId: 'react-context-reducer-redux',
     level: 'Intermediate',
-    question: 'What is the typical React/Redux data flow, and where should side effects go?',
+    question: 'React/Redux data flow aur side effects ka owner kya hai?',
     answer:
-      'An interaction dispatches an action; middleware may inspect/handle it; the reducer computes next state; the store notifies subscribers; selectors read the needed data and React updates relevant UI. Reducers must not fetch, schedule timers, mutate external data, or generate unpredictable values such as fresh timestamps/random IDs. Put these effects in event logic, thunks, listener middleware, or other appropriate effect handlers and carry results in actions. Keep state/actions serializable by default to support debugging and persistence. Draft updates in Toolkit remain subject to reducer purity. Middleware wraps dispatch, not the reducer body.',
-    followUp:
-      'Why should a timestamp be created before dispatch and included in the action if replay must reproduce state?',
+      'Interaction→dispatch→middleware→reducer→store subscribers→selectors→React UI flow hai. Reducers fetch/timers/external mutation/random IDs/timestamps generate na karein. Event logic/thunks/listener middleware effects own karke results action mein bhejein. Replay deterministic chahiye toh timestamp dispatch se pehle action payload mein ho. State/actions default serializable rakho. Toolkit drafts bhi pure reducer rule follow karte hain; middleware dispatch wrap karta hai.',
+    followUp: 'Replay ke liye timestamp dispatch se pehle action mein kyun hona chahiye?',
     tags: ['redux', 'redux-flow'],
     sources: [
       {
@@ -1488,10 +1423,10 @@ export const requestedQuestions = [
     topic: 'redux',
     noteId: 'react-context-reducer-redux',
     level: 'Intermediate',
-    question: 'What methods does a Redux store expose, and when are they useful?',
+    question: 'Redux store methods aur unke uses kya hain?',
     answer:
-      "getState reads the current tree. Dispatch submits an action through the installed dispatch pipeline. Subscribe registers a change listener and returns an unsubscribe function; read getState inside the listener. ReplaceReducer swaps the root reducer, useful for dynamic feature loading or development tooling. The observable interop API also exists; it is not normally needed in UI code.\n\n```js\n// Application excerpt: store was created with configureStore.\nconst unsubscribe = store.subscribe(() => console.log(store.getState()));\nstore.dispatch({type: 'study/added', payload: 5});\nunsubscribe();\n// store.replaceReducer(nextRootReducer) when deliberately changing reducer composition\n```\n\nSubscriptions report store updates, not a diff payload. Never mutate the object returned by getState.",
-    followUp: 'Why must a subscription be removed when the owning integration is destroyed?',
+      "getState current tree read; dispatch action pipeline mein bhejta; subscribe listener register karke unsubscribe return karta hai. Listener ke andar getState se latest state lo; callback diff payload nahi deta. replaceReducer root swap dynamic features/dev tooling mein useful. Observable interop also exists, normal UI mein rarely chahiye. Returned state mutate mat karo; integration destroy par unsubscribe karo.\n\n```js\n// Application excerpt: store was created with configureStore.\nconst unsubscribe = store.subscribe(() => console.log(store.getState()));\nstore.dispatch({type: 'study/added', payload: 5});\nunsubscribe();\n// store.replaceReducer(nextRootReducer) when deliberately changing reducer composition\n```",
+    followUp: 'Integration destroy par subscription remove kyun karein?',
     tags: ['redux', 'redux-store-api'],
     sources: [
       {
@@ -1506,11 +1441,10 @@ export const requestedQuestions = [
     topic: 'redux',
     noteId: 'react-context-reducer-redux',
     level: 'Intermediate',
-    question: 'What does React Redux connect do, and how do modern hooks compare?',
+    question: 'React Redux connect versus modern hooks kaise compare karoge?',
     answer:
-      "Connect is a higher-order function that subscribes a wrapper to the store and maps selected state and dispatch operations into component props. It works with function components too. New code often uses useSelector/useDispatch for a direct hooks interface; existing connect code is not automatically incorrect.\n\n```jsx\nimport {connect} from 'react-redux';\nfunction Total({minutes, add}) { return <button onClick={add}>{minutes}</button>; }\nconst ConnectedTotal = connect(\n  state => ({minutes: state.minutes}),\n  dispatch => ({add: () => dispatch({type:'study/added', payload:5})})\n)(Total);\n```\n\nThis application excerpt needs a Provider supplying a compatible store above it. Select only the data this view needs.",
-    followUp:
-      'How can returning a freshly allocated selector result on every call affect subscription-driven rendering?',
+      "connect HOC wrapper ko store subscribe karke selected state/dispatch props map karta hai. Function components ke saath bhi valid. New code useSelector/useDispatch prefer kar sakta hai; old connect automatically wrong nahi. Example ko compatible store wala Provider ancestor chahiye. Needed data select karo; every selector new object return kare toh comparison/render frequency affect hogi.\n\n```jsx\nimport {connect} from 'react-redux';\nfunction Total({minutes, add}) { return <button onClick={add}>{minutes}</button>; }\nconst ConnectedTotal = connect(\n  state => ({minutes: state.minutes}),\n  dispatch => ({add: () => dispatch({type:'study/added', payload:5})})\n)(Total);\n```",
+    followUp: 'Har selector call fresh object return kare toh rendering kya hogi?',
     tags: ['redux', 'redux-connect'],
     sources: [
       {
@@ -1525,11 +1459,10 @@ export const requestedQuestions = [
     topic: 'redux',
     noteId: 'react-context-reducer-redux',
     level: 'Intermediate',
-    question: 'How can code outside a React component access Redux state safely?',
+    question: 'Component ke bahar Redux state safely kaise access karoge?',
     answer:
-      "Ordinary integration code can use an explicitly supplied store's getState/dispatch; React hooks cannot be called from arbitrary utilities. Dependency injection makes the dependency visible and easier to test.\n\n```js\nfunction makeStudyService(store) {\n  return {\n    snapshot: () => store.getState().minutes,\n    add: minutes => store.dispatch({type:'study/added', payload:minutes})\n  };\n}\n```\n\nAvoid importing one global store into every module, particularly in server rendering where request-specific stores must not share user state. Values read once are snapshots; subscribe only when continuous observation is required and own its cleanup.",
-    followUp:
-      "Why could a module-level singleton store leak one server-rendered user's data into another request?",
+      "Utility/integration ko store explicitly inject karke getState/dispatch use karao; React hooks arbitrary functions mein call nahi ho sakte. Dependency visible/testable rehti hai. SSR mein global imported singleton store requests ka user state leak kar sakta hai. Once-read value snapshot hai; continuous observation chahiye tab subscribe aur cleanup own karo. Request-specific ownership preserve karo.\n\n```js\nfunction makeStudyService(store) {\n  return {\n    snapshot: () => store.getState().minutes,\n    add: minutes => store.dispatch({type:'study/added', payload:minutes})\n  };\n}\n```",
+    followUp: 'SSR mein module singleton store users ka data leak kyun kar sakta hai?',
     tags: ['redux', 'redux-outside'],
     sources: [
       {
@@ -1544,12 +1477,10 @@ export const requestedQuestions = [
     topic: 'redux',
     noteId: 'react-context-reducer-redux',
     level: 'Intermediate',
-    question:
-      'What is Redux middleware? Show an example without putting asynchronous work in a reducer.',
+    question: 'Redux middleware example do; reducer mein async work mat rakho.',
     answer:
-      'Middleware composes around dispatch and can log, transform, delay, or handle actions according to its contract. Calling next passes the action to the next middleware/base dispatch; store.dispatch re-enters the pipeline.\n\n```js\nconst audit = store => next => action => {\n  const before = store.getState().minutes;\n  const result = next(action);\n  const after = store.getState().minutes;\n  console.log({type: action.type, before, after});\n  return result;\n};\n// configureStore({reducer, middleware: getDefault => getDefault().concat(audit)})\n```\n\nThis excerpt assumes a minutes reducer. Preserve dispatch return values and do not log secrets. Thunk middleware handles function actions for asynchronous workflows while reducers remain synchronous and pure.',
-    followUp:
-      'Why can dispatching the same action unconditionally inside middleware create infinite recursion?',
+      'Middleware dispatch ke around compose hokar log/transform/delay/handle karti hai. next next middleware/base dispatch, store.dispatch pipeline dobara enter karta hai. Same action unconditional redispatch recursion bana sakta hai. Example minutes reducer assume karta hai. Dispatch return preserve, secrets log mat karo. Thunk async function actions handle kar sakta hai; reducers sync/pure rehte hain.\n\n```js\nconst audit = store => next => action => {\n  const before = store.getState().minutes;\n  const result = next(action);\n  const after = store.getState().minutes;\n  console.log({type: action.type, before, after});\n  return result;\n};\n// configureStore({reducer, middleware: getDefault => getDefault().concat(audit)})\n```',
+    followUp: 'Same action middleware mein unconditional dispatch se infinite recursion kyun?',
     tags: ['redux', 'redux-middleware'],
     sources: [
       {
@@ -1564,11 +1495,10 @@ export const requestedQuestions = [
     topic: 'spring',
     noteId: 'java-spring-rest',
     level: 'Intermediate',
-    question:
-      'How do constructor injection, component scanning, and explicit Bean definitions differ?',
+    question: 'Constructor DI, component scan aur Bean definition ka difference?',
     answer:
-      'Dependency injection supplies collaborators instead of a class constructing them secretly. Component scanning discovers configured stereotype-annotated classes; explicit @Bean methods construct objects through configuration. Constructor injection makes required dependencies visible and supports immutable fields.\n\n```java\n// Spring application excerpt; interfaces/configuration supplied by the app.\n@Service\nclass LessonService {\n  private final LessonRepository repository;\n  LessonService(LessonRepository repository) { this.repository = repository; }\n}\n```\n\nIf multiple beans implement the same dependency, select deliberately with a qualifier or primary designation. A singleton bean is shared; injection does not automatically make its mutable state thread-safe.',
-    followUp: 'How would you test LessonService without starting an entire Spring context?',
+      'DI collaborator supply karti hai, hidden construction nahi. Component scan configured stereotype classes discover; Bean method explicit config se object banata hai. Constructor required deps visible aur final fields possible banata hai. Same dependency ki multiple beans hon toh qualifier/primary deliberately choose. Singleton shared hai; injection unrelated mutable fields thread-safe nahi banati. Manual constructor se service unit-test ho sakti hai.\n\n```java\n// Spring application excerpt; interfaces/configuration supplied by the app.\n@Service\nclass LessonService {\n  private final LessonRepository repository;\n  LessonService(LessonRepository repository) { this.repository = repository; }\n}\n```',
+    followUp: 'Whole Spring context bina LessonService test kaise karoge?',
     tags: ['spring', 'spring-di'],
     sources: [
       {
@@ -1583,11 +1513,10 @@ export const requestedQuestions = [
     topic: 'spring',
     noteId: 'java-spring-rest',
     level: 'Intermediate',
-    question:
-      'What does Spring Boot auto-configuration do, and how do you debug an unexpected bean?',
+    question: 'Boot auto-configuration kya karti hai; unexpected bean debug kaise?',
     answer:
-      'Boot contributes configuration based on conditions such as classpath contents, properties, and existing beans. It supplies defaults rather than inferring your entire business design. Inspect the condition evaluation report, active profiles, property sources, and bean definitions before adding conflicting overrides. A custom bean can cause a matching auto-configuration path to back off where its conditions specify that behavior. Keep a small reproduction and inspect the actual active configuration rather than assuming every starter always installs the same objects.',
-    followUp: 'How can a test profile accidentally hide a production configuration problem?',
+      'Boot classpath, properties aur existing beans ki conditions se defaults contribute karta hai; entire business design infer nahi karta. Unexpected bean mein condition report, profiles, property sources, definitions inspect karo. Custom bean specified conditions par auto-config backoff kara sakti hai. Small reproduction aur actual effective config dekho; every starter always same objects install karta hai assume mat karo.',
+    followUp: 'Test profile production config issue hide kaise kar sakti hai?',
     tags: ['spring', 'spring-autoconfig'],
     sources: [
       {
@@ -1602,10 +1531,10 @@ export const requestedQuestions = [
     topic: 'spring',
     noteId: 'java-spring-rest',
     level: 'Intermediate',
-    question: 'How would you validate a REST request and return consistent errors in Spring?',
+    question: 'Spring REST input validate aur consistent errors kaise doge?',
     answer:
-      'Validate boundary DTOs, enforce business invariants in the service, and retain database constraints for concurrent correctness. @Valid can trigger Jakarta Bean Validation for a request body; controller advice can translate failures into a stable error contract without stack traces or secrets.\n\n```java\n// Spring MVC excerpt with validation dependency and imports.\nrecord AddMinutes(@jakarta.validation.constraints.Positive int minutes) {}\n@PostMapping("/minutes")\nvoid add(@jakarta.validation.Valid @RequestBody AddMinutes request) {\n  service.add(request.minutes());\n}\n```\n\nTest negative/zero input, malformed JSON, and a business conflict separately. Decide documented status codes and field errors; returning HTTP 200 with an error string makes clients harder to reason about.',
-    followUp: 'Which checks belong in the database even when this DTO validation passes?',
+      'Boundary DTO validate, service business invariant aur DB concurrent constraints enforce kare. Valid request body par Jakarta validation trigger kar sakta hai; advice stable safe errors map kare. Negative/zero input, malformed JSON aur business conflict separately test karo. Status/field-error contract define; HTTP200 error-string client reasoning mushkil banata hai. DTO validation uniqueness/authorization ka replacement nahi.\n\n```java\n// Spring MVC excerpt with validation dependency and imports.\nrecord AddMinutes(@jakarta.validation.constraints.Positive int minutes) {}\n@PostMapping("/minutes")\nvoid add(@jakarta.validation.Valid @RequestBody AddMinutes request) {\n  service.add(request.minutes());\n}\n```',
+    followUp: 'DTO validation pass ke baad bhi DB mein kaunse checks chahiye?',
     tags: ['spring', 'spring-validation'],
     sources: [
       {
@@ -1620,10 +1549,10 @@ export const requestedQuestions = [
     topic: 'spring',
     noteId: 'java-jpa-transactions',
     level: 'Advanced',
-    question: "What is JPA's N+1 query problem, and how do you fix it without breaking pagination?",
+    question: 'JPA N+1 kya hai; pagination tode bina fix kaise?',
     answer:
-      'Loading N parent rows and lazily touching each relation can issue one initial query plus N additional queries. Inspect actual SQL/query counts on representative requests. Depending on the access pattern, consider a projection, entity graph, fetch join, or batching. Fetch-joining a to-many collection can multiply result rows and complicate pagination; a two-step ID page followed by controlled fetching may fit better. Do not set every relation eager as a blanket fix: that can overfetch and still produce inefficient query plans.',
-    followUp: 'What test would prove both correct page size and bounded query count?',
+      'N parents load karke lazy relations touch karne par 1+N queries aa sakti hain. Actual SQL/count inspect karo. Access pattern se projection, entity graph, fetch join ya batching choose karo. To-many fetch join rows multiply karke pagination complicate karti hai; IDs page then controlled fetch useful ho sakta hai. Every relation eager blanket fix overfetch/inefficient plans la sakta hai.',
+    followUp: 'Correct page size aur bounded query count ka test kya hoga?',
     tags: ['spring', 'spring-nplusone'],
     sources: [
       {
@@ -1638,11 +1567,10 @@ export const requestedQuestions = [
     topic: 'spring',
     noteId: 'java-jpa-transactions',
     level: 'Advanced',
-    question: 'How do optimistic and pessimistic locking differ for competing updates?',
+    question: 'Competing updates mein optimistic/pessimistic locks ka difference?',
     answer:
-      'Optimistic locking checks a version when writing; an outdated version causes a conflict instead of silently losing the other update. Pessimistic locking obtains database locks during the transaction, trading earlier serialization for waiting/deadlock risk.\n\n```java\n// JPA entity field excerpt\n@jakarta.persistence.Version\nprivate long version;\n```\n\nChoose according to contention and the invariant. Retry a conflicting operation only when safe, after re-reading and re-evaluating the business rule. A version field does not protect unrelated external effects or replace every database constraint.',
-    followUp:
-      'Why is automatically retrying a payment-related method after an optimistic conflict dangerous?',
+      'Optimistic version check stale write ko conflict deta hai, silent lost update nahi. Pessimistic DB locks earlier serialize karte hain, wait/deadlock cost ke saath. Contention/invariant se choose karo. Conflict retry safe ho tab fresh read/business reevaluation ke baad karo. Version field external payment effects ya every DB constraint protect nahi karta. Payment method blind retry duplicate charge la sakti hai.\n\n```java\n// JPA entity field excerpt\n@jakarta.persistence.Version\nprivate long version;\n```',
+    followUp: 'Optimistic conflict par payment method blindly retry risky kyun?',
     tags: ['spring', 'spring-locking'],
     sources: [
       {
@@ -1657,11 +1585,10 @@ export const requestedQuestions = [
     topic: 'spring',
     noteId: 'java-maven-testing',
     level: 'Intermediate',
-    question:
-      'When should you use a unit test, MVC slice, repository test, or full Spring integration test?',
+    question: 'Unit, MVC slice, repository ya full integration test kab?',
     answer:
-      'A unit test isolates ordinary business logic with supplied collaborators. An MVC slice checks mapping, validation, serialization, and controller behavior. A repository test checks persistence contracts; use a representative database when dialect/locking matters. A full-context integration test checks wiring and boundaries together at greater cost. Match scope to risk instead of replacing all tests with the largest context. For rollback and concurrent inventory behavior, use a real transaction/database boundary and concurrent callers, not mocks that always return success.',
-    followUp: 'How could an in-memory test database miss a production SQL or isolation bug?',
+      'Unit ordinary domain logic isolate; MVC slice mapping/validation/serialization/controller; repository persistence contracts; full integration combined wiring/boundaries at more cost check karta hai. SQL dialect/locks ke liye representative DB lo. Scope risk se choose karo, sabko largest context mat banao. Rollback/concurrent inventory real transactions aur concurrent callers se test karo, always-success mocks se nahi.',
+    followUp: 'In-memory DB production SQL/isolation bug kaise miss karegi?',
     tags: ['spring', 'spring-test-scope'],
     sources: [
       {
@@ -1676,12 +1603,10 @@ export const requestedQuestions = [
     topic: 'java',
     noteId: 'java-collections-generics',
     level: 'Intermediate',
-    question:
-      'How do Comparable and Comparator differ, and how do you make ordering deterministic?',
+    question: 'Comparable/Comparator difference aur deterministic ordering kaise?',
     answer:
-      "Comparable defines a type's natural order through compareTo; Comparator supplies an external ordering strategy, allowing multiple orders. Add a tie-breaker when deterministic results matter.\n\n```java\n// Java 17+ excerpt\nrecord Lesson(String id, int minutes) {}\nComparator<Lesson> order = Comparator.comparingInt(Lesson::minutes)\n    .thenComparing(Lesson::id);\n```\n\nImport java.util.Comparator. Avoid returning a.minutes - b.minutes because subtraction can overflow. Sorted sets/maps use ordering equality to identify keys, so inconsistency with equals requires careful documentation and can surprise callers.",
-    followUp:
-      'What happens if a TreeSet comparator ignores IDs for two lessons with equal minutes?',
+      'Comparable compareTo se natural order; Comparator external alternate orders deta hai. Deterministic order ke liye tie-breaker add karo. java.util.Comparator import karo. Minutes subtract compare overflow kar sakta hai; comparison helpers lo. Sorted Set/Map ordering-equality se keys identify karte hain; same minutes IDs ignore karein toh distinct lessons collapse ho sakte hain. Equals consistency deliberate rakho.\n\n```java\n// Java 17+ excerpt\nrecord Lesson(String id, int minutes) {}\nComparator<Lesson> order = Comparator.comparingInt(Lesson::minutes)\n    .thenComparing(Lesson::id);\n```',
+    followUp: 'Same minutes par IDs ignore karne wala TreeSet comparator kya karega?',
     tags: ['java', 'java-comparable'],
     sources: [
       {
@@ -1696,11 +1621,10 @@ export const requestedQuestions = [
     topic: 'java',
     noteId: 'java-methods-arrays',
     level: 'Foundation',
-    question: 'Why are Strings immutable, and when should StringBuilder be used?',
+    question: 'String immutable kyun; StringBuilder kab use karein?',
     answer:
-      'String operations produce values without changing the original String object, allowing safe sharing and stable value-based use as keys. A variable referring to a String can still be reassigned. StringBuilder is mutable and useful when repeatedly assembling text within one thread.\n\n```java\nString name = "Java";\nString upper = name.toUpperCase(java.util.Locale.ROOT);\nStringBuilder summary = new StringBuilder();\nfor (int i = 1; i <= 3; i++) summary.append(i).append(\' \');\nSystem.out.println(name); // Java\n```\n\nUse equals for content comparison. Avoid claiming every concatenation is slow: compilers/runtime optimize many simple expressions.',
-    followUp:
-      'Why is a shared mutable StringBuilder unsuitable for unsynchronized concurrent request processing?',
+      'String operations original String mutate nahi karti; safe sharing/stable value keys useful hain. Reference variable reassign ho sakti hai. Repeated text assembly one thread mein mutable StringBuilder useful hai. equals content compare karta hai. Har concatenation slow blanket claim mat karo; compiler/runtime simple cases optimize karte hain. Shared unsynchronized builder concurrent request text mix/corrupt kar sakta hai.\n\n```java\nString name = "Java";\nString upper = name.toUpperCase(java.util.Locale.ROOT);\nStringBuilder summary = new StringBuilder();\nfor (int i = 1; i <= 3; i++) summary.append(i).append(\' \');\nSystem.out.println(name); // Java\n```',
+    followUp: 'Shared StringBuilder concurrent requests mein unsynchronized kyun unsafe?',
     tags: ['java', 'java-string-immutability'],
     sources: [
       {
@@ -1715,11 +1639,10 @@ export const requestedQuestions = [
     topic: 'dsa',
     noteId: 'dsa-patterns',
     level: 'Intermediate',
-    question:
-      'How do you merge overlapping intervals, and what must the boundary contract specify?',
+    question: 'Overlapping intervals merge kaise; boundary contract kya hai?',
     answer:
-      'Sort intervals by start, then maintain the last merged interval. If the next interval overlaps under your chosen endpoint semantics, extend the end; otherwise append it. For closed intervals, [1,3] and [3,5] overlap; half-open intervals need a deliberate touching policy.\n\n```js\nfunction mergeClosed(intervals) {\n  const sorted = intervals.map(x => [...x]).sort((a,b) => a[0]-b[0]);\n  const result = [];\n  for (const [start,end] of sorted) {\n    const last = result.at(-1);\n    if (last && start <= last[1]) last[1] = Math.max(last[1], end);\n    else result.push([start,end]);\n  }\n  return result;\n}\n```\n\nAssume finite endpoints with start <= end. This avoids input mutation and takes O(n log n) time and O(n) storage. Test empty input, nesting, touching, and disjoint ranges.',
-    followUp: 'What changes for half-open ranges where touching intervals should remain separate?',
+      'Start se intervals sort; last merged interval maintain karo. Chosen endpoint rule ke hisaab se overlap ho toh end extend, otherwise append. Closed [1,3]/[3,5] overlap; half-open touching policy deliberately define karo. Finite start<=end assume. Example input mutate nahi karta; O(n log n) time/O(n) storage. Empty, nested, touching aur disjoint cases test karo.\n\n```js\nfunction mergeClosed(intervals) {\n  const sorted = intervals.map(x => [...x]).sort((a,b) => a[0]-b[0]);\n  const result = [];\n  for (const [start,end] of sorted) {\n    const last = result.at(-1);\n    if (last && start <= last[1]) last[1] = Math.max(last[1], end);\n    else result.push([start,end]);\n  }\n  return result;\n}\n```',
+    followUp: 'Half-open touching ranges separate hon toh kya badlega?',
     tags: ['dsa', 'dsa-intervals'],
     sources: [
       {
@@ -1734,10 +1657,10 @@ export const requestedQuestions = [
     topic: 'dsa',
     noteId: 'dsa-hashing',
     level: 'Intermediate',
-    question: 'How do prefix frequencies count target-sum subarrays with negative numbers?',
+    question: 'Prefix frequencies negative values ke target-sum subarrays kaise count karti hain?',
     answer:
-      'Let prefix be the sum through the current position. An earlier prefix equal to prefix-target identifies a subarray with the target sum. Store frequencies because the same prefix can occur multiple times.\n\n```js\nfunction countTarget(nums, target) {\n  const seen = new Map([[0,1]]);\n  let prefix = 0, count = 0;\n  for (const n of nums) {\n    prefix += n;\n    count += seen.get(prefix-target) ?? 0;\n    seen.set(prefix, (seen.get(prefix) ?? 0)+1);\n  }\n  return count;\n}\nconsole.log(countTarget([1,-1,1], 1)); // 3\n```\n\nExpected O(n) time/O(n) space under normal hash assumptions; Number arithmetic must stay within the intended exact range. Count matches before adding the current prefix to avoid counting empty subarrays when target is zero.',
-    followUp: 'Why is the initial frequency of prefix zero set to one?',
+      'Current prefix s aur earlier prefix s-target ka difference target subarray deta hai. Same prefix multiple baar ho sakta hai, frequencies rakho. Initial zero frequency one empty-prefix start represent karti hai. Matches current prefix insert se pehle count karo, warna zero-target empty subarray count ho sakta hai. Normal hashing par expected O(n) time/space; Number exact-range limits respect karo.\n\n```js\nfunction countTarget(nums, target) {\n  const seen = new Map([[0,1]]);\n  let prefix = 0, count = 0;\n  for (const n of nums) {\n    prefix += n;\n    count += seen.get(prefix-target) ?? 0;\n    seen.set(prefix, (seen.get(prefix) ?? 0)+1);\n  }\n  return count;\n}\nconsole.log(countTarget([1,-1,1], 1)); // 3\n```',
+    followUp: 'Initial prefix zero ki count one kyun?',
     tags: ['dsa', 'dsa-prefix-count'],
     sources: [
       {
@@ -1752,11 +1675,10 @@ export const requestedQuestions = [
     topic: 'dsa',
     noteId: 'dsa-trees',
     level: 'Intermediate',
-    question: 'When would you choose a trie for prefix search rather than a hash set?',
+    question: 'Prefix search mein hash set ke bajay trie kab?',
     answer:
-      'A trie shares paths for common prefixes and can locate a prefix by walking its characters before enumerating descendants. A hash set is excellent for exact membership but does not directly organize keys by prefix. For keys of length L, trie insertion/lookup visits O(L) character steps, with potentially large node/map overhead. Define Unicode normalization, case handling, and whether enumeration is bounded. For a tiny static word set, a sorted array plus binary search may be simpler and more compact.',
-    followUp:
-      'How would you return only the top five completions without traversing every descendant?',
+      'Trie common-prefix paths share karta hai; characters walk karke prefix locate, phir descendants enumerate. Hash set exact membership mein good, prefix organization direct nahi deta. Length L par O(L) character steps, lekin node/map memory overhead large ho sakta hai. Unicode normalization/case/bounded suggestions define karo. Tiny static set mein sorted array+binary search simpler/compact ho sakta hai.',
+    followUp: 'Har descendant traverse bina top five completions kaise?',
     tags: ['dsa', 'dsa-trie'],
     sources: [
       {
@@ -1771,11 +1693,10 @@ export const requestedQuestions = [
     topic: 'dsa',
     noteId: 'dsa-linear-structures',
     level: 'Advanced',
-    question: 'Design an LRU cache with expected O(1) get and put. What invariants matter?',
+    question: 'Expected O(1) LRU get/put design karo; invariants kya?',
     answer:
-      'Combine a map from key to linked-list node with a doubly linked list ordered from most to least recently used. Get moves a hit to the front; put updates/moves an existing node or inserts a new one; overflow evicts the tail from both structures. Every map entry must reference exactly one live node and list size must equal map size. Sentinel nodes simplify empty/single-item cases. Space is O(capacity). Test capacity zero, replacement without growth, repeated hits, and eviction after a read.',
-    followUp:
-      'Why does a singly linked list make arbitrary hit promotion harder without extra predecessor bookkeeping?',
+      'Map key→node aur doubly linked list MRU→LRU order combine karo. Get hit front move; put existing update/move ya new insert; overflow tail dono structures se remove. Every map entry exactly one live node, map/list sizes equal. Sentinels empty/single cases simplify. O(capacity) space; zero capacity, update-without-growth, repeated hit aur read-after-eviction order test karo.',
+    followUp: 'Singly linked list mein arbitrary hit promote karna harder kyun?',
     tags: ['dsa', 'dsa-lru'],
     sources: [
       {
@@ -1790,12 +1711,10 @@ export const requestedQuestions = [
     topic: 'dsa',
     noteId: 'dsa-graphs',
     level: 'Advanced',
-    question:
-      "Why can Dijkstra's priority queue contain stale entries, and how should they be handled?",
+    question: 'Dijkstra heap stale entries kyun rakhta hai; handle kaise?',
     answer:
-      "A simpler implementation pushes a new distance entry whenever a path improves instead of decreasing an existing heap key. When popping, skip an entry whose distance differs from the current best distance. Finalize only an appropriate minimal-distance entry, under nonnegative edge weights. For A→B=10, A→C=1, C→B=1, B's entry 10 becomes stale after discovering distance 2. Account for duplicate heap entries in memory and runtime bounds; do not claim the heap always contains at most one entry per vertex.",
-    followUp:
-      'How do parallel edges and zero weights affect your tests, and why are negative edges a separate algorithm choice?',
+      'Lazy Dijkstra improve par new distance entry push karta hai, old heap key decrease nahi. Pop distance current best se different ho toh stale skip. Nonnegative weights mein appropriate minimal current entry finalize karo. A→B10, A→C1, C→B1 par B10 stale, best2. Duplicate entries time/memory mein count karo; heap mein max one per vertex claim mat karo.',
+    followUp: 'Parallel edges/zero weights test aur negatives ka separate algorithm kyun?',
     tags: ['dsa', 'dsa-dijkstra-heap'],
     sources: [
       {
@@ -1810,11 +1729,10 @@ export const requestedQuestions = [
     topic: 'dsa',
     noteId: 'dsa-dynamic-programming',
     level: 'Advanced',
-    question: 'How can a DP return the chosen solution as well as its optimal value?',
+    question: 'DP optimal value ke saath chosen solution kaise return kare?',
     answer:
-      'Keep predecessor/choice information or enough of the full table to trace decisions backward. For 0/1 knapsack, compare the chosen state with skipping the current item; when taking it, decrease capacity and move to the previous item row. A compressed array may retain the value while losing the history needed for straightforward reconstruction. Define tie-breaking if several solutions are optimal. Verify the reconstructed items obey the once-only rule and that their summed value equals the reported optimum.',
-    followUp:
-      'When could recomputation or divide-and-conquer reconstruction trade extra time for less memory?',
+      'Predecessor/choice ya enough full-table history rakho. 0/1 knapsack backward trace mein skip compare; take par capacity ghatao aur previous item row par jao. Compressed array optimum value bachakar simple reconstruction history lose kar sakti hai. Multiple optima ka tie-break define karo. Chosen items once-only, capacity valid aur summed value reported optimum ke equal verify karo.',
+    followUp: 'Recompute/divide-and-conquer reconstruction time-memory tradeoff kab useful hai?',
     tags: ['dsa', 'dsa-dp-reconstruction'],
     sources: [
       {
@@ -1829,11 +1747,10 @@ export const requestedQuestions = [
     topic: 'system-design',
     noteId: 'design-requirements-capacity',
     level: 'Intermediate',
-    question: 'Design a URL shortener with collision handling and abuse controls.',
+    question: 'Collisions aur abuse controls ke saath URL shortener design karo.',
     answer:
-      'Clarify creation/read rates, alias length, custom aliases, expiry, and ownership. Store a unique alias mapped to a validated destination. Generated collisions must be resolved using an atomic uniqueness check and a bounded retry strategy; custom-alias conflicts need a clear response. Cache popular redirects with an explicit expiry/invalidation policy. Choose redirect semantics according to whether destinations can change and should be cached. Limit creation abuse and validate schemes rather than blindly accepting arbitrary destinations. Estimate storage and hot-key traffic before proposing sharding.',
-    followUp:
-      'How would changing a previously cached destination interact with permanent redirects?',
+      'Creation/read rates, alias length/custom aliases/expiry/ownership clarify karo. Unique alias→validated destination store karo. Generated collision atomic uniqueness plus bounded retry; custom conflict clear response de. Popular redirects ka cache expiry/invalidation define. Destination change/caching ke hisaab se redirect semantics choose karo. Schemes/abuse limits validate; sharding se pehle storage/hot-key traffic estimate karo.',
+    followUp: 'Cached destination change permanent redirects ko kaise affect karega?',
     tags: ['system-design', 'design-url-shortener'],
     sources: [
       {
@@ -1848,12 +1765,10 @@ export const requestedQuestions = [
     topic: 'system-design',
     noteId: 'design-java-api-data',
     level: 'Advanced',
-    question:
-      'Design resumable uploads for large files without routing every byte through the application server.',
+    question: 'Large resumable upload design karo bina every byte app server se bheje.',
     answer:
-      "Authenticate the request and create an upload session with size/type limits. Use object-storage multipart upload with short-lived scoped authorization where appropriate. Persist part/session identity so retries and reconnects can resume; verify completion/integrity before publishing a file reference. Keep incomplete objects private and expire abandoned sessions. Scan or process untrusted content before making it available according to the product's requirements. Signed URLs are capabilities, so constrain expiry and access rather than assuming obscurity protects them.",
-    followUp:
-      'How do you handle a successful storage completion when the API response to the client is lost?',
+      'Authenticated upload session size/type limits ke saath banao. Suitable object-storage multipart upload, short-lived scoped authorization lo. Part/session IDs persist taaki retries/reconnect resume karein. Publish se pehle completion/integrity verify; incomplete private, abandoned expire. Untrusted content product policy se scan/process karo. Signed URLs capabilities hain; expiry/access constrain karo. Lost completion response par stable session se status recover karo.',
+    followUp: 'Storage complete, API response lost ho toh recovery kaise?',
     tags: ['system-design', 'design-upload'],
     sources: [
       {
@@ -1868,11 +1783,10 @@ export const requestedQuestions = [
     topic: 'system-design',
     noteId: 'design-messaging-reliability',
     level: 'Advanced',
-    question: 'Design email/push notifications with preferences, retries, and deduplication.',
+    question: 'Preferences/retries/dedup wali email/push service design karo.',
     answer:
-      'Separate the business event from channel delivery. Persist an event or outbox record, resolve current recipient/channel preferences, enqueue bounded work, and track attempt identities/outcomes. Respect provider limits and retry transient failures with budgets/backoff. Deduplicate replayed events without preventing legitimately distinct notifications. Define user-visible status carefully: provider acceptance is not proof that a human read the message. Avoid logging sensitive message bodies and allow channel-specific unsubscribe rules.',
-    followUp:
-      'What should happen when a user opts out while a notification is waiting in the queue?',
+      'Business event aur channel delivery separate karo. Durable event/outbox, current recipient/channel preferences, bounded queue aur attempt identities/outcomes rakho. Provider limits aur transient retry budgets/backoff respect. Replay dedup distinct legitimate notifications block na kare. Provider acceptance human-read proof nahi. Sensitive body logs avoid; unsubscribe policy channel-specific ho. Queued work ke waqt preferences revoke ho toh policy recheck karo.',
+    followUp: 'Queued notification ke dauran user opt-out kare toh?',
     tags: ['system-design', 'design-notifications'],
     sources: [
       {
@@ -1887,11 +1801,11 @@ export const requestedQuestions = [
     topic: 'system-design',
     noteId: 'design-security-operations',
     level: 'Advanced',
-    question: 'How do RPO and RTO shape backup and disaster recovery design?',
+    question: 'RPO/RTO backup/disaster recovery ko kaise shape karte hain?',
     answer:
-      'Recovery Point Objective describes tolerable data loss measured in time; Recovery Time Objective describes the targeted time to restore service. Choose backup frequency, replication, storage isolation, and recovery procedures to meet those goals under specific failure scenarios. A replica is not a substitute for backups because corruption or deletion can replicate. Exercise restores, verify data/application compatibility, and measure actual recovery rather than relying on successful backup job logs. Include credentials, dependencies, and DNS/client reconnection in the drill.',
+      'RPO tolerable data loss time mein, RTO service restore target duration hai. Backup frequency/replication/isolation/procedure failure scenarios ke according choose. Replica backup substitute nahi: corruption/delete replicate ho sakta hai. Restore drills, data/app compatibility aur actual recovery time measure karo; successful backup log enough nahi. Credentials, dependencies, DNS/client reconnect include karo. Partition tradeoff target ke saath explicit ho.',
     followUp:
-      'Why can a zero-data-loss goal conflict with continuing writes during a network partition?',
+      'Partition mein continuing writes aur zero-data-loss goal conflict kyun kar sakte hain?',
     tags: ['system-design', 'design-disaster-recovery'],
     sources: [
       {
@@ -1906,11 +1820,10 @@ export const requestedQuestions = [
     topic: 'system-design',
     noteId: 'design-scaling-caching',
     level: 'Advanced',
-    question: 'How can a delayed cache fill resurrect stale data after invalidation?',
+    question: 'Invalidation ke baad delayed cache fill stale data wapas kaise la sakti hai?',
     answer:
-      'A reader misses the cache and reads version 1. A writer commits version 2 and invalidates the key. The old reader then fills the cache with version 1, resurrecting stale data. TTL bounds staleness only if that bound satisfies the product. Stronger approaches may use versioned keys, generation checks, or coordinated update/invalidation protocols; each requires careful race analysis. Draw the interleaving and define the freshness contract before claiming a deletion fixes all cache races.',
-    followUp:
-      'How would you prevent an older version from replacing a newer value without introducing a global lock?',
+      'Reader cache miss par v1 read karta hai. Writer v2 commit/invalidate; old reader baad mein v1 cache fill karke stale data resurrect karta hai. TTL tab enough jab freshness bound acceptable ho. Versioned keys, generation check ya coordinated protocol stronger ho sakte hain; each race analyze karo. Interleaving draw karke proof do, sirf delete-all-races fix claim nahi.',
+    followUp: 'Global lock bina older version ko newer replace karne se kaise rokoge?',
     tags: ['system-design', 'design-cache-version'],
     sources: [
       {
@@ -1925,10 +1838,10 @@ export const requestedQuestions = [
     topic: 'system-design',
     noteId: 'design-security-operations',
     level: 'Advanced',
-    question: 'How do you isolate tenants across databases, caches, queues, and observability?',
+    question: 'DB/cache/queue/observability mein tenants isolate kaise karoge?',
     answer:
-      "Derive tenant identity from trusted authentication context and carry it through authorization, queries, cache identity, and background jobs. Use database constraints or access policies where feasible as defense in depth; client-provided tenant IDs are not authority. Partition resource budgets to contain noisy neighbors, and keep logs/traces from exposing another tenant's data. Test cross-tenant reads, writes, cache hits, exported files, and replayed jobs. Stronger physical isolation changes cost and operations, so choose according to requirements.",
-    followUp: 'Why is adding tenantId to every URL insufficient to establish tenant isolation?',
+      'Trusted auth se tenant identity derive; queries, authorization, cache aur jobs tak carry karo. DB constraints/access policies defense-in-depth de sakti hain; client tenantId authority nahi. Noisy-neighbor budgets partition aur telemetry data isolated rakho. Cross-tenant reads/writes/cache/export/replayed-job cases test karo. Strong physical isolation operational/cost tradeoff hai; requirement se choose karo, URL mein field alone enough nahi.',
+    followUp: 'Har URL ka tenantId isolation establish kyun nahi karta?',
     tags: ['system-design', 'design-multitenancy'],
     sources: [
       {
@@ -1943,11 +1856,10 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'Recreate the four flex-direction layouts in the first supplied image.',
+    question: 'First supplied image ke four flex-direction layouts recreate karo.',
     answer:
-      'In the supplied image, top-left is column; top-right is column-reverse; middle-left is row; bottom-left is row-reverse, assuming the ordinary left-to-right writing direction. Keep DOM order 1, 2, 3, 4 and change only flex-direction. Reverse values change visual progression, not DOM reading/tab order.\n\n```html\n<div class="demo column"><span>1</span><span>2</span><span>3</span><span>4</span></div>\n<style>\n.demo { display:flex; gap:6px; padding:4px; background:#12bdc1; width:280px; }\n.demo span { display:grid; place-items:center; flex:0 0 36px; width:36px; height:36px; background:#eee; }\n.column { flex-direction:column; }\n.column-reverse { flex-direction:column-reverse; }\n.row { flex-direction:row; }\n.row-reverse { flex-direction:row-reverse; }\n</style>\n```\n\nDuplicate the div and replace its direction class for each case. The reverse row packs 4,3,2,1 toward the right; the reversed column shows 4 at the top and 1 at the bottom with this content-sized container.',
-    followUp:
-      'How do RTL text direction and vertical writing modes change the physical interpretation of row and column?',
+      'Supplied image mein normal LTR assume: top-left column, top-right column-reverse, middle-left row, bottom-left row-reverse. DOM1,2,3,4 same; sirf flex-direction badlo. Reverse visual progression badalta hai, reading/tab order nahi. Example div duplicate karke direction classes replace karo. Reverse-row 4,3,2,1 right ki taraf; content-sized reverse-column mein top4/bottom1. RTL/writing-mode physical directions change kar sakte hain.\n\n```html\n<div class="demo column"><span>1</span><span>2</span><span>3</span><span>4</span></div>\n<style>\n.demo { display:flex; gap:6px; padding:4px; background:#12bdc1; width:280px; }\n.demo span { display:grid; place-items:center; flex:0 0 36px; width:36px; height:36px; background:#eee; }\n.column { flex-direction:column; }\n.column-reverse { flex-direction:column-reverse; }\n.row { flex-direction:row; }\n.row-reverse { flex-direction:row-reverse; }\n</style>\n```',
+    followUp: 'RTL/vertical writing modes row/column ki physical direction kaise badalte hain?',
     tags: ['css', 'flexbox', 'image-exercise'],
     sources: [
       {
@@ -1966,11 +1878,11 @@ export const requestedQuestions = [
     topic: 'css',
     noteId: 'javascript-browser-foundations',
     level: 'Intermediate',
-    question: 'Recreate the five wrapped-row align-content layouts in the second supplied image.',
+    question: 'Second supplied image ke five wrapped align-content layouts recreate karo.',
     answer:
-      'Reading left-to-right across the top row, the values are flex-start, center, and flex-end. The bottom row shows space-around on the left and space-between in the middle. Align-content distributes multiple flex lines along the cross axis; it needs wrapping and extra cross-axis space. It is different from aligning items inside one line.\n\n```html\n<div class="demo"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>\n<style>\n.demo { display:flex; flex-wrap:wrap; align-content:flex-start; gap:6px; box-sizing:border-box; width:220px; height:140px; padding:4px; background:#12bdc1; }\n.demo span { flex:0 0 28px; height:28px; display:grid; place-items:center; background:#eee; }\n</style>\n```\n\nSix items fit the first line and two wrap. Duplicate the container with each align-content value. Space-between puts the outer lines at opposite edges; space-around leaves half as much distributed space at each outer edge as between lines, before accounting for the fixed gap. The dimensions are original implementation choices matching the visual relationships, not measured source pixels.',
+      'Top row LTR: flex-start,center,flex-end. Bottom-left space-around; bottom-middle space-between. align-content multiple flex lines ko cross axis par distribute karta hai; wrap aur extra space chahiye. Single line ke items ka alignment alag concern. Example first line6, next2 items; each alignment duplicate karo. Space-between outer lines edges; space-around outer distributed space inner ka half, fixed gap separately. Dimensions original implementation choices hain, measured image pixels nahi.\n\n```html\n<div class="demo"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>\n<style>\n.demo { display:flex; flex-wrap:wrap; align-content:flex-start; gap:6px; box-sizing:border-box; width:220px; height:140px; padding:4px; background:#12bdc1; }\n.demo span { flex:0 0 28px; height:28px; display:grid; place-items:center; background:#eee; }\n</style>\n```',
     followUp:
-      'Why would align-content appear to do nothing with a single unwrapped row or a content-sized container height?',
+      'Single unwrapped row/content-height container mein align-content no-op kyun lagta hai?',
     tags: ['css', 'flexbox', 'image-exercise'],
     sources: [
       {
@@ -1987,31 +1899,31 @@ export const requestedQuestions = [
 
 export const answerAdditions = {
   'iq-js-01':
-    '\n\nHoisting describes observable declaration behavior, not physical movement of source code. A var binding is initialized to undefined before execution reaches its declaration; let/const remain uninitialized until evaluated. Function declarations and function expressions also differ.\n\n```js\nconsole.log(score); // undefined\nvar score = 2;\n{ const lesson = {done:false}; lesson.done = true; }\n// Reading a let/const binding before its initialization throws ReferenceError.\n```',
+    '\n\nHoisting declarations ke observable behavior ka naam hai; source code physically upar nahi jaata. var binding declaration execute hone se pehle undefined se initialize hoti hai. let/const initialization tak uninitialized rehte hain; us waqt read karoge toh ReferenceError aayega. Function declaration aur function expression ka behavior bhi alag hai.\n\n```js\nconsole.log(score); // undefined\nvar score = 2;\n{ const lesson = {done:false}; lesson.done = true; }\n// Reading a let/const binding before its initialization throws ReferenceError.\n```',
   'iq-js-02':
-    '\n\n```js\nfunction makeTracker() {\n  let minutes = 0;\n  return amount => (minutes += amount);\n}\nconst a = makeTracker(), b = makeTracker();\nconsole.log(a(5), a(3), b(2)); // 5, 8, 2\n```\n\nEach factory call owns a separate binding. The first closure remembers the updated total; it does not hold a frozen copy of zero.',
+    '\n\nHar factory call ki apni binding hai. Pehla closure updated total yaad rakhta hai; zero ki frozen copy nahi. Isliye a ki do calls ek total badhati hain, jabki b ka counter alag shuru hota hai.\n\n```js\nfunction makeTracker() {\n  let minutes = 0;\n  return amount => (minutes += amount);\n}\nconst a = makeTracker(), b = makeTracker();\nconsole.log(a(5), a(3), b(2)); // 5, 8, 2\n```',
   'iq-js-03':
-    '\n\n```js\nconst lesson = {\n  minutes: 12,\n  callbacks() {\n    return {normal: function () { return this.minutes; }, arrow: () => this.minutes};\n  }\n};\nconst callbacks = lesson.callbacks();\nconsole.log(callbacks.normal.call({minutes:99})); // 99\nconsole.log(callbacks.arrow.call({minutes:99})); // 12\n```\n\nArrows also have no own arguments binding and cannot be called with new. Regular functions are appropriate when the receiver should come from the invocation.',
+    '\n\nArrow ka apna arguments binding nahi hota aur use new ke saath call nahi kar sakte. Jab this invocation ke receiver se aana chahiye, regular function use karo. Example mein call normal ka this badalta hai, arrow ka lexical this nahi.\n\n```js\nconst lesson = {\n  minutes: 12,\n  callbacks() {\n    return {normal: function () { return this.minutes; }, arrow: () => this.minutes};\n  }\n};\nconst callbacks = lesson.callbacks();\nconsole.log(callbacks.normal.call({minutes:99})); // 99\nconsole.log(callbacks.arrow.call({minutes:99})); // 12\n```',
   'iq-js-13':
-    '\n\n```js\nfunction* lessonIds() { yield 10; yield 20; return 30; }\nconst ids = lessonIds();\nconsole.log(ids.next()); // {value:10, done:false}\nconsole.log(ids.next()); // {value:20, done:false}\nconsole.log(ids.next()); // {value:30, done:true}\n```\n\nCalling the generator creates an iterator without running its body immediately. next resumes it up to yield/return. A for...of loop consumes yielded values but not the final return value. This is not automatically parallel or asynchronous execution.',
+    '\n\nGenerator call se iterator banta hai; body turant nahi chalti. next() usse agle yield ya return tak resume karta hai. for...of yielded values leta hai, final return value nahi. Generator apne-aap parallel ya asynchronous execution nahi banata.\n\n```js\nfunction* lessonIds() { yield 10; yield 20; return 30; }\nconst ids = lessonIds();\nconsole.log(ids.next()); // {value:10, done:false}\nconsole.log(ids.next()); // {value:20, done:false}\nconsole.log(ids.next()); // {value:30, done:true}\n```',
   'iq-js-16':
-    '\n\n```js\nconst addMinutes = base => extra => base + extra;\nconst afterMorning = addMinutes(25);\nconsole.log(afterMorning(10)); // 35\n```\n\nThe two calls capture base and then supply extra. Currying organizes arguments into single-argument steps; partial application fixes some arguments, and is not necessarily the same transformation.',
+    '\n\nPehli call base capture karti hai; doosri extra deti hai. Currying multiple arguments ko single-argument steps mein arrange karti hai. Partial application kuch arguments pehle fix karti hai; dono terms ko har situation mein same mat bolo.\n\n```js\nconst addMinutes = base => extra => base + extra;\nconst afterMorning = addMinutes(25);\nconsole.log(afterMorning(10)); // 35\n```',
   'iq-lab-03':
-    "\n\nZ-index controls stack level within stacking contexts; it is useful for overlays, menus, sticky headers, and layered cards. It is not one global priority number. Positioned elements with non-auto z-index, opacity below 1, transforms, and other features can create contexts; flex/grid items can use z-index without being positioned.\n\n```css\n.panel { position: relative; z-index: 1; }\n.menu { position: absolute; z-index: 100; }\n.neighbor { position: relative; z-index: 2; }\n```\n\nA menu inside panel cannot simply outbid neighbor from its ancestor's lower context. Use a documented layer scale, inspect ancestors, and use an appropriate portal/top-layer primitive when warranted rather than escalating arbitrary numbers.",
+    '\n\nz-index apne stacking context ke andar stack level control karta hai: menus, overlays aur sticky headers mein kaam aata hai. Positioned element ka non-auto z-index, opacity below 1 ya transform naya context bana sakta hai. Flex/grid items bina position ke bhi z-index use kar sakte hain. Neeche panel ka context neighbor se neeche hai, isliye andar menu ka 100 neighbor ke 2 ko globally beat nahi karta. Ancestors inspect karo, consistent layer scale rakho aur zaroorat par suitable portal ya top-layer primitive chuno.\n\n```css\n.panel { position: relative; z-index: 1; }\n.menu { position: absolute; z-index: 100; }\n.neighbor { position: relative; z-index: 2; }\n```',
   'iq-react-05':
-    '\n\n```jsx\nimport {useRef, useState} from \'react\';\nfunction Controlled() {\n  const [name, setName] = useState(\'\');\n  return <input aria-label="Controlled name" value={name} onChange={e => setName(e.target.value)}/>;\n}\nfunction Uncontrolled() {\n  const input = useRef(null);\n  return <form onSubmit={e => {e.preventDefault(); console.log(input.current.value);}}>\n    <input aria-label="Uncontrolled name" ref={input} defaultValue="Learner"/><button>Read</button>\n  </form>;\n}\n```\n\nA controlled value must be kept consistent with its change handler. defaultValue sets the initial uncontrolled value; subsequent typing belongs to the DOM. Avoid switching one input between modes.',
+    '\n\nControlled input ki value aur change handler consistent rakho. Uncontrolled input mein defaultValue sirf initial value deta hai; baad ki typing DOM manage karta hai. Ek hi input ko uncontrolled se controlled ya ulta switch mat karo. Example mein pehla state se read hota hai, doosra submit par ref se.\n\n```jsx\nimport {useRef, useState} from \'react\';\nfunction Controlled() {\n  const [name, setName] = useState(\'\');\n  return <input aria-label="Controlled name" value={name} onChange={e => setName(e.target.value)}/>;\n}\nfunction Uncontrolled() {\n  const input = useRef(null);\n  return <form onSubmit={e => {e.preventDefault(); console.log(input.current.value);}}>\n    <input aria-label="Uncontrolled name" ref={input} defaultValue="Learner"/><button>Read</button>\n  </form>;\n}\n```',
   'iq-react-06':
-    "\n\n```jsx\nimport {memo, useCallback, useMemo, useState} from 'react';\nconst Results = memo(function Results({items, onChoose}) {\n  return <ul>{items.map(x => <li key={x.id}><button onClick={() => onChoose(x.id)}>{x.title}</button></li>)}</ul>;\n});\nfunction Search({items, query}) {\n  const [selected, setSelected] = useState(null);\n  const visible = useMemo(() => items.filter(x => x.title.includes(query)), [items, query]);\n  const choose = useCallback(id => setSelected(id), []);\n  return <><Results items={visible} onChoose={choose}/><p>{selected}</p></>;\n}\n```\n\nUseMemo caches a calculated result; useCallback caches a function identity; memo can skip parent-driven component rendering when props compare equal. Stable identity alone is not correctness. Measure the relevant workload; state/context updates and unstable inputs can still cause work. Compiler-enabled builds may reduce the need for manual memoization.",
+    "\n\nuseMemo calculated result cache karta hai; useCallback function identity cache karta hai; memo equal props par parent ki wajah se hone wala render skip kar sakta hai. Stable identity correctness ka substitute nahi. Relevant workload measure karo: state/context updates aur unstable inputs ab bhi kaam karwa sakte hain. Compiler-enabled build mein manual memoization ki zaroorat kam ho sakti hai.\n\n```jsx\nimport {memo, useCallback, useMemo, useState} from 'react';\nconst Results = memo(function Results({items, onChoose}) {\n  return <ul>{items.map(x => <li key={x.id}><button onClick={() => onChoose(x.id)}>{x.title}</button></li>)}</ul>;\n});\nfunction Search({items, query}) {\n  const [selected, setSelected] = useState(null);\n  const visible = useMemo(() => items.filter(x => x.title.includes(query)), [items, query]);\n  const choose = useCallback(id => setSelected(id), []);\n  return <><Results items={visible} onChoose={choose}/><p>{selected}</p></>;\n}\n```",
   'iq-react-07':
-    "\n\n```jsx\nimport {createContext, useContext, useState} from 'react';\nconst ThemeContext = createContext('light');\nfunction Label() { return <p>{useContext(ThemeContext)}</p>; }\nfunction App() {\n  const [theme, setTheme] = useState('light');\n  return <ThemeContext.Provider value={theme}><button onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}>Toggle</button><Label/></ThemeContext.Provider>;\n}\n```\n\nConsumers read the nearest provider. Context distributes the value and reacts when it changes; it does not prescribe reducers, middleware, or server-cache policy. Composition can often remove prop drilling before introducing another shared-state mechanism.",
+    "\n\nConsumer nearest matching provider ki value padhta hai. Context value distribute karta hai aur change par consumers update karta hai; reducer, middleware ya server-cache policy define nahi karta. Shared-state mechanism add karne se pehle dekho composition se prop drilling kam ho sakti hai kya.\n\n```jsx\nimport {createContext, useContext, useState} from 'react';\nconst ThemeContext = createContext('light');\nfunction Label() { return <p>{useContext(ThemeContext)}</p>; }\nfunction App() {\n  const [theme, setTheme] = useState('light');\n  return <ThemeContext.Provider value={theme}><button onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}>Toggle</button><Label/></ThemeContext.Provider>;\n}\n```",
   'iq-react-11':
-    "\n\nUse a boundary around a recoverable region so a failed render can show fallback UI. For function-component applications, a maintained boundary wrapper or the framework's route-error facility can avoid writing a class in feature code. Ordinary event-handler failures and unrelated async callbacks need their own handling; boundaries do not catch every promise rejection. Error-boundary behavior remains relevant even in a hooks-first codebase. Define reset/retry behavior and log useful diagnostic context without exposing private data.",
+    '\n\nRecoverable UI region ke around error boundary rakho, taaki render fail ho toh fallback dikhe. Function-component app mein maintained boundary wrapper ya framework ka route-error feature use kar sakte ho. Ordinary event-handler errors aur unrelated async callbacks ke liye alag handling chahiye; boundary har promise rejection nahi pakadti. Reset/retry behavior define karo aur private data expose kiye bina useful diagnostics log karo.',
   'iq-react-13':
-    "\n\n```jsx\nimport {useEffect, useState} from 'react';\nfunction useOnline() {\n  const [online, setOnline] = useState(() => typeof navigator === 'undefined' ? true : navigator.onLine);\n  useEffect(() => {\n    const sync = () => setOnline(navigator.onLine);\n    sync();\n    window.addEventListener('online', sync); window.addEventListener('offline', sync);\n    return () => {window.removeEventListener('online', sync); window.removeEventListener('offline', sync);};\n  }, []);\n  return online;\n}\n```\n\nThis client-oriented hook shares behavior, not one global state cell. navigator.onLine is only a connectivity hint, not proof that your API is reachable; server-rendered hydration needs a deliberately consistent initial snapshot.",
+    "\n\nYeh client hook behavior share karta hai, ek global state cell nahi. Har useOnline call ki apni state/effect hoti hai. navigator.onLine sirf connectivity hint hai, API reachable hone ka proof nahi. Server rendering mein initial snapshot aur hydration ko deliberately consistent rakhna padta hai.\n\n```jsx\nimport {useEffect, useState} from 'react';\nfunction useOnline() {\n  const [online, setOnline] = useState(() => typeof navigator === 'undefined' ? true : navigator.onLine);\n  useEffect(() => {\n    const sync = () => setOnline(navigator.onLine);\n    sync();\n    window.addEventListener('online', sync); window.addEventListener('offline', sync);\n    return () => {window.removeEventListener('online', sync); window.removeEventListener('offline', sync);};\n  }, []);\n  return online;\n}\n```",
   'iq-mongo-14':
-    '\n\nAdditional failure check: TTL deletion is asynchronous, so an expired document can remain present after its logical expiry. Use the expiry timestamp in the authorization/query contract to reject expired sessions immediately; TTL is cleanup. Test the boundary while the expired document still exists. Define clock handling and renewal rules explicitly. Treat storage cleanup, authentication validity, and token expiry as related but separate concerns rather than making correctness depend on the background deletion schedule.',
+    '\n\nFailure check: TTL deletion asynchronous hai; logical expiry ke baad bhi document kuch time present ho sakta hai. Expired session ko turant reject karne ke liye authorization/query contract mein expiry timestamp check karo. TTL cleanup ke liye hai. Expired document delete hone se pehle boundary test karo; clock aur renewal rules define karo. Storage cleanup aur authentication validity ko alag responsibilities samjho.',
   'iq-lab-14':
-    '\n\nAdditional failure check: Streaming limits buffering, but only if producers respect backpressure. A pipeline coordinates transfer and error propagation/cleanup across streams. On client disconnect, stop the database cursor and owned downstream work instead of continuing a full export nobody can receive. If headers have already been sent, a later error cannot be converted into an ordinary JSON error response without corrupting the format. Define partial-download behavior and make retries explicit. Observe memory, cursor lifetime, and cancellation under slow or disconnected consumers.',
+    '\n\nFailure check: streaming tabhi buffering limit karti hai jab producer backpressure maane. Pipeline transfer, errors aur cleanup coordinate karti hai. Client disconnect ho toh owned database cursor aur downstream work stop karo. Headers send hone ke baad normal JSON error bhejne se download format corrupt ho sakta hai. Partial download aur retry behavior define karo; slow/disconnected client ke saath memory, cursor lifetime aur cancellation observe karo.',
 };
 
 export const reusedChecklist = {

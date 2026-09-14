@@ -5,18 +5,18 @@ track: dsa
 order: 11
 level: Advanced
 minutes: 40
-summary: BFS, DFS, cycle detection, topological order, and weighted path choices ko connect karo.
+summary: Shortest-path algorithm edge weights ki conditions par depend karta hai; unweighted graph mein BFS minimum edges deta hai.
 tags: graph, bfs, dfs, dijkstra, topological-sort
 visual: bfs
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Graph relationships model karta hai: vertices entities hain aur edges connections. Directed edge one-way relation hai; undirected edge dono directions permit karta hai. Edge weights distance, cost ya time ho sakte hain. Self-loops, duplicate edges aur disconnected vertices valid hain ya nahi, problem contract mein decide karo.
 
 Adjacency list sparse graph ke liye O(V + E) storage deti hai; undirected edge usually twice store hota hai. Adjacency matrix O(V²) storage leti hai, lekin direct edge check O(1) hota hai. Traversal complexity representation ke saath state karo.
 
-> **Core takeaway:** Shortest-path algorithms depend on edge assumptions; BFS minimizes edge count in an unweighted graph.
+> **Core takeaway:** Shortest-path algorithm edge weights ki conditions par depend karta hai; unweighted graph mein BFS minimum edges deta hai.
 
 ## BFS with path reconstruction
 
@@ -218,7 +218,7 @@ Ek important limitation: Union-Find **deletion support nahi karta**. Edge hatane
 | DAG, even with negative edges | Topological-order relaxation |
 | Negative edges in general graph | Bellman–Ford; detect reachable negative cycles |
 
-Dijkstra settles lowest tentative distance; negative weights break its standard greedy proof. Binary-heap Dijkstra with decrease-key has O((V + E) log V) bound. Lazy duplicate entries can use O(E) heap space and O((V + E) log E) time; skip stale entries when popped. Simple sparse-graph presentations often simplify this to O((V + E) log V), but say what implementation you mean.
+Dijkstra lowest tentative distance settle karta hai; negative weights uski standard greedy proof tod deti hain. Binary heap plus decrease-key ka bound O((V+E) log V) hai. Lazy duplicate entries O(E) heap space aur O((V+E) log E) time le sakti hain; popped stale entry skip karo. Simple sparse-graph explanations ise aksar O((V+E) log V) bolti hain, lekin apni implementation clear batao.
 
 ```js
 // Lazy-deletion Dijkstra. `heap` ek min-heap hai jo { node, dist } ko dist se order karta hai.
@@ -277,7 +277,7 @@ Idea yeh hai ki deque hamesha at most do distinct distance values hold karta hai
 
 Yeh general lesson deta hai: **structure ki extra information se algorithm sasta ho jaata hai.** Unweighted → plain BFS. Weights sirf {0,1} → deque BFS. Nonnegative weights → Dijkstra. DAG → topological relaxation (negative weights bhi chalte hain). General negative weights → Bellman–Ford. Har step par ek assumption dhili hoti hai aur cost badhta hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** BFS mein visited dequeue ke waqt mark karna aur enqueue ke waqt karna equivalent hai, bas thoda extra kaam hai. **Why it breaks:** Dequeue par marking se ek vertex apne saare `d` in-neighbors dwara alag-alag enqueue ho sakta hai, isse pehle ki woh process ho. Queue size O(E) tak badh jaata hai, duplicate processing hoti hai, aur `parent` map overwrite hone se reconstructed path bhi galat (longer) ho sakta hai — yaani performance aur correctness dono. **Fix:** Vertex ko `parent`/`visited` mein tabhi likho jab usse queue mein push karo, aur us check ke bina kabhi push mat karo.
 - **Wrong assumption:** Directed cycle detect karne ke liye "visited node par pahunch gaye" kaafi hai. **Why it breaks:** `A→B`, `A→C`, `B→C` mein `C` do raston se reachable hai lekin koi cycle nahi hai — two-color logic ise cycle bata dega. Cycle sirf tab hai jab tum **current recursion path par abhi active** (gray) node par pahuncho. **Fix:** Teen states rakho — unvisited, in-progress (gray), finished (black). Gray par pahunchna hi back edge aur cycle hai; black par pahunchna sirf ek alternate path hai. Undirected graph mein rule alag hai: wahan parent edge explicitly exclude karo.
@@ -296,7 +296,7 @@ BFS social graphs mein "degrees of separation" aur friend-of-friend recommendati
 
 ## Practice and answer
 
-**Prompt:** Edges A→B cost 10, A→C cost 1, C→B cost 1. Is one-edge BFS path A→B cheapest?
+**Prompt:** A→B cost 10, A→C cost 1, C→B cost 1 hain. Kya one-edge BFS path A→B cheapest hai?
 
 **Answer:** Nahi. Minimum edges aur minimum weight different goals hain; A→C→B costs 2. Nonnegative weighted shortest path ke liye Dijkstra use kar sakte ho.
 
@@ -326,29 +326,29 @@ BFS social graphs mein "degrees of separation" aur friend-of-friend recommendati
 
 ## Research notes: Negative edges in a DAG
 
-A DAG can have negative edges but cannot have negative cycles. Process vertices in topological order and relax each outgoing edge once for O(V + E) work.
+DAG mein negative edges ho sakti hain, negative cycles nahi. Topological order mein vertices process karke har outgoing edge ek baar relax karo; work O(V+E) hai.
 
-Original graph: A→B costs 4, A→C costs 2, B→C costs -5. Order A, B, C produces distance(C) = -1. Finalizing C just because it initially appears cheapest would miss B's improvement.
+Example: A→B=4, A→C=2, B→C=-5. Order A,B,C se distance(C)=-1 milta hai. C ko initial cheap distance 2 dekhkar finalize kar dete toh B ke through better path miss hota.
 
-**Interview check:** Does every negative edge force Bellman-Ford?
+**Interview check:** Kya har negative edge ke liye Bellman–Ford zaroori hai?
 
-**Answer:** No. A DAG supports topological relaxation with negative weights. For a general graph choose an algorithm supporting negative edges and explicitly address reachable negative cycles.
+**Answer:** Nahi. DAG mein negative weights ke saath topological relaxation chalti hai. General graph mein negative edges support karne wala algorithm choose karo aur reachable negative cycles ka behavior explicitly handle karo.
 
-**Practice:** Add C→A and explain which assumption disappears.
+**Practice:** C→A edge add karo. Kaunsi assumption ab valid nahi rahi, explain karo.
 
-[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/6277a1f06100c26a7ff21031af6757b5_MIT6_006F11_lec16.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/6277a1f06100c26a7ff21031af6757b5_MIT6_006F11_lec16.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Edges are A→B cost 10, A→C cost 1, and C→B cost 1. Compare the fewest-edge path with the cheapest path.
+**Apply:** A→B cost 10, A→C cost 1, C→B cost 1 hain. Minimum-edge path aur minimum-cost path compare karo.
 
-> **Hint:** One edge can cost more than two.
+> **Hint:** Ek edge ki cost do edges ki total cost se badi ho sakti hai.
 
-**Answer guide — compare after attempting:** BFS by edges chooses A→B, but the cheapest route is A→C→B with cost 2. Dijkstra applies here because weights are nonnegative. State unreachable-node behavior and test zero-weight edges; ordinary BFS does not minimize arbitrary weighted cost.
+**Answer guide — compare after attempting:** BFS edge count se A→B choose karega. Cheapest path A→C→B hai, total 2. Weights nonnegative hain isliye Dijkstra applicable hai. Unreachable nodes ka result define karo aur zero-weight edges test karo. Ordinary BFS arbitrary weighted cost minimize nahi karta.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

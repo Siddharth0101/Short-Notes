@@ -5,16 +5,16 @@ track: javascript
 order: 15
 level: Advanced
 minutes: 30
-summary: Tasks, microtasks, promise composition, cancellation aur request races ko trace karo.
+summary: Promise reactions current synchronous work ke baad chalti hain; zero-delay timer bhi scheduled work hai.
 tags: async, promises, event-loop, fetch, cancellation
 visual: event-loop
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Browser mein current JavaScript job run-to-completion hota hai. Async I/O host environment handle karta hai; completion ke baad callback continuation schedule hoti hai. Promise fulfilled hone se `.then` callback current synchronous line ke beech execute nahi hota. `await` surrounding async function ko suspend karta hai, poore browser ko block nahi karta.
 
-> **Core takeaway:** Promise reactions run after the current synchronous work; a zero-delay timer is still scheduled work.
+> **Core takeaway:** Promise reactions current synchronous work ke baad chalti hain; zero-delay timer bhi scheduled work hai.
 
 ## Trace the order
 
@@ -113,7 +113,7 @@ Async/await sequential logic ko synchronous jaisa readable banata hai, especiall
 
 Promise constructor ka executor synchronous run hota hai. Async executor Promise constructor mein mat use karo; errors ka propagation confusing hota hai. `forEach(async ...)` completion wait nahi karta. Sequential work ke liye `for...of` plus await, independent work ke liye map plus Promise.all use karo. Search UI mein old request late finish karke new result overwrite kar sakti hai; abort ya request-generation guard lagao.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `async` function hamesha kaam parallel/background mein karti hai. **Why it breaks:** `async` sirf return-value-ko-Promise-mein-wrap-karna aur `await` par suspend hone ki guarantee deta hai; pehle `await` tak function body poori tarah synchronous chalti hai, current call stack ko block karte hue. **Fix:** Samjho ki `async`/`await` concurrency create nahi karta, sirf asynchronous continuation ko sequential-jaisa likhne deta hai.
 - **Wrong assumption:** `try/catch` ek async function ke andar har error catch kar lega, including unrelated timer callback ka error. **Why it breaks:** `setTimeout` callback apne aap mein ek separate call stack/task hai; uske andar thrown error us try/catch ke bahar hai aur uncaught exception ban jaata hai. **Fix:** Timer-based operation ko khud Promise mein wrap karo (jaisa `fetch` karta hai) taaki reject sahi jagah propagate ho.
@@ -125,24 +125,24 @@ Real app mein retry-with-backoff pattern payment APIs aur flaky third-party inte
 
 Search box banao with debounce, abort aur loading/error/empty states. Slow first request aur fast second request simulate karo. Verify karo ki latest query ka result hi visible rahe.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Promise parallel thread hai?** Nahi. Promise future outcome ka object hai; underlying operation execution model decide karta hai.
 
 **Q. Await loop ko fast banata hai?** Nahi. Har iteration await kare to work sequential hota hai. Concurrency explicitly design karni padti hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Predict a script that logs A, schedules a zero-delay timer logging B, queues `Promise.resolve().then(() => console.log('C'))`, then logs D.
+**Apply:** Script A log karti hai, zero-delay timer B schedule karti hai, `Promise.resolve().then(() => console.log('C'))` queue karti hai, phir D log karti hai. Order batao.
 
-> **Hint:** Finish the current script before draining its promise reactions.
+> **Hint:** Current script finish karo, phir promise reactions drain karo.
 
-**Answer guide — compare after attempting:** The order is A, D, C, B in this ordinary single-script scenario. The timer delay does not make it interrupt synchronous code. Explain the queue boundary instead of memorizing letters; adding more asynchronous sources requires a fresh trace.
+**Answer guide — compare after attempting:** Is ordinary single-script case mein A, D, C, B milega. Timer delay zero hone se synchronous code interrupt nahi hota. Letters ratne ke bajay queue boundary samjhao; nayi async sources add hon toh trace dobara banao.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN using promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) composition explain karta hai. [MDN using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) HTTP errors aur cancellation explain karta hai.

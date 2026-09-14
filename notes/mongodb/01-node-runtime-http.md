@@ -5,16 +5,16 @@ track: mongodb
 order: 1
 level: Foundation
 minutes: 27
-summary: Node aur web-server foundations se Mongo-backed application ka request flow samjho.
+summary: Event loop multiple waits coordinate kar sakta hai; synchronous CPU calculation phir bhi usse block karti hai.
 tags: node, http, npm, streams, event-loop, modules
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Node JavaScript ko browser ke outside run karta hai. V8 JavaScript execute karta hai; Node APIs operating system aur libuv ke through I/O coordinate karti hain. Main JavaScript thread par long CPU work sab requests ke callbacks delay kar sakta hai. Async I/O ka matlab har operation ke liye naya JavaScript thread create hona nahi hai. Kuch APIs OS networking use karti hain; kuch work libuv thread pool mein jaata hai.
 
-> **Core takeaway:** The event loop can coordinate many waits, but synchronous CPU work still blocks it.
+> **Core takeaway:** Event loop multiple waits coordinate kar sakta hai; synchronous CPU calculation phir bhi usse block karti hai.
 
 ## A minimal HTTP server
 
@@ -100,7 +100,7 @@ Yahan teen streams chained hain: readable source, transform (gzip) aur writable 
 
 **Real production API mein yeh kaise dikhta hai:** CSV/report export endpoint jo database se lakhs rows fetch karke client ko stream karta hai, usse `res` (jo khud ek writable stream hai) ko directly pipe karna chahiye instead of building a giant array in memory aur ek saath `res.json()` call karna. Slow client ya slow network automatically upstream database cursor ko bhi throttle kar dega jab tak pipeline correctly wired ho.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `fs.readFileSync`/other sync APIs request handler ke andar "thoda sa" use karna safe hai kyunki file chhoti hai. **Why it breaks:** Sync call event loop ko block karti hai; us duration mein koi bhi doosri request (health check bhi) process nahi hoti. Production traffic ke under yeh latency spikes/timeouts ka common root cause hai. **Fix:** Async variant (`fs.promises.readFile`) use karo, ya startup-time config ke liye hi sync version reserve karo jab abhi tak koi request serve nahi ho rahi.
 - **Wrong assumption:** ESM aur CommonJS ko same file mein freely mix kar sakte hain bina soche. **Why it breaks:** `require()` ESM-only package ko load nahi kar sakta, aur top-level `await` sirf ESM mein valid hai; mismatch confusing `ERR_REQUIRE_ESM` jaisi errors deta hai. **Fix:** Package ka `"type"` field aur target Node version check karke consistently ek module system choose karo; dynamic `import()` interop escape hatch hai jab zaroorat pade.
@@ -110,7 +110,7 @@ Yahan teen streams chained hain: readable source, transform (gzip) aur writable 
 
 Health endpoint ke saath text-file download add karo using a stream. Large file aur disconnected client cases test karo. Synchronous expensive loop add karke concurrent health latency compare karo, phir loop remove karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Node single-threaded hai?** JavaScript execution usually one main thread par hoti hai, lekin runtime OS services, thread pool aur optional workers use karta hai. Blanket “sab single-threaded” inaccurate hai.
 
@@ -118,7 +118,7 @@ Health endpoint ke saath text-file download add karo using a stream. Large file 
 
 ## Research notes: Backpressure is a producer contract
 
-When a writable returns false from write(), stop producing until it can accept more work. Continuing turns the buffer into an accidental queue. An error-aware pipeline coordinates cooperating streams.
+Writable.write() false de toh producer pause kare jab tak destination ready na ho. Continue karoge toh buffer accidental queue banega. Error-aware pipeline cooperating streams coordinate karti hai.
 
 ```js
 import { pipeline } from 'node:stream/promises';
@@ -126,28 +126,28 @@ import { createReadStream, createWriteStream } from 'node:fs';
 await pipeline(createReadStream('input.txt'), createWriteStream('copy.txt'));
 ```
 
-The input must exist and the output is owned by this exercise. Streaming the final stage cannot undo an earlier stage loading the whole dataset.
+Input file exist honi chahiye; output is exercise ka owned file hai. Earlier stage ne poora dataset load kar liya toh final stage stream karne se woh memory cost undo nahi hoti.
 
-**Interview check:** Does backpressure cap the total number of simultaneous exports?
+**Interview check:** Backpressure total simultaneous exports ki count cap karta hai?
 
-**Answer:** No. It regulates flow within cooperating pipelines. The service separately needs admission limits across pipelines and cleanup on cancellation and errors.
+**Answer:** Nahi; woh cooperating pipeline ke andar flow regulate karta hai. Service ko pipelines ke across admission limit aur cancellation/error cleanup alag chahiye.
 
-**Practice:** Use a slow destination and compare memory when demand is respected or ignored.
+**Practice:** Slow destination ke saath demand respect/ignore karke memory compare karo.
 
-[Read the source — Node.js](https://nodejs.org/en/learn/modules/backpressuring-in-streams). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Node.js](https://nodejs.org/en/learn/modules/backpressuring-in-streams). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** An endpoint performs a long synchronous calculation before sending a response. Why do unrelated lightweight requests slow down, and what experiment isolates the cause?
+**Apply:** Endpoint response se pehle long synchronous calculation karta hai. Unrelated lightweight requests slow kyun hoti hain? Cause isolate karne ka experiment do.
 
-> **Hint:** Asynchronous networking does not make synchronous calculation parallel.
+> **Hint:** Async networking synchronous calculation ko parallel nahi banati.
 
-**Answer guide — compare after attempting:** Measure event-loop delay and compare concurrent lightweight requests with and without the calculation. Move suitable CPU work to workers or another execution service, with bounded queues. Simply marking the handler async does not move its synchronous body off the event loop.
+**Answer guide — compare after attempting:** Calculation ke saath aur bina concurrent lightweight requests compare karo; event-loop delay measure karo. Suitable CPU work bounded worker queue ya separate execution service ko do. Handler ko async likhne se uski synchronous body event loop se bahar nahi jaati.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [Node event loop guide](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick) runtime phases explain karta hai. [Node stream documentation](https://nodejs.org/api/stream.html) pipeline aur backpressure ka reference hai.

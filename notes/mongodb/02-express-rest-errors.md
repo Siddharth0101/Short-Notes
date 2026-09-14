@@ -5,16 +5,16 @@ track: mongodb
 order: 2
 level: Intermediate
 minutes: 30
-summary: Request validation, routing, controllers, pagination aur centralized errors ko structured API mein jodo.
+summary: Middleware order decide karta hai ki handler ko kaunsa parsed data aur kaunse checks milenge.
 tags: express, rest, middleware, errors, validation, pagination
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Express request middleware chain se travel karti hai. Har middleware response complete karta hai, next middleware ko control deta hai, ya error forward karta hai. Registration order behavior define karta hai. Route transport concerns handle kare, service business use case handle kare aur repository database access handle kare. Small app mein layers lightweight rakho; unnecessary wrappers architecture nahi banate.
 
-> **Core takeaway:** Middleware order determines what data and checks a handler receives.
+> **Core takeaway:** Middleware order decide karta hai ki handler ko kaunsa parsed data aur kaunse checks milenge.
 
 ## Express 5 route with bounded input
 
@@ -115,7 +115,7 @@ app.use((error, req, res, next) => {
 
 Response send karne ke baad execution automatically return nahi hota; unintended second response avoid karo — `return next(...)` ya `return res.json(...)` likhne ki habit banao. Middleware mein na response na next hua to request hang hogi (client timeout tak wait karega). JSON parser order important hai, especially raw signed webhook body ke saath — raw body parser signed-webhook route par global JSON parser se pehle registered hona chahiye. Static files, health checks aur authenticated API routes ke boundaries clear rakho. Error logs mein tokens, passwords aur unnecessary personal data mat include karo. Async handler ke andar thrown error automatically next request ko block nahi karti (each request apna own call stack rakhta hai), lekin unhandled promise rejection process-level listener trigger kar sakti hai — isliye har async path se error ko explicitly propagate/handle karna zaroori hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Express 4 ki tarah, ek async route handler mein thrown error automatically 500 response bana degi. **Why it breaks:** Express 4 mein async function ke andar throw hua error `next()` ko automatically forward nahi hota; request silently hang ho jaati hai ya client ko timeout milta hai. **Fix:** Express 4 projects mein async handler ko `try/catch` se wrap karo aur `catch` block se `next(error)` explicitly call karo, ya ek reusable `catchAsync` wrapper use karo. Express 5 yeh automatically karta hai, lekin version confirm kiye bina assume mat karo.
 - **Wrong assumption:** 404 handler har jagah kaam kar jaayega chahe usse register kahin bhi karo. **Why it breaks:** Agar 404 handler real feature routes se pehle register hua, toh woh un routes tak request pahunchne hi nahi dega — sab kuch "not found" ban jaayega. **Fix:** Route registration order maintain karo: specific routes pehle, catch-all 404 sabse last (error handler se pehle).
@@ -125,7 +125,7 @@ Response send karne ke baad execution automatically return nahi hota; unintended
 
 Topics CRUD API ka request/response contract likho. Malformed JSON, unknown route, invalid limit, missing topic aur database failure simulate karo. Verify karo ki server useful error deta hai aur next request handle kar sakta hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Controller aur service separate kyun?** HTTP parsing aur business rules independently understandable/testable hote hain; same use case job ya CLI se reuse ho sakta hai.
 
@@ -133,7 +133,7 @@ Topics CRUD API ka request/response contract likho. Malformed JSON, unknown rout
 
 ## Research notes: Return the promise that owns the request
 
-Express 5 forwards rejection from a returned handler promise. Detached asynchronous work still needs an explicit error owner.
+Express 5 returned handler promise ki rejection forward karta hai. Detached async work ka explicit error owner phir bhi chahiye.
 
 ```js
 // Express 5; loadOrder is an injected async repository.
@@ -147,28 +147,28 @@ app.use((err, req, res, next) => {
 });
 ```
 
-Register error middleware after routes. Once a response finishes, a later background failure cannot be reported in that response.
+Routes ke baad error middleware register karo. Response finish hone ke baad background failure usi response mein report nahi ho sakti.
 
-**Interview check:** Why is an exception in a later setTimeout different from a rejected returned promise?
+**Interview check:** Later setTimeout ki exception returned promise rejection se alag kyun hai?
 
-**Answer:** The timer callback is outside the returned promise chain. Catch and route its failure to the appropriate owner, or await an abstraction that includes the work before completing the response.
+**Answer:** Timer callback returned promise chain ke bahar hai. Failure catch karke appropriate owner tak route karo, ya work include karne wali abstraction await karke phir response complete karo.
 
-**Practice:** Inject a repository rejection and verify one controlled response.
+**Practice:** Repository rejection inject karke exactly one controlled response verify karo.
 
-[Read the source — Express](https://expressjs.com/en/guide/error-handling/). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Express](https://expressjs.com/en/guide/error-handling/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A JSON endpoint sees an undefined request body. Identify an ordering cause, then specify how malformed JSON should reach a controlled response.
+**Apply:** JSON endpoint ko req.body undefined milta hai. Ordering cause batao; malformed JSON par controlled response kaise doge?
 
-> **Hint:** Parsing must happen before the handler reads the body.
+> **Hint:** Handler body padhe usse pehle parser chalna chahiye.
 
-**Answer guide — compare after attempting:** Install the JSON parser before the relevant routes and send the appropriate content type. Handle parsing failures through the error path with a documented client-error response. Do not continue into business logic with a fabricated empty body or expose internal stack traces.
+**Answer guide — compare after attempting:** Relevant routes se pehle JSON parser install karo aur correct content type bhejo. Parsing failure error path se documented client-error response de. Fake empty body bana kar business logic continue mat karo; internal stack trace expose mat karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [Express error handling](https://expressjs.com/en/guide/error-handling/) async propagation explain karta hai. [Express middleware guide](https://expressjs.com/en/guide/using-middleware.html) chain behavior ka reference hai.

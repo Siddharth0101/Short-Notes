@@ -5,16 +5,16 @@ track: system-design
 order: 12
 level: Advanced
 minutes: 31
-summary: Real-time transport, durable messages aur reconnect recovery ko end-to-end design karo.
+summary: Reconnect ke liye durable ordering aur missing-message recovery chahiye; live socket akela kaafi nahi.
 tags: case-study, websocket, sse, collaboration, java
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Real-time ka matlab low-latency updates hai, guaranteed delivery ya automatic conflict resolution nahi. Durable document content, chat messages and temporary presence different data classes hain. Cursor movement drop hona acceptable ho sakta hai; saved edit lose hona nahi. Invariants data type ke according choose karo.
 
-> **Core takeaway:** Reconnect requires durable ordering and gap recovery, not only a live socket.
+> **Core takeaway:** Reconnect ke liye durable ordering aur missing-message recovery chahiye; live socket akela kaafi nahi.
 
 ## Transport and topology
 
@@ -184,7 +184,7 @@ Polling ko underrate mat karo. 10,000 users × 1 poll per 30 s = 333 rps — wo 
 
 Deployment ka ek specific issue: long-lived connections rolling deploy ko mushkil banate hain. Instance shutdown par 10,000 connections drop hongi. Graceful approach: instance ko unready mark karo (naye connections na aayein), connected clients ko ek `{"t":"reconnect","afterMs":<jittered>}` message bhejo taaki wo controlled rate se dusre instance par jaayein, phir bounded time (jaise 60 s) baad close karo. Bina iske har deploy ek mini thundering herd hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** WebSocket connection open hai toh messages deliver ho rahi hain. **Why it breaks:** TCP connection half-open reh sakti hai — client ka network gaya lekin server ko FIN nahi mila, toh server happily messages ek dead socket mein likhta rehta hai aur koi error nahi milta. Client ko lagta hai wo connected hai, server ko lagta hai delivery ho rahi hai, aur dono galat hain. **Fix:** Application-level heartbeat (ping/pong) with a timeout rakho, aur delivery ko connection state se nahi, client ke acknowledged `seq` se measure karo.
 - **Wrong assumption:** Message ordering guaranteed hai kyunki WebSocket TCP par chalta hai. **Why it breaks:** TCP sirf ek connection ke andar ordering deta hai. Multi-instance setup mein do messages do alag gateways se, do alag pub/sub partitions se aa sakti hain, aur reconnect ke baad to connection hi nayi hai. Server-side concurrency bhi ordering todh sakti hai — do handlers same room par parallel chal rahe hain. **Fix:** Ordering ko application-level per-room sequence se establish karo; transport ordering ko incidental maano, guarantee nahi.
@@ -193,7 +193,7 @@ Deployment ka ek specific issue: long-lived connections rolling deploy ko mushki
 - **Wrong assumption:** Reconnect par poora room history dobara fetch kar lena simplest aur safe hai. **Why it breaks:** Ek 50,000-message room ke liye yeh megabytes ka transfer hai, mobile par seconds lagta hai, aur ek reconnect storm mein 10,000 clients ek saath yeh karein toh database aur bandwidth dono collapse ho jaate hain. **Fix:** `lastSeq` se incremental catch-up karo with bounded page size, aur agar gap bahut bada hai (jaise 1,000 messages se zyada) toh history ko truncate karke "load earlier messages" affordance do — client ko sab kuch turant chahiye hi nahi.
 - **Wrong assumption:** Authentication connection ke waqt ho gayi toh connection ki poori lifetime ke liye kaafi hai. **Why it breaks:** Ek WebSocket connection ghanton khuli reh sakti hai. Us dauran token expire ho sakta hai, user ka room access revoke ho sakta hai, ya account suspend ho sakta hai — lekin connection ab bhi messages deliver kar rahi hai. **Fix:** Connection par periodic re-authorization karo (token expiry par close ya refresh demand karo), aur membership change events par affected connections ki subscriptions actively revoke karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Do WebSockets guarantee message persistence?** Nahi. Transport connection ordering persistence or application acknowledgment policy replace nahi karti. Durable store, IDs and reconnect replay protocol chahiye.
 
@@ -215,34 +215,34 @@ Phir catch-up gap deliberately reproduce karo: fetch-then-subscribe order use ka
 
 ## Capstone: reconnectable collaboration service
 
-Design a collaborative notes service with a React client, durable backend, and a replayable event stream. Specify the editing semantics first: whole-document version checks, operation transforms, and CRDTs solve different problems and have different implementation costs.
+React client, durable backend aur replayable stream se collaborative notes design karo. Pehle editing semantics choose: whole-document version checks, OT aur CRDT different problems/costs ke tools hain.
 
 ### Acceptance criteria
 
-- Write a workload estimate using active users, edits per user, event size, and retention. Include burst traffic and fan-out rather than only daily averages.
-- Define a per-document ordering/version contract and show how stale writes are handled.
-- Disconnect a client, create edits elsewhere, and reconnect using a cursor. Define deduplication and a fallback when the cursor is older than retention.
-- Revoke document access while a socket is connected; specify how existing and reconnecting sessions lose access.
-- Bound slow-client buffers and choose resynchronization or disconnect behavior when a client cannot keep up.
-- Trace a crash between durable commit and publication; show how an outbox or equivalent durable handoff recovers the event.
+- Active users, edits/user, event size aur retention se workload nikalo; bursts/fan-out include karo.
+- Per-document ordering/version contract aur stale writes ka behavior define karo.
+- Client disconnect karke elsewhere edits banao; cursor se reconnect, dedup aur expired-retention fallback test karo.
+- Connected socket ke dauran access revoke karo; existing/reconnecting sessions access lose karein.
+- Slow-client buffers bound aur resync/disconnect policy choose karo.
+- Commit/publish ke beech crash trace karke durable outbox/equivalent handoff se recovery dikhao.
 
 ### Interview defense
 
-Draw the happy path and two failure paths, state which subsystem owns every durable fact, and identify the first scaling bottleneck. Distinguish transport delivery from exactly-once business effects. Finish with observability, a rollout strategy, and the test that would falsify your claimed consistency guarantee.
+Happy path aur two failure paths draw karo. Har durable fact ka owner aur first scaling bottleneck identify karo. Transport delivery versus exactly-once business effect alag samjhao. Observability, rollout aur claimed consistency tod sakne wala test ke saath finish karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A client last acknowledged message 41, disconnects, and reconnects after messages 42–45. Explain replay and duplicate handling.
+**Apply:** Client ne last message 41 acknowledge kiya; disconnect ke dauran 42–45 aaye. Reconnect par replay aur duplicates kaise handle honge?
 
-> **Hint:** A live subscription alone misses messages sent during disconnection.
+> **Hint:** Sirf live subscribe karne se disconnection ke messages miss ho sakte hain.
 
-**Answer guide — compare after attempting:** Request messages after the durable cursor, replay 42–45 in order, and merge by stable message identity. Coordinate replay and live delivery so new messages cannot fall into a handoff gap. Deduplicate overlap and define behavior when the cursor is older than retained history.
+**Answer guide — compare after attempting:** Durable cursor ke baad messages maango; 42–45 order mein replay karke stable IDs se merge karo. Replay/live handoff coordinate karo taaki beech mein new messages lose na hon. Overlap deduplicate karo. Cursor retained history se purana ho toh recovery behavior define karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 - [Server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
 - [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 - [Yjs shared types](https://docs.yjs.dev/getting-started/working-with-shared-types)

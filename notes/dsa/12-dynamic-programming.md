@@ -5,18 +5,18 @@ track: dsa
 order: 12
 level: Advanced
 minutes: 40
-summary: State define karo, recurrence prove karo, aur memoization se tabulation tak progress karo.
+summary: DP state mein itni information honi chahiye ki future choices decide ho sakein; irrelevant history store karna zaroori nahi.
 tags: dynamic-programming, memoization, tabulation, coin-change, knapsack
 visual: dynamic-programming
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Dynamic programming repeated subproblems ke answers reuse karta hai. State aisi information honi chahiye jo remaining decision ko fully determine kare. Agar future answer path ke kisi ignored detail par depend karta hai, cache key incomplete hai aur result wrong ho sakta hai.
 
 Five steps follow karo: state ka plain-language meaning, choices/transition, base cases, evaluation order, final answer location. Complexity usually **number of distinct states × work per state** se nikalti hai, plus output construction aur arithmetic cost.
 
-> **Core takeaway:** A DP state must contain enough information to determine future choices.
+> **Core takeaway:** DP state mein itni information honi chahiye ki future choices decide ho sakein; irrelevant history store karna zaroori nahi.
 
 ## Memoization and tabulation
 
@@ -247,7 +247,7 @@ Aur DP ko greedy se distinguish karna: greedy tab kaam karta hai jab local optim
 | Small n (≤ 20) + subset state | Bitmask DP |
 | Monotone predicate on the answer | Binary search on answer |
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** State ko "kaunsa index par hoon" jitna simple rakhna hamesha kaafi hai. **Why it breaks:** State mein woh saari information honi chahiye jo **remaining decisions ko determine** karti hai. LIS mein "first i elements ki LIS length" state se recurrence bann hi nahi sakti, kyunki extend karne ke liye previous element ki **value** chahiye — isliye state "index i par end hone wali LIS" hona chahiye. Stock-trading problems mein "abhi share hold kiya hua hai ya nahi" ek zaroori dimension hai. **Fix:** State ko ek poore English/Hinglish sentence mein likho, phir poocho: "is sentence se kya main agla decision le sakta hoon?" Nahi toh dimension missing hai.
 - **Wrong assumption:** Memoization add karne se galat recursion sahi ho jayegi. **Why it breaks:** Cache sirf repeated evaluation hataata hai; woh recurrence ki correctness par koi effect nahi daalta. Aur agar cache key state ke saare relevant dimensions capture nahi karti, toh alag states collide karke **wrong answers** dete hain — aur yeh bug consistent lagta hai, random nahi, isliye pakadna mushkil hai. **Fix:** Pehle bina cache ke recurrence ko chhote inputs par verify karo, phir cache add karo. Cache key mein har woh parameter daalo jo result ko affect karta hai.
@@ -299,46 +299,46 @@ Interview-level lesson jo production mein bhi lagta hai: caching aur DP ek hi ch
 
 ## Capstone: prove an optimized solution
 
-Implement three problems: count target-sum subarrays with negative values, shortest paths with nonnegative weights, and 0/1 knapsack. For each, keep a simple exhaustive or slower reference implementation for small inputs.
+Teen problems implement karo: negative values ke saath target-sum subarrays count, nonnegative weights ke shortest paths, aur 0/1 knapsack. Har problem ke liye small inputs par simple exhaustive/slower reference solver bhi rakho.
 
 ### Acceptance criteria
 
-- State the invariant or recurrence before code, and name the input assumptions that make it valid.
-- Target-sum counting handles an empty input, zero target, repeated prefix sums, and negative values.
-- Shortest paths handles disconnected nodes, parallel edges, zero weights, and stale heap entries. Reject or explicitly route unsupported negative weights to a suitable algorithm.
-- Knapsack cannot select the same item twice. Demonstrate why descending capacity order matters with one item and capacity twice its weight.
-- Enumerate small inputs or use seeded randomized cases to compare optimized outputs with the reference solver.
-- Report time and auxiliary-space complexity, including recursion stack, heap duplicates, and preprocessing.
+- Code se pehle invariant/recurrence aur uski input assumptions likho.
+- Target-sum count mein empty input, zero target, repeated prefix sums aur negatives check karo.
+- Shortest paths mein disconnected nodes, parallel edges, zero weights aur stale heap entries check karo. Unsupported negative weights reject karo ya suitable algorithm ko route karo.
+- Knapsack mein same item do baar select nahi hona chahiye. Ek item aur uske weight se double capacity lekar descending iteration ka reason dikhao.
+- Small inputs enumerate karo ya seeded random inputs par optimized/reference answers compare karo.
+- Time aur auxiliary space mein recursion stack, heap duplicates aur preprocessing bhi include karo.
 
 ### Interview defense
 
-Give a counterexample to the tempting incorrect algorithm, then explain the invariant that repairs it. Trace one example by hand and discuss numeric bounds. Stretch task: reconstruct a chosen path or item set, explaining why the memory optimization may need additional reconstruction data.
+Tempting wrong algorithm ka counterexample do, phir repairing invariant samjhao. Ek example hand-trace karo aur numeric bounds batao. Stretch task: chosen path/items reconstruct karo; memory optimization ke baad kaunsa extra reconstruction data chahiye, explain karo.
 
 ## Research notes: Numeric magnitude can dominate DP
 
-O(nW) knapsack depends on the numeric capacity W. Binary encoding takes only about log2(W) bits, so this is pseudopolynomial complexity.
+O(nW) knapsack numeric capacity W par depend karta hai. W ko binary mein likhne ke liye lagbhag log2(W) bits chahiye. Isliye yeh pseudopolynomial complexity hai: number ki value aur encoded input length alag hain.
 
-Original estimate: 100 items and capacity one billion imply roughly 100 billion state visits. Check the constraints before allocating a table. A different state dimension, approximation or smaller-item-count algorithm may be needed.
+100 items aur capacity one billion par lagbhag 100 billion state visits honge. Table allocate karne se pehle constraints check karo. Value-based state, approximation ya smaller-item-count approach chahiye ho sakta hai.
 
-**Interview check:** Why is reducing DP memory alone insufficient for huge capacity?
+**Interview check:** Huge capacity ke liye sirf DP memory kam karna kaafi kyun nahi?
 
-**Answer:** Reducing O(nW) storage to O(W) leaves O(nW) time. Estimate both; indexing by total value or exploiting a smaller item count may change feasibility.
+**Answer:** O(nW) storage ko O(W) karne se O(nW) time nahi badalta. Dono estimate karo. Total value ko dimension banana ya smaller item count use karna feasibility badal sakta hai.
 
-**Practice:** Compare equal item counts with capacities differing by a millionfold.
+**Practice:** Same item count aur millionfold different capacities ka work compare karo.
 
-[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/3484e876d81aba07911a1109f5b5e81e_MIT6_006F11_lec21.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/3484e876d81aba07911a1109f5b5e81e_MIT6_006F11_lec21.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** For house values `[2,7,9,3,1]`, compute the best nonadjacent sum. Define the state and trace each prefix, assuming values are nonnegative.
+**Apply:** Nonnegative house values `[2,7,9,3,1]` ke liye maximum nonadjacent sum nikalo. State define karke har prefix ka answer likho.
 
-> **Hint:** At each house compare skipping it with taking it plus the best prefix two positions back.
+> **Hint:** Current house skip karne aur use lene plus do positions pehle ka best answer compare karo.
 
-**Answer guide — compare after attempting:** Let best[i] cover the first i houses. Starting with best[0]=0, prefix results are 2, 7, 11, 11, 12. The answer is 12. Use `max(best[i-1], value[i-1]+best[i-2])` with an explicit first-house base case; the empty input returns 0.
+**Answer guide — compare after attempting:** `best[i]` first i houses ka best sum hai. best[0]=0 se prefix answers 2, 7, 11, 11, 12 milte hain. Final 12. Recurrence `max(best[i-1], value[i-1]+best[i-2])` hai; first house ka base case alag handle karo. Empty input ka answer 0 hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [Princeton's recursion and dynamic programming discussion](https://introcs.cs.princeton.edu/java/23recursion/) repeated recursive work aur memoization ko cover karta hai. [Princeton's analysis chapter](https://algs4.cs.princeton.edu/14analysis/) states × work-per-state wale cost model ko support karta hai. Coin-change, knapsack, LIS aur edit-distance recurrences aur unke derivations original exercises hain.

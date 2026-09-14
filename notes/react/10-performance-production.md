@@ -5,16 +5,16 @@ track: react
 order: 10
 level: Advanced
 minutes: 30
-summary: Profile first, memoization boundaries choose karo aur slow networks aur failures ke liye UI prepare karo.
+summary: Measured bottleneck optimize karo aur verify karo ki user ko improvement dikhi.
 tags: performance, memoization, suspense, lazy, testing, production
 visual: react-render
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Performance ka target user experience hai: input quickly respond kare, content timely dikhe aur layout stable rahe. Re-render count alone performance score nahi hai. Network, bundle size, expensive calculation, DOM size aur layout work alag bottlenecks hain. Pehle profiler se actual slow interaction identify karo, phir us boundary par fix apply karo.
 
-> **Core takeaway:** Optimize a measured bottleneck and verify user-visible improvement.
+> **Core takeaway:** Measured bottleneck optimize karo aur verify karo ki user ko improvement dikhi.
 
 ## Load an optional feature on demand
 
@@ -141,7 +141,7 @@ Ek learning-platform dashboard jisme sabhi enrolled courses, unka progress perce
 
 Five-thousand-item list par typing profile karo. Pehle state localize karo, phir filtering calculation aur list rendering cost isolate karo. Ek optimization implement karke before/after same interaction compare karo. Slow connection aur failed chunk load scenario run karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Har function useCallback mein wrap karoge?** Nahi. Stable identity valuable consumer/dependency ke liye useful ho sakti hai; unnecessary caching complexity add karti hai.
 
@@ -149,32 +149,32 @@ Five-thousand-item list par typing profile karo. Pehle state localize karo, phir
 
 ## Research notes: Measure user experience as well as renders
 
-Current Core Web Vitals targets are LCP at most 2.5 seconds, INP at most 200 milliseconds, and CLS at most 0.1 at the 75th percentile, segmented by mobile and desktop.
+Is source review ke Core Web Vitals targets: LCP ≤2.5s, INP ≤200ms, CLS ≤0.1. Mobile/desktop separately segment karke 75th percentile par judge karo.
 
-They describe loading, responsiveness and layout stability. A component render count is a diagnostic rather than a user outcome. A default navigation-only Lighthouse run uses TBT as a proxy rather than measuring real interaction INP.
+Yeh loading, responsiveness aur layout stability describe karte hain. Render count diagnostic hai, direct user outcome nahi. Default navigation-only Lighthouse real interaction INP ke bajay TBT proxy use karta hai.
 
-Original exercise: sorting freezes on low-end phones despite quick page loading. Record the interaction, identify synchronous work and compare the same workload after improvement.
+Exercise: page fast load hoti hai lekin low-end phone par sorting freeze karti hai. Interaction record karke synchronous work identify karo; improvement ke baad same workload compare karo.
 
-**Interview check:** Can a good desktop Lighthouse score prove good field INP?
+**Interview check:** Achha desktop Lighthouse score field INP prove karta hai?
 
-**Answer:** No. Real devices, networks and interactions differ from lab conditions. Use field data to establish the affected population and controlled traces to isolate the cause.
+**Answer:** Nahi. Real devices/networks/interactions lab se alag hain. Field data se affected users identify, controlled traces se cause isolate karo.
 
-**Practice:** Reserve image dimensions and compare layout shifts.
+**Practice:** Images ke dimensions reserve karke layout shifts compare karo.
 
-[Read the source — web.dev](https://web.dev/articles/vitals). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — web.dev](https://web.dev/articles/vitals). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Typing into a filter feels slow with 10,000 rows. Describe an experiment that distinguishes costly filtering from costly rendering.
+**Apply:** 10,000 rows filter karte waqt typing slow hai. Filtering cost aur rendering cost alag karne ka experiment do.
 
-> **Hint:** Measure both the calculation and the render work with the same workload.
+> **Hint:** Same workload mein calculation aur render dono ka time measure karo.
 
-**Answer guide — compare after attempting:** Record a baseline, isolate filtering time, and profile rendering. If DOM volume dominates, test virtualization; if filtering dominates, test a better computation strategy. Compare input responsiveness and correctness afterward. Memoization alone cannot remove work when the relevant input changes on every keystroke.
+**Answer guide — compare after attempting:** Baseline record karo, filtering timing isolate karo aur rendering profile karo. DOM volume problem ho toh virtualization; filtering costly ho toh better computation strategy try karo. Baad mein responsiveness aur correctness compare karo. Har keystroke par input badlega toh memoization alone calculation hata nahi sakti.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [React Compiler introduction](https://react.dev/learn/react-compiler/introduction) optional automatic memoization explain karta hai. [React Suspense reference](https://react.dev/reference/react/Suspense) supported loading behavior ka reference hai.

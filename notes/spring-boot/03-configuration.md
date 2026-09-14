@@ -5,19 +5,19 @@ track: spring-boot
 order: 3
 level: Intermediate
 minutes: 16
-summary: Bind typed settings and diagnose environment overrides.
+summary: Related settings typed object mein bind karo; overrides ke baad effective value verify karo.
 tags: spring, configuration, profiles
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Same application artifact ko local aur production mein different settings chahiye. Configuration code ke bahar values supply karti hai; profiles related settings ya beans activate karte hain. Har issue ko profile bana dena unnecessary combinations create karta hai. Prefer a small explicit set of deployment inputs.
 
-> **Core takeaway:** Bind related settings into a typed object and verify the effective value after overrides.
+> **Core takeaway:** Related settings typed object mein bind karo; overrides ke baad effective value verify karo.
 
 ## Bind a small settings group
 
-Application excerpt using Java 21 and Spring Boot's ConfigurationProperties support. Save the public record in its own file with your application's package declaration. Enable scanning by adding `@ConfigurationPropertiesScan` to the application class and its import from `org.springframework.boot.context.properties`.
+Java 21 aur Boot ConfigurationProperties ka app excerpt hai. Public record separate file/application package mein rakho. Application class par `@ConfigurationPropertiesScan` aur `org.springframework.boot.context.properties` ka import add karo.
 
 ```java
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -43,36 +43,36 @@ study.page-size=20
 study.request-timeout=2s
 ```
 
-Inject StudyProperties through a service constructor. The record groups related values and prevents arbitrary reassignment. The duration is only a value: an HTTP client will not automatically use it unless your client construction explicitly applies it.
+StudyProperties service constructor se inject karo. Record related values group aur arbitrary reassignment prevent karta hai. Duration sirf value hai; HTTP client setup explicitly apply karega tab effect hoga.
 
 ## Trace an override
 
-For ordinary launches, command-line options override environment variables, which override packaged configuration data. Boot has additional property sources for tests and other contexts; do not mistake this simplified example for the entire precedence list.
+Ordinary launch mein command-line environment ko, environment packaged config ko override karta hai. Tests/other contexts mein additional sources hain; yeh simplified list full precedence reference nahi.
 
-With the file above, `STUDY_PAGESIZE=40` supplies 40. Adding `--study.page-size=60` to the launch supplies 60. Boot's environment-variable conversion removes hyphens, replaces dots with underscores and uppercases the name. Inspect the effective configuration safely when debugging; avoid dumping secrets into logs.
+Given file ke saath `STUDY_PAGESIZE=40` se 40; `--study.page-size=60` se 60 milega. Env conversion hyphens remove, dots ko underscores aur name uppercase karti hai. Debug mein effective config inspect karo bina secrets logs mein dump kiye.
 
 ## Profiles and secrets
 
-Put local development settings in `application-local.properties` and activate local intentionally through `spring.profiles.active`. Keep sensible non-secret defaults in the base file. Do not commit database passwords or signing keys; inject them through your deployment's secret mechanism. A profile name alone provides no security boundary.
+Local settings application-local.properties mein aur profile `spring.profiles.active` se intentionally activate karo. Base mein sensible non-secret defaults rakho. Passwords/signing keys deployment secret mechanism se do. Profile name khud security boundary nahi.
 
-Fail startup for missing required settings instead of discovering them during a customer request. This example validates in the record constructor. Bean Validation can also validate configuration properties when its dependency and Validated annotation are configured. A typo that leaves a required value unset should produce a clear configuration failure.
+Required setting missing ho toh startup fail karo, customer request tak wait nahi. Example record constructor validate karta hai. Correct dependency/Validated setup se Bean Validation bhi use kar sakte ho. Required value unset chhodne wali typo clear config failure de.
 
 ## Practice
 
-Run with page sizes 1, 100 and 101. Expect the first two to bind and the last to fail startup. Change request-timeout to 500ms and explain why the record carries a Duration instead of an ambiguous integer.
+Page sizes 1,100,101 run karo. First two bind, 101 startup fail hona chahiye. Timeout 500ms karke Duration versus ambiguous integer ka benefit samjhao.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
 **Recall:** Does declaring a timeout property configure every outbound client?
 
-**Apply:** The file says 20, the environment says 40 and the command line says 60. Determine the value, then remove the command-line override and predict the next launch.
+**Apply:** File mein 20, environment mein 40 aur command line mein 60 hai. Effective value batao; command-line override hata kar next launch predict karo.
 
-> **Hint:** Trace sources in increasing precedence.
+> **Hint:** Sources ko lower se higher precedence mein trace karo.
 
-**Answer guide — compare after attempting:** The first launch uses 60 and the next uses 40. Both pass validation. A configured duration has no networking effect until client setup consumes it. Separate binding tests from behavior tests for that reason.
+**Answer guide — compare after attempting:** Pehle 60, phir 40 use hoga; dono validation pass karte hain. Configured duration tab tak networking behavior nahi badalti jab tak client setup use apply na kare. Isi liye binding aur actual behavior alag test karo.
 
 **Exit check:** Explain a safe way to diagnose an unexpected page size without printing credentials.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Official reference](https://docs.spring.io/spring-boot/reference/features/external-config.html).
+[Official reference yahan padho](https://docs.spring.io/spring-boot/reference/features/external-config.html).

@@ -5,16 +5,16 @@ track: spring-boot
 order: 7
 level: Advanced
 minutes: 26
-summary: Authentication, authorization, tokens aur distributed failures ko practical flow mein jodo.
+summary: Authentication caller ko identify karti hai; authorization requested resource ki permission check karti hai.
 tags: security, jwt, csrf, microservices
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Authentication identity establish karta hai; authorization decide karta hai ki identity specific resource par action kar sakti hai. Login success se har note read permission nahi milti. Security har server-side operation ka contract hai. Microservice boundary network failures, independent deployments and ownership decisions introduce karti hai; architecture ko automatically simpler nahi banati.
 
-> **Core takeaway:** Authentication identifies a caller; authorization checks permission for the requested resource.
+> **Core takeaway:** Authentication caller ko identify karti hai; authorization requested resource ki permission check karti hai.
 
 ## Browser and API authentication
 
@@ -84,7 +84,7 @@ Example mein order and event record same database transaction mein commit hote h
 
 Every network call timeout define kare. Retry only transient, safe/idempotent work with bounded attempts, exponential backoff and jitter. Circuit breaker repeatedly failing dependency par requests temporarily stop kar sakta hai; bulkhead one dependency ka resource exhaustion contain karta hai. Docker container packaging consistency deta hai, distributed transactions solve nahi karta.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `hasRole("USER")` check karna kaafi hai yeh ensure karne ke liye ki user sirf apna khud ka data access kar raha hai. **Why it breaks:** Role check sirf yeh confirm karta hai ki user authenticated hai aur uske paas ek generic permission level hai — yeh path variable/request body mein diye gaye specific resource ID ka owner check nahi karta. User A login karke URL mein user B ka ID daal sakta hai (IDOR — insecure direct object reference), aur agar sirf role check ho, request pass ho jayegi. **Fix:** Resource-level authorization explicitly enforce karo — `@PreAuthorize` se path variable ko authenticated principal se compare karo, ya service layer mein query khud hi current user ke ID se scope karo.
 - **Wrong assumption:** `requestMatchers` rules ka order security config mein matter nahi karta, Spring sabse specific match dhoondh lega. **Why it breaks:** Spring Security rules ko declaration order mein evaluate karta hai, first-match-wins — agar generic `anyRequest().authenticated()` specific `/api/admin/**` rule se pehle likh diya jaaye, admin path bhi generic rule se hi match ho jayega aur intended stricter check kabhi apply nahi hogi. **Fix:** Specific path patterns ko hamesha generic patterns se pehle declare karo, aur security config ka ek integration test likho jo actual applied rule verify kare.
@@ -94,7 +94,7 @@ Every network call timeout define kare. Retry only transient, safe/idempotent wo
 
 IDOR (insecure direct object reference) bugs — jahan URL/body mein resource ID change karke doosre user ka data access ho jaata hai — real-world APIs mein sabse common security vulnerability class hai, aur yeh exactly authorization ke role-check-vs-ownership-check confusion se aati hai. Refresh-token rotation aur circuit breakers dono production incident response mein directly kaam aate hain: compromised session detect hone par pura token family revoke karna, aur ek downstream dependency ke fail hone par circuit breaker se cascading failure rokna, dono common on-call scenarios hain.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Are JWTs stateless?** Local access-token verification session lookup avoid kar sakti hai. Refresh-token rotation, revocation and account permissions often state require karte hain; whole system necessarily stateless nahi.
 
@@ -110,19 +110,19 @@ IDOR (insecure direct object reference) bugs — jahan URL/body mein resource ID
 
 Notes API mein user A ko user B ka note ID guess karwa kar authorization test karo. Then notification consumer ko same event twice deliver karo and verify exactly one logical notification record. Dependency timeout ke time API ka user-visible behavior document karo. Phir ek IDOR vulnerability intentionally reproduce karo (sirf `hasRole` check ke saath endpoint banao jisme dusre user ka ID access ho jaaye), phir `@PreAuthorize` ownership check se fix karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** User A is authenticated and requests user B's private order by guessing its ID. Where must access be checked and what should a test prove?
+**Apply:** Logged-in user A guessed ID se user B ka private order maangta hai. Access check kahan lagega aur test kya prove karega?
 
-> **Hint:** Login success does not establish ownership.
+> **Hint:** Login success ownership establish nahi karta.
 
-**Answer guide — compare after attempting:** Enforce the ownership or role rule on the backend before returning or changing the order. Test cross-user read and write attempts and assert no private data or mutation leaks. Choose consistent forbidden/not-found behavior according to the API contract.
+**Answer guide — compare after attempting:** Order return/change se pehle backend par ownership/role rule enforce karo. Cross-user read/write attempts mein private data aur mutation leak na ho. API contract ke hisaab se consistent forbidden/not-found behavior choose karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [JWT resource server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html)
 - [Spring CSRF protection](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html)

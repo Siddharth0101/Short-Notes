@@ -5,7 +5,7 @@ Jonas Schmedtmann Ultimate React Bootcamp style notes.
 These notes follow the same style as the JavaScript and Backend notes in this repo:
 short Hinglish explanations, visual ASCII diagrams, important rules, and compact code examples.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_COURSE_OVERVIEW/Jonas_React_Course_Map.js`
 2. `02_REACT_FUNDAMENTALS/React_Fundamentals.js`
@@ -21,7 +21,7 @@ short Hinglish explanations, visual ASCII diagrams, important rules, and compact
 12. `13_STYLING_REACT/Styled_Components_Tailwind.js`
 13. `11_CHEATSHEETS/React_Cheat_Sheet.js`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - React fundamentals, JSX, props, state, controlled elements
 - State management, lifting state up, derived state, immutable updates

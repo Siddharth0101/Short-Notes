@@ -5,15 +5,15 @@ track: spring-boot
 order: 9
 level: Advanced
 minutes: 18
-summary: Health checks, metrics aur distributed tracing se production service ka andar dekho.
+summary: Observability se pata chalna chahiye ki request ka time kahan gaya aur failure ne user ko kaise affect kiya.
 tags: actuator, observability, metrics, tracing, logging
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Ek service "working" hai ya nahi, yeh sirf uske apne process ke andar se pata nahi chalta — usse externally observable banana padta hai. Observability teen pillars par khadi hoti hai: logs (kya hua, discrete events), metrics (kitna/kitni baar, aggregated numbers over time), aur traces (ek request ka poora journey multiple services ke through). Spring Boot Actuator health/metrics endpoints ready-made deta hai; production readiness ka matlab hai in signals ko correctly configure karna, sirf feature ko "on" kar dena nahi.
 
-> **Core takeaway:** Observability should explain where requests spend time and how failures affect users.
+> **Core takeaway:** Observability se pata chalna chahiye ki request ka time kahan gaya aur failure ne user ko kaise affect kiya.
 
 ## Health checks: liveness versus readiness
 
@@ -86,7 +86,7 @@ class CorrelationIdFilter extends OncePerRequestFilter {
 
 `MDC` (Mapped Diagnostic Context) SLF4J ka thread-local-backed mechanism hai jo current request ka context (correlation ID, user ID) log pattern mein automatically inject karta hai bina har log statement mein manually pass kiye. Yeh chapter 6 ke ThreadLocal cleanup discipline ka hi ek concrete application hai: pooled thread agla unrelated request serve karega, isliye `finally` block mein `MDC.clear()` zaroori hai warna correlation ID cross-request leak ho sakta hai. Distributed tracing (Micrometer Tracing + Zipkin/Jaeger) isi correlation ID concept ko multiple services ke across extend karta hai — ek trace ID poore request journey (gateway to order-service to notification-worker) ko jodta hai, taaki ek slow request ko sirf logs se nahi, ek unified timeline se debug kiya ja sake.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Liveness aur readiness probe ko same health check se serve karna theek hai — "service ya toh healthy hai ya nahi". **Why it breaks:** Ek temporary downstream dependency failure (database slow, cache unreachable) readiness ke liye valid "not ready" signal hai, but liveness ke liye nahi — process khud crash nahi hua, restart karne se problem solve nahi hogi, balki restart loop create ho sakta hai jab dependency recover hone mein thoda time le. **Fix:** Liveness ko sirf process-level health (deadlock, unrecoverable state) ke liye rakho; readiness mein external dependencies check karo.
 - **Wrong assumption:** `/actuator/**` endpoints ko default configuration ke saath production mein expose karna safe hai. **Why it breaks:** Kuch actuator endpoints (jaise `/actuator/env`, `/actuator/heapdump`) sensitive configuration values aur memory contents expose kar sakte hain — bina authentication/authorization ke publicly accessible hone par yeh credentials leak ya information disclosure vulnerability ban sakta hai. **Fix:** Sirf zaroori endpoints (`health`, `info`, `metrics`) expose karo (`management.endpoints.web.exposure.include`), aur actuator endpoints ko bhi Spring Security se authenticate/authorize karo jaise kisi normal API ko karte.
@@ -96,7 +96,7 @@ class CorrelationIdFilter extends OncePerRequestFilter {
 
 Production incident response mein yeh teeno signals ek saath use hote hain: metrics dashboard se pehle symptom dikhta hai (p99 latency spike, error rate badha), traces se pata chalta hai kaunsi service/call slow hai, aur logs (correlation ID se filtered) us specific request ka exact failure detail dete hain. Kubernetes readiness probes rolling deployments ko safe banate hain — naya pod tab tak traffic nahi paata jab tak uska readiness check pass na ho, isliye ek slow-starting application (JIT warmup, connection pool initialization) bina readiness probe ke deployment ke turant baad failed requests serve kar sakti hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **What's the difference between a liveness and a readiness probe?** Liveness poochta hai "kya process itna broken hai ki restart chahiye" — fail hone par orchestrator container restart karta hai. Readiness poochta hai "kya yeh instance abhi traffic handle karne ke liye ready hai" — fail hone par orchestrator sirf traffic route karna rok deta hai, restart nahi karta. Dono ko same check se serve karna galat restart loops create kar sakta hai.
 
@@ -110,34 +110,34 @@ Ek `HealthIndicator` likho jo external HTTP dependency (jaise payment gateway) k
 
 ## Capstone: observable inventory reservation API
 
-Implement reserve, confirm, and release operations around an explicit reservation state machine. Store inventory and reservation transitions durably. Decide how reservation expiry interacts with a concurrent confirmation before writing the endpoint.
+Explicit reservation state machine ke around reserve/confirm/release implement karo. Inventory/transitions durably store karo. Endpoint se pehle expiry versus concurrent confirmation ka rule decide karo.
 
 ### Acceptance criteria
 
-- With one item left and twenty simultaneous reservation attempts, at most one succeeds and stock never becomes negative.
-- Repeating a request with its idempotency key returns the same logical reservation; key reuse with changed intent is rejected.
-- Confirmation racing expiry has a defined winner enforced at the write boundary.
-- A database integration test exercises the actual isolation/locking strategy with separate concurrent transactions.
-- Metrics separate HTTP time, pool wait, and query time. Traces connect the request to its database operation without leaking credentials.
-- A slow downstream dependency has a deadline and bounded concurrency. Document what the caller observes on overload.
+- One item aur twenty simultaneous attempts mein maximum one reservation; stock negative na ho.
+- Same idempotency key same logical reservation de; changed intent ke saath reuse reject ho.
+- Confirmation/expiry winner actual write boundary enforce kare.
+- Separate concurrent transactions actual isolation/locking test karein.
+- HTTP time, pool wait aur query time separate metrics hon; trace credentials leak na kare.
+- Slow dependency ki deadline/concurrency bound aur overload ka caller-visible behavior document karo.
 
 ### Interview defense
 
-Explain the invariant, transaction boundary, and recovery after a commit followed by a lost response. Compare a conditional update, pessimistic lock, and optimistic version check. Provide measured conflict and latency results under contention. A successful HTTP response alone does not prove race safety.
+Invariant, transaction boundary aur commit-ke-baad-lost-response recovery explain karo. Conditional update, pessimistic lock aur optimistic version compare karo. Contention mein measured conflict/latency results do; HTTP success race safety prove nahi karti.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Endpoint latency rises while database execution time stays flat. Name two other timings to inspect and a useful trace boundary.
+**Apply:** Endpoint latency badhi, DB execution time same hai. Do aur timings aur useful trace boundary batao.
 
-> **Hint:** Execution time omits queueing and downstream waits.
+> **Hint:** Execution timing queueing aur downstream wait include nahi karti.
 
-**Answer guide — compare after attempting:** Inspect connection-pool acquisition wait and outbound-service latency, plus request queueing where applicable. Trace controller-to-service-to-database/outbound boundaries with correlated request context. Compare affected and healthy requests; avoid placing unbounded user IDs in metric labels.
+**Answer guide — compare after attempting:** Connection-pool acquisition wait, outbound-service latency aur relevant request queueing inspect karo. Correlated context se controller→service→DB/outbound spans trace karo. Healthy/affected requests compare karo; unbounded user IDs metric labels mein mat daalo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/index.html)
 - [Micrometer concepts](https://docs.micrometer.io/micrometer/reference/concepts.html)
 - [Spring Boot Kubernetes probes](https://docs.spring.io/spring-boot/reference/actuator/kubernetes-probes.html)

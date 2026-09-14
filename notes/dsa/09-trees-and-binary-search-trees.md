@@ -5,17 +5,17 @@ track: dsa
 order: 9
 level: Intermediate
 minutes: 34
-summary: Tree traversal, BST ordering, deletion, and balance ko invariants ke through samjho.
+summary: BST ka rule poore subtree par lagta hai; sirf parent-child pair sahi hona kaafi nahi.
 tags: tree, bst, dfs, traversal, balancing
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Tree ek hierarchy hai: root se children tak links jaate hain, aur ordinary rooted tree mein har non-root node ka ek parent hota hai. Binary tree mein at most two children hote hain. **Binary search tree** extra ordering rule add karta hai: left subtree ke saare keys smaller, right subtree ke saare keys larger. Duplicate handling ka rule separately choose karo, jaise node mein count rakhna.
 
 Tree ki height longest root-to-leaf path se related hai. Interview mein convention batao: neeche empty tree ki height 0 aur leaf ki height 1 use kar rahe hain. Balanced tree aur complete tree same concept nahi: complete tree last level tak left-to-right filled hota hai, balancing mainly height bound maintain karta hai.
 
-> **Core takeaway:** A BST property constrains whole subtrees, not just immediate children.
+> **Core takeaway:** BST ka rule poore subtree par lagta hai; sirf parent-child pair sahi hona kaafi nahi.
 
 ## Traversal order
 
@@ -200,7 +200,7 @@ O(n) time, O(h) space. Do versions ka contrast hi asli lesson hai: **BST ka orde
 
 `lcaTree` ek assumption par chalta hai: dono nodes tree mein present hain. Ek absent ho toh yeh doosre ko return kar dega, jo galat hai. Production version ko presence flags bhi track karne padte hain — yeh contract explicitly clarify karna chahiye.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** BST operations O(log n) hain. **Why it breaks:** Yeh sirf **balanced** BST par sach hai. Plain BST mein sorted input (timestamps, auto-increment IDs — real data ka sabse common shape) ek degenerate chain banata hai jahan h = n aur har operation O(n) ho jaata hai. **Fix:** Hamesha "O(h), jo balanced tree mein O(log n) hai" bolo, aur batao ki balance kaise maintain hoga — self-balancing structure (AVL/red-black) ya randomized insertion order.
 - **Wrong assumption:** BST validate karne ke liye har node ko apne direct children se compare karna kaafi hai. **Why it breaks:** BST constraint poore subtree par lagti hai, sirf immediate child par nahi. `root = 10`, `root.left = 5`, `root.left.right = 12` mein har parent-child pair locally valid hai, lekin 12 root ke left subtree mein hai aur 10 se bada hai — invalid BST jo local check pass kar jaata hai. **Fix:** Har recursive call mein `(lower, upper)` bounds propagate karo, ya inorder traversal ka strictly-increasing hona verify karo.
@@ -241,31 +241,31 @@ Tree traversal ka roz ka use compilers aur tooling mein hai: ASTs par postorder 
 
 ## Research notes: Balance the height that controls lookup
 
-Sorted insertion can turn an ordinary BST into a chain. Search depends on height; ordering alone does not guarantee logarithmic lookup.
+Sorted values insert karne par ordinary BST ek chain ban sakta hai. Search height par depend karta hai; sirf ordering logarithmic lookup guarantee nahi karti.
 
-AVL trees constrain subtree-height differences. Rotations restore balance while preserving in-order key order. Update height metadata in dependency order.
+AVL tree subtree heights ka difference bound karta hai. Rotations links badalkar balance restore karti hain, lekin inorder key order preserve karti hain. Height metadata dependencies ke correct order mein update karo.
 
-Original trace: insert 10, 20, 30. A rotation puts 20 above 10 and 30, preserving the sorted traversal.
+10,20,30 insert karke trace karo. Rotation ke baad 20 root, 10 left aur 30 right hota hai. Inorder ab bhi 10,20,30 hai.
 
-**Interview check:** Why can rotation change the root without breaking search order?
+**Interview check:** Rotation root badalkar bhi search order kaise bacha sakti hai?
 
-**Answer:** It rearranges local links while preserving ordering among affected subtrees. Show that each subtree stays on the correct side of its new ancestors.
+**Answer:** Local links rearrange hote hain, affected subtrees ka key order preserve rehta hai. Har subtree naye ancestors ki correct side par hai, yeh diagram se dikhao.
 
-**Practice:** Trace an insertion requiring a double rotation and verify heights.
+**Practice:** Double rotation chahiye aisa insertion trace karo aur final heights verify karo.
 
-[Read the source — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/83cdd705cd418d10d9769b741e34a2b8_MIT6_006F11_lec06.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/83cdd705cd418d10d9769b741e34a2b8_MIT6_006F11_lec06.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A tree has root 10, left child 5, and 5's right child 12. Each local edge looks plausible. Is the tree a valid BST?
+**Apply:** Root 10, left child 5, aur 5 ka right child 12 hai. Local edges sahi dikh rahe hain; kya yeh valid BST hai?
 
-> **Hint:** The left subtree inherits an upper bound from the root.
+> **Hint:** Root ke left subtree ki har value par upper bound 10 lagta hai.
 
-**Answer guide — compare after attempting:** It is invalid because 12 lies in 10's left subtree. Validate with inherited lower/upper bounds or an equivalent global-order check. Define a duplicate-key policy explicitly. Testing only each parent and its children misses this violation.
+**Answer guide — compare after attempting:** Invalid hai: 12, root 10 ke left subtree mein hai. Validation mein inherited lower/upper bounds ya equivalent global-order check use karo. Duplicate-key policy clearly define karo. Sirf immediate children check karoge toh yeh violation miss hogi.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

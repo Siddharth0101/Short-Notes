@@ -5,15 +5,15 @@ track: java
 order: 8
 level: Intermediate
 minutes: 20
-summary: Collection contracts, complexity aur PECS ko practical examples se revise karo.
+summary: Collection required operations aur contracts se choose karo; key mutable hai ya immutable, yeh bhi matter karta hai.
 tags: collections, generics, hashmap, pecs
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Collection ka interface behavior batata hai; implementation performance aur ordering decisions leta hai. Pehle requirement likho: duplicates allowed? insertion order important? fast lookup? sorted ranges? thread safety? Uske baad collection choose karo. Har problem mein HashMap use karna aur har ordering problem mein sorting karna unnecessary complexity la sakta hai.
 
-> **Core takeaway:** Choose collections by operations and contracts, including mutability of their keys.
+> **Core takeaway:** Collection required operations aur contracts se choose karo; key mutable hai ya immutable, yeh bhi matter karta hai.
 
 ## Choosing an implementation
 
@@ -112,7 +112,7 @@ ranked.sort(
 
 Repository layer se return hone wale collections ko usually unmodifiable rakha jaata hai (`List.copyOf` ya `Collections.unmodifiableList`) taaki controller layer accidentally domain state mutate na kar de. `PECS` pattern service-layer utility methods mein dikhta hai — jaise ek `mergeInto(List<? super OrderLine> target, List<? extends OrderLine> source)` helper jo different concrete list types ke saath kaam kare bina caller ko exact generic type expose kiye.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **HashMap versus TreeMap?** HashMap key equality/hash contract use karta hai and ordering promise nahi karta. TreeMap comparator/natural ordering se sorted keys maintain karta hai, range operations support karta hai.
 
@@ -126,7 +126,7 @@ Top three frequent words return karo; ties alphabetical rakho. Phir API ko `List
 
 ## Research notes: A read-only view is not an immutable snapshot
 
-The wrapper disallows changes through its interface but observes mutations to the backing list.
+Wrapper apne interface se changes rokta hai, lekin backing list change hogi toh view mein woh change dikhega.
 
 ```java
 var names = new java.util.ArrayList<String>();
@@ -136,29 +136,29 @@ names.add("Dev");
 System.out.println(view.size()); // 2
 ```
 
-Copying separates structural ownership. If the elements themselves are mutable objects, a shallow copy still shares those objects.
+Copy structural ownership separate karti hai. Elements mutable objects hon toh shallow copy ab bhi woh objects share karegi.
 
-**Interview check:** What additional property does deep immutability require?
+**Interview check:** Deep immutability ke liye aur kya chahiye?
 
-**Answer:** Reachable values must also be immutable or defensively copied. Preventing add/remove operations alone does not prevent an element field from changing through another reference.
+**Answer:** Reachable values bhi immutable ya defensively copied honi chahiye. Add/remove rokne se doosre reference ke through element field badalna nahi rukta.
 
-**Practice:** Replace String with a mutable Customer and trace an element update.
+**Practice:** String ki jagah mutable Customer lo aur element update trace karo.
 
-[Read the source — Oracle Java API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Oracle Java API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** You insert a key into a HashMap, then mutate a field used by its hashCode. Why can lookup fail, even with the same object reference?
+**Apply:** HashMap mein key insert karke uska hashCode mein used field mutate kar diya. Same object reference se lookup bhi fail kyun ho sakta hai?
 
-> **Hint:** The entry was placed using the previous hash.
+> **Hint:** Entry old hash ke basis par bucket mein rakhi gayi thi.
 
-**Answer guide — compare after attempting:** Lookup now computes a different hash and may search a different bucket. Keep hash/equality fields immutable, or remove the entry before changing the key and reinsert afterward. Prefer an immutable identifier as the key; do not depend on accidental hash collisions to rescue lookup.
+**Answer guide — compare after attempting:** Lookup new hash se doosri bucket search kar sakta hai. Hash/equality fields immutable rakho; ya change se pehle remove karke baad mein reinsert karo. Immutable identifier better key hai. Accidental collision lookup bacha de, is par depend mat karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Collections framework](https://dev.java/learn/api/collections-framework/)
 - [Generics tutorial](https://dev.java/learn/generics/)

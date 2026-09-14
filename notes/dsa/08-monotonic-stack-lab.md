@@ -5,18 +5,18 @@ track: dsa
 order: 8
 level: Advanced
 minutes: 25
-summary: Derive next-greater answers with invariants and prove the linear bound.
+summary: Monotonic stack un candidates ko rakhta hai jinka answer aage aane wali value decide kar sakti hai.
 tags: dsa, monotonic-stack, amortized, arrays
 visual: monotonic-stack
 ---
 
-## Mental model
+## Mental model — simple soch
 
-A monotonic stack stores unresolved candidates in an order that makes future elimination cheap. Do not memorize a while condition first. Ask: what does a stored index still need, and what new value makes that index permanently resolvable?
+Monotonic stack unresolved candidates ko aise order mein rakhta hai ki future mein unhe efficiently resolve/remove kar sakein. Pehle while condition mat rato. Pucho: stored index ko abhi kis answer ka wait hai? Kaunsi nayi value aane par uska answer permanently decide ho jaega?
 
-For daily temperatures, each day needs the first later strictly warmer day. Store indices of days whose warmer answer is unknown. Their temperatures remain non-increasing from bottom to top; equal temperatures are allowed because equal is not warmer.
+Daily temperatures mein har day ko pehla later strictly warmer day chahiye. Un days ke indices stack mein rakho jinka answer unknown hai. Bottom se top temperatures non-increasing rehti hain. Equal temperatures allowed hain, kyunki equal ka matlab warmer nahi.
 
-> **Core takeaway:** A monotonic stack retains candidates that future values may resolve.
+> **Core takeaway:** Monotonic stack un candidates ko rakhta hai jinka answer aage aane wali value decide kar sakti hai.
 
 ## Worked solution
 
@@ -38,42 +38,42 @@ console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]));
 // [1, 1, 4, 2, 1, 1, 0, 0]
 ```
 
-When 72 arrives at index 5, it resolves 69 at index 4 and 71 at index 3. It cannot resolve 75 at index 2, so that index stays. The stack records indices rather than just temperatures because the output is a distance and duplicate values need distinct identities.
+Index 5 par 72 aata hai toh index 4 ka 69 aur index 3 ka 71 resolve hote hain. Index 2 ka 75 resolve nahi hota, isliye stack mein rehta hai. Sirf temperatures nahi, indices store karo: distance calculate karna hai aur duplicate values ke days alag hain.
 
 ## Proof before complexity
 
-Every popped index has a smaller temperature than today's. If an earlier intervening day had been warmer, that index would already have been popped. Therefore today is its first warmer day. Any index left at the end has no later warmer day, so its initialized zero is correct.
+Pop hua har index aaj se colder hai. Agar beech mein koi pehla warmer day aaya hota toh woh index tabhi pop ho chuka hota. Isliye aaj uska first warmer day hai. End mein bache indices ka koi later warmer day nahi; unka initial zero correct hai.
 
-The nested while does not imply quadratic total work. Each index is pushed once and popped at most once. Across all outer iterations there are at most n pops, giving O(n) time and O(n) auxiliary stack space; the output itself also uses O(n). This is aggregate amortized analysis, not an average-case assumption about random inputs.
+Nested while dekhkar seedha O(n²) mat bolo. Har index ek baar push aur maximum ek baar pop hota hai. Saare outer iterations mila kar maximum n pops hain. Total time O(n), auxiliary stack O(n), output O(n). Yeh aggregate amortized analysis hai; random input ka average-case assumption nahi.
 
 ## Variants and traps
 
-For next greater-or-equal, equality changes the elimination condition. For a circular array, scan a second logical pass while avoiding duplicate unresolved pushes and use modular indexing carefully. For stock span, combine consecutive smaller-or-equal prices; the answer's meaning changes, so do not copy the temperature comparison blindly.
+Next greater-or-equal mein equality bhi resolve karegi, toh pop condition badlegi. Circular array mein second logical pass aur modular indexing carefully use karo; unresolved indices dobara push mat karo. Stock span mein consecutive smaller-or-equal prices combine hote hain. Answer ka meaning badla hai, toh temperature comparison blindly copy mat karo.
 
-Histogram maximum rectangle uses increasing heights and calculates the width available when a shorter bar closes a candidate. Duplicate-height handling and sentinel boundaries deserve explicit examples. A sliding-window maximum usually needs a deque, because expired candidates leave from the front while dominated candidates leave from the back.
+Histogram maximum rectangle mein increasing heights rakho. Chhota bar aane par candidate close hota hai aur available width calculate hoti hai. Equal heights aur sentinel boundaries examples se check karo. Sliding-window maximum mein usually deque chahiye: expired candidates front se, dominated candidates back se nikalte hain.
 
 ## Practice
 
-Trace [], [30], [30, 30], [40, 30, 20] and [20, 30, 40]. Write a quadratic reference solution that scans forward for each day and compare it against the stack solution on small random arrays. The reference can be slow because its purpose is to validate reasoning on small cases. Then explain the strict versus non-strict comparison without looking at code.
+`[]`, `[30]`, `[30,30]`, `[40,30,20]`, `[20,30,40]` trace karo. Har day se aage scan karne wala simple quadratic reference likho; small random arrays par stack answer se compare karo. Reference slow ho sakta hai kyunki small cases ki correctness check kar raha hai. Phir strict/non-strict comparison code dekhe bina explain karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Why store indices?** They retain identity and allow distances or expiration checks without a second lookup.
+**Indices kyun store karein?** Index item ki identity bachata hai; distance aur expiry calculate karne ke liye second lookup nahi chahiye.
 
-**When is a monotonic stack the wrong tool?** Arbitrary online updates or range queries may need a tree or other structure; future elimination is no longer permanent under all update models.
+**Monotonic stack kab unsuitable hai?** Arbitrary online updates ya range queries mein tree jaisa structure chahiye ho sakta hai. Updates allowed hon toh aaj eliminated candidate future mein relevant ho sakta hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Find the next strictly greater value to the right for `[2,2,3,1]`. Explain how equality changes the pop condition.
+**Apply:** `[2,2,3,1]` mein har item ke right ka next strictly greater value nikalo. Equal values pop condition ko kaise affect karti hain?
 
-> **Hint:** Equal values do not satisfy strictly greater.
+> **Hint:** Equal ka matlab strictly greater nahi hota.
 
-**Answer guide — compare after attempting:** The answers are `[3,3,-1,-1]`. In a left-to-right unresolved-index stack, pop while the new value is strictly greater than the stacked value. Each index is pushed and popped at most once, giving O(n) time and O(n) auxiliary space.
+**Answer guide — compare after attempting:** Answer `[3,3,-1,-1]` hai. Left-to-right unresolved-index stack mein tab pop karo jab nayi value stacked value se strictly badi ho. Har index maximum ek baar push aur ek baar pop hota hai; total O(n) time aur O(n) auxiliary space.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MIT algorithms materials](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/) provide supporting foundations for invariants and complexity analysis. The worked problem and implementation here are original.
+[MIT algorithms materials](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/) se invariants aur complexity ki foundation padho. Yahan ka worked problem aur implementation is repo ke liye likha gaya hai.

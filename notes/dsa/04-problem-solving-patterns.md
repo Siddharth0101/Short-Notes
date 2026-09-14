@@ -5,15 +5,15 @@ track: dsa
 order: 4
 level: Foundation
 minutes: 32
-summary: Recognize when counts, sorted pointers, windows, and prefix sums remove repeated work.
+summary: Pattern tabhi sahi hai jab uska invariant, yani har step par sach rehne wala rule, input ki conditions se match kare.
 tags: frequency-counter, two-pointers, sliding-window, prefix-sum
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Pattern ek reusable invariant hai, bas problem ke keyword se match karne wali trick nahi. Frequency counter multiplicity remember karta hai; two pointers impossible pairs discard karte hain. Sliding window neighboring contiguous ranges ka work reuse karti hai. Prefix sums repeated range addition ko subtraction mein convert karte hain.
 
-> **Core takeaway:** A pattern is valid only when its invariant matches the input constraints.
+> **Core takeaway:** Pattern tabhi sahi hai jab uska invariant, yani har step par sach rehne wala rule, input ki conditions se match kare.
 
 ## Frequency counters
 
@@ -256,7 +256,7 @@ Yeh pattern interval scheduling aur "kitni meetings ek saath chal rahi hain" jai
 
 Ek shortcut jo aksar galat hota hai: "contiguous" dekh kar turant sliding window likhna. Window tabhi valid hai jab shrink/expand ka effect **monotone** ho. Negative numbers, ya "exactly k distinct" jaise non-monotone conditions, window ko silently tod dete hain. Aise case mein "exactly k = atMost(k) − atMost(k−1)" wali decomposition ek reliable rescue hai, kyunki `atMost` monotone hoti hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Sliding window har contiguous-subarray problem par lagti hai. **Why it breaks:** Window ka shrink step is argument par depend karta hai ki element hatane se aggregate ek hi direction mein move karega. Negative numbers ke saath `sum -= nums[left]` sum ko badha sakta hai, so "abhi bhi `>= target` hai" wali loop condition meaningless ho jaati hai — code chalega, answers galat honge. **Fix:** Shrink karne se pehle monotonicity explicitly verify karo. Signed values par prefix sums + hash map (equality-based) ya monotonic deque use karo.
 - **Wrong assumption:** Two pointers ke liye bas do variables `left` aur `right` chahiye. **Why it breaks:** Discard step ki correctness **sorted order** par tikki hai. Unsorted array par `left++` karna un pairs ko bhi chhod deta hai jo valid the — kyunki "aage sirf bade elements aayenge" wali guarantee hi nahi hai. **Fix:** Pehle bolo ki input sorted hai ya tum sort karoge (aur us O(n log n) ko complexity mein add karo), aur agar original indices return karni hain toh values ke saath indices bhi carry karo.
@@ -292,17 +292,17 @@ Frequency counters observability pipelines mein har jagah hain — log lines par
 
 **Answer:** O(n). Jab saare prefix sums distinct hon (jaise saare elements positive), map mein n + 1 entries jaati hain. "Map sirf O(k) leta hai" bolna tab valid hota jab values ki range chhoti ho — general signed input par aisi koi bound nahi hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** You want a target-sum subarray and use a shrinking window intended for nonnegative values. Explain why adding negative values breaks that reasoning.
+**Apply:** Target-sum subarray ke liye nonnegative values wala shrinking window use kiya. Negative values aane par reasoning kyun toot sakti hai?
 
-> **Hint:** Removing an element no longer necessarily decreases the sum.
+> **Hint:** Element hatane se sum hamesha kam nahi hota; negative hataoge toh sum badhega.
 
-**Answer guide — compare after attempting:** A negative removal can increase the sum, so the direction of window adjustment is no longer reliable. For example, `[4,-1]` reaches target 3 even though discarding 4 early would miss it. Use an appropriate prefix-sum method when negatives are allowed.
+**Answer guide — compare after attempting:** `[4,-1]` ka sum 3 hai. Agar sum zyada dekhkar 4 pehle hata diya toh valid answer miss hoga. Negative remove karne se sum badh bhi sakta hai, isliye window move karne ka purana rule reliable nahi. Negatives allowed hon toh suitable prefix-sum approach dekho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

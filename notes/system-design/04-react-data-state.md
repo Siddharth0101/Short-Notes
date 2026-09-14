@@ -5,16 +5,16 @@ track: system-design
 order: 4
 level: Intermediate
 minutes: 25
-summary: URL state, local state aur server cache ko clear ownership do.
+summary: State ownership aur response identity se ek request/user ka result doosre view ko overwrite nahi karta.
 tags: react, state, caching, optimistic-ui
 visual: caching
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Har state same lifecycle follow nahi karti. Modal open flag ephemeral UI state hai. Search query shareable URL state ho sakti hai. Server note list remote data ka cached snapshot hai. Form draft unsaved local intent hai. In sabko one giant global object mein mix karne se reset, invalidation and synchronization bugs badhte hain.
 
-> **Core takeaway:** State ownership and response identity prevent one user's view from overwriting another.
+> **Core takeaway:** State ownership aur response identity se ek request/user ka result doosre view ko overwrite nahi karta.
 
 ## State ownership map
 
@@ -118,7 +118,7 @@ key: ["notes", ownerId, { q: "reac", topic: "java", sort: "recent", page: 1 }]
 
 User "react" type karta hai toh 5 keystrokes = 5 distinct cache entries. 20 searches per session × 5 prefixes = 100 entries, har ek 20 items × ~2 KB = ~40 KB → ~4 MB ek session mein. Mobile browser par yeh memory pressure aur GC pauses create karta hai. Do fixes: query ko debounce karke normalize karo (trim, lowercase, collapse spaces) taaki key space chhota rahe, aur `gcTime` short rakho (jaise 5 minutes) taaki unused entries evict ho jaayein. Filters ko serialize karte waqt key order stable rakho — `{a:1,b:2}` aur `{b:2,a:1}` ko alag key banana silent cache-miss doubling hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Optimistic update ka rollback ka matlab hai purana snapshot wapas set kar dena. **Why it breaks:** Optimistic write aur failure ke beech mein agar koi aur mutation ya background refetch cache update kar chuki hai, toh purana snapshot restore karne se wo naya (correct) data mit jaata hai — user ko ek change dikhta hai jo usne undo nahi kiya. **Fix:** Rollback ko targeted rakho (sirf us item ka wo field revert karo), ya rollback ke turant baad affected query invalidate karke server se authoritative state lao.
 - **Wrong assumption:** Cache key mein user ID daalne ki zaroorat nahi kyunki logout par page reload ho jaata hai. **Why it breaks:** SPA mein logout aksar client-side navigation hota hai, page reload nahi — agla user (shared device, ya account switch) usi in-memory cache ko hit karta hai aur pichle user ka data dekh sakta hai. Server authorization isse nahi rokta kyunki request jaati hi nahi, cache hit ho jaati hai. **Fix:** Har private query key mein owner/tenant scope include karo, aur logout par cache explicitly clear karo (`queryClient.clear()`), sirf token delete mat karo.
@@ -126,7 +126,7 @@ User "react" type karta hai toh 5 keystrokes = 5 distinct cache entries. 20 sear
 - **Wrong assumption:** Server data ko Redux/Context mein rakhna simpler hai kyunki "sab state ek jagah" hoti hai. **Why it breaks:** Server data ko manually manage karne ka matlab hai ki deduplication, retry, staleness tracking, refetch-on-focus, pagination merging aur cache eviction — sab khud likhna padega. Yeh hazaar lines ka accidental library ban jaata hai, aur usme sabse zyada bugs staleness/invalidation mein aate hain. **Fix:** Server cache ko dedicated tool se manage karo; Redux/Context ko genuine client state (wizard step, selection, draft, feature flags) ke liye rakho.
 - **Wrong assumption:** `localStorage` mein auth token ya user data rakhna convenient aur safe enough hai. **Why it breaks:** `localStorage` har JavaScript ko readable hai — ek XSS ya ek compromised npm dependency token exfiltrate kar sakti hai, aur wo token expiry tak valid rehta hai. Multi-tab sync bhi manual banti hai. **Fix:** Session credentials ke liye httpOnly, Secure, SameSite cookies prefer karo; `localStorage` ko non-sensitive UI preferences tak limit rakho.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Context versus a server-data cache?** Context value distribution mechanism hai. Remote cache additionally deduplication, retries, staleness and mutation reconciliation manage kar sakti hai; Context alone yeh policies provide nahi karta.
 
@@ -146,31 +146,31 @@ Uske baad read-after-write bug deliberately banao: mutation ko sirf `{ ok: true 
 
 ## Research notes: Client caches do not enforce database access
 
-RLS constrains access when callers bypass the React UI. For UPDATE, USING selects existing rows and WITH CHECK constrains resulting rows; the applicable SELECT policy is also needed.
+RLS React UI bypass karne par bhi access constrain karti hai. UPDATE mein USING existing rows, WITH CHECK resulting rows validate karta hai; relevant SELECT policy bhi chahiye.
 
-Original test: a user may edit their draft title but tries to change its owner to another account. Constrain both the existing scope and resulting ownership. Enable RLS, define required operation policies and keep bypass credentials outside browser code.
+Test: user apna draft title edit kar sakta hai lekin owner doosre account mein badalne ki koshish karta hai. Existing scope aur resulting ownership dono constrain karo. RLS/required operation policies enable karo; bypass credentials browser se bahar rakho.
 
-**Interview check:** Why validate the resulting owner as well as the original row?
+**Interview check:** Original row ke saath resulting owner kyun validate karein?
 
-**Answer:** An authorized edit must not allow transferring a record into an unauthorized scope. Existing-row and resulting-row predicates protect different parts of the transition.
+**Answer:** Authorized edit record ko unauthorized scope transfer nahi karni chahiye. Existing/resulting row predicates transition ke alag parts protect karte hain.
 
-**Practice:** Test anonymous access, another owner and attempted owner reassignment.
+**Practice:** Anonymous, other owner aur owner-reassignment attempts test karo.
 
-[Read the source — Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A user changes a notes filter while an older request is pending. Define query identity and what should happen when the old response arrives.
+**Apply:** Old request pending hai aur user notes filter badal deta hai. Query identity aur old response ka behavior define karo.
 
-> **Hint:** The currently selected filter determines the visible result.
+> **Hint:** Visible result current selected filter se match hona chahiye.
 
-**Answer guide — compare after attempting:** Include user and filter inputs in request/cache identity. Store the old result under its own identity or ignore it for the active view. Keep loading/error feedback associated with the current request. Test reversed completion order and account switching.
+**Answer guide — compare after attempting:** Request/cache identity mein user aur filter inputs include karo. Old result apni identity ke cache mein rakho ya active view ke liye ignore karo. Loading/error bhi current request se attach ho. Reverse completion aur account switching test karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [When Effects are unnecessary](https://react.dev/learn/you-might-not-need-an-effect)
 - [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)

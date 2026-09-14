@@ -5,15 +5,15 @@ track: java
 order: 9
 level: Intermediate
 minutes: 17
-summary: Failures ko useful context do aur resources deterministic close karo.
+summary: Resource ka owner decide karta hai use kaun close karega; exception aane par bhi cleanup hona chahiye.
 tags: exceptions, io, time, resources
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Exception ek failed operation ka structured signal hai. Caller ko decide karna hota hai ki recover karna possible hai, retry meaningful hai, ya error translate karke boundary par return karna hai. Har catch block mein print karke continue karna failure ko success jaisa bana deta hai. Resource cleanup correctness ka part hai, garbage collector ka replacement task nahi.
 
-> **Core takeaway:** Resource ownership determines who closes a stream; exceptions must not bypass cleanup.
+> **Core takeaway:** Resource ka owner decide karta hai use kaun close karega; exception aane par bhi cleanup hona chahiye.
 
 ## Exception contracts
 
@@ -86,7 +86,7 @@ static boolean isExpired(Instant issuedAt, Duration ttl, Clock clock) {
 
 `Clock` inject karne se expiry test ko real 15-minute wait ki zaroorat nahi; fixed clock se boundary (exactly at expiry, one second before/after) deterministically test ho sakti hai. Same design database "created at" timestamps aur scheduled-job logic mein bhi repeat hota hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `LocalDateTime.now()` ko directly database mein store karke different timezone ke servers/clients ke saath consistently compare kiya ja sakta hai. **Why it breaks:** `LocalDateTime` mein timezone information hi nahi hoti; ek server IST mein aur dusra UTC mein `now()` call kare toh dono values direct comparison mein galat honge, aur daylight-saving transition wale din same local time do baar ya kabhi bhi occur nahi karti. **Fix:** Storage aur cross-system comparison ke liye `Instant` (ya UTC `ZonedDateTime`) use karo; `LocalDateTime` sirf timezone-agnostic user-facing display/input ke liye rakho.
 - **Wrong assumption:** Do dates ke beech din count karne ke liye `Duration` sahi tool hai. **Why it breaks:** `Duration` exact elapsed time (seconds/nanos) measure karta hai, calendar-aware nahi hota. Daylight-saving transition wale din `Duration.between(startOfDay, endOfDay)` 24 hours nahi dega — 23 ya 25 hours de sakta hai. **Fix:** Calendar date differences (days, months, years) ke liye `Period` use karo; sirf elapsed wall-clock/instant duration ke liye `Duration`.
@@ -96,7 +96,7 @@ static boolean isExpired(Instant issuedAt, Duration ttl, Clock clock) {
 
 Payment/order APIs mein exception translation exactly is pattern se dikhti hai: repository layer ka `SQLException`/`DataAccessException` service layer mein domain exception (`OrderNotFoundException`, `InsufficientStockException`) mein wrap hota hai, aur `@RestControllerAdvice` (chapter 10) usse HTTP status mein map karta hai. Cause chain preserve karna production debugging mein root cause ke liye critical hota hai — sirf top-level message se root SQL/network issue identify karna mushkil hota hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Does finally always run?** Ordinary control flow mein usually yes, lekin JVM termination, crash ya abrupt process kill cleanup guarantee nahi deta. Finally se return karna original return/exception suppress kar sakta hai, isliye avoid karo.
 
@@ -108,19 +108,19 @@ Payment/order APIs mein exception translation exactly is pattern se dikhti hai: 
 
 UTF-8 file importer banao. Invalid row number ke saath error report karo. Fixed Clock se midnight-boundary test likho, phir Europe/Berlin daylight-saving day par 24-hour duration aur one-day calendar addition compare karo. Phir ek token-expiry checker likho jo injected `Clock` use kare, aur teen tests likho: expiry se pehle, exactly at expiry, aur expiry ke baad.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A file-reading method throws halfway through processing. Sketch how to ensure its owned reader closes and how the caller learns about failure.
+**Apply:** File read karte waqt beech mein exception aa gayi. Owned reader close kaise hoga aur caller ko failure kaise pata chalega?
 
-> **Hint:** Use a construct whose cleanup runs on normal and exceptional exits.
+> **Hint:** Aisa construct use karo jo normal aur exceptional exit dono par cleanup kare.
 
-**Answer guide — compare after attempting:** Open the reader in try-with-resources and propagate or meaningfully wrap the exception. Verify the failure path as well as successful reading. Do not swallow the exception and return a fabricated complete result. Avoid closing a resource owned by a caller unless the contract transfers ownership.
+**Answer guide — compare after attempting:** Reader try-with-resources mein kholo. Exception propagate karo ya meaningful context ke saath wrap karo. Success aur failure dono paths check karo. Exception chupakar fake complete result mat do. Caller-owned resource tabhi close karo jab contract ownership transfer karta ho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Exception guide](https://dev.java/learn/exceptions/)
 - [Files API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Files.html)

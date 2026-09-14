@@ -5,15 +5,15 @@ track: react
 order: 5
 level: Intermediate
 minutes: 31
-summary: Effects ko external synchronization ke liye use karo aur stale requests, listeners aur closures clean up karo.
+summary: Effect external system se synchronization own karta hai; jo resource start kare uska cleanup bhi kare.
 tags: effects, useEffect, useRef, custom-hooks, races
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Effect React tree ko external system se synchronize karta hai: network request, browser listener, timer, socket ya third-party widget. Effect ko general “state change ke baad code chalao” tool mat banao. Rendering se calculate hone wali value render mein calculate karo; button click ki action handler mein karo. Effect setup ke opposite cleanup ka mental checklist useful hai.
 
-> **Core takeaway:** An effect owns synchronization with an external system and must release what it starts.
+> **Core takeaway:** Effect external system se synchronization own karta hai; jo resource start kare uska cleanup bhi kare.
 
 ## A cancellable data effect
 
@@ -53,7 +53,7 @@ Id change par previous cleanup run hota hai, phir new setup. Abort unnecessary r
 
 Effect apne render ki bindings capture karta hai. Dependency array mein effect ke used reactive values include karo. Missing dependency stale behavior create kar sakti hai. Linter suppress karne se actual dependency disappear nahi hoti. Object/function har render mein create ho rahe hain to dependency identity change hogi; creation effect ke andar move karna ya responsibility redesign karna helpful ho sakta hai.
 
-Including `onLoaded` in dependencies is correct. If its identity changes, synchronization restarts. The research notes below explain why removing it is not the fix.
+onLoaded dependency include karna correct hai. Identity badlegi toh synchronization restart hogi. Neeche research section samjhata hai ki dependency remove karna fix kyun nahi.
 
 Empty dependency array ka meaning component lifetime ke saath setup hai, universal "exactly once" guarantee nahi. Development Strict Mode extra setup-cleanup cycle chala sakta hai. Cleanup real resource undo kare: listener remove, connection disconnect, timer clear. Effect callback itself async mat banao, kyunki async function promise return karta hai aur effect cleanup function expect karta hai.
 
@@ -103,7 +103,7 @@ function useDebouncedValue(value, delayMs) {
 
 Yahan cleanup critical hai: agar `clearTimeout` na ho, to fast typing ke dauraan multiple stale timeouts queue ho jaayenge aur search request se zyada baar fire hogi.
 
-Effect timing is explained in the research notes below. Reserve paint-blocking `useLayoutEffect` for necessary visual measurement.
+Effect timing neeche explain hai. Paint-blocking useLayoutEffect necessary visual measurement ke liye rakho.
 
 ## Gotchas
 
@@ -122,7 +122,7 @@ Topic id rapidly switch karo with network throttling. Confirm karo ki old respon
 
 Chat ya notifications feature mein WebSocket connection effect ke andar open hoti hai aur cleanup mein close hoti hai. User jab conversation switch karta hai (id dependency change hoti hai), to purani connection close honi chahiye taaki purani room ke messages naye UI mein leak na karein. Yehi pattern analytics "page viewed" event ke liye bhi common hai — effect route change par ek baar fire ho, duplicate na ho, aur unmount par pending call cancel ho sake.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Effect infinite loop kyun hota hai?** Effect state update karta hai, update dependency identity/value change karti hai, phir effect repeat hota hai. Dependency aur data model dono inspect karo.
 
@@ -130,30 +130,30 @@ Chat ya notifications feature mein WebSocket connection effect ke andar open hot
 
 ## Research notes: Effect timing depends on the trigger
 
-`useEffect` is not an unconditional after-paint hook. React generally allows paint first for non-interaction Effects; interaction-related Effects may run before paint. Necessary layout measurement before paint belongs in `useLayoutEffect`, which blocks painting.
+useEffect unconditional after-paint hook nahi. Non-interaction effects mein React generally paint pehle allow karta hai; interaction-related effects paint se pehle bhi run ho sakte hain. Required pre-paint layout measurement useLayoutEffect mein hoti hai, jo painting block karta hai.
 
-Dependency changes run old cleanup before new setup. Dependencies use `Object.is`. A new options object can restart synchronization even when its fields look equal; prefer primitive dependencies and create connection options inside the Effect when appropriate.
+Dependencies change par old cleanup, phir new setup. Comparison Object.is se hoti hai. Same-looking fields ka new options object bhi sync restart karega; suitable ho toh primitive dependencies aur effect ke andar options creation use karo.
 
-**Interview check:** Does including an unstable callback violate exhaustive-deps?
+**Interview check:** Unstable callback include karna exhaustive-deps violate karta hai?
 
-**Answer:** No. Including it declares the dependency correctly. If its identity changes, rerunning follows that declaration. Fix unnecessary churn through ownership or appropriate stabilization rather than removing a needed dependency.
+**Answer:** Nahi; dependency honestly declare hoti hai. Identity badlegi toh rerun expected hai. Churn ko ownership/appropriate stabilization se fix karo, required dependency delete karke nahi.
 
-**Practice:** Trace setup and cleanup as roomId changes twice.
+**Practice:** roomId do baar change karke setup/cleanup trace karo.
 
-[Read the source — React](https://react.dev/reference/react/useEffect). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — React](https://react.dev/reference/react/useEffect). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A subscription effect runs again when roomId changes. Describe the expected subscribe/unsubscribe sequence for room A, then B, then unmount.
+**Apply:** roomId A se B hota hai, phir component unmount hota hai. Subscribe/unsubscribe ka order batao.
 
-> **Hint:** Pair each setup with cleanup for the same room and resource.
+> **Hint:** Har setup ka cleanup same room aur resource ke liye pair karo.
 
-**Answer guide — compare after attempting:** Subscribe to A; clean up A before subscribing to B; clean up B on unmount. Return cleanup from the effect and include reactive dependencies. Development checks can exercise an additional setup/cleanup cycle, so cleanup must actually undo the subscription.
+**Answer guide — compare after attempting:** A subscribe; B subscribe karne se pehle A cleanup; unmount par B cleanup. Effect se cleanup return karo aur reactive dependencies include karo. Development checks extra setup/cleanup cycle chala sakte hain, isliye cleanup actual subscription undo kare.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [React synchronizing with effects](https://react.dev/learn/synchronizing-with-effects) setup/cleanup explain karta hai. [React you might not need an effect](https://react.dev/learn/you-might-not-need-an-effect) unnecessary effects identify karta hai.

@@ -5,15 +5,15 @@ track: javascript
 order: 2
 level: Foundation
 minutes: 12
-summary: Learn numbers strings booleans and comparisons before writing decisions.
+summary: Input conversion soch-samajhkar karo; truthy hona valid number hone ka proof nahi hai.
 tags: fundamentals, js, types, operators
 ---
 
-## Mental model
+## Mental model — simple soch
 
-A value has a type, and that type affects what an operator does. Variables are names; values are the things being named. JavaScript can assign a different type to a let binding later, but keeping one clear meaning per variable makes a program easier to follow. For now, concentrate on numbers, strings and booleans, plus missing values.
+Har value ka type hota hai; operator ka behavior usse affect hota hai. Variable naam hai, value actual data hai. let binding mein later different type aa sakta hai, lekin ek variable ka meaning consistent rakhna code easy banata hai. Abhi numbers, strings, booleans aur missing values par focus karo.
 
-> **Core takeaway:** Conversion is a decision at the input boundary; truthiness does not validate a number.
+> **Core takeaway:** Input conversion soch-samajhkar karo; truthy hona valid number hone ka proof nahi hai.
 
 ## Calculate and compare
 
@@ -30,32 +30,32 @@ console.log(Number('20') + 3); // 23
 console.log('20' === 20); // false
 ```
 
-Arithmetic operators include +, -, *, / and %. Parentheses make grouping explicit. Strings contain text; joining text with + is concatenation. Booleans are true and false. Strict equality compares without first converting a string into a number. Prefer explicit conversion when your input is textual but the calculation requires a number.
+Arithmetic operators +,-,*,/,% hain; parentheses grouping clear karte hain. String text hai; + se text join karna concatenation hai. Booleans true/false hain. Strict equality pehle string ko number convert nahi karti. Text input se numeric calculation chahiye toh explicit conversion karo.
 
 ## Inspect input deliberately
 
-Use typeof to inspect common value types. undefined usually represents a missing or not-yet-assigned value; null is often an explicit absence chosen by an API. The full primitive list also includes bigint and symbol, which later examples introduce when useful. Number('hello') produces NaN, so conversion is not proof of valid input. Number.isNaN checks that particular numeric result. An empty string converts to zero, which may conflict with a required-field rule.
+Common types inspect karne ke liye typeof use karo. undefined usually missing/not-yet-assigned value; null often API-chosen explicit absence hai. bigint/symbol later useful examples mein aayenge. `Number('hello')` NaN deta hai; conversion valid input ka proof nahi. Number.isNaN specifically NaN check karta hai. Empty string zero banti hai, jo required-field rule tod sakti hai.
 
 ## Practice
 
-Predict '5' + 2, Number('5') + 2, 5 > 2 and 5 === '5'. Then run them. Compute the area of a rectangle using numeric width and height. Change width to a numeric string and explicitly convert it at the input boundary. State what the program should do if width is blank or invalid instead of assuming every input is correct.
+`'5'+2`, `Number('5')+2`, `5>2`, `5==='5'` predict karke run karo. Numeric width/height se rectangle area nikalo. Width numeric string karo aur input boundary par convert karo. Blank/invalid width ka behavior bhi define karo.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-Explain why 0 and '0' are different values. You should be able to produce a boolean comparison and distinguish it from assignment. The next lesson uses these booleans to choose which statements run.
+0 aur '0' alag kyun hain, samjhao. Boolean comparison aur assignment ka difference batao. Next in booleans se choose karenge ki kaunsi statements chalengi.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Predict `'8' + 2`, `Number('8') + 2`, and `Number('')`. Why should an empty form field not automatically become a valid score?
+**Apply:** `'8' + 2`, `Number('8') + 2`, `Number('')` predict karo. Empty form field ko automatically valid score kyun nahi maanna chahiye?
 
-> **Hint:** An empty string has a numeric conversion too.
+> **Hint:** Empty string ka bhi numeric conversion hota hai.
 
-**Answer guide — compare after attempting:** The results are `'82'`, `10`, and `0`. Reject blank input before conversion, then check that the result is finite and within the allowed range. A successful conversion alone does not prove that the user supplied a score.
+**Answer guide — compare after attempting:** Results `'82'`, `10`, `0` hain. Conversion se pehle blank input reject karo; phir finite number aur allowed range check karo. Conversion succeed hone ka matlab user ne score diya, yeh nahi hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MDN expressions and operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_operators) describes these operations.
+[MDN expressions and operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_operators) mein operations padho.

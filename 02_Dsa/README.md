@@ -1,11 +1,10 @@
 # DSA Short Notes
 
-> Start with the [new structured study path](../notes/README.md#data-structures--algorithms). This folder preserves the original source notes and examples.
+> Pehle [ordered Hinglish course](../notes/README.md#data-structures--algorithms). Yahan original source notes aur examples references ke liye hain.
 
-These notes follow the same style as the JavaScript and Frontend notes in this repo:
-short Hinglish explanations, important rules, and JavaScript examples.
+Yeh notes bhi repo ke JavaScript aur Frontend jaisi style mein hain: short Hinglish explanations, important rules aur JavaScript examples.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_FOUNDATIONS/Big_O_Notation.js`
 2. `01_FOUNDATIONS/Arrays_Objects_Strings.js`
@@ -24,7 +23,7 @@ short Hinglish explanations, important rules, and JavaScript examples.
 15. `13_ADVANCED/Advanced_DSA_Concepts.js`
 16. `14_CHEATSHEETS/DSA_Interview_Cheat_Sheet.js`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - Big O, time complexity, space complexity, logarithms
 - Objects, arrays, strings, built-in operations

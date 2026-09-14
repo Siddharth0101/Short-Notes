@@ -1,13 +1,13 @@
 # Frontend Short Notes
 
-> Start with the [new structured study path](../notes/README.md#react). This folder preserves the original source notes and examples.
+> Pehle [ordered Hinglish course](../notes/README.md#react). Yahan original source notes aur examples references ke liye hain.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `01_CSS/Vw_Vh,Rem,Px.js`
 2. `02_React/README.md`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - CSS units: px, rem, em, %, vw, vh, responsive sizing basics
 - Complete React framework notes (Jonas Schmedtmann course style)

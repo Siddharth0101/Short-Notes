@@ -5,19 +5,19 @@ track: javascript
 order: 16
 level: Advanced
 minutes: 25
-summary: Build cancellation, retries and concurrency limits with explicit failure behavior.
+summary: Concurrency limit ek waqt active work bound karti hai; total jobs ki count nahi.
 tags: promises, concurrency, cancellation, machine-coding
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Async ka matlab unlimited parallel work nahi hai. A promise represents an eventual outcome; it does not own cancellation, scheduling or resource limits. Before writing an async utility, define four contracts: result order, maximum in-flight work, failure policy and cancellation ownership. These decisions matter more than remembering a combinator name.
 
-> **Core takeaway:** A concurrency limit bounds in-flight work, not the total number of jobs.
+> **Core takeaway:** Concurrency limit ek waqt active work bound karti hai; total jobs ki count nahi.
 
 ## Worked implementation
 
-This worker pool preserves input order and caps active mapper calls. The mapper receives an index so repeated values remain distinguishable. The contract is to settle every item, similar to allSettled, rather than stop on the first rejection.
+Worker pool input order preserve aur active mapper calls cap karta hai. Index se repeated input values distinguish hoti hain. Contract har item settle karna hai, allSettled jaisa; first rejection par stop karna nahi.
 
 ```javascript
 async function mapLimit(items, limit, mapper) {
@@ -46,29 +46,29 @@ async function mapLimit(items, limit, mapper) {
 }
 ```
 
-For inputs A, B, C and limit 2, workers start A and B. If B finishes first, its worker starts C. Output slots still stay A, B, C. cursor increment happens synchronously before await on the single JS thread, so two workers do not claim the same index. This reasoning does not transfer to shared memory across actual threads.
+A,B,C aur limit 2 mein A/B start. B pehle finish toh uski worker C start karegi. Output slots phir bhi A,B,C order mein hain. Single JS thread par cursor increment await se pehle synchronously hota hai, isliye same index do workers claim nahi karti. Actual threads ki shared memory par yeh proof directly apply nahi hota.
 
-Scheduling overhead is O(n), results use O(n) memory, and at most min(n, limit) mapper calls remain active. Network duration determines elapsed time; a concurrency limit alone is not a requests-per-second rate limit.
+Scheduling overhead O(n), result memory O(n), active calls maximum min(n,limit) hain. Wall-clock time network duration par depend karta hai. Concurrency cap requests-per-second rate limit nahi hai.
 
 ## Failure and cancellation decisions
 
-Promise.all rejects when one input rejects, but other operations continue. Promise.race with a timeout also leaves the losing operation running. Abort a fetch through its signal, and check response.ok because HTTP 404 is a response, not a transport rejection. Cancellation requires cooperation from the underlying operation.
+Promise.all first rejection par reject karta hai, baaki operations cancel nahi hoti. Timeout wali Promise.race bhi losing operation ko chalne deti hai. Fetch signal se abort karo; response.ok check karo kyunki HTTP 404 response hai, transport rejection nahi. Cancellation underlying operation ke cooperation par depend hai.
 
-Retry only failures your application defines as transient. Use a bounded attempt count and total deadline. A retried write needs a stable operation identity; generating a fresh identifier on every attempt defeats deduplication. If a downstream server keeps processing after cancellation, the client cannot infer that no write happened.
+Sirf app-defined transient failures retry karo. Attempts aur total deadline bound rakho. Retried write same stable operation ID use kare; har attempt new ID deduplication todti hai. Cancellation ke baad server continue kare toh client “write nahi hui” infer nahi kar sakta.
 
 ## Practice
 
-Use manually controlled promises to verify that active mapper calls never exceed two. Resolve B before A and inspect output order. Reject C and ensure its slot contains a rejected result. Check empty input, limit zero and synchronous mapper exceptions. Then add AbortSignal support with an explicit contract: stop starting new items, pass the signal into active work, and decide how unstarted slots are represented.
+Manually controlled promises se maximum two active mappers verify karo. B ko A se pehle resolve karke output order dekho. C reject par uske slot mein rejected result ho. Empty input, zero limit, sync throw test karo. AbortSignal add karte waqt new jobs stop, active work signal aur unstarted slots ka contract define karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Why does await inside forEach not wait for the whole loop?** forEach ignores the returned promises. Use for...of for sequencing or map plus a combinator for concurrent results.
+**forEach ke andar await whole loop ko wait kyun nahi karata?** forEach returned promises ignore karta hai. Sequential work ke liye for...of; concurrent results ke liye map plus promise combinator lo.
 
-**Why can a pool still overload an API?** Fast responses can yield high request rates even with a small concurrency cap. Add rate control when the service contract requires it.
+**Pool bhi API overload kyun kar sakta hai?** Fast responses par small concurrency ke saath bhi requests/second high ho sakti hain. Service contract require kare toh rate control bhi lagao.
 
 ## Research notes: Independent outcomes with allSettled
 
-Independent dashboard panels can show partial results. `allSettled` returns outcomes in input order, regardless of completion order.
+Independent dashboard panels partial results dikha sakte hain. allSettled completion order se independent input-order outcomes deta hai.
 
 ```js
 const outcomes = await Promise.allSettled([
@@ -79,28 +79,28 @@ console.log(outcomes.map(item => item.status));
 // ["fulfilled", "rejected"]
 ```
 
-Inspect each outcome. Replacing every error with an empty array hides the difference between empty data and failed loading. Collecting outcomes does not limit how many jobs you start.
+Har outcome inspect karo. Har error ko [] kar dene se empty data aur failed loading ka difference chupta hai. Outcomes collect karna started jobs ki count limit nahi karta.
 
-**Interview check:** Will allSettled finish when one input promise never settles?
+**Interview check:** Ek promise kabhi settle na ho toh allSettled finish karega?
 
-**Answer:** No. It waits for every input to settle. Define deadlines separately; also distinguish a timed-out observation from cancellation of the underlying work.
+**Answer:** Nahi; har input settle hone ka wait karega. Deadline separately define karo. Timeout observe karna aur underlying work cancel karna alag actions hain.
 
-**Practice:** Add a never-settling job and design a deadline without losing successful panels.
+**Practice:** Never-settling job add karo aur successful panels bachate hue deadline design karo.
 
-[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Five jobs take `[50,10,10,10,10]` milliseconds and two workers take the next job whenever free. Sketch starts and completions, ignoring scheduling overhead.
+**Apply:** Jobs `[50,10,10,10,10]` ms leti hain. Do workers free hote hi next job uthati hain. Overhead ignore karke start/end times likho.
 
-> **Hint:** One worker can finish several short jobs while the long job continues.
+> **Hint:** Long job chalti reh sakti hai jab doosri worker multiple short jobs complete kare.
 
-**Answer guide — compare after attempting:** Jobs 1 and 2 start at time 0. The second worker starts jobs 3, 4, and 5 at times 10, 20, and 30; they finish at 20, 30, and 40. Job 1 finishes at 50. At most two are active; preserve result indices if input order matters.
+**Answer guide — compare after attempting:** Jobs 1 aur 2 time 0 par start. Second worker jobs 3,4,5 ko 10,20,30 par start karke 20,30,40 par finish karegi. Job 1 time 50 par complete. Maximum do active hain. Input order mein result chahiye toh original indices preserve karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MDN promise guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) explains promise composition and cancellation boundaries.
+[MDN promise guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) mein composition aur cancellation boundaries padho.

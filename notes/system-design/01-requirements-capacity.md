@@ -5,16 +5,16 @@ track: system-design
 order: 1
 level: Foundation
 minutes: 21
-summary: User flows se constraints nikalo aur rough numbers se architecture justify karo.
+summary: Capacity estimate clear assumptions aur units se nikalta hai; guessed number ko fact mat samjho.
 tags: requirements, capacity, interviews, tradeoffs
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 System design boxes draw karne se pehle constraints choose karne ka exercise hai. Same notes product 100 personal users aur 10 million public readers ke liye different architecture demand kar sakta hai. Interview mein assumptions aloud bolo. Har component ka reason user behavior, reliability need ya measured bottleneck se connect hona chahiye.
 
-> **Core takeaway:** Capacity estimates are consequences of explicit assumptions and units.
+> **Core takeaway:** Capacity estimate clear assumptions aur units se nikalta hai; guessed number ko fact mat samjho.
 
 ## Frame the problem
 
@@ -114,14 +114,14 @@ Error budget ko concrete numbers mein rakho, warna wo slogan ban jaata hai:
 
 Dependency chain ka naive math bhi dhyan se: agar ek request 5 services touch karti hai aur har ek 99.9% available hai, independent failures assume karne par overall ~99.5% (~3.6 hours/month) milta hai — proposed SLO se kaafi kharab. Iske do real fixes hain: dependencies ko critical path se hatao (cache/fallback/async), ya failures ko correlated maano aur shared infrastructure ko single failure domain ki tarah treat karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Capacity estimate ka matlab hai precise QPS number nikaalna, aur jitna precise utna better. **Why it breaks:** Input assumptions (DAU, actions/user, peak factor) khud 2-5x uncertain hain, toh 231.48 rps likhna false precision hai — aur wo precision reviewers ko sensitivity analysis se distract kar deti hai. **Fix:** Order of magnitude par commit karo ("hundreds of rps, thousands nahi") aur time us threshold ko identify karne mein lagao jahan design category badalti hai.
 - **Wrong assumption:** Peak load ko average ka fixed 2-3x maan lena safe hai. **Why it breaks:** Real spikes product events se aate hain — push notification, sale start, exam deadline, cron jobs jo sab tenants ke liye ek hi minute par chalti hain. Ye 20-100x compression create karte hain, aur autoscaling ko new instances warm karne mein 60-180 seconds lagte hain, matlab spike ka pehla minute existing capacity par hi padta hai. **Fix:** Spike ka *source* name karo, uska duration estimate karo, aur decide karo ki spike ko absorb karna hai (headroom + queue) ya spread karna hai (jitter, staggered cron).
 - **Wrong assumption:** Total users ka number scale ka best indicator hai. **Why it breaks:** 10 million registered users jinme 50,000 daily active hain, 50,000 DAU wale product jaisa load banate hain — lekin storage aur index size 10 million wale jaisi hoti hai. Ek hi "scale" word do alag constraints ko chhupa deta hai. **Fix:** Reads/s, writes/s, data volume aur concurrent connections ko alag-alag estimate karo; inme se sirf ek hi usually pehla bottleneck hota hai.
 - **Wrong assumption:** Nonfunctional requirements ko "fast, reliable, secure" keh dena kaafi hai. **Why it breaks:** Yeh un-testable hai, isliye koi design choice inse justify nahi ho sakti — har architecture "fast" claim kar sakti hai. **Fix:** Har NFR ko number aur measurement point ke saath likho: "search results p95 under 400 ms as measured at the browser, over a 4G-class connection."
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **What do you do first?** Users, core flows, scope, scale and correctness requirements clarify karta hoon. Then simple design propose karke one important bottleneck deeply analyze karta hoon.
 
@@ -141,19 +141,19 @@ Video-learning platform ke liye same worksheet fill karo. Read-heavy catalog and
 
 Phir ek sensitivity exercise: apne estimate mein peak factor 10 se 50 karo aur likho ki kaunsa component *pehle* fail karega — app instances, connection pool, database CPU, ya bandwidth. Usually answer connection pool ya database hota hai, app instances nahi; yeh identify karna hi capacity work ka real output hai. Last mein retention rule design karo: kaunsa data 90 din baad aggregate mein collapse ho sakta hai, aur usse storage growth curve kitni flat hoti hai?
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Assume 100,000 daily users each make 20 reads per day. Estimate average reads/second and a 10× peak. What assumption would you validate first?
+**Apply:** 100,000 daily users har din 20 reads karte hain. Average reads/second aur 10× peak nikalo. Pehle kaunsi assumption validate karoge?
 
-> **Hint:** There are 86,400 seconds in a day.
+> **Hint:** Ek din mein 86,400 seconds hote hain.
 
-**Answer guide — compare after attempting:** Two million daily reads average about 23.1 requests/second; a 10× peak is about 231. Validate burstiness and reads per active user against observed traffic. These estimates exclude retries, background work, and downstream fan-out, which need separate accounting.
+**Answer guide — compare after attempting:** 2,000,000 daily reads / 86,400 ≈23.1 requests/second; 10× peak ≈231. Actual burstiness aur per-active-user reads validate karo. Retries, background work aur downstream fan-out is estimate mein included nahi; unhe alag gino.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Google SRE service objectives](https://sre.google/sre-book/service-level-objectives/)
 - [Google SRE handling overload](https://sre.google/sre-book/handling-overload/)

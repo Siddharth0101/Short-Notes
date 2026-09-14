@@ -28,29 +28,29 @@ export function monotonicStackTrace(values) {
     });
   }
   snapshot(
-    'Every day starts unresolved',
-    'Zero means no warmer day has been found. Store indices so duplicate temperatures keep their identity.',
+    'Shuru mein har day ka answer pending hai',
+    'Zero ka matlab abhi koi warmer day nahi mila. Indices store karo, taaki same temperature wale alag days ki identity bachi rahe.',
   );
   values.forEach((value, today) => {
     while (stack.length && value > values[stack.at(-1)]) {
       const previous = stack.pop();
       waits[previous] = today - previous;
       snapshot(
-        `Day ${today} resolves day ${previous}`,
-        `${value}° is warmer than ${values[previous]}°. The wait is ${today} − ${previous} = ${waits[previous]} days. This index will never be pushed again.`,
+        `Day ${today} se day ${previous} ka answer mila`,
+        `${value}° pichhle ${values[previous]}° se warmer hai. Wait ${today} − ${previous} = ${waits[previous]} din hai. Yeh index ab dobara push nahi hoga.`,
         today,
       );
     }
     stack.push(today);
     snapshot(
-      `Push day ${today}`,
-      'Unresolved temperatures stay non-increasing from bottom to top. Equal temperatures do not count as warmer.',
+      `Day ${today} ko push karo`,
+      'Pending temperatures bottom se top tak non-increasing hain. Equal temperature warmer nahi maana jaata, isliye equality par pop nahi karte.',
       today,
     );
   });
   snapshot(
-    'All answers resolved or left at zero',
-    'Remaining indices have no later warmer day. Each index was pushed once and popped at most once: O(n) time, O(n) space.',
+    'Answers mil gaye; baaki zero hain',
+    'Bache indices ke baad koi warmer day nahi hai. Har index ek baar push aur maximum ek baar pop hua: time O(n), space O(n).',
   );
   return frames;
 }
@@ -61,45 +61,45 @@ export const advancedVisuals = [
     name: 'React keys and draft identity',
     track: 'react',
     icon: 'react',
-    description: 'Watch a draft move to the wrong row, then fix the identity contract.',
+    description: 'Galat row par draft pahunchne ka reason aur stable keys ka fix dekho.',
     source: 'https://react.dev/learn/preserving-and-resetting-state',
     code: '// Stable identity survives sibling deletion:\nitems.map(item => <Editor key={item.id} item={item} />)\n// Index keys identify positions, not entities:\nitems.map((item, i) => <Editor key={i} item={item} />)',
     language: 'jsx',
     takeaway:
-      'Keys identify siblings within their parent. Stable IDs preserve entity state during reordering; changing a key intentionally starts fresh state.',
+      'Key same parent ke siblings ki identity batati hai. Stable entity ID se reorder par sahi entity ki state bachti hai. Key badaloge toh nayi state se shuruaat hoti hai.',
     frames: [
       frame(
-        'Two rows, indexed by position',
-        'A and B each have an Editor with local draft state. The keys are 0 and 1.',
+        'Do rows — position wali keys',
+        'A aur B dono ke Editor mein apna local draft hai. Abhi keys positions 0 aur 1 hain.',
         [
           lane('Rendered rows', ['key 0 → A', 'key 1 → B']),
           lane('Local drafts', ['key 0: draft A', 'key 1: draft B']),
         ],
       ),
       frame(
-        'Delete A from the data',
-        'B becomes the first array item, so its index key changes from 1 to 0.',
+        'Data se A delete karo',
+        'A delete hua toh B pehla item bana. Index key 1 se 0 ho gayi, bhale hi entity wahi B hai.',
         [lane('Next render', ['key 0 → B']), lane('Existing component at key 0', ['draft A'])],
       ),
       frame(
-        'Position identity preserves the wrong draft',
-        'React reuses the Editor at key 0 for B. Its local state still belongs to the old A editor.',
+        'Position key se galat draft bacha',
+        'React key 0 wala Editor B ke liye reuse karta hai. Uski local draft state purane A editor ki hai, isliye galat draft dikhta hai.',
         [
           lane('Visible row', ['B showing draft A']),
           lane('Unmounted component', ['old key 1, draft B discarded']),
         ],
       ),
       frame(
-        'Restart with stable entity keys',
-        'Use keys A and B. This is the same initial example with a different identity contract.',
+        'Stable entity keys se dobara dekho',
+        'Ab entity IDs A aur B ko keys banao. Example wahi hai; identity ab position par depend nahi karti.',
         [
           lane('Rendered rows', ['key A → A', 'key B → B']),
           lane('Local drafts', ['key A: draft A', 'key B: draft B']),
         ],
       ),
       frame(
-        'Delete A again',
-        'B keeps key B under the same parent and therefore retains its own local state.',
+        'A ko phir delete karo',
+        'Same parent ke andar B ki key B hi rehti hai, isliye uski apni local state bachti hai.',
         [
           lane('Visible row', ['key B → B showing draft B']),
           lane('Unmounted component', ['key A only']),
@@ -112,21 +112,21 @@ export const advancedVisuals = [
     name: 'The last-seat transaction race',
     track: 'java',
     icon: 'database',
-    description: 'Compare a read-then-write race with an atomic conditional claim.',
+    description: 'Read-then-write race ko atomic conditional claim se compare karo.',
     language: 'sql',
     source: 'https://www.postgresql.org/docs/18/transaction-iso.html',
     code: 'UPDATE inventory\nSET stock = stock - 1\nWHERE product_id = $1 AND stock > 0\nRETURNING stock;\n-- No returned row: no reservation was made.\n-- Write the reservation in the same transaction.',
     takeaway:
-      'Protect the invariant in the shared database. A transaction wrapper or a local Java lock alone does not make every read-then-write design race-safe.',
+      'Shared database mein invariant protect karo. Sirf transaction wrapper ya ek Java instance ka lock har read-then-write race solve nahi karta.',
     frames: [
       frame(
-        'One seat, two buyers',
-        'Both requests reach different API instances. The database currently has stock = 1.',
+        'Ek seat, do buyers',
+        'Dono requests alag API instances par aayi hain. Shared database mein stock = 1 hai.',
         [lane('Buyer A', ['ready']), lane('Database', ['stock = 1']), lane('Buyer B', ['ready'])],
       ),
       frame(
-        'Both read available stock',
-        'A preliminary SELECT allows both callers to observe one available seat before either writes.',
+        'Dono ne available stock padha',
+        'Pehle SELECT karne par dono callers ko ek seat available dikhti hai. Abhi kisi ne write nahi kiya.',
         [
           lane('Buyer A', ['read 1; decide to book']),
           lane('Database', ['stock = 1']),
@@ -134,16 +134,16 @@ export const advancedVisuals = [
         ],
       ),
       frame(
-        'Both write a previously computed zero',
-        'With no other invariant or conflict check, each writes stock = 0 and creates an order. Two bookings now exist for one seat.',
+        'Dono ne pehle calculated zero likha',
+        'Koi extra invariant/conflict check nahi hai. Dono pehle se calculated stock = 0 write karke order banate hain. Ek seat ke liye do bookings ho gayi.',
         [
           lane('Bookings', ['order A', 'order B']),
           lane('Database', ['stock = 0 — hides oversell']),
         ],
       ),
       frame(
-        'Reset: claim with one conditional statement',
-        'Both callers issue UPDATE ... WHERE stock > 0. Here we model PostgreSQL Read Committed row-update behavior.',
+        'Reset: ek conditional statement se claim karo',
+        'Dono UPDATE ... WHERE stock > 0 chalate hain. Yeh PostgreSQL Read Committed row-update behavior ka simplified model hai.',
         [
           lane('Buyer A', ['conditional UPDATE']),
           lane('Database', ['stock = 1']),
@@ -151,8 +151,8 @@ export const advancedVisuals = [
         ],
       ),
       frame(
-        'A claims the row; B waits',
-        'A changes stock to zero and writes its reservation in the same transaction. B cannot update the row concurrently.',
+        'A ne row claim ki; B wait karta hai',
+        'A stock zero karta hai aur same transaction mein reservation likhta hai. B ko is row ka concurrent update karne ke liye wait karna padta hai.',
         [
           lane('Buyer A', ['one row returned; commit reservation']),
           lane('Database', ['stock = 0']),
@@ -160,8 +160,8 @@ export const advancedVisuals = [
         ],
       ),
       frame(
-        'B rechecks and cannot claim',
-        'After A commits, B re-evaluates the condition against the updated row. No row satisfies stock > 0, so B returns sold out.',
+        'B dobara check karta hai; claim fail',
+        'A commit kare toh B updated row par condition dobara check karta hai. Stock > 0 match nahi hota; B sold out return karta hai.',
         [lane('Bookings', ['order A only']), lane('Buyer B', ['zero rows returned → sold out'])],
       ),
     ],
@@ -171,11 +171,11 @@ export const advancedVisuals = [
     name: 'Monotonic stack: warmer days',
     track: 'dsa',
     icon: 'layers',
-    description: 'See unresolved candidates leave the stack exactly once.',
+    description: 'Pending candidates ko stack se maximum ek baar nikalte dekho.',
     source: 'https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/',
     code: 'const waits = Array(temperatures.length).fill(0);\nconst stack = [];\nfor (let today = 0; today < temperatures.length; today++) {\n  while (stack.length && temperatures[today] > temperatures[stack.at(-1)]) {\n    const previous = stack.pop();\n    waits[previous] = today - previous;\n  }\n  stack.push(today);\n}',
     takeaway:
-      'A nested loop can have linear total work. Every index enters once and leaves at most once; equal temperatures remain unresolved.',
+      'Nested loop ka total kaam bhi linear ho sakta hai. Har index ek baar push aur maximum ek baar pop hota hai. Equal temperature warmer nahi hai, isliye woh pending rehta hai.',
     frames: monotonicStackTrace([73, 74, 75, 71, 69, 72, 76, 73]),
   },
 ];

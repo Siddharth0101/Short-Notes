@@ -1,80 +1,78 @@
-# Shortnotes app
+# Shortnotes app — setup aur architecture
 
-React 19, React Router, and Vite power a local-first reader for the repository's study material. Markdown is rendered with `react-markdown` and GFM support. Code is displayed as text with copy controls; source-note files are imported as raw content, never imported as application code. Only the preserved `.jsx` visualizers are loaded as React components.
+React 19, React Router aur Vite se repo ka study reader chalta hai. Markdown ke liye `react-markdown` aur GFM hain. Source-note files raw text ke roop mein load hoti hain; app code ki tarah execute nahi hoti. Existing `.jsx` visualizers React components ki tarah load hote hain.
 
-## Commands
+## Local setup
+
+Node.js 22.12+ chahiye. `playground/` ke andar commands chalao:
 
 ```bash
 npm ci
-npm run dev       # Local development; Vite prints the URL
-npm test          # Content, algorithm, and DOM interaction tests
-npm run lint      # Oxlint; existing playground warnings are reported
-npm run build     # Production files in dist/
-npm run check     # Tests, lint, and build
-npm run preview   # Serve the production build locally
-npm run format   # Format the new app modules and tests
+npm run dev       # Terminal mein local URL milega
+npm test          # Content, algorithms aur DOM interaction checks
+npm run lint      # Oxlint checks
+npm run build     # Production files dist/ mein
+npm run check     # Generated docs, tests, lint aur build
+npm run preview   # Production build locally dekho
+npm run format    # App modules aur tests format karo
 ```
 
-Node.js 22.12+ is required. The lockfile is committed for reproducible installs. `npm ci` runs inside `playground/`; the build requires the parent notes directories too, so do not copy this app folder on its own.
+Lockfile reproducible install ke liye hai. Build parent `notes/` aur source directories bhi use karta hai; sirf app folder copy karna enough nahi.
 
-## App organization
+## Kaunsa code kahan hai?
 
-- `src/library/`: navigation, dashboard, collections, reader, interviews, and visual lab.
-- `src/data/catalog.js`: discovers Markdown chapters, integrates source examples through `sourceChapters.json`, and attaches interview questions. Old source IDs resolve to their chapter.
-- `src/data/interviewQuestions.js`: question bank with answers, follow-ups, difficulty, and subject tags.
-- `src/data/visuals.js`: explanatory traces and visualization metadata.
-- `src/lib/content.js`: frontmatter parsing, search, section anchors, original-note conversion, progress normalization.
-- `src/lib/traces.js`: deterministic binary-search, sorting, graph, and DP traces.
-- `src/lib/progress.jsx`: persistent progress provider; `progressContext.js` exposes its hook.
-- `src/components/` and `src/registry/`: preserved original playground components and old routes.
-- `tests/`: Node's test runner; jsdom interaction tests load JSX/raw content with Vite's module runner.
+| File/folder | Kaam |
+| --- | --- |
+| `src/library/` | Navigation, dashboard, reader, interviews aur visual lab |
+| `src/data/catalog.js` | Chapters discover karke source examples aur questions attach karta hai |
+| `src/data/sourceChapters.json` | Har source example ka owning chapter |
+| `src/data/interviewQuestions.js` | Main bank; extra question files ko bhi combine karta hai |
+| `src/data/visuals.js` | Visual metadata aur explanations |
+| `src/data/advancedVisuals.js` | React identity, transaction race aur monotonic stack |
+| `src/lib/content.js` | Frontmatter, search, heading anchors aur progress normalization |
+| `src/lib/traces.js` | Binary search, sorting, BFS aur DP ke deterministic steps |
+| `src/lib/progress.jsx` | Progress provider; hook `progressContext.js` mein hai |
+| `src/components/`, `src/registry/` | Existing playgrounds aur compatible old routes |
+| `tests/` | Node test runner, jsdom aur Vite module runner se checks |
 
 ## Routes
 
-| Route | Purpose |
+| Route | Kya khulta hai? |
 | --- | --- |
-| `/` | Overview and continue learning |
-| `/library?track=react&q=effects` | Search and filter chapters |
-| `/library?view=original` | Original source notes and PDFs |
-| `/paths` | Ordered subject paths with completion |
-| `/notes/:id` | Chapter or original-reference reader |
-| `/notes/:id?tab=visual` | A chapter's associated visualization |
-| `/visuals?topic=binary-search` | Visual lab and step controls |
-| `/interview?track=java` | Filterable interview practice |
-| `/saved` | Bookmarks and progress import/export |
-| `/domain/:domainId/dir/*` | Compatible original folder routes |
-| `/domain/:domainId/file/*` | Original playgrounds; Java notes route to the reader |
+| `/` | Overview aur padhai continue karne ka link |
+| `/library?track=react&q=effects` | Search aur filtered chapters |
+| `/library?view=original` | Library ka compatible original-reference entry |
+| `/paths` | Ordered course stages aur completion |
+| `/notes/:id` | Chapter; purana source ID owning chapter par resolve hota hai |
+| `/notes/:id?tab=visual` | Chapter ka linked visual |
+| `/visuals?topic=binary-search` | Visual lab |
+| `/interview?track=java` | Filtered interview practice |
+| `/saved` | Bookmarks aur progress import/export |
+| `/domain/:domainId/dir/*` | Compatible old folder route |
+| `/domain/:domainId/file/*` | Existing playground; Java notes reader par jaate hain |
 
-## Data and behavior
+## Content aur state ka flow
 
-Bookmarks, completed chapters, confident interview answers, and recent reads live in `shortnotes.progress.v1` in local storage. Import merges a versioned JSON backup with current progress. Invalid files are rejected before changing state. The app can keep working in memory if browser storage is unavailable.
+`notes/curriculum.json` ordered stages define karta hai. `node ../scripts/sync-curriculum.mjs` main syllabus, course indexes aur coverage guide regenerate karta hai. `node ../scripts/sync-interviews.mjs` interview workbook banata hai. `--check` se pata chalta hai ki generated docs current data se match karte hain ya nahi.
 
-Chapter durations are suggested study blocks, including tracing examples and attempting exercises, rather than timed reading-speed claims.
+Chapter IDs permanent hain: URLs, bookmarks aur progress unhe use karte hain. Title rename kar sakte ho, lekin ID badalne se old links toot sakte hain. Standard bilingual headings ke old section anchors `headingId` mein preserve kiye hain. New chapters `notes/*/*.md` se discover hote hain. Duration suggested study block hai, measured reading time nahi.
 
-Chapter IDs are permanent identities for URLs and saved progress. Rename a title freely; changing its ID breaks old bookmarks. New content is discovered from `notes/*/*.md`. Frontmatter and visual mappings are validated by tests.
+Bookmarks, completed chapters, confident answers aur recent reads `shortnotes.progress.v1` local storage mein rehte hain. Import versioned JSON ko current progress se merge karta hai. Invalid import state badalne se pehle reject hota hai. Storage unavailable ho toh session memory mein app chal sakta hai; backup export karo.
 
-The visual lab is educational simulation, not a JVM, browser, database, or Spring runtime. The database visualization explicitly distinguishes its simplified sorted-index analogy from MongoDB's B-tree implementation. Java and server snippets require their own runtime/project setup.
+Mock session filtered pool se five questions leta hai. 15-minute wall-clock timer pause/resume hota hai; time khatam hone par answer discard nahi hota. Drafts aur mock self-review temporary hain, confidence toggle persistent hai.
 
-## Appearance
+## Visual models ko kaise samjho?
 
-The top bar offers System, Light, and Dark appearances. The preference is saved locally, follows operating-system changes in System mode, and synchronizes between tabs. `public/theme-init.js` applies it before React renders to avoid a flash of the wrong theme. Shared tokens in `src/theme.css` style the reader, interview practice, visual lab, and preserved playgrounds. Theme tests check text contrast, startup behavior, persistence, and switching.
+Visual lab teaching simulation hai. Browser, JVM, database ya Spring runtime actually execute nahi hota. Mongo index ka sorted-array demo analogy hai; real index implementation alag hai. Java/server snippets ko apna runtime/project setup chahiye. Algorithm ke extra snapshots teaching cost hain; unhe base algorithm ki auxiliary-space claim se alag samjho.
 
-## Deployment
+## Theme aur deployment
 
-The root `netlify.toml` builds `playground/` and publishes `playground/dist/`. SPA fallback rules keep deep links working. Other hosts must serve `index.html` for application routes while preserving actual asset requests. The supplied PDFs are emitted as static assets and load only when opened.
+Top bar se System, Light aur Dark theme choose hoti hai. Preference local save hoti hai aur tabs mein sync hoti hai. System mode OS changes follow karta hai. `public/theme-init.js` React se pehle theme apply karta hai; shared styles `src/theme.css` mein hain.
 
-Google Fonts is used for typography with local font fallbacks. The app needs no API key or backend. It does not provide an offline service-worker cache or cross-device sync.
+Root `netlify.toml` app build karke `playground/dist/` publish karta hai. Doosre hosts par SPA routes ke liye `index.html` fallback aur actual assets ke liye normal serving rakho. PDFs static assets hain aur open karne par load hote hain. Google Fonts ke saath local font fallbacks hain. API key/backend nahi chahiye; offline service-worker cache aur automatic cross-device sync implemented nahi hain.
 
-## Validation scope
+## Validation ki scope
 
-Tests verify chapter metadata/links, content search, progress normalization/persistence, library tabs, note rendering, bookmarks, completion, interview reveal/filtering, all visual topics, trace edge cases, and original URL compatibility. The production build validates application imports. Illustrative code snippets inside notes are study material, not an independently built full-stack project. Existing legacy playground lint warnings predate the revamp and are still reported.
+Tests metadata, links, search, progress, bookmarks, rendering, answer reveal, filters, mock timer, themes, all visual topics, algorithm boundaries aur old URL compatibility check karte hain. Build app imports verify karta hai. Notes ke illustrative snippets ek independently built complete full-stack project nahi hain. Existing legacy playground lint warnings bhi report hote hain.
 
-## Practical interview workspace
-
-Interview filters determine the question pool for a five-question mock session. The 15-minute deadline uses elapsed wall time, supports pause/resume, and does not discard answers on expiry. Drafts and self-assessments are session-only; the existing confidence toggle remains persistent. Every revealed answer links back to study material.
-
-`src/data/advancedQuestions.js` adds chapter-linked scenarios. `src/data/advancedVisuals.js` contains the React identity and SQL race walkthroughs and an algorithm-generated monotonic-stack trace. Add visual IDs to `src/lib/visualIds.js` and use chapter frontmatter to expose the Visualize it tab.
-
-## Ordered courses
-
-The app reads `notes/curriculum.json` to group lessons into stages. `node ../scripts/sync-curriculum.mjs --check` verifies the same order in filenames, chapter metadata and generated Markdown indexes. Stable chapter IDs preserve existing bookmarks after file reordering.
+UI copy badalne par desktop/narrow viewport, light/dark theme, keyboard navigation, long code aur direct reload check karo. Questions aur explanations simple Roman Hinglish mein likho; IDs, API names aur machine-readable enum values stable rakho.

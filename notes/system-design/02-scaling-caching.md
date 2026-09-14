@@ -5,16 +5,16 @@ track: system-design
 order: 2
 level: Advanced
 minutes: 27
-summary: Read paths speed up karo without freshness aur failure behavior lose kiye.
+summary: Cache sirf safely reusable requests ka origin work kam karta hai; har request hit nahi hoti.
 tags: caching, scaling, replication, sharding
 visual: caching
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Scale karna work distribute ya avoid karna hai. Cache repeated work avoid karti hai. Replica reads distribute kar sakti hai. Sharding data ownership partition karti hai. Load balancer requests distribute karta hai. Har mechanism consistency, cost and operational tradeoffs introduce karta hai; ek tool sab bottlenecks solve nahi karta.
 
-> **Core takeaway:** A cache reduces origin work only for the requests it can safely reuse.
+> **Core takeaway:** Cache sirf safely reusable requests ka origin work kam karta hai; har request hit nahi hoti.
 
 ## Layered read path
 
@@ -139,7 +139,7 @@ Aur yeh shard resize karne se theek nahi hota: 16 shards karne par bhi wo ek ten
 
 Resharding ka cost bhi pehle se socho: 8 se 16 shards jaana matlab poora dataset move karna, dual-write window maintain karna, aur consistency verify karna — yeh weeks ka project hai, ek afternoon ka config change nahi. Consistent hashing ya virtual buckets (jaise 1,024 logical buckets jo physical shards par map hote hain) yeh migration bahut sasti bana dete hain, isliye wo decision pehle din lena chahiye.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Cache-aside invalidation ke baad cache consistent ho jaati hai. **Why it breaks:** Ek reader ne database se purani value padh li thi lekin abhi tak cache mein set nahi ki; writer ne database update karke cache invalidate kar diya; ab reader apni purani value cache mein likh deta hai. Cache ab indefinitely stale hai — TTL expire hone tak koi usse theek nahi karega, aur wo stale value freshly-written dikhti hai. **Fix:** Staleness ko explicitly bound karo (short TTL), ya versioned writes use karo (value ke saath version store karo, purani version overwrite na kare), ya invalidate ke bajaye write-through se cache update karo jahan consistency zyada matter karti hai.
 - **Wrong assumption:** Cache hit rate 95% hai toh database ko 5% load milta hai, safe hai. **Why it breaks:** Hit rate ek average hai jo failure mode hide karta hai — cache outage, mass eviction (memory pressure), ya ek deployment jo cache key format badal deta hai, sab 0% hit rate produce karte hain. Us instant mein database ko 20x load milta hai jiske liye usse kabhi size nahi kiya gaya. **Fix:** Database ko us load ke liye size karo jo wo *bina cache ke* absorb kar sake, ya miss path par explicit concurrency limit aur load shedding lagao. Cache ko latency optimization maano, capacity dependency nahi.
@@ -147,7 +147,7 @@ Resharding ka cost bhi pehle se socho: 8 se 16 shards jaana matlab poora dataset
 - **Wrong assumption:** TTL bada rakhne se cache zyada effective hai. **Why it breaks:** Lamba TTL memory mein cold keys retain karta hai jisse hot keys evict ho sakti hain, aur staleness window ko user-visible bana deta hai (user ne apna profile update kiya, 1 ghante tak purana naam dikhta raha). Aur invalidation bug ho toh uska blast radius TTL jitna lamba hota hai. **Fix:** TTL ko data ki acceptable staleness se derive karo, memory se nahi; hot-key retention ke liye LRU/LFU eviction policy par bharosa karo.
 - **Wrong assumption:** Cache mein sab kuch daal do, memory sasti hai. **Why it breaks:** Low hit-rate entries (jaise per-user search results jo dobara kabhi query nahi hote) memory bharke high-value entries evict karti hain — effective hit rate girta hai aur cache add karne se pehle se kharab performance milti hai. Saath hi har entry serialization/deserialization CPU bhi kharch karti hai. **Fix:** Cache candidate ke liye do sawaal poochho: reuse probability kya hai, aur recompute cost kya hai. Dono high hon tabhi cache karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **How do you cache private data safely?** User/tenant-aware keys, authorization before exposure, explicit lifetime, logout/session changes handling and protected shared-cache policy define karta hoon.
 
@@ -167,31 +167,31 @@ Phir stampede reproduce karo: ek key ko 200 ms rebuild cost do, 200 concurrent r
 
 ## Research notes: Define behavior beyond capacity
 
-Request count poorly represents capacity when request costs differ. Identify the scarce resource and choose what to reject or degrade before waiting grows without bound.
+Requests ki cost different ho toh sirf count capacity achhe se describe nahi karti. Scarce resource identify karo; unbounded wait se pehle reject/degrade policy choose karo.
 
-Original policy: omit recommendations under overload while preserving an article. Checkout cannot invent inventory results to seem available. Specify degraded behavior as a product contract and monitor it separately from full success.
+Example: overload par recommendations omit karke article serve kar sakte ho. Checkout available dikhne ke liye fake inventory nahi bana sakta. Degraded behavior product contract mein define aur full success se separately monitor karo.
 
-**Interview check:** Why is an unlimited queue a poor overload strategy?
+**Interview check:** Unlimited queue weak overload strategy kyun hai?
 
-**Answer:** It converts overload into growing latency and memory use. Expired requests can still consume resources. Bound waiting and prioritize or reject work according to explicit requirements.
+**Answer:** Overload growing latency/memory mein badalta hai. Expired requests bhi resources kha sakti hain. Wait bound aur explicit requirements ke hisaab se prioritize/reject karo.
 
-**Practice:** Compare accepted throughput, rejection rate, queue age and latency during a burst.
+**Practice:** Burst mein accepted throughput, rejection rate, queue age aur latency compare karo.
 
-[Read the source — Google SRE](https://sre.google/sre-book/handling-overload/). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Google SRE](https://sre.google/sre-book/handling-overload/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** At 1000 reads/second with a 90% hit rate, estimate origin reads. What happens immediately after a cold restart?
+**Apply:** 1000 reads/second aur 90% hit rate par origin reads nikalo. Cold restart ke turant baad kya ho sakta hai?
 
-> **Hint:** A hit-rate estimate is conditional on a warm cache.
+> **Hint:** 90% hit-rate estimate warm cache ke liye hai.
 
-**Answer guide — compare after attempting:** A warm cache sends about 100 reads/second to origin, ignoring refresh overhead. A cold cache may send close to 1000 until populated. Discuss request coalescing, controlled warming, and admission limits; size the failure plan instead of assuming the steady-state hit rate always holds.
+**Answer guide — compare after attempting:** Warm cache mein refresh overhead ignore karke ≈100 origin reads/second. Cold cache fill hone tak close to 1000 ja sakti hain. Request coalescing, controlled warming aur admission limits discuss karo. Failure capacity ko steady-state hit rate se assume mat karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [HTTP caching guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)
 - [PostgreSQL replication](https://www.postgresql.org/docs/current/high-availability.html)

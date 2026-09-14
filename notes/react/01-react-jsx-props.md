@@ -5,15 +5,15 @@ track: react
 order: 1
 level: Foundation
 minutes: 12
-summary: Start React after JavaScript functions arrays objects and browser basics.
+summary: Props component ka input hain; rendering mein input mutate nahi karna chahiye.
 tags: fundamentals, react, jsx, props
 ---
 
-## Mental model
+## Mental model — simple soch
 
-A React component describes UI from inputs. A function component receives props and returns elements expressed with JSX. JSX looks like HTML but is syntax used by the build tool to produce JavaScript element descriptions. Start in the existing React app: you do not need routing, Redux, effects or server-state caching for this lesson.
+React component inputs se UI describe karta hai. Function component props leta hai aur JSX mein elements return karta hai. JSX HTML jaisa dikhta hai, lekin build tool usse JavaScript element descriptions mein badalta hai. Existing React app se start karo; abhi routing, Redux, effects/cache ki need nahi.
 
-> **Core takeaway:** Props describe a component's input; rendering should not mutate that input.
+> **Core takeaway:** Props component ka input hain; rendering mein input mutate nahi karna chahiye.
 
 ## Compose a small screen
 
@@ -38,34 +38,34 @@ export default function App() {
 }
 ```
 
-LessonCard is capitalized so JSX treats it as a component rather than a browser tag. Curly braces evaluate JavaScript expressions. A text prop can be quoted; a numeric value uses braces. The same component definition receives different inputs for the two cards. It should not mutate those props while rendering.
+LessonCard capitalized hai taaki JSX use component samjhe, browser tag nahi. Braces JavaScript expressions evaluate karti hain; text quote, numeric value braces mein do. Same component different inputs se two cards banata hai. Render ke dauran props mutate mat karo.
 
 ## Read JSX as a tree
 
-The outer main contains a heading and two component instances. A component returns one root element, or a fragment grouping several siblings without an extra DOM wrapper. Use className for CSS classes and close tags, including self-closing image or input elements. An event prop such as onClick receives a function, not the result of calling it during rendering.
+Outer main heading aur two instances contain karta hai. Component one root ya fragment return karta hai; fragment extra DOM wrapper ke bina siblings group karta hai. CSS ke liye className, tags properly close karo. onClick ko function do, render ke waqt us function ka called result nahi.
 
-Conditional expressions and mapping arrays are useful, but first make the static tree work. You have already studied JavaScript functions, objects and arrays in the prerequisite course. If destructuring in the parameter list is unfamiliar, revisit those notes before adding React-specific behavior. Component composition builds on ordinary function inputs rather than replacing JavaScript fundamentals.
+Pehle static tree sahi banao, phir conditions/array mapping add karo. Prerequisite JS mein functions/objects/arrays padhe hain. Parameter destructuring unclear ho toh revise karo. Composition ordinary inputs par build karti hai, JS fundamentals replace nahi karti.
 
 ## Practice
 
-Add a third card without duplicating the article markup. Add a description prop and render it below the title. Then intentionally pass minutes as text and explain why the display may look the same while a later arithmetic operation behaves differently. Keep the example static; interactive retained state is the next lesson.
+Article markup duplicate kiye bina third card add karo. Description prop title ke neeche render karo. Minutes text ke roop mein pass karke batao display same dikhkar bhi later arithmetic alag kyun hogi. Retained interactive state next lesson mein hai.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-You should explain which component owns each prop and what the browser eventually renders. Next, use useState and event handlers to change what the component displays over time.
+Har prop ka owner aur final browser output explain karo. Next useState/event handlers se display time ke saath badlenge.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Create a `LessonTitle` component receiving `title` and `minutes`. Render two instances with different values. Where should a changed title come from?
+**Apply:** `LessonTitle` ko title aur minutes props do. Do instances different values se render karo. Title badalne par nayi value kahan se aani chahiye?
 
-> **Hint:** Treat props as read-only values supplied by the parent.
+> **Hint:** Props parent se aane wali read-only values samjho.
 
-**Answer guide — compare after attempting:** `function LessonTitle({title, minutes}) { return <h2>{title} · {minutes} min</h2>; }` is a component excerpt for a React app. The parent passes new props when data changes. Assigning to a prop locally does not update the parent's data model.
+**Answer guide — compare after attempting:** React app mein `function LessonTitle({title, minutes}) { return <h2>{title} · {minutes} min</h2>; }` component excerpt use karo. Data badlega toh parent new props bhejega. Local prop assignment parent ka data model update nahi karti.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[React your first component](https://react.dev/learn/your-first-component) and [passing props](https://react.dev/learn/passing-props-to-a-component) introduce these concepts.
+[First React component](https://react.dev/learn/your-first-component) aur [props](https://react.dev/learn/passing-props-to-a-component) se concepts aur padho.

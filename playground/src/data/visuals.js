@@ -7,12 +7,12 @@ export const VISUALS = [
     id: 'event-loop',
     name: 'The event loop',
     track: 'javascript',
-    description: 'Follow the call stack, microtasks, and timer tasks.',
+    description: 'Call stack, microtasks aur timer tasks ko ek-ek step follow karo.',
     icon: 'code',
     source: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model',
     code: "console.log('A');\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve().then(() => console.log('C'));\nconsole.log('D');",
     takeaway:
-      'Synchronous code finishes first. At the microtask checkpoint, microtasks drain before the next timer task. A 0 ms timer does not run immediately.',
+      'Pehle synchronous code finish hota hai. Microtask checkpoint par queue drain hoti hai, phir agla timer task chal sakta hai. 0 ms ka matlab turant chalna nahi.',
     frames: [
       frame(
         'Run the synchronous script',
@@ -80,12 +80,12 @@ export const VISUALS = [
     id: 'closures',
     name: 'Closures & memory',
     track: 'javascript',
-    description: 'See how a function remembers its lexical environment.',
+    description: 'Dekho function apne lexical environment ki variables kaise yaad rakhta hai.',
     icon: 'code',
     source: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures',
     code: 'function createCounter() {\n  let count = 0;\n  return () => ++count;\n}\nconst next = createCounter();\nconsole.log(next()); // 1\nconsole.log(next()); // 2',
     takeaway:
-      'Closure variable ki live binding retain karta hai, frozen copy nahi. A second createCounter() call creates a separate environment.',
+      'Closure variable ki live binding rakhta hai, frozen copy nahi. createCounter() dobara call karne se alag environment banta hai.',
     frames: [
       frame(
         'Call the factory',
@@ -129,12 +129,12 @@ export const VISUALS = [
     id: 'react-render',
     name: 'React render & commit',
     track: 'react',
-    description: 'Separate state updates, rendering, DOM work, and effects.',
+    description: 'State update, render, DOM changes aur effects ka farq samjho.',
     icon: 'react',
     source: 'https://react.dev/learn/render-and-commit',
     code: 'function Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(c => c + 1)}>\n    {count}\n  </button>;\n}',
     takeaway:
-      'Render calculates the next UI. Commit applies required DOM changes. A render does not necessarily change the DOM; concurrent rendering may restart or discard work.',
+      'Render next UI calculate karta hai. Commit zaroori DOM changes lagata hai. Har render DOM nahi badalta; concurrent rendering ka kaam restart ya discard bhi ho sakta hai.',
     frames: [
       frame(
         'Start with committed UI',
@@ -187,12 +187,12 @@ export const VISUALS = [
     id: 'java-memory',
     name: 'Java references & the heap',
     track: 'java',
-    description: 'Trace aliases, objects, and reachability.',
+    description: 'References, ek object ke aliases aur reachability trace karo.',
     icon: 'coffee',
     source: 'https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html',
     code: 'Box a = new Box(10);\nBox b = a;\nb.value = 20;\na = null;\nb = null;',
     takeaway:
-      'Reference assignment copies a reference, not the object. Unreachable objects become eligible for GC; collection is not immediate or guaranteed at a particular time. This is a conceptual JVM model.',
+      'Reference assignment reference copy karta hai, object nahi. Unreachable object GC ke liye eligible hota hai; turant collect hona guaranteed nahi. Yeh JVM ka simplified model hai.',
     frames: [
       frame(
         'Allocate an object',
@@ -237,12 +237,12 @@ export const VISUALS = [
     id: 'request-flow',
     name: 'A Spring API request',
     track: 'system-design',
-    description: 'Follow one request from React to a Java service and back.',
+    description: 'React se Java service aur wapas response tak request follow karo.',
     icon: 'layers',
     source: 'https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html',
     code: 'React → HTTP → Security filters\n  → DispatcherServlet → Controller\n  → Service (@Transactional)\n  → Repository → Database\n  ← DTO ← HTTP response ← React',
     takeaway:
-      'Each boundary has a job: authenticate, validate, enforce business rules, persist, and serialize. Network retries need explicit idempotency design for writes.',
+      'Har boundary ka role hai: authentication, validation, business rules, storage aur serialization. Write ko network retry kar sake, iske liye idempotency design karni padti hai.',
     frames: [
       frame(
         'React sends a request',
@@ -255,7 +255,7 @@ export const VISUALS = [
       ),
       frame(
         'Security filters inspect it',
-        'Configured security filters authenticate credentials and enforce applicable protections before controller invocation.',
+        'Configured security filters credentials authenticate karte hain aur controller call se pehle applicable protections check karte hain.',
         [
           lane('React', ['loading']),
           lane('Security filters', ['authentication', 'access policy']),
@@ -295,12 +295,12 @@ export const VISUALS = [
     id: 'caching',
     name: 'Cache-aside & invalidation',
     track: 'system-design',
-    description: 'Watch a cache miss, a hit, and a write invalidate data.',
+    description: 'Cache miss, hit aur write ke baad invalidation dekho.',
     icon: 'database',
     source: 'https://redis.io/docs/latest/develop/get-started/data-store/',
     code: 'value = cache.get(key)\nif value is missing:\n  value = database.read(key)\n  cache.set(key, value, ttl)\nreturn value\n\n// On a successful write:\ndatabase.update(key, newValue)\ncache.delete(key)',
     takeaway:
-      'This serial happy-path trace is not a consistency guarantee. A concurrent reader can repopulate stale data after invalidation; use versions, appropriate TTLs, or stronger coordination when required.',
+      'Yeh serial happy-path example hai. Concurrent reader invalidation ke baad bhi stale value bhar sakta hai. Requirement ke hisaab se versions, TTL ya stronger coordination chuno.',
     frames: [
       frame(
         'Request a missing cache key',
@@ -353,52 +353,52 @@ export const VISUALS = [
     id: 'binary-search',
     name: 'Binary search',
     track: 'dsa',
-    description: 'Shrink the search space. Check every boundary.',
+    description: 'Search range chhoti karo aur har boundary check karo.',
     icon: 'search',
     code: 'while (left <= right) {\n  const mid = Math.floor((left + right) / 2);\n  if (a[mid] === target) return mid;\n  if (a[mid] < target) left = mid + 1;\n  else right = mid - 1;\n}\nreturn -1;',
     takeaway:
-      'Invariant: if target exists, it is inside [left, right]. Input must be sorted. O(log n) comparisons and O(1) auxiliary space.',
+      'Invariant: target agar present hai toh [left, right] ke andar hai. Input sorted hona chahiye. Comparisons O(log n), extra space O(1).',
   },
   {
     id: 'sorting',
     name: 'Bubble sort',
     track: 'dsa',
-    description: 'Follow real comparisons and adjacent swaps.',
+    description: 'Har comparison aur paas-paas ke elements ka swap dekho.',
     icon: 'network',
     code: 'for (let end = a.length - 1; end > 0; end--) {\n  let swapped = false;\n  for (let j = 0; j < end; j++) {\n    if (a[j] > a[j + 1]) {\n      [a[j], a[j + 1]] = [a[j + 1], a[j]];\n      swapped = true;\n    }\n  }\n  if (!swapped) break;\n}',
     takeaway:
-      'After every full pass, the largest remaining element reaches the end. Swap only on > to keep this algorithm stable.',
+      'Har complete pass ke baad remaining elements ka maximum end tak pahunchta hai. Sirf > par swap karoge toh equal elements ka relative order bachega: algorithm stable rahega.',
   },
   {
     id: 'bfs',
     name: 'Breadth-first search',
     track: 'dsa',
-    description: 'Explore a cyclic graph, one distance layer at a time.',
+    description: 'Cycle wale graph ko distance ki ek-ek layer mein explore karo.',
     icon: 'network',
     code: 'const queue = [start];\nconst seen = new Set([start]);\nfor (let head = 0; head < queue.length; head++) {\n  const node = queue[head];\n  for (const next of graph[node]) {\n    if (!seen.has(next)) {\n      seen.add(next);\n      queue.push(next);\n    }\n  }\n}',
     takeaway:
-      'Mark visited on enqueue. BFS gives shortest paths by edge count in unweighted graphs. Weighted edges need a suitable algorithm such as Dijkstra for nonnegative weights.',
+      'Queue mein daalte waqt visited mark karo. Unweighted graph mein BFS minimum edges wala path deta hai. Weighted graph mein suitable algorithm chahiye; nonnegative weights ke liye Dijkstra ek option hai.',
   },
   {
     id: 'dynamic-programming',
     name: 'Dynamic programming',
     track: 'dsa',
-    description: 'Turn repeated work into reusable subproblems.',
+    description: 'Repeated calculation ko reusable subproblems mein badlo.',
     icon: 'layers',
     code: 'const dp = [0, 1];\nfor (let i = 2; i <= n; i++) {\n  dp[i] = dp[i - 1] + dp[i - 2];\n}\nreturn dp[n];',
     takeaway:
-      'Define the state, recurrence, base cases, and evaluation order. Fibonacci is a simple demo; the same process applies to many harder DP problems.',
+      'Pehle state, recurrence, base cases aur evaluation order define karo. Fibonacci simple demo hai; mushkil DP problems mein bhi yahi questions poochho.',
   },
   {
     id: 'thread-sync',
     name: 'Threads racing a shared counter',
     track: 'java',
-    description: 'See a lost update happen, then watch a lock fix it.',
+    description: 'Lost update dekho, phir lock se shared update protect karo.',
     icon: 'network',
     source: 'https://docs.oracle.com/javase/tutorial/essential/concurrency/sync.html',
     code: 'class Counter {\n  private int count = 0;\n  void increment() { count++; }\n}\n// Two threads call increment() concurrently.',
     takeaway:
-      'count++ read-modify-write teen steps hai. Interleaved without synchronization, two threads can read the same value and one increment gets lost. A lock (or AtomicInteger) makes the sequence indivisible; it does not make unrelated work faster.',
+      'count++ ke read, modify aur write teen steps hain. Bina synchronization dono threads same value padh sakte hain aur ek increment kho sakta hai. Lock ya AtomicInteger shared update ko atomic bana sakta hai; unrelated kaam apne-aap fast nahi hota.',
     frames: [
       frame(
         'Both threads read the same value',
@@ -451,13 +451,13 @@ export const VISUALS = [
     id: 'gc-sweep',
     name: 'Mark and sweep garbage collection',
     track: 'java',
-    description: 'Watch reachability decide what survives a collection.',
+    description: 'Reachability se dekho kaunse objects collection mein bachenge.',
     icon: 'coffee',
     source:
       'https://docs.oracle.com/en/java/javase/21/gctuning/introduction-garbage-collection-tuning.html',
     code: 'Node root = new Node("root");\nroot.child = new Node("child");\nNode orphan = new Node("orphan");\norphan = null; // no more references to it',
     takeaway:
-      'GC roots (stack locals, static fields) se traverse karke jo reachable hai woh marked hota hai. Unmarked objects sweep ho jaate hain. This is a conceptual model — real collectors (generational, concurrent) differ in mechanism, and collection timing is never guaranteed.',
+      'GC roots se reachable objects mark hote hain; unmarked objects sweep ho sakte hain. Yeh conceptual model hai. Real collectors ki implementation alag hoti hai aur exact collection time guaranteed nahi.',
     frames: [
       frame(
         'Allocate objects on the heap',
@@ -497,12 +497,12 @@ export const VISUALS = [
     id: 'aggregation-pipeline',
     name: 'An aggregation pipeline',
     track: 'mongodb',
-    description: 'Follow documents through match, group, and sort stages.',
+    description: 'Documents ko match, group aur sort se guzarte dekho.',
     icon: 'database',
     source: 'https://www.mongodb.com/docs/manual/core/aggregation-pipeline/',
     code: 'db.orders.aggregate([\n  { $match: { status: "paid" } },\n  { $group: { _id: "$customerId", total: { $sum: "$amount" } } },\n  { $sort: { total: -1 } },\n]);',
     takeaway:
-      'Har stage previous stage ka output leta hai aur next stage ko document stream deta hai — Array.prototype.map/filter/reduce chaining jaisa. Stage order matters: $match jitna jaldi lagao utna better, kyunki baad ke stages ko kam documents process karne padte hain.',
+      'Har stage pichhle stage ka output leta hai. $match jaldi lagane se aage kam documents jaate hain, lekin use tabhi move karo jab result ka meaning same rahe. Group ke calculated total par filter ko original documents par seedha nahi laga sakte.',
     frames: [
       frame(
         'Start with the raw collection',
@@ -555,11 +555,11 @@ export const VISUALS = [
     id: 'recursion-stack',
     name: 'The call stack during recursion',
     track: 'dsa',
-    description: 'Watch frames stack up, then unwind with return values.',
+    description: 'Calls ke frames bante aur return ke saath hat-te dekho.',
     icon: 'layers',
     code: 'function factorial(n) {\n  if (n <= 1) return 1;\n  return n * factorial(n - 1);\n}\nfactorial(4);',
     takeaway:
-      'Har recursive call ka apna stack frame hota hai with its own n. Calls tab tak stack hote hain jab tak base case na mile; phir returns stack ko reverse order mein unwind karte hain, multiplying as they go. Missing/wrong base case → stack overflow.',
+      'Har recursive call ka apna n aur stack frame hai. Base case par calls rukti hain, phir reverse order mein values return hoti hain. Galat ya missing base case se stack overflow ho sakta hai.',
     frames: [
       frame(
         'Call factorial(4)',
@@ -610,12 +610,12 @@ export const VISUALS = [
     id: 'outbox-pattern',
     name: 'The transactional outbox',
     track: 'system-design',
-    description: 'Persist a write and its event together, then relay safely.',
+    description: 'Data aur event ko saath save karo, phir relay se publish karo.',
     icon: 'network',
     source: 'https://microservices.io/patterns/data/transactional-outbox.html',
     code: "db.transaction(() => {\n  orders.insert(order);\n  outbox.insert({ type: 'OrderCreated', payload: order });\n});\n// A separate relay polls the outbox and publishes, then marks it sent.",
     takeaway:
-      'Database row aur "event to publish" same local transaction mein likhe jaate hain, so they cannot disagree. Relay crash/retry duplicate publish kar sakta hai — consumer ko idempotent/dedupe rehna hoga. This gives at-least-once delivery, not automatic exactly-once.',
+      'Business row aur publish hone wala event same local transaction mein save hote hain. Relay crash/retry se duplicate publish ho sakta hai, isliye consumer idempotent rakho. Yeh at-least-once pattern hai; exactly-once apne-aap nahi milta.',
     frames: [
       frame(
         'One transaction writes both rows',
@@ -666,12 +666,12 @@ export const VISUALS = [
     id: 'context-flow',
     name: 'Context vs. prop drilling',
     track: 'react',
-    description: 'See who re-renders when shared state changes.',
+    description: 'Shared context badalne par consumers ka update dekho.',
     icon: 'react',
     source: 'https://react.dev/learn/passing-data-deeply-with-context',
     code: 'const ThemeContext = createContext("light");\nfunction Toolbar() {\n  return <ThemedButton />; // no theme prop needed\n}\nfunction ThemedButton() {\n  const theme = useContext(ThemeContext);\n  return <button className={theme}>Save</button>;\n}',
     takeaway:
-      'Context un components ko skip kar deta hai jo value use nahi karte — no manual prop passing through every level. But jab context value change hoti hai, har consuming component re-render hota hai, chahe woh value ka wahi hissa use kare ya nahi; large frequently-changing state ke liye isse memoized selectors ya state-management library se split karo.',
+      'Context se har level par manually props pass nahi karne padte. Provider ki value badle toh us context ke consumers update hote hain. Non-consumers parent render ki wajah se render ho sakte hain; Context unhe automatically skip nahi karta. Frequently changing values ko zaroorat ke hisaab se alag contexts mein baanto.',
     frames: [
       frame(
         'Without context: prop drilling',
@@ -706,10 +706,10 @@ export const VISUALS = [
         [lane('Provider', ['value changes: "dark" → "light"'])],
       ),
       frame(
-        'Every consumer re-renders — non-consumers do not',
-        'ThemedButton (aur koi bhi aur consumer) re-render hota hai naye value ke saath. Toolbar, jo context read hi nahi karta, re-render skip kar sakta hai (props/state unchanged rehne par).',
+        'Context consumers update hote hain',
+        'ThemedButton aur baaki consumers ko nayi value milti hai. Toolbar context read nahi karta, isliye direct context subscription update nahi hai. Phir bhi parent render se Toolbar render ho sakta hai; skip hone ke liye suitable bailout, jaise memo aur equal props, chahiye.',
         [
-          lane('Toolbar', ['no re-render needed']),
+          lane('Toolbar', ['direct context update nahi; parent se render possible']),
           lane('ThemedButton', ['re-renders with "light"']),
         ],
       ),
@@ -719,12 +719,12 @@ export const VISUALS = [
     id: 'mongo-index',
     name: 'Database index lookup',
     track: 'mongodb',
-    description: 'Compare scanning documents with seeking an index.',
+    description: 'Documents scan karne aur index lookup ka farq dekho.',
     icon: 'database',
     source: 'https://www.mongodb.com/docs/manual/indexes/',
     code: 'db.products.createIndex({ sku: 1 });\ndb.products.find({ sku: 42 })\n  .explain("executionStats");\n// Compare totalKeysExamined, totalDocsExamined,\n// nReturned, and the winning plan.',
     takeaway:
-      'The sorted lookup is a teaching analogy. MongoDB uses B-tree indexes, not this array algorithm. Indexes cost storage and write work; inspect real explain plans for actual performance.',
+      'Sorted array lookup sirf samjhane ka example hai; MongoDB B-tree indexes use karta hai. Index storage leta hai aur writes par extra kaam karta hai. Real performance ke liye explain plan dekho.',
   },
   ...advancedVisuals,
 ];

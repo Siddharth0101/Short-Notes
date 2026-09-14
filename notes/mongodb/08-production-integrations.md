@@ -5,16 +5,16 @@ track: mongodb
 order: 8
 level: Advanced
 minutes: 36
-summary: Full application ko templates, external services, durable jobs aur observable production lifecycle ke saath complete karo.
+summary: External callbacks repeat ho sakte hain; durable state se repeated delivery ko safe banao.
 tags: production, pug, stripe, uploads, email, deployment, observability
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Production app database request ke baad finish nahi hoti. Email provider timeout kar sakta hai, payment webhook duplicate aa sakta hai, upload invalid ho sakta hai aur process mid-request restart ho sakta hai. Har integration ke liye success evidence, retry policy, idempotency aur recovery path define karo. Network response lost hone ka matlab operation definitely fail hona nahi hai.
 
-> **Core takeaway:** External callbacks can repeat; durable state must make repeated delivery safe.
+> **Core takeaway:** External callbacks repeat ho sakte hain; durable state se repeated delivery ko safe banao.
 
 ## Server-rendered pages
 
@@ -115,7 +115,7 @@ app.use((req, res, next) => {
 
 Structured (JSON) log lines free-text messages se better hain kyunki log aggregation tools (jaise CloudWatch, Datadog) unhe field-by-field query/filter/alert kar sakte hain — jaise "sab 500 responses jo 2 second se zyada le rahe hain, sirf `/api/payments` route par." `req.id` ko error handler ke response mein bhi include karna user-reported issue ko exact log lines se correlate karna easy banata hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `SIGKILL`/abrupt process crash aur graceful `SIGTERM` shutdown same tarah handle ho jaate hain automatically. **Why it breaks:** `SIGKILL` ko koi bhi handler intercept nahi kar sakta — in-flight requests turant drop ho jaati hain aur database connections uncleanly close hoti hain, jisse partial writes ya orphaned connections ban sakte hain. **Fix:** Deployment ko `SIGTERM` bhejne aur reasonable grace period dene ke liye configure karo (orchestrator settings mein), aur `SIGKILL` sirf true last-resort ho, normal deploy path na ho.
 - **Wrong assumption:** Health check endpoint sirf `res.sendStatus(200)` return kare bina kuch check kiye, kyunki "server toh chal hi raha hai." **Why it breaks:** Process alive hone ka matlab yeh nahi ki woh actually traffic serve kar sakta hai — database disconnected ho sakta hai, downstream dependency down ho sakti hai. Load balancer aise "always-200" health check par bharosa karke broken instance ko bhi traffic bhejta rahega. **Fix:** Readiness check mein actual dependency state verify karo (jaise `mongoose.connection.readyState`), aur liveness/readiness ko alag endpoints ke roop mein treat karo.
@@ -125,7 +125,7 @@ Structured (JSON) log lines free-text messages se better hain kyunki log aggrega
 
 Same webhook twice deliver karo aur verify karo ki one business action hoti hai. Database outage before acknowledgment simulate karo. Invalid image aur oversized upload reject karo. Process shutdown during slow request test karo aur deployment rollback steps document karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Webhook response quickly kyun dena hai?** Durable acceptance ke baad heavy work background mein karne se timeout/retry pressure reduce hota hai. Durability ke pehle acknowledgment event lose kar sakta hai.
 
@@ -133,32 +133,32 @@ Same webhook twice deliver karo aur verify karo ki one business action hoti hai.
 
 ## Capstone: durable order and webhook workflow
 
-Build an order service with an authenticated create endpoint and a webhook handler backed by MongoDB. Use a fake payment provider so you can replay, delay, reorder, and duplicate events without sending real payments.
+Authenticated order-create endpoint aur MongoDB-backed webhook handler banao. Fake payment provider se events replay/delay/reorder/duplicate karo, taaki real payments ki need na ho.
 
 ### Acceptance criteria
 
-- Authorize each order read against its owner or explicit role, including direct requests with a changed order ID.
-- Verify webhook authenticity using the provider's documented payload rules. Never accept a browser redirect as payment confirmation.
-- Two concurrent deliveries of one event produce one durable business transition; restarting the service does not reset deduplication.
-- A crash after commit but before acknowledgment is recovered by replay without duplicate effects.
-- Inspect a realistic tenant feed query plan before and after a compound index. Record examined documents, returned rows, and write-cost tradeoffs.
-- Bound input size, pagination size, and asynchronous work. Return actionable errors without exposing internal stack traces.
+- Har order read owner/explicit role se authorize karo; changed ID wali direct request bhi test karo.
+- Provider ke documented payload rules se webhook authenticity verify karo. Browser redirect payment confirmation nahi.
+- Same event ki concurrent deliveries ek durable business transition karein; restart dedup reset na kare.
+- Commit ke baad ack se pehle crash par replay duplicate effect na de.
+- Realistic tenant-feed plan index ke pehle/baad compare karo: scanned documents, returned rows aur write cost note karo.
+- Input size, page size aur async work bound rakho. Useful error do bina internal stack leak kiye.
 
 ### Interview defense
 
-Explain the differences between unique constraints, single-document atomicity, and multi-document transactions. If using a transaction, test against a deployment that supports it. Describe the retention of deduplication records and how reconciliation detects a payment/order mismatch. Include a replay script and a concurrency reproduction with your implementation.
+Unique constraints, single-document atomicity aur multi-document transactions ka difference samjhao. Transaction supported deployment par test karo. Dedup-record retention aur payment/order mismatch reconciliation define karo. Replay script aur concurrent reproduction deliver karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A payment provider sends the same success event twice. Sketch storage and processing that avoids fulfilling an order twice.
+**Apply:** Provider same payment-success event do baar bhejta hai. Order do baar fulfill na ho, aisa processing/storage sketch do.
 
-> **Hint:** Persist an event identity and coordinate it with the business transition.
+> **Hint:** Event ID persist karke business transition ke saath coordinate karo.
 
-**Answer guide — compare after attempting:** Record a unique provider event ID and transition the order atomically within the chosen storage design. Repeated events become no-ops. For external fulfillment, persist an outbox task and use an idempotent downstream operation; a local flag cannot atomically cover an unrelated network call.
+**Answer guide — compare after attempting:** Unique provider event ID record karo aur chosen storage design mein order transition atomic rakho. Repeat no-op bane. External fulfillment ke liye durable outbox task aur idempotent downstream operation use karo. Local flag unrelated network call ko atomically cover nahi karta.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 [Stripe webhooks](https://docs.stripe.com/webhooks) signatures aur delivery handling explain karta hai. [Express production performance](https://expressjs.com/en/advanced/best-practice-performance.html) operational patterns aur [Pug interpolation](https://pugjs.org/language/interpolation.html) template escaping ka reference hain.

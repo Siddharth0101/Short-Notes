@@ -1,43 +1,43 @@
-# Node & MongoDB — ordered course
+# Node & MongoDB — step-by-step course
 
-[All courses](../README.md)
+[Saare courses](../README.md)
 
-Before starting: [Objects arrays and modern data transformations](../javascript/07-modern-data-collections.md) · [Event loop promises and resilient fetching](../javascript/15-async-event-loop.md) · [Modules web delivery and debugging](../javascript/17-modules-tooling-debugging.md).
+Shuru karne se pehle: [Objects arrays and modern data transformations](../javascript/07-modern-data-collections.md) · [Event loop promises and resilient fetching](../javascript/15-async-event-loop.md) · [Modules web delivery and debugging](../javascript/17-modules-tooling-debugging.md).
 
-Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
 
-## Stage 1: Understand the server request
+## Stage 1: Server request samjho
 
-Start with Node and HTTP, then learn Express routing and errors.
+Node/HTTP ke baad Express routing aur errors seekho.
 
 1. [Node runtime HTTP modules and streams](01-node-runtime-http.md)
 2. [Express REST APIs middleware and errors](02-express-rest-errors.md)
 
-**Stage checkpoint:** Trace a request through middleware to a controlled response.
+**Stage checkpoint — khud karke dikhao:** Request ko middleware se controlled response tak trace karo.
 
-## Stage 2: Store and model data
+## Stage 2: Data ka model banao
 
-Learn documents and CRUD before introducing Mongoose schemas.
+Mongoose schema se pehle documents aur CRUD samjho.
 
 3. [Documents CRUD and access-driven modeling](03-documents-crud-modeling.md)
 4. [Mongoose schemas validation and relationships](04-mongoose-validation-relations.md)
 
-**Stage checkpoint:** Choose embedding or references for a concrete access pattern and validate writes.
+**Stage checkpoint — khud karke dikhao:** Actual read pattern se embedding/references choose aur writes validate karo.
 
-## Stage 3: Query efficiently
+## Stage 3: Efficient queries likho
 
-Learn indexes and aggregation, then inspect query plans and bounded streaming.
+Indexes/aggregation ke baad plans aur bounded streaming inspect karo.
 
 5. [Indexes aggregation geospatial queries and transactions](05-indexes-aggregation-transactions.md)
 6. [MongoDB query plans and Node streaming lab](06-query-production-lab.md)
 
-**Stage checkpoint:** Explain the winning plan for a tenant-scoped query and stream a large export.
+**Stage checkpoint — khud karke dikhao:** Tenant query ka winning plan explain aur large export stream karo.
 
-## Stage 4: Secure and ship
+## Stage 4: Secure karke deploy karo
 
-Add authentication and authorization before payment/upload/deployment integration.
+Payments/uploads/deployment se pehle authentication/authorization add karo.
 
 7. [Authentication authorization and secure boundaries](07-auth-security.md)
 8. [SSR uploads payments email and deployment](08-production-integrations.md)
 
-**Stage checkpoint:** Reject unauthorized resource access and recover safely from a duplicate webhook.
+**Stage checkpoint — khud karke dikhao:** Unauthorized access reject aur duplicate webhook se safely recover karo.

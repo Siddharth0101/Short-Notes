@@ -39,12 +39,12 @@ export function QuestionCard({ item, number }) {
       </div>
       {revealed && (
         <div className="question-answer" id={`answer-${item.id}`}>
-          <span className="card-overline">A STRONG ANSWER</span>
+          <span className="card-overline">ANSWER KA REASON SAMJHO</span>
           <Markdown>{item.answer}</Markdown>
           <div className="follow-up">
             <Icon name="messages" size={18} />
             <div>
-              <strong>Go one level deeper</strong>
+              <strong>Thoda aur deep samjho</strong>
               <p>{item.followUp}</p>
             </div>
           </div>
@@ -73,7 +73,7 @@ export function QuestionCard({ item, number }) {
           aria-controls={`answer-${item.id}`}
           onClick={() => setRevealed(!revealed)}
         >
-          {revealed ? 'Hide answer' : 'Reveal answer'}
+          {revealed ? 'Answer chhupao' : 'Answer dekho'}
           <Icon name={revealed ? 'close' : 'down'} size={16} />
         </button>
         <button
@@ -82,7 +82,7 @@ export function QuestionCard({ item, number }) {
           onClick={() => toggle('known', item.id)}
         >
           <Icon name={known ? 'check' : 'circle'} size={15} />
-          {known ? 'Feeling confident' : 'I know this'}
+          {known ? 'Concept clear hai' : 'Yeh samajh aa gaya'}
         </button>
       </div>
     </article>
@@ -124,9 +124,11 @@ function MockSession({ questions, onClose }) {
     <section className="mock-session" aria-label="Mock interview session">
       <div className="mock-header">
         <div>
-          <span className="card-overline">FOCUSED PRACTICE</span>
+          <span className="card-overline">FOCUSED PRACTICE KARO</span>
           <h2 ref={heading} tabIndex={-1}>
-            {finished ? 'Your session review' : `Question ${index + 1} of ${questions.length}`}
+            {finished
+              ? 'Tumhare session ka review'
+              : `Question ${index + 1} of ${questions.length}`}
           </h2>
         </div>
         <div className="button-group">
@@ -136,36 +138,36 @@ function MockSession({ questions, onClose }) {
                 {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, '0')}
               </span>
               <button className="subtle-button" disabled={!remaining} onClick={toggleTimer}>
-                {running ? 'Pause timer' : 'Resume timer'}
+                {running ? 'Timer pause karo' : 'Timer continue karo'}
               </button>
             </>
           )}
           <button className="subtle-button" onClick={onClose}>
-            {finished ? 'Back to questions' : 'End session'}
+            {finished ? 'Questions par wapas' : 'Session khatam karo'}
           </button>
         </div>
       </div>
       <p className="mock-help">
-        15-minute practice target. Drafts and self-assessments stay in this session only; leaving
-        clears them.
+        15-minute practice target hai. Drafts aur self-review sirf is session mein rehte hain;
+        session chhodne par clear ho jaate hain.
       </p>
       {!remaining && !finished && (
         <p role="status" className="learning-tip">
-          Time is up. You can still compare answers and finish your review.
+          Time khatam. Answers compare karke review ab bhi complete kar sakte ho.
         </p>
       )}
       {finished ? (
         <>
           <p>
-            {ratings.filter((r) => r.value === 'confident').length} of {questions.length} self-rated
-            confident. Use the explanations below to plan your next revision.
+            {ratings.filter((r) => r.value === 'confident').length} of {questions.length} answers
+            tumne clear mark kiye. Neeche explanations se next revision plan karo.
           </p>
           {ratings.map(({ item, value, draft: answer }) => (
             <details className="mock-review" key={item.id}>
               <summary>
                 {value === 'confident' ? 'Confident' : 'Revisit'} · {item.question}
               </summary>
-              <p className="mock-draft">{answer || 'No written draft — answered aloud.'}</p>
+              <p className="mock-draft">{answer || 'Written draft nahi — bolkar answer diya.'}</p>
               <QuestionCard
                 item={item}
                 number={ratings.findIndex((r) => r.item.id === item.id) + 1}
@@ -177,27 +179,27 @@ function MockSession({ questions, onClose }) {
         <>
           <QuestionCard key={questions[index].id} item={questions[index]} number={index + 1} />
           <label className="mock-answer">
-            Your answer or talking points
+            Apna answer ya talking points likho
             <textarea
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder="Explain the model, trace an example, name a failure case, then justify your tradeoff…"
+              placeholder="Concept samjhao, example trace karo, failure aur tradeoff ka reason likho…"
               rows={5}
             />
           </label>
           <div className="mock-rubric">
-            <strong>Before you move on</strong>
-            <span>Correct model</span>
-            <span>Concrete example</span>
-            <span>Failure case</span>
-            <span>Clear tradeoff</span>
+            <strong>Aage badhne se pehle</strong>
+            <span>Correct concept</span>
+            <span>Apna example</span>
+            <span>Failure ka case</span>
+            <span>Tradeoff ka reason</span>
           </div>
           <div className="mock-actions">
             <button className="subtle-button" onClick={() => rate('revisit')}>
-              Needs revision · Next
+              Revision chahiye · Agla
             </button>
             <button className="primary-button" onClick={() => rate('confident')}>
-              Confident · Next <Icon name="arrow" size={16} />
+              Clear hai · Agla <Icon name="arrow" size={16} />
             </button>
           </div>
         </>
@@ -253,9 +255,9 @@ export default function Interviews() {
       <div className="page-heading">
         <div>
           <h1>
-            Let’s talk about what you know<span>.</span>
+            Jo seekha, use samjhao<span>.</span>
           </h1>
-          <p>Think out loud, reveal the answer, then challenge yourself with a follow-up.</p>
+          <p>Pehle bolkar answer do, phir compare aur follow-up attempt karo.</p>
         </div>
         <button className="subtle-button" onClick={shuffle}>
           <Icon name="shuffle" size={16} /> Shuffle questions
@@ -267,7 +269,7 @@ export default function Interviews() {
             <Icon name="messages" size={27} />
           </span>
           <div>
-            <h3>Understanding beats memorizing.</h3>
+            <h3>Reason samjho, phir khud answer do.</h3>
             <p>Pehle apne words mein answer do. Phir compare karo.</p>
           </div>
         </div>
@@ -325,7 +327,7 @@ export default function Interviews() {
       </div>
       <div className="filter-chips">
         <button className={track === 'all' ? 'active' : ''} onClick={() => setParams({})}>
-          All subjects
+          Saare subjects
         </button>
         {TRACKS.filter((item) => item.id !== 'interview').map((item) => (
           <button
@@ -356,8 +358,8 @@ export default function Interviews() {
       {!filtered.length && (
         <div className="empty-state">
           <Icon name="messages" size={32} />
-          <h2>No questions in this view.</h2>
-          <p>Try another filter, or revisit the questions you already know.</p>
+          <h2>Is filter mein questions nahi mile.</h2>
+          <p>Doosra filter lo ya practiced questions revise karo.</p>
         </div>
       )}
       {filtered.length > limit && (

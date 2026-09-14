@@ -1,14 +1,14 @@
-# Java — ordered course
+# Java — step-by-step course
 
-[All courses](../README.md)
+[Saare courses](../README.md)
 
-No prior programming course required. Start with lesson 01.
+Pehle programming course ki zaroorat nahi. Lesson 01 se start karo.
 
-Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
 
-## Stage 1: Write your first Java programs
+## Stage 1: Pehla Java program likho
 
-Run main, declare variables, make decisions, write methods, and create instances.
+main run, variables declare, decisions, methods aur instances banao.
 
 1. [First Java program variables and primitive types](01-java-first-program.md)
 2. [Java operators decisions and loops](02-java-decisions-loops.md)
@@ -16,11 +16,11 @@ Run main, declare variables, make decisions, write methods, and create instances
 4. [Classes objects constructors and encapsulation](04-java-classes-constructors.md)
 5. [Java foundations review and conversion edge cases](05-language-foundations.md)
 
-**Stage checkpoint:** Compile a learner program with two independent objects and a method that processes an array.
+**Stage checkpoint — khud karke dikhao:** Two independent objects aur array-processing method wala learner program compile karo.
 
-## Stage 2: Build a reliable core model
+## Stage 2: Reliable core model banao
 
-Extend basic classes with OOP, collections, exceptions, streams and memory reasoning.
+Basic classes par OOP, collections, exceptions, streams aur memory reasoning build karo.
 
 6. [Packages access control and interface boundaries](06-packages-interfaces.md)
 7. [Objects OOP records and equality](07-object-model.md)
@@ -29,23 +29,23 @@ Extend basic classes with OOP, collections, exceptions, streams and memory reaso
 10. [Lambdas streams and Optional](10-streams-lambdas.md)
 11. [JVM memory garbage collection and diagnosis](11-jvm-memory.md)
 
-**Stage checkpoint:** Choose a collection, preserve equality contracts and close an owned resource.
+**Stage checkpoint — khud karke dikhao:** Suitable collection choose, equality contract preserve aur owned resource close karo.
 
-## Stage 3: Build test and persist
+## Stage 3: Build, test aur data save karo
 
-Set up builds and tests before database access and SQL concurrency exercises.
+Database/SQL concurrency se pehle builds aur tests setup karo.
 
 12. [Maven builds and useful Java tests](12-maven-testing.md)
 13. [JDBC SQL and transaction boundaries](13-jdbc-sql.md)
 14. [SQL joins windows and transaction races](14-sql-interview-lab.md)
 
-**Stage checkpoint:** Test a JDBC operation and explain a join and an atomic inventory update.
+**Stage checkpoint — khud karke dikhao:** JDBC operation test karo; join aur atomic inventory update explain karo.
 
-## Stage 4: Reason about concurrency and resource limits
+## Stage 4: Concurrency aur resource limits samjho
 
-Understand thread safety, virtual threads and bounded resources.
+Thread safety, virtual threads aur bounded resources seekho.
 
 15. [Concurrency synchronization and virtual threads](15-concurrency.md)
 16. [Java concurrency under real resource limits](16-concurrency-production.md)
 
-**Stage checkpoint:** Demonstrate a race-safe operation and explain where backpressure is needed.
+**Stage checkpoint — khud karke dikhao:** Race-safe operation dikhao aur backpressure ki need explain karo.

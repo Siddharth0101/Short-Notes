@@ -5,15 +5,15 @@ track: react
 order: 4
 level: Intermediate
 minutes: 25
-summary: Children, compound components, render props, accessible UI aur maintainable styling boundaries seekho.
+summary: Composition reusable outer structure ko uske andar ke content se separate rakhti hai.
 tags: composition, patterns, css, accessibility, components
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Reusable component ek stable contract expose karta hai: inputs, actions, slots aur accessibility behavior. Har visual variation ko boolean prop bana doge to combinations unmanageable ho sakte hain. Composition caller ko meaningful pieces arrange karne deti hai, jabki component shared behavior own karta hai. Reuse ka goal similar pixels copy karna nahi, same responsibility centralize karna hai.
 
-> **Core takeaway:** Composition separates reusable structure from the content placed inside it.
+> **Core takeaway:** Composition reusable outer structure ko uske andar ke content se separate rakhti hai.
 
 ## Start with simple slots
 
@@ -143,24 +143,24 @@ Design system ka `Button` component often sabse zyada reused piece hota hai — 
 
 Card ke three real uses compare karo aur common shell extract karo. Ek use mein actions absent rakho. Keyboard aur 200% zoom par layout verify karo. Explain karo ki kaunsi customization slot honi chahiye aur kaunsi explicit variant. Compound Tabs component ko accessible banao: arrow keys se tabs ke beech move karo, `aria-selected` sync rakho aur panel ko sahi `Tab` se `aria-controls`/`id` se associate karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Composition inheritance se React mein useful kyun hai?** UI pieces ko props/children se combine karna explicit data flow deta hai aur rigid component inheritance hierarchy avoid karta hai.
 
 **Q. Custom hook component state share karta hai?** Logic share karta hai; individual calls ki state separate hoti hai jab tak shared external source use na ho.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Design one `Panel` for a profile and a lesson list without adding `isProfile` and `isLessons` switches. What should its public inputs be?
+**Apply:** Profile aur lesson list ke liye ek Panel design karo bina isProfile/isLessons switches ke. Public inputs kya honge?
 
-> **Hint:** Let callers supply content instead of making the panel understand every domain.
+> **Hint:** Har domain ka logic Panel mein bharne ke bajay caller ko content dene do.
 
-**Answer guide — compare after attempting:** A title slot, children, and an optional actions slot cover the shared shell. Profile and lesson components provide their own content. Keep domain fetching and validation outside the shell. Add a specialized prop only when multiple uses demonstrate a real shared behavior.
+**Answer guide — compare after attempting:** Title, children aur optional actions slots shared shell cover karte hain. Profile/lesson components apna content den. Domain fetching aur validation shell ke bahar rakho. Specialized prop tab add karo jab multiple uses mein real shared behavior dikhe.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [React passing JSX as children](https://react.dev/learn/passing-props-to-a-component) composition explain karta hai. [React custom hooks](https://react.dev/learn/reusing-logic-with-custom-hooks) logic sharing ka reference hai.

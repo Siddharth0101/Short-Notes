@@ -5,16 +5,16 @@ track: system-design
 order: 8
 level: Advanced
 minutes: 28
-summary: Duplicate delivery aur partial failure ko normal design inputs ki tarah handle karo.
+summary: Reliable delivery ke liye replay-safe consumers aur bounded retries chahiye; message dobara aa sakta hai.
 tags: messaging, outbox, idempotency, sagas
 visual: outbox-pattern
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Network call timeout ambiguous hai: operation server par complete hui ya nahi, caller sure nahi ho sakta. Queue reliable handoff help karti hai, but business correctness automatically guarantee nahi karti. Design har step ke before/after crash scenario se validate karo.
 
-> **Core takeaway:** Reliable delivery requires replay-safe consumers and bounded retries.
+> **Core takeaway:** Reliable delivery ke liye replay-safe consumers aur bounded retries chahiye; message dobara aa sakta hai.
 
 ## The dual-write problem
 
@@ -146,7 +146,7 @@ send confirmation  (compensate: none possible)   <- last, always
 
 Orchestration versus choreography ka practical tradeoff: choreography (har service event sunkar next step trigger kare) coupling kam dikhta hai, lekin poora workflow kahin likha hua nahi hota — debug karne ke liye 5 services ke logs jodne padte hain aur "yeh order abhi kahan atka hai" ka koi single jawab nahi milta. Orchestration (ek coordinator explicit state machine chalaye) ek central dependency add karta hai, lekin uske paas har saga instance ka current state aur history hoti hai. Multi-step business workflow ke liye orchestration usually better choice hai kyunki operability workflow ki length ke saath zyada matter karti hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Broker "exactly-once" support karta hai, isliye consumer ko idempotent banane ki zaroorat nahi. **Why it breaks:** Broker ka exactly-once usually *uske apne log ke andar* hota hai (producer dedupe plus transactional read-process-write within the same broker). Jaise hi consumer koi external effect karta hai — database write kisi aur system mein, HTTP call, email — wo guarantee khatam ho jaati hai, kyunki broker us side effect ka part nahi hai. **Fix:** Consumer ko hamesha idempotent design karo; broker ki guarantee ko optimization maano, correctness ka basis nahi.
 - **Wrong assumption:** Queue add karne se overload problem solve ho jaati hai kyunki requests ab buffer ho jaayengi. **Why it breaks:** Queue arrival rate aur service rate ke beech ka mismatch absorb nahi karti, wo usse *latency mein convert* karti hai. Agar consumers permanently slow hain toh queue infinitely badhti hai aur users ko ek aisi request ka wait milta hai jo shayad ab relevant hi nahi rahi. Queue ke bina fast failure aksar better user experience hai. **Fix:** Queue ke saath hamesha bounded size, admission control (queue full par reject), aur ek maximum useful age (usse purane messages drop ya DLQ) define karo.
@@ -155,7 +155,7 @@ Orchestration versus choreography ka practical tradeoff: choreography (har servi
 - **Wrong assumption:** Outbox pattern lagane ke baad message delivery guaranteed aur single ho jaati hai. **Why it breaks:** Outbox sirf ek problem solve karta hai — business write aur event intent ko atomically record karna. Relay publish ke baad aur outbox row mark karne se pehle crash kar sakta hai, matlab wahi event dobara publish hoga. Delivery at-least-once hi rehti hai. **Fix:** Outbox ko consumer-side dedupe ke saath pair karo; dono milkar end-to-end effectively-once behavior dete hain, akela outbox nahi.
 - **Wrong assumption:** Consumer lag zero hai toh system healthy hai. **Why it breaks:** Lag zero iska bhi matlab ho sakta hai ki producer ne publish karna hi band kar diya (upstream outage), ya consumer messages ko silently fail karke acknowledge kar raha hai. Dono cases mein dashboard green dikhta hai aur business process ruk chuka hota hai. **Fix:** Lag ke saath throughput aur success rate dono monitor karo, aur expected-volume floor par alert lagao ("last 10 minutes mein zero orders processed" bhi ek alert hai).
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Does outbox guarantee one email?** Nahi. It solves atomic business-data/event recording; relay and consumer duplicates still possible hain. Email provider idempotency or notification state tracking required ho sakti hai.
 
@@ -175,31 +175,31 @@ Phir retry amplification measure karo: teen nested layers banao jinme har ek 3 a
 
 ## Research notes: Budget retries across the call graph
 
-Retries use capacity while a dependency may already be struggling. Three layers with up to three attempts each can create 27 leaf attempts. Specify whether the attempt count includes the original call.
+Dependency already struggle kar rahi ho tab retries aur capacity leti hain. Three layers × maximum three attempts each se 27 leaf attempts ho sakti hain. Attempt count mein original call included hai ya nahi, clear karo.
 
-Choose a retry boundary, cap attempts, honor an end-to-end deadline and spread retries with jitter. A timed-out write may already have committed; retries must respect operation semantics.
+Retry boundary choose, attempts cap, end-to-end deadline honor aur jitter se retries spread karo. Timed-out write already commit ho sakti hai; operation semantics respect karo.
 
-**Interview check:** Why can exponential backoff without jitter still cause bursts?
+**Interview check:** Exponential backoff bina jitter burst kyun bana sakta hai?
 
-**Answer:** Clients failing together can schedule their next attempt together. Random delay spreads retries; it still needs limits and a budget because waiting does not create capacity.
+**Answer:** Saath fail hue clients next attempt bhi saath schedule kar sakte hain. Random delay spread karti hai; limits/budget phir bhi chahiye kyunki wait capacity nahi banata.
 
-**Practice:** Allocate 900 ms across two attempts, waits and network overhead.
+**Practice:** 900ms ko two attempts, waits aur network overhead mein allocate karo.
 
-[Read the source — AWS Builders’ Library](https://d1.awsstatic.com/builderslibrary/pdfs/timeouts-retries-and-backoff-with-jitter.pdf). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — AWS Builders’ Library](https://d1.awsstatic.com/builderslibrary/pdfs/timeouts-retries-and-backoff-with-jitter.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A consumer commits an order update but crashes before acknowledging the message. Describe redelivery and the safe consumer response.
+**Apply:** Consumer order update commit karke acknowledgement se pehle crash karta hai. Redelivery aur safe response explain karo.
 
-> **Hint:** The broker cannot infer that the business effect already committed.
+> **Hint:** Broker ko apne aap nahi pata ki business effect commit ho chuka hai.
 
-**Answer guide — compare after attempting:** Expect the message again. Coordinate a durable processed-message ID with the business update so replay becomes a no-op, then acknowledge. Bound retry attempts and isolate poison messages. An external side effect needs its own idempotency strategy; deduplicating only in process memory is insufficient.
+**Answer guide — compare after attempting:** Message dobara expect karo. Durable processed-message ID aur business update coordinate karo taaki replay no-op ho; phir ack karo. Retries bound karo, poison messages isolate karo. External side effect ko apni idempotency strategy chahiye; in-memory dedup enough nahi.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)
 - [Timeouts retries and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/)

@@ -5,17 +5,17 @@ track: dsa
 order: 1
 level: Foundation
 minutes: 27
-summary: Analyze growth, state assumptions, and turn a vague problem into a provable algorithm.
+summary: Complexity batati hai ki input badhne par kitna time aur extra memory lagegi; hidden operations bhi gino.
 tags: big-o, complexity, problem-solving, invariants
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Algorithm decisions ka sequence hai jiske saath correctness ka reason bhi hona chahiye. Complexity batati hai ki input badhne par resource use kaise grow karega; exact milliseconds predict nahi karti. Pehle input sizes define karo: `n` elements, `m` characters, ya graph ke `V` vertices aur `E` edges. Har problem ko sirf ek `n` se describe karna useful nahi hota.
 
 Yeh original revision notes hain. Inhe apne course aur existing exercises ke saath use karo. Interview mein code likhne se pehle problem ka contract clear karna answer ka important part hai.
 
-> **Core takeaway:** Complexity counts growth with input size, including extra memory and hidden operations.
+> **Core takeaway:** Complexity batati hai ki input badhne par kitna time aur extra memory lagegi; hidden operations bhi gino.
 
 ## The solving loop
 
@@ -154,7 +154,7 @@ Interview mein input bounds ek strong hint hote hain. Roughly 10⁸ simple opera
 
 Yeh table answer nahi deti, direction deti hai. `n ≤ 10⁵` par O(n²) likhne se pehle hi tumhe pata hona chahiye ki woh accept nahi hoga, aur `n ≤ 20` dekh kar exponential search ko turant reject mat karo — wahan wahi intended solution ho sakta hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Big O ke andar constants aur lower-order terms hamesha irrelevant hain, so O(n log n) hamesha O(n²) se behtar hai. **Why it breaks:** Asymptotic bound *large* n ke liye statement hai. n = 20 par heavy-constant merge sort insertion sort se slow ho sakta hai — yehi reason hai ki real library sorts chhote subarrays par insertion sort par switch karte hain. **Fix:** Complexity ko selection ka *first filter* samjho, final verdict nahi; actual n aur constant factors mention karo jab woh decision change karte hon.
 - **Wrong assumption:** "Extra data structure use kiya, so space O(n) ho gayi" — aur input ko hi space maan lena. **Why it breaks:** Auxiliary space aur total space alag metrics hain. In-place algorithm input array ko hi mutate karta hai aur O(1) auxiliary space leta hai, lekin input toh phir bhi O(n) memory mein hai. **Fix:** Hamesha bolo "auxiliary space O(1), input excluded" — ambiguous "space O(1)" claim mat karo, aur recursion stack ko auxiliary space mein count karo.
@@ -190,17 +190,17 @@ Amortized reasoning system design mein bhi wahi hai: log-structured storage (jai
 
 **Answer:** Jab n aur m independently vary karte hain. Correct bound O(nm) hai. Dono ko ek hi `n` mein collapse karna tab hi valid hai jab problem constraint kehti ho ki m = O(n). Interview mein multiple input sizes ko alag naam dena precision ka signal hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** An outer loop runs n times and an inner loop doubles j from 1 while j < n. Derive runtime and compare with an inner loop that increments j.
+**Apply:** Outer loop n baar chalta hai. Inner loop j=1 se shuru karke j ko double karta hai jab tak j<n. Iska runtime nikalo; phir j++ wale version se compare karo.
 
-> **Hint:** Count how many doublings reach n.
+> **Hint:** 1, 2, 4, 8 likho aur gino ki n tak pahunchne mein kitne steps lagte hain.
 
-**Answer guide — compare after attempting:** The doubling loop performs O(log n) iterations, so the nested algorithm is O(n log n). Incrementing by one makes it O(n²). If only counters are stored, auxiliary space is O(1). State the n > 1 assumption when describing the logarithm.
+**Answer guide — compare after attempting:** Doubling wale inner loop mein O(log n) steps hain, isliye total O(n log n) hai. j++ mein O(n) inner steps, yani total O(n²). Sirf counters store ho rahe hon toh auxiliary space O(1) hai. Logarithm samjhate waqt n>1 assume karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

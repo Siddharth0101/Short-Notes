@@ -5,11 +5,10 @@ export const scenarioQuestions = [
     track: 'javascript',
     noteId: 'js-async-event-loop',
     level: 'Advanced',
-    question:
-      'A progress spinner freezes although the calculation is wrapped in Promise.resolve().then(). Why?',
+    question: 'Calculation Promise.then mein hai phir bhi spinner freeze kyun?',
     answer:
-      'Promise callbacks still execute JavaScript on the same thread. A long calculation blocks other work; repeatedly queuing microtasks can also delay rendering. Move substantial CPU work to a worker or split it into bounded tasks that yield to the host. Measure responsiveness as well as total execution time.',
-    followUp: 'How would you cancel a worker result after the user changes inputs?',
+      'Promise callback bhi same JS thread par chalti hai. Long calculation other work block karti hai; endless microtasks rendering delay bhi kar sakti hain. Substantial CPU work worker ko do ya bounded host-yielding tasks mein split karo. Total runtime ke saath responsiveness measure karo. Input change par old worker results ki ownership guard/cancellation policy rakho.',
+    followUp: 'Inputs badalne par old worker result kaise cancel/ignore karoge?',
     tags: ['event-loop', 'microtasks', 'performance'],
     sources: [
       {
@@ -23,12 +22,10 @@ export const scenarioQuestions = [
     track: 'javascript',
     noteId: 'javascript-async-patterns',
     level: 'Advanced',
-    question:
-      'Design a search request flow where typing A then AB must never show the stale A result.',
+    question: 'A phir AB type par stale A kabhi visible na ho: flow design karo.',
     answer:
-      'Assign each request a monotonically increasing identity and only commit the current identity. Abort the old fetch to reduce wasted work, but retain the identity guard for later async processing. Treat cancellation separately from genuine errors; clear loading only for the current request.',
-    followUp:
-      'What happens if the first fetch resolves before cancellation but its JSON processing finishes later?',
+      'Har request ko increasing ID do; sirf current ID result commit kare. Old fetch abort karke work bachao, lekin later JSON/async processing ke liye ID guard bhi rakho. Cancellation ko real error se alag dikhao. Loading sirf current request clear kare; old completion nayi request ka spinner/result overwrite na kare.',
+    followUp: 'Fetch cancel se pehle resolve lekin JSON baad mein finish ho toh?',
     tags: ['async', 'requests', 'race-conditions'],
     sources: [
       {
@@ -42,10 +39,10 @@ export const scenarioQuestions = [
     track: 'javascript',
     noteId: 'js-scope-closures',
     level: 'Advanced',
-    question: 'A removed widget stays in memory. How would you investigate its event handler?',
+    question: 'Removed widget memory mein hai; handler investigate kaise karoge?',
     answer:
-      'Inspect a heap snapshot retaining path. A listener on a long-lived target can retain its closure and the widget data captured by that closure. Remove the exact callback or abort its listener lifecycle; clear owned timers too. Compare retained instances after repeated mount/remove cycles instead of assuming every closure leaks.',
-    followUp: 'Why does removeEventListener fail when passed a newly created arrow function?',
+      'Heap snapshot ki retaining path dekho. Long-lived target listener closure aur captured widget data reachable rakh sakta hai. Exact callback remove ya listener lifecycle abort karo; owned timers bhi clear. Repeated mount/remove ke baad retained instances compare karo. Har closure leak hai assume mat karo; new arrow original callback identity nahi hai.',
+    followUp: 'New arrow function se removeEventListener kyun fail hota hai?',
     tags: ['closures', 'memory', 'events'],
     sources: [
       {
@@ -59,11 +56,10 @@ export const scenarioQuestions = [
     track: 'react',
     noteId: 'react-effects-custom-hooks',
     level: 'Advanced',
-    question:
-      'A filtered list uses an Effect to copy filtered props into state. How would you simplify it?',
+    question: 'Filtered props Effect se state mein copy ho rahi hain. Simplify kaise?',
     answer:
-      'Derive the filtered list during render, keeping only the user-controlled filter in state. This avoids an extra state synchronization cycle. Memoize the calculation only when measured cost justifies it. Effects are appropriate when synchronizing with an external system, such as a subscription.',
-    followUp: 'What changes if the filter operation must run on a remote server?',
+      'Filtered list render mein derive karo; state mein user-controlled filter rakho. Extra props→state synchronization cycle hat jaati hai. Calculation expensive measure ho tab memoize karo. External subscription jaisi synchronization mein Effect appropriate hai. Filter remote ho toh async request identity/loading/error aur stale-response handling bhi chahiye, sirf local derivation enough nahi.',
+    followUp: 'Filter remote server par chale toh kya badlega?',
     tags: ['effects', 'state', 'rendering'],
     sources: [
       {
@@ -77,12 +73,10 @@ export const scenarioQuestions = [
     track: 'react',
     noteId: 'react-machine-coding',
     level: 'Advanced',
-    question:
-      'A sorted editable table moves a typed draft into the wrong row. What is your diagnosis?',
+    question: 'Sorted editable table ka draft wrong row mein: diagnosis kya hai?',
     answer:
-      'Index keys associate component state with a position. Sorting changes which record occupies that position, so a draft can appear on another record. Use stable record IDs as keys, define whether drafts belong to the row or an external editor store, and test sorting while a draft is active.',
-    followUp:
-      'How should a deliberately new record reset the editor without resetting unrelated rows?',
+      'Index key state ko position se jodti hai. Sorting position ka record badalti hai, isliye draft other record par dikh sakta hai. Stable record IDs use karo; drafts row-local ya ID-keyed external store mein own karo. Active draft ke saath sort/delete test karo. Intentionally new editor identity ki key hi badlo, unrelated rows reset na karo.',
+    followUp: 'New record ka editor reset karte hue other rows ka state kaise bachao?',
     tags: ['keys', 'identity', 'state'],
     sources: [
       {
@@ -96,10 +90,10 @@ export const scenarioQuestions = [
     track: 'react',
     noteId: 'react-effects-custom-hooks',
     level: 'Advanced',
-    question: 'Strict Mode exposes two active socket listeners. What should the Effect guarantee?',
+    question: 'Strict Mode two active socket listeners dikha raha hai. Effect guarantee kya ho?',
     answer:
-      'Setup must own a subscription and cleanup must remove that same subscription. React can run an extra setup-cleanup cycle in development to expose missing cleanup. Verify only one listener remains after that cycle and none after unmount. A ref that suppresses the second setup hides the ownership defect.',
-    followUp: 'How would your cleanup change when the room ID changes while connected?',
+      'Setup ek subscription own kare aur cleanup exactly wahi remove kare. Development extra setup-cleanup missing cleanup expose kar sakti hai. Cycle ke baad one listener, unmount ke baad zero verify karo. Ref se second setup suppress karna defect hide karta hai. Room change mein old room unsubscribe ke baad new room subscribe hona chahiye.',
+    followUp: 'Connected room ID badle toh cleanup kaise hogi?',
     tags: ['effects', 'cleanup', 'strict-mode'],
     sources: [
       {
@@ -113,11 +107,10 @@ export const scenarioQuestions = [
     track: 'java',
     noteId: 'java-collections-generics',
     level: 'Advanced',
-    question:
-      'A HashMap contains a customer key but get(customer) returns null after an update. Explain.',
+    question: 'HashMap customer key hai lekin update ke baad get null: kyun?',
     answer:
-      'If fields used by equals or hashCode change after insertion, lookup can search a different bucket. Model keys with stable immutable identity, and keep equals and hashCode consistent. Prefer a customer ID key when the customer object is mutable. Reproduce with a small mutation test before changing the collection.',
-    followUp: 'Does wrapping the map in an unmodifiable view prevent mutation of the customer key?',
+      "Insertion ke baad equals/hashCode fields change hui toh lookup different bucket search kar sakta hai. Stable immutable key identity aur consistent equals/hashCode rakho. Mutable Customer ke bajay customer ID key better hai. Small mutation reproduction se prove karo. Unmodifiable map wrapper entries modification rokta hai, referenced customer object's fields automatically freeze nahi karta.",
+    followUp: 'Unmodifiable map view customer-key mutation rokta hai?',
     tags: ['hashmap', 'equality', 'collections'],
     sources: [
       {
@@ -131,10 +124,10 @@ export const scenarioQuestions = [
     track: 'java',
     noteId: 'java-jpa-transactions',
     level: 'Advanced',
-    question: 'Two checkout requests both read stock = 1. How do you prevent both succeeding?',
+    question: 'Two checkouts stock=1 read karti hain. Both success kaise rokoge?',
     answer:
-      'Make the invariant part of the write: decrement only when stock is positive and check affected rows, or use appropriate locking/version checks within a transaction. A transaction alone does not automatically serialize the read-modify-write sequence. Define retry behavior for conflicts and keep external payment calls outside long-held database locks.',
-    followUp: 'How will a retry know whether the earlier checkout already reserved stock?',
+      'Write mein invariant include karo: stock positive ho tab decrement, affected rows check; ya suitable locking/version transaction use karo. Transaction wrapper alone read-modify-write serialize guarantee nahi. Conflict retry behavior define aur external payment long-held DB lock ke bahar rakho. Stable purchase identity se retry previous reservation recover kare, stock dobara decrement nahi.',
+    followUp: 'Retry ko pehle ki reservation kaise pata chalegi?',
     tags: ['transactions', 'concurrency', 'sql'],
     sources: [
       {
@@ -148,11 +141,10 @@ export const scenarioQuestions = [
     track: 'java',
     noteId: 'java-concurrency-production',
     level: 'Advanced',
-    question:
-      'After increasing request concurrency, database timeout rates rise. What would you change first?',
+    question: 'Concurrency badhane par DB timeouts badhe. Pehle kya change karoge?',
     answer:
-      'Compare arrival rate, connection wait time, query duration, and pool utilization. Bound concurrent database work to the downstream capacity, enforce deadlines, and reject or queue excess work with a limit. More request threads do not create database capacity; fix slow queries and transaction scope before enlarging the pool blindly.',
-    followUp: 'What metric distinguishes connection-pool waiting from slow SQL execution?',
+      'Arrival rate, connection wait, query duration aur pool utilization compare karo. DB work downstream capacity ke according bound, deadlines enforce, excess reject ya bounded queue karo. More request threads more DB capacity nahi banati. Pool blindly badhane se pehle slow queries/transaction scope fix karo. Acquisition wait aur execution latency separate metrics rakho.',
+    followUp: 'Pool wait versus SQL execution kaunsi metrics se separate karoge?',
     tags: ['concurrency', 'backpressure', 'connections'],
   },
   {
@@ -160,11 +152,10 @@ export const scenarioQuestions = [
     track: 'mongodb',
     noteId: 'mongo-node-runtime-http',
     level: 'Advanced',
-    question:
-      'An async Node endpoint parses a huge JSON payload and stalls unrelated requests. Why?',
+    question: 'Async Node endpoint huge JSON parse karke other requests stall kyun karta hai?',
     answer:
-      'Async syntax does not move synchronous JSON parsing off the event loop. Bound payload size and avoid unbounded per-request computation. For substantial CPU work, consider workers with a bounded submission queue. Measure event-loop delay and CPU alongside request latency to separate computation from database waiting.',
-    followUp: 'Why can a worker pool still overload the service if its input queue is unlimited?',
+      'Async syntax synchronous JSON parse ko event loop se bahar nahi bhejti. Payload size aur per-request computation bound karo. Heavy CPU ke liye bounded worker submission queue consider karo. CPU/event-loop delay/request latency measure karke DB waiting se distinguish karo. Worker count limited ho lekin queue unlimited ho toh memory/latency overload phir bhi possible hai.',
+    followUp: 'Unlimited input queue ke saath worker pool bhi overload kyun hoga?',
     tags: ['node', 'event-loop', 'backpressure'],
     sources: [
       {
@@ -179,10 +170,10 @@ export const scenarioQuestions = [
     noteId: 'mongodb-query-production-lab',
     level: 'Advanced',
     question:
-      'A tenant activity feed filters by tenantId and sorts by createdAt and _id. Propose an index and pagination strategy.',
+      'Tenant feed tenantId filter, createdAt/_id sort karti hai. Index/cursor design karo.',
     answer:
-      'Try a compound index starting with tenantId followed by the sort fields in matching directions. Use the last createdAt and _id as a cursor with a matching lexicographic boundary. The ID breaks timestamp ties. Validate the actual plan and examined keys/documents with representative tenant sizes; indexes also cost storage and write work.',
-    followUp: 'How do concurrent inserts affect cursor pagination compared with a strict snapshot?',
+      'tenantId leading equality aur matching directions mein createdAt/_id sort ka compound index try karo. Last pair cursor aur lexicographic boundary lo; ID timestamp ties break karta hai. Representative tenants ka actual plan/examined keys/docs verify karo. Index write/storage cost deta hai. Concurrent inserts cursor ko strict snapshot nahi banate; desired consistency explicitly define karo.',
+    followUp: 'Concurrent inserts mein cursor strict snapshot se kaise alag hai?',
     tags: ['indexes', 'pagination', 'query-plan'],
     sources: [
       {
@@ -197,10 +188,10 @@ export const scenarioQuestions = [
     noteId: 'mongo-production-integrations',
     level: 'Advanced',
     question:
-      'A payment webhook is delivered twice while two server instances process it. What prevents a duplicate order update?',
+      'Two instances duplicate payment webhook process karti hain. Double update kaise roko?',
     answer:
-      'Persist a unique provider event identity and apply the business transition atomically with its deduplication record. Authenticate the webhook, validate its association to the order, and acknowledge only after durable handling. An in-memory set fails across instances and restarts. Make side effects replay-safe and retain enough evidence for reconciliation.',
-    followUp: 'What if the process crashes after committing but before returning HTTP success?',
+      'Unique provider event ID durably store aur business transition dedup record ke saath atomic rakho. Webhook authenticate, order association validate aur durable handling ke baad ack karo. In-memory Set instances/restarts mein fail hai. Replay-safe effects aur reconciliation evidence rakho. Commit ke baad response lost ho toh repeated event existing outcome pehchaan kar no-op kare.',
+    followUp: 'Commit ke baad HTTP success se pehle crash ho toh?',
     tags: ['webhooks', 'idempotency', 'transactions'],
     sources: [
       {
@@ -214,11 +205,10 @@ export const scenarioQuestions = [
     track: 'dsa',
     noteId: 'dsa-patterns',
     level: 'Advanced',
-    question:
-      'Why does a shrinking sliding window fail for exact target sums when negative numbers are allowed?',
+    question: 'Negative numbers par exact-sum shrinking window kyun fail?',
     answer:
-      'Its usual shrinking rule relies on monotonic behavior: adding grows the sum and removing shrinks it for nonnegative values. Negatives break that reasoning. For counting arbitrary integer subarrays with a target sum, use prefix sums and frequencies of earlier prefix sums, including an initial zero prefix.',
-    followUp: 'For [1, -1, 1] and target 1, trace the prefix map and count all valid subarrays.',
+      'Usual shrinking rule nonnegative values mein add=sum badhe, remove=sum ghate par depend hai. Negatives direction todte hain. Arbitrary integer target-subarray count ke liye earlier prefix sums ki frequencies rakho; initial zero prefix include karo. Current prefix s par earlier s-target count add karo, phir s record karo, taaki valid start positions sahi gini jaayein.',
+    followUp: '[1,-1,1], target 1 ka prefix-map trace aur total subarrays batao.',
     tags: ['sliding-window', 'prefix-sum', 'invariants'],
   },
   {
@@ -226,11 +216,10 @@ export const scenarioQuestions = [
     track: 'dsa',
     noteId: 'dsa-graphs',
     level: 'Advanced',
-    question:
-      'A shortest-path solution marks a node final the first time it is discovered. When is that valid?',
+    question: 'Node first discovery par final karna kab valid hai?',
     answer:
-      'For unweighted BFS, discovery in layer order establishes minimum edge count. For weighted Dijkstra, discovery alone is insufficient; finalize the minimum-distance entry removed from the priority queue, skipping stale entries. Its standard correctness argument requires nonnegative edge weights. State which graph model you are solving before choosing the algorithm.',
-    followUp: 'Give a three-node graph where first discovery produces a longer weighted route.',
+      'Unweighted BFS layer order mein discovery minimum edge count establish karti hai. Weighted Dijkstra mein discovery enough nahi; priority queue se minimum current-distance entry nikle tab finalize, stale skip karo. Standard proof nonnegative weights maangti hai. Graph model pehle define karo: A→B=10 aur A→C→B=1+1 first-discovery weighted mistake dikhaata hai.',
+    followUp: 'Three-node weighted counterexample do jahan later path shorter ho.',
     tags: ['bfs', 'dijkstra', 'graph'],
     sources: [
       {
@@ -244,12 +233,10 @@ export const scenarioQuestions = [
     track: 'dsa',
     noteId: 'dsa-dynamic-programming',
     level: 'Advanced',
-    question:
-      'How can the same one-dimensional knapsack array accidentally solve a different problem?',
+    question: 'Same 1D knapsack array accidentally different problem kaise solve kar sakti hai?',
     answer:
-      'With 0/1 knapsack, descending capacity order prevents the current item from being reused in the same iteration. Ascending order can consume the newly updated state and implements unbounded reuse. Explain what each state means before optimizing memory, and compare the optimized solution against a small exhaustive oracle.',
-    followUp:
-      'Use a single item of weight 2 and value 3 with capacity 4 to demonstrate the difference.',
+      '0/1 knapsack mein capacities descending update current item ko same iteration mein reuse hone se rokti hai. Ascending newly updated state read karke unbounded reuse solve kar sakti hai. Weight2/value3/capacity4 mein ascending 6 dega; 0/1 answer 3 hai. Memory optimize se pehle state meaning batao aur small exhaustive reference se compare karo.',
+    followUp: 'Weight 2/value 3/capacity 4 se difference dikhao.',
     tags: ['dynamic-programming', 'knapsack', 'invariants'],
     sources: [
       {
@@ -263,10 +250,10 @@ export const scenarioQuestions = [
     track: 'system-design',
     noteId: 'design-messaging-reliability',
     level: 'Advanced',
-    question: 'A create-order API times out after committing. What should a client retry do?',
+    question: 'Create-order commit ke baad timeout: client retry kya kare?',
     answer:
-      'Reuse a caller-scoped idempotency key bound to the request intent. Atomically record the key with the state change and return the recorded outcome on a duplicate. Reject reuse with a different payload and define retention. A timeout leaves the outcome uncertain; it is not evidence that no side effect occurred.',
-    followUp: 'What happens when two identical requests with the same key arrive concurrently?',
+      'Caller-scoped idempotency key intent/payload se bind karo. Key aur state change atomic record; duplicate par saved outcome return karo. Different payload reuse reject aur retention define karo. Concurrent duplicates unique-key/transaction se coordinate hon. Timeout uncertain outcome hai, no-side-effect proof nahi; fresh key bana kar blindly create repeat mat karo.',
+    followUp: 'Same-key identical requests concurrently aayein toh kya hoga?',
     tags: ['idempotency', 'retries', 'transactions'],
     sources: [
       {
@@ -280,11 +267,10 @@ export const scenarioQuestions = [
     track: 'system-design',
     noteId: 'design-scaling-caching',
     level: 'Advanced',
-    question:
-      'A hot cache entry expires and thousands of requests hit the database. Design a recovery path.',
+    question: 'Hot cache expire, thousands DB hits: recovery design karo.',
     answer:
-      'Coalesce concurrent refreshes, spread expiry times, and cap refresh work. If the product allows it, serve bounded stale data while one request refreshes. Keep a timeout and failure policy for the refresher. Size protection for the database when the cache is completely unavailable, not only for normal hit rates.',
-    followUp: 'Which data would you refuse to serve stale, and how would the UI communicate that?',
+      'Refresh coalesce karo, expiries spread aur refresh concurrency cap karo. Product allow kare toh bounded stale data serve karte hue one refresh chalao. Refresher ka timeout/failure policy rakho. DB protection cold/unavailable cache ke liye size karo, normal hit rate ke liye hi nahi. Inventory jaise authoritative decisions stale hint se confirm mat karo.',
+    followUp: 'Kaunsa data stale serve nahi karoge aur UI kya bolegi?',
     tags: ['caching', 'resilience', 'stampede'],
   },
   {
@@ -292,11 +278,10 @@ export const scenarioQuestions = [
     track: 'system-design',
     noteId: 'design-realtime-case-study',
     level: 'Advanced',
-    question:
-      'A chat client reconnects after missing messages. How do you recover without gaps or duplicates?',
+    question: 'Chat reconnect mein gaps/duplicates bina recovery kaise?',
     answer:
-      'Persist messages with stable identities and a conversation sequence or cursor. Reconnect from the last acknowledged position, replay retained events, and deduplicate by message identity. If the cursor is outside retention, return a resynchronization path. Define ordering scope explicitly; a global total order is a separate and usually more expensive requirement.',
-    followUp: 'How would you handle replay arriving while new live messages are already streaming?',
+      'Stable message IDs aur conversation sequence/cursor durably store karo. Last acknowledged position se retained events replay, IDs se dedup karo. Cursor retention se bahar ho toh resync path do. Replay/live handoff mein overlap dedup aur gap prevent karo. Ordering scope explicit ho; global total order separate aur often expensive requirement hai.',
+    followUp: 'Replay aur live stream overlap kaise handle karoge?',
     tags: ['websocket', 'replay', 'ordering'],
   },
   {
@@ -304,10 +289,10 @@ export const scenarioQuestions = [
     track: 'javascript',
     noteId: 'js-conditionals',
     level: 'Intermediate',
-    question: 'When should a fallback use ?? instead of ||?',
+    question: 'Fallback mein || ke bajay ?? kab use karoge?',
     answer:
-      'The || operator falls back for any falsy value, including 0, false, and an empty string. The ?? operator falls back only for null or undefined. For a valid numeric zero, use nullish handling plus explicit validation instead of silently replacing the value.',
-    followUp: 'How would you separately reject NaN while allowing zero?',
+      "|| every falsy value par fallback karta hai: 0,false,'' bhi. ?? sirf null/undefined par fallback karta hai. Valid zero bachana ho toh nullish fallback plus explicit numeric validation lo. NaN nullish nahi, isliye Number.isNaN/finite check alag chahiye. Missing aur invalid values ka contract clear rakho; convenient fallback data error hide na kare.",
+    followUp: 'Zero allow karke NaN separately reject kaise karoge?',
     tags: ['conditionals', 'coercion'],
   },
   {
@@ -315,12 +300,10 @@ export const scenarioQuestions = [
     track: 'javascript',
     noteId: 'js-loops',
     level: 'Intermediate',
-    question:
-      'A loop removes items from an array while incrementing its index. Why can it skip matches?',
+    question: 'Array remove karte hue index increment matches skip kyun karta hai?',
     answer:
-      'Removing an element shifts later elements left, but the next increment advances past the element that shifted into the current position. Iterate backward when mutating by index, or construct a filtered result. Specify whether preserving the original array identity matters to callers.',
-    followUp:
-      'Trace adjacent removable values and compare the space cost of filter with in-place removal.',
+      'Removal later elements left shift karti hai. Next i++ current position mein shift hua element skip karta hai. Index mutation mein backwards iterate karo ya filtered new result banao. Adjacent removable items se trace karo. Original array identity preserve karni hai ya new array allowed hai, caller contract define karo; filter extra result storage leta hai.',
+    followUp: 'Adjacent removable values trace aur filter/in-place space compare karo.',
     tags: ['loops', 'arrays'],
   },
   {
@@ -328,10 +311,10 @@ export const scenarioQuestions = [
     track: 'react',
     noteId: 'react-jsx-props',
     level: 'Intermediate',
-    question: 'Why is changing a prop object inside a child component a problem?',
+    question: 'Child prop object mutate kare toh problem kyun?',
     answer:
-      'Props describe the input for a render and should be treated as read-only. Mutating the object can change shared parent data without a scheduled state update and undermine render assumptions. Ask the owner to update state through a callback, creating new objects for the changed path.',
-    followUp: 'How would you update one nested field without replacing unrelated sibling objects?',
+      'Props render ka read-only input hain. Object mutate karne se parent/shared data scheduled update ke bina badal sakta hai aur pure-render assumptions toot sakti hain. Callback se owner ko update request do. Changed nested path ke new objects banao; untouched siblings preserve karo. Isse updates traceable aur sharing predictable rehti hai.',
+    followUp: 'Nested field update mein unrelated sibling objects kaise preserve karoge?',
     tags: ['props', 'jsx'],
   },
   {
@@ -339,10 +322,10 @@ export const scenarioQuestions = [
     track: 'react',
     noteId: 'react-routing-url-state',
     level: 'Intermediate',
-    question: 'Which parts of a product-search screen belong in the URL?',
+    question: 'Product search ki kaunsi state URL mein rahegi?',
     answer:
-      'Put shareable navigation state such as committed query, filters, sort, and page in the URL. Keep transient input or focus local when it need not survive navigation. Parse and validate URL values, reset incompatible pagination when filters change, and test reload plus back/forward navigation.',
-    followUp: 'When would replace history be preferable to adding an entry for every keystroke?',
+      'Committed query, filters, sort/page jaise shareable navigation URL mein rakho. Temporary typing/focus local rahe agar navigation ke across preserve nahi chahiye. URL values parse/validate, incompatible page reset aur reload/Back/Forward test karo. Har keystroke history flood kare toh draft local ya history replace policy use karo; committed navigation deliberate entry bana sakti hai.',
+    followUp: 'Har keystroke history entry ke bajay replace kab better hai?',
     tags: ['routing', 'url'],
   },
   {
@@ -350,11 +333,10 @@ export const scenarioQuestions = [
     track: 'react',
     noteId: 'react-query-supabase',
     level: 'Intermediate',
-    question:
-      'Two tenants see cached data from each other in a client session. What do you inspect?',
+    question: 'Two tenants ek-doosre ka client cache dekhte hain. Kya inspect karoge?',
     answer:
-      'Check whether the query key includes tenant identity and every input that changes the result. Clear or partition sensitive caches when identity changes. Cache separation is only a UI concern; the backend must still enforce tenant access for every request, including direct requests outside the UI.',
-    followUp: 'How would you test account switching while the old request is still in flight?',
+      'Query key mein tenant/user aur all result-affecting inputs check karo. Identity change par sensitive caches partition/clear karo; old in-flight response ko new view mein commit mat hone do. Client isolation UX/cached-data boundary hai; backend every request independently tenant-authorize kare. Direct request UI bypass kar sakti hai, isliye cache key authorization substitute nahi.',
+    followUp: 'Old request pending ho tab account switch test kaise?',
     tags: ['query', 'cache', 'supabase'],
   },
   {
@@ -362,10 +344,10 @@ export const scenarioQuestions = [
     track: 'java',
     noteId: 'java-language-foundations',
     level: 'Intermediate',
-    question: 'Why can assigning an int multiplication to long still produce an overflowed result?',
+    question: 'int multiplication long ko assign karke bhi overflow kyun?',
     answer:
-      'If both operands are int, multiplication is evaluated using int arithmetic before assignment to long. Promote an operand first, such as 1L * count * price, and choose checked arithmetic when overflow must fail. Widening an already overflowed intermediate cannot recover the mathematical result.',
-    followUp: 'What changes when even the correct result exceeds the long range?',
+      'Dono operands int hon toh multiplication assignment se pehle int mein hoti hai. Pehle operand promote karo, jaise `1L * count * price`. Overflow reject chahiye toh checked arithmetic choose karo. Already overflowed intermediate ko long banana mathematical result restore nahi karta. Long bhi insufficient ho toh bounds/domain ke hisaab se bigger representation chahiye.',
+    followUp: 'Correct result long range se bhi bada ho toh?',
     tags: ['types', 'casting'],
   },
   {
@@ -373,12 +355,10 @@ export const scenarioQuestions = [
     track: 'java',
     noteId: 'java-maven-testing',
     level: 'Intermediate',
-    question:
-      'An integration test passes alone but fails in the full Maven suite. How do you debug it?',
+    question: 'Test alone pass, Maven suite mein fail: debug kaise?',
     answer:
-      'Look for shared database rows, fixed ports, mutable static state, time assumptions, and order-dependent cleanup. Reproduce with the same suite configuration and isolate each test resource. Prefer unique fixture identifiers and explicit lifecycle cleanup; adding sleeps usually masks the race without establishing correctness.',
-    followUp:
-      'How would you keep database integration tests independent when they run concurrently?',
+      'Shared rows, fixed ports, static mutable state, time assumptions aur cleanup order inspect karo. Same suite config reproduce; har resource isolate karo. Unique fixtures aur explicit lifecycle cleanup prefer karo. Parallel DB tests separate schemas/databases ya nonconflicting fixtures use karein. Sleeps race hide karte hain, correctness establish nahi; first interfering resource ka evidence nikalo.',
+    followUp: 'Parallel DB integration tests independent kaise rakhoge?',
     tags: ['maven', 'testing'],
   },
   {
@@ -386,12 +366,10 @@ export const scenarioQuestions = [
     track: 'mongodb',
     noteId: 'mongo-auth-security',
     level: 'Intermediate',
-    question:
-      'A valid user token can read another user’s order by changing its ID. What check is missing?',
+    question: 'Valid token se other user order ID access ho raha hai. Missing check?',
     answer:
-      'Authentication identifies the caller; object-level authorization decides whether that caller may access this order. Scope the query or policy check to the authenticated user and tenant, with explicit exceptions for authorized roles. Never trust a user ID supplied in the request body as proof of ownership.',
-    followUp:
-      'What integration tests cover horizontal access, privileged access, and a deleted membership?',
+      'Authentication caller identify karti hai; object-level authorization is order ka access decide karti hai. Verified user/tenant se query/policy scope karo; privileged role exceptions explicit hon. Body userId ownership ka proof nahi. Cross-user read/write, privileged allowed case aur revoked membership test karo; ID badalne par private data/mutation leak nahi honi chahiye.',
+    followUp: 'Cross-user, privileged aur revoked-membership integration cases kya honge?',
     tags: ['auth', 'authorization'],
   },
 ];

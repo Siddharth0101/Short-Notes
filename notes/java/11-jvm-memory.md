@@ -5,16 +5,16 @@ track: java
 order: 11
 level: Advanced
 minutes: 22
-summary: Reachability, allocation aur profiling se memory issues ko reason karo.
+summary: Jo object reachable hai lekin ab useful nahi, woh bhi memory leak ka part ho sakta hai.
 tags: jvm, memory, garbage-collection, profiling
 visual: gc-sweep
 ---
 
-## Mental model
+## Mental model — simple soch
 
 JVM abstract execution model aur actual optimized runtime ko distinguish karo. Model mein each thread ke stack frames method invocation state hold karte hain; heap shared object storage hai. Primitive/reference distinction memory location decide nahi karta. Primitive instance field object ka part ho sakta hai, while local reference stack frame mein modeled hoti hai. JIT actual storage optimize kar sakta hai.
 
-> **Core takeaway:** A memory leak can consist of reachable objects that are no longer useful.
+> **Core takeaway:** Jo object reachable hai lekin ab useful nahi, woh bhi memory leak ka part ho sakta hai.
 
 ## Trace references before locations
 
@@ -96,7 +96,7 @@ Synthetic capacity example: 200,000 cached values at estimated 1 KB payload alre
 
 Long-running Spring Boot services mein sabse common leak sources hote hain: unbounded in-memory caches (jaise `Map` ko manually cache jaisa use karna without eviction), event listener registries jinme unregister step miss ho jaata hai, aur ThreadLocal cleanup missed hona pooled-thread environments mein (chapter 6 se related). JFR ya APM tool (jaise New Relic/Datadog) se allocation profiling production mein continuously chalti rehti hai taaki ek slow memory growth incident banne se pehle hi dikh jaaye.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Can Java have memory leaks?** Haan. Garbage collector unused business data ko nahi samajhta; reachable data retain hota hai even when application logically no longer needs it.
 
@@ -108,19 +108,19 @@ Long-running Spring Boot services mein sabse common leak sources hote hain: unbo
 
 Unbounded cache ko bounded eviction policy mein convert karo. Increasing-load test se post-GC live memory compare karo. Ek retained listener ka reference path draw karo, aur removal lifecycle document karo. Phir ek non-static inner class ko static registry mein register karke outer-instance leak reproduce karo, aur static nested class se fix karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A service retains every processed request in a static map. Why can garbage collection run successfully while heap usage keeps growing?
+**Apply:** Service har processed request static map mein rakhti hai. GC chalne ke baad bhi heap kyun badhti rahegi?
 
-> **Hint:** Reachability prevents collection even after business work is finished.
+> **Hint:** Business work khatam hone se references automatically remove nahi hote.
 
-**Answer guide — compare after attempting:** The static map keeps request objects reachable. Inspect heap retention paths and map growth, then bound or expire entries according to the real retention need. More frequent garbage collection does not fix an unbounded owner. Verify memory stabilizes under repeated load.
+**Answer guide — compare after attempting:** Static map requests ko reachable rakhta hai. Heap retention paths aur map growth inspect karo; actual need ke hisaab se size bound/expiry lagao. Zyada GC unbounded owner ko fix nahi karta. Repeated load par memory stabilize hoti hai ya nahi, verify karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [JVM runtime areas](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html)
 - [Java Flight Recorder API and controls](https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/package-summary.html)

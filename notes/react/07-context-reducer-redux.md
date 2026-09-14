@@ -5,16 +5,16 @@ track: react
 order: 7
 level: Advanced
 minutes: 29
-summary: State ownership choose karo aur predictable transitions ko reducers aur Redux Toolkit se model karo.
+summary: Reducer state transitions centralize karta hai; context value consumers tak pahunchata hai.
 tags: context, reducer, redux, redux-toolkit, state-management
 visual: context-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 State management ka first decision library nahi, ownership aur lifetime hai. Local draft component mein, shared feature state common ancestor mein, URL state router mein aur server cache query layer mein rakho. Context tree ke deep consumers tak value distribute karta hai. Reducer event aur previous state se next state calculate karta hai. Redux shared store, subscriptions aur predictable event flow organize karta hai.
 
-> **Core takeaway:** A reducer centralizes transitions; context distributes a value to consumers.
+> **Core takeaway:** Reducer state transitions centralize karta hai; context value consumers tak pahunchata hai.
 
 ## Reducer as a state transition table
 
@@ -159,24 +159,24 @@ Theme (dark/light mode) aur authenticated user jaise cross-cutting concerns typi
 
 Reading session reducer ke invalid transitions test karo: idle state ko pause, paused state mein minute tick, double start. Bookmarks feature Redux slice se implement karo aur selector ko minimal data return karne do. Context provider ko state aur dispatch contexts mein split karo aur React DevTools Profiler se verify karo ki dispatch-only consumer ab state update par re-render nahi hota.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Context Redux replace kar deta hai?** Context distribution primitive hai; Redux external store subscriptions, middleware aur debugging workflow deta hai. App needs se decision lo.
 
 **Q. RTK mein mutation-looking syntax allowed kyun?** Reducer ko Immer draft milta hai, jo updates ko immutable result mein convert karta hai. Draft ko reducer lifetime ke bahar retain mat karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Model a cart action that increments quantity by item ID. What should happen for a missing ID, and how do you keep the old state intact?
+**Apply:** Item ID se cart quantity increment action banao. Missing ID aur old state ka behavior define karo.
 
-> **Hint:** Write a transition rule before choosing a state library.
+> **Hint:** State library choose karne se pehle transition rule likho.
 
-**Answer guide — compare after attempting:** Map items and replace only the matching item with a new object containing the incremented quantity. Define missing IDs as a no-op or explicit error. Keep the prior array and objects unchanged. Test the reducer independently of context or Redux wiring.
+**Answer guide — compare after attempting:** Items map karo; matching item ko incremented quantity ke new object se replace karo. Missing ID ko no-op ya explicit error define karo. Previous array/objects mutate mat karo. Reducer ko context/Redux wiring se independently test karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [React scaling with reducer and context](https://react.dev/learn/scaling-up-with-reducer-and-context) shared state composition explain karta hai. [Redux Toolkit quick start](https://redux-toolkit.js.org/tutorials/quick-start) store aur slice APIs ka reference hai.

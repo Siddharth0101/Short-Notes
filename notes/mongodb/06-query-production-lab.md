@@ -5,19 +5,19 @@ track: mongodb
 order: 6
 level: Advanced
 minutes: 25
-summary: Reason from access patterns and backpressure instead of adding indexes blindly.
+summary: Index tab useful hai jab uska order actual filter aur sort pattern ko support kare.
 tags: mongodb, indexes, explain, streams, backpressure
 ---
 
-## Mental model
+## Mental model — simple soch
 
-An index is a maintained access path, not a free speed switch. Start with the query's equality filters, ordering and range conditions, then check the plan on representative data. Node streaming solves a related resource problem: process data incrementally so a slow consumer does not require buffering the whole result.
+Index maintained access path hai, free speed switch nahi. Query equality filters, ordering aur ranges se start karo; representative data ka plan dekho. Node streaming related memory problem solve karti hai: data gradually process karo, taaki slow consumer ke liye whole result buffer na karna pade.
 
-> **Core takeaway:** An index is useful when its ordering matches the actual filter and sort pattern.
+> **Core takeaway:** Index tab useful hai jab uska order actual filter aur sort pattern ko support kare.
 
 ## Design one real access pattern
 
-Suppose a tenant's recent paid orders are requested in descending creation order. Use a stable tie-breaker because timestamps can repeat.
+Tenant ke recent paid orders descending creation order mein chahiye. Timestamp repeat ho sakta hai, isliye stable tie-breaker rakho.
 
 ```javascript
 db.orders.createIndex({ tenantId: 1, status: 1, createdAt: -1, _id: -1 });
@@ -27,9 +27,9 @@ db.orders.find({ tenantId: 't1', status: 'paid' })
   .explain('executionStats');
 ```
 
-Read the winning plan, returned count and examined keys/documents. A small nReturned with huge documents examined is a warning, not proof of one particular fix. Selectivity, sort support and data distribution matter. A query for status alone does not have the same useful leading prefix as the tenant-scoped query above.
+Winning plan, returned count, examined keys/documents padho. Small nReturned aur huge scan warning hai, ek specific fix ka proof nahi. Selectivity, sorting aur distribution matter karte hain. Status-only query ko tenant-scoped index ka same leading prefix benefit nahi milega.
 
-For the next page, anchor both createdAt and _id with a lexicographic condition. Encode cursor values without losing BSON types. Validate cursor shape and apply the tenant filter on every request; a cursor is not authorization.
+Next page mein createdAt aur _id dono lexicographic cursor condition mein lo. BSON types lose kiye bina encode karo. Cursor validate aur har request par tenant filter lagao; cursor authorization nahi hai.
 
 ## Stream without whole-file buffering
 
@@ -45,36 +45,36 @@ await pipeline(
 );
 ```
 
-pipeline coordinates stream completion, errors and backpressure. This example compresses an existing file; an API export also needs database cursor cleanup, client-disconnect handling and authorization. Do not collect the cursor into a giant array before streaming, because that defeats the memory objective.
+pipeline completion/errors/backpressure coordinate karti hai. Example existing file compress karta hai; API export mein DB cursor cleanup, disconnect handling aur auth bhi chahiye. Stream se pehle cursor giant array mein collect karna memory objective tod dega.
 
 ## Consistency and modeling decisions
 
-Single-document updates are atomic. A unique index protects uniqueness under races; application-level find-then-insert does not. Multi-document invariants may require transactions, but design the ownership boundary first. Embedding bounded child data can make an invariant easier to update atomically. Unbounded arrays create document growth and update-cost problems.
+Single-document updates atomic hain. Unique index races mein uniqueness protect karta hai; find-then-insert nahi. Multi-document invariant par transaction chahiye ho sakti hai; pehle ownership boundary design karo. Bounded children embed karke atomic update easy ho sakta hai; unbounded arrays growth/update cost badhati hain.
 
-Replication and acknowledgement settings affect failure semantics. Do not equate a successful local read with a universally fresh global view. State what the user needs after their own write, how reads are routed and what happens during failover. A fixed delay before reading is a heuristic, not a proof of freshness.
+Replication/ack settings failure semantics affect karti hain. Successful local read universally fresh global view nahi hai. Own-write ke baad freshness need, read routing aur failover define karo. Fixed delay freshness ki heuristic hai, proof nahi.
 
 ## Practice
 
-Generate skewed data: one large tenant and many small tenants. Compare the plan for both rather than only a uniform toy dataset. Remove the sort-supporting index and inspect whether a blocking sort appears. For streaming, slow the destination and watch memory stabilize; then force a destination error and verify resources close.
+One large tenant plus many small tenants ka skewed data banao; dono plans compare karo. Sort-supporting index remove karke blocking sort dekho. Stream destination slow karke memory stabilization, phir error inject karke resource close verify karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Should every filter field get a separate index?** No. Compound access patterns, write cost and storage must be considered; inspect plans rather than assuming index intersection will solve everything.
+**Har filter ka separate index?** Nahi. Compound access pattern, write/storage cost dekho; index intersection sab solve karega, assume mat karo.
 
-**Does backpressure eliminate overload?** It propagates pacing within cooperating boundaries. Admission control, deadlines and bounded queues are still needed across the full service.
+**Backpressure overload eliminate karta hai?** Woh cooperating boundaries mein pacing propagate karta hai. Full service ko admission control, deadlines aur bounded queues bhi chahiye.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** You list a user's published notes newest first. Suggest an index candidate and describe how to judge it on representative data.
+**Apply:** User ki published notes newest-first list karni hain. Index candidate do aur representative data par usse judge karo.
 
-> **Hint:** Equality fields can precede the sort field.
+> **Hint:** Equality fields sort field se pehle aa sakti hain.
 
-**Answer guide — compare after attempting:** Try a compound index on userId, status, and descending createdAt, adding a stable tie-breaker if pagination requires it. Compare explain execution statistics, examined rows/keys, and sorting behavior. Include write/storage cost and real selectivity; do not declare success just because an index exists.
+**Answer guide — compare after attempting:** userId, status, descending createdAt ka compound index try karo; stable pagination ke liye tie-breaker add karo. Explain execution stats, examined documents/keys aur sort behavior compare karo. Selectivity, write aur storage cost dekho; sirf index exist karna success nahi hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MongoDB compound indexes](https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/) and [Node streams](https://nodejs.org/api/stream.html) are the primary references for the examples.
+[MongoDB compound indexes](https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/) aur [Node streams](https://nodejs.org/api/stream.html) mein examples ka reference padho.

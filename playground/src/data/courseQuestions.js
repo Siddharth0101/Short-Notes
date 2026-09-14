@@ -4,10 +4,10 @@ export const courseQuestions = [
     track: 'java',
     noteId: 'java-jdbc-sql',
     level: 'Intermediate',
-    question: 'How do two JDBC updates become one atomic transfer?',
+    question: 'Two JDBC updates ek atomic transfer kaise banenge?',
     answer:
-      'Use the same connection with auto-commit disabled, perform both updates, validate affected row counts, then commit. On failure roll back. Restore connection state before returning a pooled connection and close owned resources. Two independent auto-committed updates can leave a partial transfer.',
-    followUp: 'Why does using two connections not automatically share one local transaction?',
+      'Same connection par auto-commit disable karo; debit/credit dono updates, affected rows validation, phir commit. Failure par rollback. Pooled connection return se pehle state restore aur owned resources close karo. Two independently auto-committed updates partial transfer chhod sakti hain: debit save ho gaya lekin credit fail. Isliye connection aur transaction ownership explicitly define karo.',
+    followUp: 'Two connections automatically same local transaction kyun nahi share karti?',
     tags: ['jdbc', 'sql', 'transactions'],
   },
   {
@@ -16,10 +16,10 @@ export const courseQuestions = [
     topic: 'spring',
     noteId: 'java-observability-actuator',
     level: 'Advanced',
-    question: 'API latency rises while SQL execution stays fast. What would you inspect?',
+    question: 'SQL fast hai lekin API slow: kya inspect karoge?',
     answer:
-      'Measure connection acquisition wait, active connections, pending requests and timeouts alongside query execution. Pool saturation can delay a request before any query starts. Correlate traces and metrics; increasing pool size blindly can overload the database. Expose only the management endpoints required by the operational access policy.',
-    followUp: 'Why should per-user identifiers not become metric labels?',
+      'Query execution ke saath connection acquisition wait, active connections, pending requests aur timeouts measure karo. Pool saturated ho toh query start se pehle delay hota hai. Traces/metrics correlate karo; blindly pool badhane se DB overload ho sakti hai. Operational access policy ke required management endpoints hi expose karo; unbounded user IDs metric labels mat banao.',
+    followUp: 'Per-user IDs metric labels kyun na hon?',
     tags: ['spring', 'actuator', 'observability'],
   },
   {
@@ -27,10 +27,10 @@ export const courseQuestions = [
     track: 'java',
     noteId: 'java-packages-interfaces',
     level: 'Intermediate',
-    question: 'Why use an interface for a constructor dependency?',
+    question: 'Constructor dependency ke liye interface kyun?',
     answer:
-      'Caller contract stable rehta hai while implementations can change. A recording fake can verify behavior without network calls; an interface is useful only when that boundary is meaningful.',
-    followUp: 'Does an import make a package-private class public?',
+      'Interface caller ka contract stable rakhta hai jab implementation badle. Recording fake se actual network bina behavior verify kar sakte ho. Constructor dependency explicitly maangta hai, service khud delivery decide nahi karti. Interface tab useful hai jab boundary meaningful ho; har class ka interface automatically banana zaroori nahi. Import visibility rules change nahi karta.',
+    followUp: 'Import package-private class ko public banata hai?',
     tags: ['packages', 'interfaces', 'encapsulation'],
   },
   {
@@ -38,10 +38,10 @@ export const courseQuestions = [
     track: 'spring-boot',
     noteId: 'spring-boot-first-application',
     level: 'Intermediate',
-    question: 'Why can a compiling controller still return 404?',
+    question: 'Controller compile hokar bhi 404 kyun de sakta hai?',
     answer:
-      'Compilation checks Java types, not Spring registration. A controller outside the component scan root is not registered, so its handler mapping is missing.',
-    followUp: 'How would you distinguish a missing mapping from a server that never started?',
+      'Compilation Java types check karti hai, Spring registration nahi. Component-scan root ke bahar controller compile ho sakta hai lekin bean/handler mapping register nahi hogi. Package, scan aur route inspect karo. 404 ko startup failure se alag samjho: port busy ho toh process successfully serve hi nahi hua. Random annotations se pehle logs ka meaningful cause padho.',
+    followUp: 'Missing mapping versus never-started server kaise distinguish karoge?',
     tags: ['spring', 'boot', 'startup'],
   },
   {
@@ -49,11 +49,10 @@ export const courseQuestions = [
     track: 'spring-boot',
     noteId: 'spring-beans-di',
     level: 'Intermediate',
-    question: 'Does a Spring singleton guarantee thread safety?',
+    question: 'Spring singleton thread safety guarantee karta hai?',
     answer:
-      'No. Singleton controls instance scope, not synchronization. Concurrent requests share its mutable fields, so use request-local data or an explicit concurrency design.',
-    followUp:
-      'What happens when a singleton receives one prototype instance through its constructor?',
+      'Nahi. Singleton instance scope control karta hai, synchronization nahi. Concurrent requests same mutable fields share kar sakti hain. Request-specific data parameters/locals mein rakho ya explicit concurrency design karo. Constructor se once injected prototype har method call par fresh nahi banega; repeated lookup chahiye toh provider/scope mechanism deliberately choose karo.',
+    followUp: 'Singleton ko constructor se once prototype mile toh kya hota hai?',
     tags: ['spring', 'beans', 'dependency-injection'],
   },
   {
@@ -61,10 +60,10 @@ export const courseQuestions = [
     track: 'spring-boot',
     noteId: 'spring-configuration',
     level: 'Intermediate',
-    question: 'Why prefer ConfigurationProperties for related settings?',
+    question: 'Related settings ke liye ConfigurationProperties kyun?',
     answer:
-      'It groups settings into a typed dependency, supports structured binding, and provides a place to validate invariants at startup. Values still need to be applied to the components they configure.',
-    followUp: 'Which value wins between packaged configuration and a command-line option?',
+      'ConfigurationProperties related settings ko typed dependency banata hai, structured binding aur startup validation ki jagah deta hai. Setting bind ho gayi toh component behavior automatically nahi badlega: timeout value HTTP client setup mein apply karni padegi. Ordinary launch mein command-line packaged config ko override karti hai; full precedence context-specific property sources se padho.',
+    followUp: 'Packaged config aur command-line mein kaunsi value jeetegi?',
     tags: ['spring', 'configuration', 'profiles'],
   },
   {
@@ -72,10 +71,10 @@ export const courseQuestions = [
     track: 'spring-boot',
     noteId: 'spring-validation-errors',
     level: 'Intermediate',
-    question: 'Can Bean Validation guarantee database uniqueness?',
+    question: 'Bean Validation DB uniqueness guarantee karti hai?',
     answer:
-      'No. Concurrent requests can pass field checks and existence queries. A database unique constraint enforces the invariant; translate its recognized failure into the API conflict contract.',
-    followUp: 'Why should arbitrary exceptions not all become HTTP 400?',
+      'Nahi. Concurrent requests field validation aur existence query dono pass kar sakti hain. DB unique constraint final invariant enforce karta hai. Specifically recognized violation ko documented conflict response do. Every exception ko 400 karne se server defect bhi client error ban jaata hai; expected failures aur unexpected diagnostics alag handle karo.',
+    followUp: 'Har arbitrary exception HTTP 400 kyun na bane?',
     tags: ['spring', 'validation', 'errors'],
   },
   {
@@ -83,10 +82,10 @@ export const courseQuestions = [
     track: 'spring-boot',
     noteId: 'spring-testing',
     level: 'Intermediate',
-    question: 'Why can a transactional HTTP integration test leave database rows behind?',
+    question: 'Transactional HTTP test DB rows chhod kyun sakta hai?',
     answer:
-      'A real HTTP request runs on a server thread with a separate transaction. Rolling back the test thread transaction does not undo the server commit; use isolated fixtures or explicit cleanup.',
-    followUp: 'Can an in-memory database prove PostgreSQL locking behavior?',
+      'Real HTTP request separate server thread/transaction mein chalti hai. Test thread rollback server commit undo nahi karta. Isolated fixtures, test DB ya explicit cleanup use karo; suite order par depend mat karo. PostgreSQL locks/constraints prove karne ke liye PostgreSQL-backed test lo, in-memory substitute identical semantics guarantee nahi karti.',
+    followUp: 'In-memory DB PostgreSQL locking prove kar sakti hai?',
     tags: ['spring', 'testing', 'integration'],
   },
   {
@@ -94,10 +93,10 @@ export const courseQuestions = [
     track: 'spring-boot',
     noteId: 'spring-deployment-capstone',
     level: 'Intermediate',
-    question: 'Why can rolling back a jar fail to restore a service?',
+    question: 'Jar rollback se service restore kyun nahi ho sakti?',
     answer:
-      'The database schema or data may have changed incompatibly. Keep old and new versions compatible during rollout and test migration recovery independently of application rollback.',
-    followUp: 'How can a dependency outage cause a liveness restart storm?',
+      'Schema/data incompatible change ho chuki ho toh old jar expected columns nahi paayegi. Rollout mein old/new versions compatible rakho; application rollback se separately migration recovery test karo. Destructive drop simply jar rollback se reverse nahi hota. Dependency outage ko liveness failure banaoge toh unnecessary restarts recovery aur worse kar sakte hain.',
+    followUp: 'Dependency outage liveness restart storm kaise bana sakti hai?',
     tags: ['spring', 'deployment', 'capstone'],
   },
 ];

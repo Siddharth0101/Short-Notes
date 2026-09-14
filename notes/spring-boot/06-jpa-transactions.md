@@ -5,15 +5,15 @@ track: spring-boot
 order: 6
 level: Advanced
 minutes: 26
-summary: Persistence context, fetching aur transaction proxies ke failure modes samjho.
+summary: Transaction ka behavior actual invocation boundary aur uske andar ki operations se decide hota hai.
 tags: jpa, hibernate, transactions, n-plus-one
 ---
 
-## Mental model
+## Mental model — simple soch
 
 JPA specification hai; Hibernate uska popular implementation hai; Spring Data JPA repository boilerplate reduce karta hai. Entity ordinary response DTO nahi. Persistence context managed entities track karta hai and changes SQL synchronization mein convert kar sakta hai. Database constraints still final correctness boundary hain.
 
-> **Core takeaway:** Transaction behavior depends on the actual invocation boundary and the operations inside it.
+> **Core takeaway:** Transaction ka behavior actual invocation boundary aur uske andar ki operations se decide hota hai.
 
 ## Entity lifecycle and mapping
 
@@ -113,7 +113,7 @@ Entity JSON serialization lazy loading trigger kar sakti hai or cycles expose ka
 
 N+1 queries production mein aksar tab discover hote hain jab list endpoint suddenly slow ho jaata hai load ke saath — ek local test mein 3 rows ke saath difference invisible hota hai, but 10,000 rows ke saath 10,001 queries clearly dikhti hain. `orphanRemoval` aur `CascadeType.REMOVE` ka galat combination ek classic "customer delete karne se unrelated orders bhi gayab ho gaye" incident ka source hota hai — schema design review mein cascade rules explicitly document karna is class ke bugs ko production tak pahunchne se rokta hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Save versus dirty checking?** Managed entity changes persistence context track kar sakta hai and flush par write karta hai. Detached state and new entity persistence need different handling; repository save behavior entity state par depend karta hai.
 
@@ -129,33 +129,33 @@ List endpoint ke SQL statement count measure karo. Same version se two updates e
 
 ## Research notes: Trace the actual transaction entry point
 
-Default proxy-based transaction advice intercepts calls crossing the proxy. An object's call to its own annotated method does not apply that inner method's transaction metadata.
+Default proxy transaction advice proxy-crossing calls intercept karti hai. Object ka apne annotated method ko direct call inner metadata apply nahi karta.
 
-Original trace: a controller calls `CheckoutService.checkout()`, which calls `this.reserve()`. If only reserve is annotated, do not assume it starts a transaction. Move the intended boundary to an externally invoked service method or an appropriately separated bean.
+Trace: controller `CheckoutService.checkout()` call karta hai; woh `this.reserve()` call karta hai. Sirf reserve annotated ho toh new transaction assume mat karo. Intended boundary external service method ya appropriate separate bean par rakho.
 
-If checkout already has a transaction, the internal call can run inside it; the inner annotation still was not intercepted.
+checkout already transactional ho toh internal call us transaction mein chal sakti hai; inner annotation phir bhi intercept nahi hui.
 
-**Interview check:** Why can self-invoked REQUIRES_NEW fail to start an independent transaction?
+**Interview check:** Self-invoked REQUIRES_NEW independent transaction kyun start nahi kar sakta?
 
-**Answer:** The call bypasses the proxy, so the propagation metadata is not applied. Verify the actual call path before relying on annotation placement.
+**Answer:** Call proxy bypass karti hai; propagation metadata apply nahi hota. Annotation placement par rely karne se pehle actual call path verify karo.
 
-**Practice:** Force an inner failure in an integration test and inspect durable rows.
+**Practice:** Integration test mein inner failure force karke durable rows inspect karo.
 
-[Read the source — Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** In Spring's usual proxy-based transaction setup, one method calls another annotated method on `this`. Why might the intended transaction not begin?
+**Apply:** Usual Spring proxy-based setup mein method `this` par doosra annotated method call karta hai. Intended transaction kyun start nahi ho sakti?
 
-> **Hint:** An internal method call does not pass through the external proxy.
+> **Hint:** Internal call external proxy se hokar nahi jaati.
 
-**Answer guide — compare after attempting:** The transactional interceptor is bypassed for that self-invocation. Put the transaction on the externally invoked service boundary or call a separate managed collaborator as appropriate. Verify rollback with an integration test; an annotation's presence alone is not evidence that interception occurred.
+**Answer guide — compare after attempting:** Self-invocation transactional interceptor bypass karti hai. Transaction externally invoked service boundary par rakho ya suitable separate managed collaborator call karo. Integration test se rollback verify karo; annotation dikhna interception ka proof nahi.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Spring transaction semantics](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
 - [Hibernate user guide](https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html)

@@ -1,11 +1,11 @@
 # JavaScript Short Notes
 
-> Start with the [new structured study path](../notes/README.md#javascript). This folder preserves the original source notes and examples.
+> Pehle [ordered Hinglish course](../notes/README.md#javascript). Yahan original source notes aur examples references ke liye hain.
 
 Jonas Schmedtmann JavaScript course style notes.
-Short Hinglish explanations, visual ASCII diagrams, important rules, and compact JavaScript examples.
+Short Hinglish explanations, ASCII diagrams, important rules aur compact JavaScript examples se revise karo.
 
-## Suggested Reading Order
+## Padhne ka suggested order
 
 1. `05_FUNDAMENTALS/JS_Fundamentals_Part1.js`
 2. `05_FUNDAMENTALS/JS_Fundamentals_Part2.js`
@@ -26,7 +26,7 @@ Short Hinglish explanations, visual ASCII diagrams, important rules, and compact
 17. `13_DEV_SKILLS/Dev_Skills_Debugging.js`
 18. `04_REGEX/Regular_Expressions.js`
 
-## Main Coverage
+## Yahan kya cover hai
 
 - Values, variables, types, operators, control flow (fundamentals part 1)
 - Strict mode, functions, arrays, objects, loops (fundamentals part 2)

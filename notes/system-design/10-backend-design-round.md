@@ -5,20 +5,20 @@ track: system-design
 order: 10
 level: Advanced
 minutes: 25
-summary: Design a booking API around invariants, transaction boundaries and retry recovery.
+summary: Reservation ki correctness competing state transitions, especially expiry aur confirmation, par depend karti hai.
 tags: backend, java, system-design, idempotency, transactions
 visual: transaction-race
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Backend design ki starting point database brand nahi, invariant hai. For a booking service: one seat can have at most one active reservation, a confirmed payment must be traceable, and retries must not create a second logical booking. Availability and latency choices follow these correctness requirements.
 
-> **Core takeaway:** Reservation correctness depends on competing state transitions, especially around expiry.
+> **Core takeaway:** Reservation ki correctness competing state transitions, especially expiry aur confirmation, par depend karti hai.
 
 ## Start with a narrow architecture
 
-A React client calls a stateless Java API backed by a relational database. Keep reservation creation and its idempotency record in one transaction. Add a worker for asynchronous notifications when the user need does not require waiting for delivery. Do not split services until scaling, ownership or isolation requirements justify the distributed boundary.
+React client stateless Java API call karta hai jiske peeche relational DB hai. Reservation aur idempotency record same transaction mein rakho. Delivery wait required na ho toh async notification worker add karo. Scaling/ownership/isolation justify kare tab service split karo.
 
 ```text
 POST /reservations
@@ -36,48 +36,48 @@ COMMIT
 Relay → publish event → idempotent notification consumer
 ```
 
-Scope the key to the authenticated caller and operation. A reused key with a different payload is a conflict, not a valid retry. Concurrent duplicates must coordinate through a unique key and transaction behavior, rather than both passing a preliminary existence check.
+Key authenticated caller aur operation se scope karo. Different payload ke saath reused key conflict hai, valid retry nahi. Concurrent duplicates unique key/transaction se coordinate hon; preliminary existence check alone enough nahi.
 
 ## Payment and expiration races
 
-Do not hold a database transaction open while waiting on a payment provider. Use explicit pending, confirmed, expired and cancelled transitions. The provider can accept a payment while the caller times out, so an unknown outcome needs reconciliation with a stable provider operation ID.
+Payment provider ka wait karte waqt DB transaction open mat rakho. Pending/confirmed/expired/cancelled transitions explicit rakho. Provider payment accept karke response lose kar sakta hai; unknown outcome stable provider ID se reconcile karo.
 
-Reservation expiration and payment confirmation can race. Both transitions must verify the current state atomically. Define the business policy for late payment: reject confirmation and refund, or reacquire capacity if possible. An architecture diagram cannot substitute for this product decision.
+Expiry/confirmation race mein dono current state atomically verify karein. Late payment policy choose karo: reject+refund ya capacity available ho toh reacquire. Diagram business decision replace nahi karta.
 
 ## Scale the reads and protect the writes
 
-Cache event descriptions and public availability hints, but validate capacity at the authoritative write boundary. A displayed available seat is not a reservation guarantee. Read replicas can serve stale data, so a user's immediate confirmation view should rely on the committed result or an explicit freshness policy.
+Event descriptions/public availability hints cache kar sakte ho; capacity authoritative write par validate karo. Displayed seat reservation guarantee nahi. Replica stale ho sakti hai; immediate confirmation committed result ya explicit freshness policy use kare.
 
-Partitioning by event can make a very popular event a hot partition. Admission control and a waiting room can protect the write path before adding complicated cross-partition inventory coordination. A global queue does not increase the speed of a single contended seat update.
+Event-based partitioning popular event ko hot partition bana sakti hai. Complex cross-partition coordination se pehle admission/waiting room write path protect kar sakte hain. Global queue single contended seat update faster nahi banati.
 
 ## Reliability and operations
 
-An outbox relay may publish twice if it crashes after broker acknowledgement but before marking the row sent. Consumers deduplicate durable event IDs atomically with their side effects when possible. If a side effect is external, use that provider's idempotency or a reconciliation workflow.
+Relay broker ack ke baad sent-mark se pehle crash kare toh outbox event twice publish ho sakta hai. Consumer durable ID dedup ko side effect se atomically coordinate kare where possible. External effect ke liye provider idempotency/reconciliation chahiye.
 
-Track reservation success, conflict rate, lock wait, pool wait, event lag and reconciliation backlog. Correlate user operation IDs across the Java API, database record and payment interaction without logging credentials or sensitive payloads. Test restore and replay procedures, not just process health.
+Reservation success, conflicts, lock/pool wait, event lag aur reconciliation backlog track karo. API/DB/payment mein operation ID correlate karo bina credentials/sensitive payload logs mein daale. Restore/replay test karo, sirf health nahi.
 
 ## Practice
 
-Walk through three timelines: two users claim one seat; payment succeeds but HTTP response is lost; expiration races a payment webhook. For each, state the durable records, allowed next transition and user-visible message. Estimate peak write traffic separately from read traffic and identify the first bottleneck worth load-testing.
+Three timelines banao: two users one seat; payment success response lost; expiry/webhook race. Har boundary ka durable state, next transition aur user message batao. Peak writes/reads separately estimate aur first load-test bottleneck identify karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Does exactly-once delivery solve booking duplication?** Delivery claims are scoped. Business deduplication still needs stable identity and an atomic invariant at the side-effect boundary.
+**Exactly-once delivery booking duplicate solve karti hai?** Claim ka scope hota hai. Business dedup ko stable identity aur side-effect boundary par atomic invariant phir bhi chahiye.
 
-**Can a local lock protect seats across instances?** No. All writers must coordinate through a shared authoritative mechanism or a valid distributed ownership protocol.
+**Local lock multiple instances ki seats protect karega?** Nahi. All writers shared authority ya valid distributed ownership protocol se coordinate karein.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A reservation expires while a payment confirmation arrives. List possible terminal outcomes and what must never happen.
+**Apply:** Payment confirmation aate waqt reservation expire hoti hai. Possible terminal outcomes aur forbidden outcome likho.
 
-> **Hint:** Treat payment and expiry as competing transitions against durable state.
+> **Hint:** Expiry aur payment ko durable state par competing transitions samjho.
 
-**Answer guide — compare after attempting:** Atomically decide whether confirmation can consume the active reservation. If expiry wins, reconcile payment with a refund or a new explicit fulfillment decision. Never silently promise an already-reallocated seat. Persist transition history and make duplicate callbacks safe.
+**Answer guide — compare after attempting:** Atomically decide karo ki confirmation active reservation consume kar sakti hai ya nahi. Expiry jeete toh payment refund/reconcile karo ya explicit new fulfillment decision lo. Already-reallocated seat ka silent promise kabhi mat karo. Transition history persist aur duplicate callbacks safe rakho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[PostgreSQL concurrency control](https://www.postgresql.org/docs/18/mvcc.html) provides the transaction background. [Java concurrency APIs](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html) document local coordination primitives and their scope.
+[PostgreSQL concurrency](https://www.postgresql.org/docs/18/mvcc.html) mein transactions padho. [Java concurrency APIs](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html) local coordination aur uska scope explain karti hain.

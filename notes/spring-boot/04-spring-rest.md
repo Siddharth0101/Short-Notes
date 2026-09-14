@@ -5,16 +5,16 @@ track: spring-boot
 order: 4
 level: Intermediate
 minutes: 23
-summary: Container se request boundary tak Spring ka end-to-end flow samjho.
+summary: DI collaborators deta hai; HTTP boundary request ko stable application contract mein translate karti hai.
 tags: spring, rest, dependency-injection, validation
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Spring container application objects create aur wire karta hai. Spring Boot conventions, starters and conditional auto-configuration se setup simplify karta hai. Auto-configuration magic replacement nahi: dependencies, properties and registered beans conditions influence karte hain. Constructor injection component ki required collaborators explicit banata hai.
 
-> **Core takeaway:** Dependency injection supplies collaborators; the HTTP boundary translates requests into a stable contract.
+> **Core takeaway:** DI collaborators deta hai; HTTP boundary request ko stable application contract mein translate karti hai.
 
 ## Request flow
 
@@ -117,7 +117,7 @@ Specific exception types ko specific handlers mein map karna generic `catch (Exc
 
 Profiles environment-specific differences select kar sakte hain; secrets source code mein commit mat karo. External configuration validated startup failure de toh production surprise kam hoti hai. AOP proxies cross-cutting behavior like transactions apply karte hain; object ko manually `new` karna managed proxy bypass kar sakta hai. Container lifecycle aur proxy boundaries debugging ke key tools hain.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Controller class ka mutable field request-specific data store karne ke liye safe hai kyunki "har request apna khud ka data use karega". **Why it breaks:** Default bean scope singleton hai — ek hi controller instance saare concurrent requests serve karta hai. Do requests simultaneously aaye toh unka data field mein overwrite/interleave ho sakta hai. **Fix:** Request-specific data ko method parameters/local variables mein rakho, ya explicitly `@RequestScope` bean use karo jab session/request lifecycle ke saath scoped state genuinely chahiye ho.
 - **Wrong assumption:** `@Transactional` annotated method ko same class ke andar directly call karne se transaction apply hoti hai. **Why it breaks:** Spring AOP default proxy-based hai — proxy sirf external calls (ek bean se doosre bean ka method call) intercept karta hai. Same object ke andar `this.someTransactionalMethod()` call karna proxy ko bypass kar deta hai, transaction advice apply hi nahi hoti. **Fix:** Transactional method ko alag bean mein extract karo aur usse inject karke call karo, ya `AopContext.currentProxy()` jaisa workaround use karo (generally avoid karna better hai).
@@ -127,7 +127,7 @@ Profiles environment-specific differences select kar sakte hain; secrets source 
 
 Production APIs mein `@RestControllerAdvice` se centralized error mapping consistent client experience deta hai — mobile app aur web frontend dono ek predictable `{code, message, fieldErrors}` shape expect kar sakte hain chahe backend internally kitne bhi different exception types throw kare. Singleton-scope bugs interview mein common hain kyunki local testing single-user single-request flow mein kabhi surface nahi hote — load testing ya production traffic mein hi visible hote hain, isliye concurrent-request tests likhna value-add hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Spring versus Spring Boot?** Spring foundational container and framework capabilities deta hai. Boot opinionated configuration and operational packaging simplify karta hai, existing Spring semantics replace nahi karta.
 
@@ -139,19 +139,19 @@ Production APIs mein `@RestControllerAdvice` se centralized error mapping consis
 
 Create/list notes API design karo with validation, maximum page size and consistent errors. Two simultaneous users ke requests se verify karo ki singleton controller mein accidental shared request state nahi hai. Phir ek self-invocation `@Transactional` bug reproduce karo (method ko same class se call karke), aur method ko separate bean mein extract karke fix karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A controller receives a negative quantity. Specify the flow and response behavior without embedding database logic in the controller.
+**Apply:** Controller ko negative quantity milti hai. Database logic controller mein daale bina flow aur response define karo.
 
-> **Hint:** Separate input validation, business decisions, and persistence.
+> **Hint:** Input validation, business decision aur persistence ki responsibilities alag rakho.
 
-**Answer guide — compare after attempting:** Validate the request at the boundary and reject it with the API's documented client-error response. Valid input reaches a service that owns the use case and calls persistence collaborators. Test the invalid response and verify no write is attempted.
+**Answer guide — compare after attempting:** Boundary par validate karke documented client-error response do. Valid request use-case-owning service tak jaaye, jo persistence collaborators call kare. Invalid response test karo aur verify karo ki write attempt hi nahi hui.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Dependency injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html)
 - [Spring MVC annotated controllers](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller.html)

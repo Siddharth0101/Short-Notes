@@ -5,19 +5,19 @@ track: spring-boot
 order: 5
 level: Intermediate
 minutes: 16
-summary: Separate malformed input business rules and authorization failures.
+summary: Transport input business work se pehle validate karo; DB invariants aur authorization alag checks hain.
 tags: spring, validation, errors
 ---
 
-## Mental model
+## Mental model — simple soch
 
 HTTP boundary par incoming JSON ko trusted domain object mat samjho. Pehle shape aur field constraints validate karo, phir authorization aur business invariants enforce karo. Valid email ya nonblank title ka matlab user ko resource edit karne ka permission nahi mil gaya.
 
-> **Core takeaway:** Validate transport input before business work, and keep database invariants and authorization as separate checks.
+> **Core takeaway:** Transport input business work se pehle validate karo; DB invariants aur authorization alag checks hain.
 
 ## Validate a request DTO
 
-Application excerpts for Spring MVC with the validation dependency selected for your Boot version. Boot 3+ uses jakarta.validation imports. Each public record belongs in its own file with the application package declaration.
+Yeh Spring MVC excerpts hain; selected Boot version ki validation dependency chahiye. Boot 3+ jakarta.validation imports use karta hai. Public records separate application-package files mein rakho.
 
 ```java
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +28,7 @@ public record CreateLessonRequest(
 ) {}
 ```
 
-Controller method excerpt; requires an injected LessonService and a LessonResponse DTO defined by your application:
+Controller-method excerpt: app mein injected LessonService aur defined LessonResponse DTO chahiye:
 
 ```java
 @PostMapping("/api/lessons")
@@ -40,36 +40,36 @@ ResponseEntity<LessonResponse> create(
 }
 ```
 
-Use imports from `org.springframework.web.bind.annotation`, `org.springframework.http.ResponseEntity`, `jakarta.validation.Valid` and `java.net.URI`. The validation provider must be on the classpath. Valid triggers validation of the bound request before normal method execution. The response DTO deliberately exposes only contract fields, not the whole persistence entity.
+Imports `org.springframework.web.bind.annotation`, `org.springframework.http.ResponseEntity`, `jakarta.validation.Valid`, `java.net.URI` se lo. Validation provider classpath par ho. Valid bound request ko normal method execution se pehle validate karta hai. Response DTO sirf public contract fields expose kare, whole persistence entity nahi.
 
 ## Distinguish failure paths
 
-Malformed JSON fails during message conversion. Well-formed JSON with a blank title fails Bean Validation. A duplicate unique database key can fail after field validation; concurrent requests can both pass an application-level existence check. The database constraint remains authoritative for uniqueness.
+Malformed JSON message conversion mein fail; blank title wala valid JSON Bean Validation mein fail. Duplicate DB key field validation ke baad fail ho sakti hai. Concurrent requests existence check dono pass kar sakti hain; uniqueness ka final authority DB constraint hai.
 
-Map expected failures centrally using RestControllerAdvice and ExceptionHandler. In MVC, argument validation and method validation may raise different exceptions depending on the method signature. Handle the relevant paths instead of catching every exception and returning 400. Unexpected defects deserve a server error and internal diagnostics.
+Expected errors RestControllerAdvice/ExceptionHandler se centrally map karo. MVC argument/method validation signature ke hisaab se different exceptions de sakti hai. Relevant paths handle karo; every exception ko 400 mat banao. Unexpected defect server error/internal diagnostics deserve karta hai.
 
-A useful public error schema has a stable code, safe message, field violations and a correlation identifier. Do not return SQL text, stack traces or rejected secret values. Choose and document whether inaccessible resources return 403 or a deliberately indistinguishable 404.
+Public error mein stable code, safe message, field violations aur correlation ID rakho. SQL, stack trace ya rejected secrets expose mat karo. Inaccessible resource ke liye 403 ya deliberately indistinguishable 404 ka contract choose karo.
 
 ## Specify the HTTP contract
 
-Use 201 with a Location header when creation succeeds. Use 400 for this API's malformed or invalid input policy, 404 for a missing resource and 409 for a known state conflict. A GET must not create a lesson as a side effect. A retry of POST may duplicate creation unless you design a separate idempotency mechanism; validation does not solve retries.
+Creation success par 201 plus Location; is API policy mein malformed/invalid input 400, missing resource 404, known conflict 409. GET lesson create na kare. POST retry duplicate create kar sakti hai unless explicit idempotency design ho; validation retry problem solve nahi karti.
 
 ## Practice
 
-Write request cases for blank title, absent title, 121 characters, malformed JSON and a valid title. For each, state the status and whether the service should execute. Add a duplicate-key case that reaches the database and receives a controlled conflict.
+Blank/absent title, 121-character title, malformed JSON aur valid title ke cases likho. Status aur service execute honi chahiye ya nahi batao. DB tak pahunchne wala duplicate-key case controlled conflict de.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
 **Recall:** Why does a unique-title existence check fail under concurrency?
 
-**Apply:** Two requests check that a title is absent, then both insert it. Require at most one durable row and a useful response for the loser.
+**Apply:** Do requests same title absent dekhkar insert karti hain. Maximum ek durable row aur losing request ko useful response chahiye. Design karo.
 
-> **Hint:** The reads do not reserve the value.
+> **Hint:** Read value reserve nahi karti; dono checks pass ho sakte hain.
 
-**Answer guide — compare after attempting:** Enforce the unique constraint in the database. One insertion succeeds; translate the specifically recognized constraint failure into the documented conflict response. Do not classify every integrity failure as the same conflict, and do not continue using a failed transaction.
+**Answer guide — compare after attempting:** DB unique constraint enforce karo. Ek insert jeete; specifically recognized constraint failure ko documented conflict response mein map karo. Har integrity error ko same conflict mat bolo. Failed transaction mein further work continue mat karo.
 
 **Exit check:** Explain why field validation, ownership checks and database constraints each remain necessary.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[Official reference](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html).
+[Official reference yahan padho](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html).

@@ -21,13 +21,13 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
           <h2>{track.name}</h2>
           <p>
             {track.id === 'interview'
-              ? 'Choose the playbook for your completed subject, then practice its rounds.'
-              : 'Start at lesson 01. Finish each stage checkpoint before moving forward.'}
+              ? 'Completed subject ka playbook chuno, phir uske rounds practice karo.'
+              : 'Lesson 01 se start karo. Stage checkpoint complete karke aage badho.'}
           </p>
         </div>
         <Link className="primary-button" to={`/notes/${(next || sequence[0]).id}`}>
           <Icon name={next ? 'play' : 'reset'} size={16} />
-          {next ? (completed ? 'Continue course' : 'Start course') : 'Review course'}
+          {next ? (completed ? 'Course continue karo' : 'Course shuru karo') : 'Course revise karo'}
         </Link>
       </header>
       <div className="course-readiness">
@@ -42,7 +42,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
         {course.prerequisites.length ? (
           <div>
             <strong>
-              {track.id === 'interview' ? 'Readiness by subject: ' : 'Before this course: '}
+              {track.id === 'interview' ? 'Subject ke liye pehle padho: ' : 'Is course se pehle: '}
             </strong>
             {course.prerequisites.map((id, i) => (
               <span key={id}>
@@ -52,7 +52,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
             ))}
           </div>
         ) : (
-          <p>No prior programming course required. Begin with the first lesson.</p>
+          <p>Pehle programming course ki need nahi. First lesson se start karo.</p>
         )}
       </div>
       <div className="course-stages">
@@ -82,7 +82,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
               <div className="stage-checkpoint">
                 <Icon name="check" size={18} />
                 <p>
-                  <strong>Before the next stage:</strong> {stage.checkpoint}
+                  <strong>Next stage se pehle:</strong> {stage.checkpoint}
                 </p>
               </div>
             </section>
@@ -94,7 +94,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
         to={`/interview?track=${track.id === 'interview' ? 'all' : track.id}`}
       >
         <Icon name="messages" size={16} />
-        Practice interview questions after the course
+        Course ke baad interview questions practice karo
       </Link>
     </section>
   );

@@ -5,16 +5,16 @@ track: react
 order: 3
 level: Foundation
 minutes: 24
-summary: Component tree, props, events, keys aur render-commit distinction ko understand karo.
+summary: State rendered tree mein component ki identity se attached hoti hai.
 tags: components, jsx, props, rendering, keys
 visual: react-render
 ---
 
-## Mental model
+## Mental model — simple soch
 
 React component current props, state aur context se UI description calculate karta hai. Render ka matlab function call karke next UI calculate karna hai; commit ka matlab actual DOM changes apply karna hai. Har render ka DOM mutation hona necessary nahi. Component pure rakho taaki React calculation repeat ya discard kare to hidden side effects na hon.
 
-> **Core takeaway:** State belongs to a component's identity within the rendered tree.
+> **Core takeaway:** State rendered tree mein component ki identity se attached hoti hai.
 
 ## Build from a component tree
 
@@ -111,24 +111,24 @@ Ek study-tracker app mein topic list drag-and-drop se reorder hoti hai, favorite
 
 Topic cards ko list aur grid views mein show karo. Local favorite toggle add karo, list reorder karo aur verify karo ki stable keys correct item identity preserve karti hain. Ek dusra variant banao jisme index ko key banao aur dikhaao ki reorder ke baad favorite state kaise wrong card par chali jaati hai — dono versions compare karne se identity rule concrete ban jaata hai. Keyboard se saare controls operate karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Virtual DOM always faster hai?** Universal guarantee nahi. React declarative updates manage karta hai; actual performance workload aur implementation par depend karti hai.
 
 **Q. Props aur state mein difference?** Props parent-controlled input hain; state component ki retained memory hai. Dono ko render ke dauraan immutable snapshots ki tarah treat karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Two editable rows use array indices as keys. Type a draft in row B and prepend row A. Explain the misplaced draft and choose a fix.
+**Apply:** Editable rows index keys use karti hain. Row B mein draft type karke beginning mein row A add karo. Misplaced draft ka reason aur fix batao.
 
-> **Hint:** Positions shift while the underlying item identities remain stable.
+> **Hint:** Positions badalti hain, lekin data items ki identities wahi rehti hain.
 
-**Answer guide — compare after attempting:** Index keys attach existing state to positions that now represent different items. Use stable data IDs as sibling keys. Verify prepend, reorder, and delete operations. A random key is also wrong because it remounts the row and discards its local state.
+**Answer guide — compare after attempting:** Index key existing state ko position se jodti hai; prepend ke baad us position par doosra item hota hai. Stable data IDs sibling keys banao. Prepend/reorder/delete check karo. Random key har render par remount karke state lose karwa sakti hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [React thinking in React](https://react.dev/learn/thinking-in-react) component decomposition explain karta hai. [React preserving and resetting state](https://react.dev/learn/preserving-and-resetting-state) identity rules ka reference hai.

@@ -5,16 +5,16 @@ track: interview
 order: 2
 level: Advanced
 minutes: 32
-summary: Java fundamentals ko collections, concurrency, Spring transactions, and production diagnosis se connect karo.
+summary: Backend answer ko concurrency aur failures ke beech business rule bachana chahiye, jaise ek seat do logon ko na mile.
 tags: java, interview, spring, concurrency, transactions
 visual: thread-sync
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Backend interview mein local code correctness aur concurrent system behavior dono matter karte hain. Method single request mein correct ho sakta hai lekin two requests ke interleaving mein invariant break kar sakta hai. Answer mein language rule, resource boundary aur failure outcome clearly separate karo.
 
-> **Core takeaway:** A backend answer should protect a business invariant through concurrent and failed execution.
+> **Core takeaway:** Backend answer ko concurrency aur failures ke beech business rule bachana chahiye, jaise ek seat do logon ko na mile.
 
 ## Representative questions and answers
 
@@ -79,49 +79,49 @@ Each 0–2 score: Java semantics, collection contract, concurrency proof, transa
 
 ## Assessed mock: Java backend concurrency round
 
-**Prompt:** Design a stock reservation endpoint and write the conditional database update or version check.
+**Prompt:** Stock reservation endpoint design karo; conditional DB update ya version check likho.
 
-**Round structure:** Spend 5 minutes clarifying requirements and assumptions, 20 minutes implementing or drawing the core flow, 10 minutes investigating failures, and 5 minutes defending tradeoffs. These are practice targets, not a claim about any company's interview format.
+**Round structure:** 5 minute requirements/assumptions clear karo, 20 minute core flow implement/draw karo, 10 minute failures inspect karo, aur 5 minute tradeoffs defend karo. Yeh practice timings hain; kisi company ke exact interview format ka claim nahi.
 
-**Failure injection:** Run two transactions against one remaining unit; lose the first HTTP response after commit.
+**Failure injection:** Last unit ke liye do transactions chalao; commit ke baad first HTTP response lose karwao.
 
-**Strong-answer evidence:** An enforced invariant, a real transaction boundary, bounded retries, and observable contention.
+**Strong-answer evidence:** Enforced invariant, real transaction boundary, bounded retries aur measurable contention dikhao.
 
-Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
+Correctness, concrete example, failure handling aur tradeoff reasoning ko 0–2 score do. 0=missing/incorrect; 1=plausible par untested; 2=trace, test ya invariant se demonstrated. Total achha ho lekin correctness gap ho toh revision abhi bhi chahiye.
 
-After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+Round ke baad first approach todne wala smallest counterexample likho, fix karo aur notes dekhe bina change bolkar samjhao. Mock repeat karne se pehle chapter ke answer-reveal questions se focused revision karo.
 
 ## Research notes: Defend a failure boundary
 
-Microsoft includes testing and problem-solving in its technical interview guidance.
+Linked Microsoft technical guidance mein testing aur problem-solving bhi assessment ka part hain.
 
-**Original practice round:** Design a transfer between two local account records. Define atomicity, insufficient funds and duplicate request handling before choosing classes.
+**Original practice round:** Do local account records ke beech transfer design karo. Classes choose karne se pehle atomicity, insufficient funds aur duplicate requests define karo.
 
-**Failure injection:** Inject a failure between the debit and credit, then repeat the request.
+**Failure injection:** Debit aur credit ke beech failure inject karo, phir request repeat karo.
 
-**Evidence to bring:** Inspect durable balances and request identity. A successful HTTP response is not evidence that the transaction boundary is correct.
+**Evidence to bring:** Durable balances aur request identity inspect karo. HTTP success alone correct transaction boundary ka proof nahi hai.
 
-The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+Employer source assessment approach ka reference hai. Yeh exercise original practice hai; reported company question nahi.
 
-**Interview check:** How should you review this round after attempting it?
+**Interview check:** Attempt ke baad is round ko review kaise karoge?
 
-**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+**Answer:** First failing example save karo, wrong assumption batao aur fix se behavior kaise badla dikhao. Jo demonstrate kiya aur jo extra time mein investigate karoge, unhe clearly identify karo.
 
-**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+**Practice:** Different failure ke saath repeat karo aur reasoning bolte jao.
 
-[Read the source — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** In five minutes, defend a last-item purchase endpoint. Include a concurrent request and a failed payment, without claiming a database transaction can roll back the provider.
+**Apply:** Paanch minute mein last-item purchase endpoint defend karo. Concurrent request aur failed payment include karo; DB transaction provider ki payment rollback kar degi, yeh assume mat karo.
 
-> **Hint:** Separate the inventory decision from the external payment lifecycle.
+> **Hint:** Inventory reservation aur external payment lifecycle ko alag state transitions mein dekho.
 
-**Answer guide — compare after attempting:** Explain an atomic inventory/reservation decision, idempotent purchase identity, durable status, and payment reconciliation/compensation. Walk through which state persists at each failure boundary. Give a concurrency test where only one reservation wins and a replay test where no duplicate charge is requested.
+**Answer guide — compare after attempting:** Atomic reservation, stable idempotent purchase ID, durable status aur payment reconciliation/compensation explain karo. Har failure par kaunsa state save reh gaya, trace karo. Concurrent test mein sirf ek reservation jeete; replay test mein duplicate charge request na ho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [Java concurrency package](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html), [HashMap contract](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html), [virtual threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html), aur [Spring transaction annotations](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) official references hain.

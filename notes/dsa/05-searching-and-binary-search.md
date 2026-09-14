@@ -5,16 +5,16 @@ track: dsa
 order: 5
 level: Intermediate
 minutes: 31
-summary: Search sorted data and monotone answer spaces without boundary bugs.
+summary: Binary search ke liye monotone decision aur exact interval rule chahiye: har step par pata ho ki answer kis range mein bach sakta hai.
 tags: linear-search, binary-search, lower-bound, strings
 visual: binary-search
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Linear search har candidate check karta hai. Binary search prove karta hai ki remaining candidates ka poora half discard ho sakta hai. Is proof ke liye sorted data ya monotone predicate chahiye. Arbitrary unsorted input par binary search chalana correctness bug hai, sirf performance issue nahi.
 
-> **Core takeaway:** Binary search needs a monotone decision and a precise interval convention.
+> **Core takeaway:** Binary search ke liye monotone decision aur exact interval rule chahiye: har step par pata ho ki answer kis range mein bach sakta hai.
 
 ## A reusable lower bound
 
@@ -159,7 +159,7 @@ Complexity O(log n) time, O(1) space — **distinct values ke saath**. Duplicate
 
 Yahan inclusive `[left, right]` interval jaan-boojh kar use kiya hai kyunki hum exact match dhoondh rahe hain, insertion position nahi. Do styles mix mat karo — ek problem mein ek hi convention rakho aur usse consistently follow karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - Inclusive `right = n - 1` ko half-open updates ke saath mix karna.
 - `mid === left` par `left = mid` likhna; interval shrink nahi hoga aur infinite loop ho sakta hai.
@@ -209,17 +209,17 @@ Version rollouts aur capacity autoscaling mein bhi yehi shape hai. Aur distribut
 
 **Answer:** **Calls ki count**, jo exactly O(log n) hai — aur wahi optimize karna hai, per-call constant nahi. Yahan linear scan O(n) API calls karega, jo latency aur rate limits ki wajah se practically unusable hai. Yeh ek accha example hai jahan cost model "operations" nahi, "expensive external calls" hai; complexity analysis ke liye sahi unit choose karna answer ka hissa hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Find the first index with value at least 2 in `[1,2,2,4]`. Specify results for targets 0 and 5 and for an empty array.
+**Apply:** `[1,2,2,4]` mein pehla index nikalo jahan value kam-se-kam 2 ho. Target 0, target 5 aur empty array ke results bhi batao.
 
-> **Hint:** Use a half-open interval and let length mean no qualifying index.
+> **Hint:** Half-open interval `[lo,hi)` rakho; qualifying index na mile toh array length return karo.
 
-**Answer guide — compare after attempting:** Results are 1, 0, 4, and 0 for the respective cases. Maintain `[lo,hi)` with hi initially length; move lo to mid+1 when the middle value is too small, otherwise move hi to mid. Returning lo handles duplicates and missing boundaries consistently.
+**Answer guide — compare after attempting:** Answers respectively 1, 0, 4 aur 0 hain. hi ko length se start karo. Middle value target se chhoti ho toh lo=mid+1; warna hi=mid. End mein lo return karo. Is rule se duplicates aur missing answer dono consistently handle hote hain.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

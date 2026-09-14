@@ -1,14 +1,14 @@
-# JavaScript — ordered course
+# JavaScript — step-by-step course
 
-[All courses](../README.md)
+[Saare courses](../README.md)
 
-No prior programming course required. Start with lesson 01.
+Pehle programming course ki zaroorat nahi. Lesson 01 se start karo.
 
-Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](../STUDY_GUIDE.md) for session plans and self-review.
+Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
 
-## Stage 1: Start with the language
+## Stage 1: Language ki shuruaat
 
-Learn one small concept at a time, starting with variables.
+Variables se start karke ek waqt ek chhota concept samjho.
 
 1. [Variables and assignment with let and const](01-js-variables.md)
 2. [Value types operators and explicit conversion](02-js-types-operators.md)
@@ -17,43 +17,43 @@ Learn one small concept at a time, starting with variables.
 5. [Functions parameters arguments and return values](05-js-functions.md)
 6. [Arrays objects and simple data modeling](06-js-arrays-objects.md)
 
-**Stage checkpoint:** Calculate the total study minutes for an array of lessons using a function, loop and condition.
+**Stage checkpoint — khud karke dikhao:** Function, loop aur condition se lessons array ke total study minutes nikalo.
 
-## Stage 2: Work with data and scope
+## Stage 2: Data aur scope samjho
 
-Transform collections, validate input, then understand bindings and built-in utilities.
+Collections transform, input validate aur bindings/built-in utilities samjho.
 
 7. [Objects arrays and modern data transformations](07-modern-data-collections.md)
 8. [Foundations checkpoint and reliable input handling](08-language-foundations.md)
 9. [Execution contexts scope and closures](09-scope-closures.md)
 10. [Numbers dates strings and regular expressions](10-numbers-dates-regex.md)
 
-**Stage checkpoint:** Explain a closure and build a validated calculation without accidental string concatenation.
+**Stage checkpoint — khud karke dikhao:** Closure explain karo aur accidental string concatenation ke bina validated calculation banao.
 
-## Stage 3: Build browser interactions
+## Stage 3: Browser mein interactions banao
 
-Learn HTML/CSS structure before manipulating the DOM.
+DOM manipulate karne se pehle HTML/CSS structure seekho.
 
 11. [HTML CSS and browser rendering essentials](11-browser-foundations.md)
 12. [DOM events and browser interaction](12-dom-events-browser.md)
 
-**Stage checkpoint:** Build a keyboard-accessible list with delegated actions.
+**Stage checkpoint — khud karke dikhao:** Keyboard-accessible list banao jiske actions delegation se handle hon.
 
-## Stage 4: Understand objects and design
+## Stage 4: Objects aur design samjho
 
-Learn receivers and prototypes before the OOP project.
+OOP project se pehle this receiver aur prototypes samjho.
 
 13. [This binding prototypes and classes](13-this-prototypes-classes.md)
 14. [OOP pillars and a banking mini-project](14-oop-and-mini-project.md)
 
-**Stage checkpoint:** Explain this for three call sites and implement the small state-machine project.
+**Stage checkpoint — khud karke dikhao:** Three call sites ka this explain karke small state-machine project implement karo.
 
-## Stage 5: Handle asynchronous work and delivery
+## Stage 5: Async work aur delivery sambhalo
 
-Progress from promises and fetching to concurrency limits and modules.
+Promises/fetch se concurrency limits aur modules tak badho.
 
 15. [Event loop promises and resilient fetching](15-async-event-loop.md)
 16. [Async patterns and bounded concurrency](16-async-patterns.md)
 17. [Modules web delivery and debugging](17-modules-tooling-debugging.md)
 
-**Stage checkpoint:** Handle a failed request, cap concurrent work, and explain how the app reaches the browser.
+**Stage checkpoint — khud karke dikhao:** Failed request handle, active work cap aur browser tak app delivery explain karo.

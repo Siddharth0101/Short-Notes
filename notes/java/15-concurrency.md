@@ -5,16 +5,16 @@ track: java
 order: 15
 level: Advanced
 minutes: 25
-summary: Atomicity, visibility, cancellation aur bounded concurrency ko alag samjho.
+summary: Read-modify-write ke poore operation ko coordinate karna hota hai; alag reads/writes safe hona kaafi nahi.
 tags: concurrency, threads, virtual-threads, locks
 visual: thread-sync
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Concurrency multiple tasks ko progress karne deti hai; parallelism same time multiple CPU cores par execution hai. Shared mutable state ke teen questions hain: operation atomic hai? latest write visible hai? allowed ordering kya hai? `volatile` visibility help karta hai, lekin `count++` ko atomic nahi banata because read, add and write separate actions hain.
 
-> **Core takeaway:** A compound read-modify-write needs synchronization as a whole.
+> **Core takeaway:** Read-modify-write ke poore operation ko coordinate karna hota hai; alag reads/writes safe hona kaafi nahi.
 
 ## Protect an invariant
 
@@ -153,7 +153,7 @@ class RequestContext {
 
 Servlet containers aur executor pools threads ko reuse karte hain. Agar request handling ke end mein `RequestContext.clear()` call karna bhool jao, agla unrelated request usi pooled thread par chale toh usse pichhle request ka `CURRENT_USER` value dikh sakta hai — ek user ke data doosre user ko leak ho sakta hai. Fix: `try/finally` mein guaranteed cleanup karo, ya Spring jaise frameworks ke request-scoped filters/interceptors use karo jo yeh lifecycle already manage karte hain.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `volatile` field increment (`volatileCount++`) ko thread-safe bana deta hai. **Why it breaks:** `volatile` sirf visibility guarantee karta hai — latest write dusre threads ko dikhegi. Lekin `count++` khud read-modify-write teen steps hain; do threads same value read karke dono apna increment likh sakte hain, ek update lost ho jaata hai. **Fix:** `AtomicInteger`/`AtomicLong` ka `incrementAndGet()` use karo, ya `synchronized` block se poora operation protect karo.
 - **Wrong assumption:** `ExecutorService` ko `shutdown()` kiye bina bhi application cleanly exit ho jayegi kyunki JVM garbage collect kar dega. **Why it breaks:** Fixed/cached thread pool ke non-daemon threads active rehte hain jab tak explicitly shut down na ho; yeh JVM ko exit hone se rokte hain, aur Spring context shutdown ke baad bhi orphaned threads resource hold kar sakte hain. **Fix:** Pool ko `@PreDestroy`/application shutdown hook mein explicitly `shutdown()` phir `awaitTermination` karo.
@@ -163,7 +163,7 @@ Servlet containers aur executor pools threads ko reuse karte hain. Agar request 
 
 Request-scoped correlation IDs, security context aur tenant info aksar `ThreadLocal` ya Spring ke request-scoped beans mein store hote hain — cleanup missed hone par cross-request data leak ek real production incident class hai. Executor-based async processing (jaise order-confirmation email background mein bhejna) mein bounded thread pool aur explicit timeout/cancellation policy honi chahiye, warna ek slow downstream dependency poora pool exhaust karke unrelated requests ko bhi block kar sakta hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Volatile versus synchronized?** Volatile read/write visibility and ordering guarantees deta hai for that variable. Synchronized mutually exclusive critical section plus happens-before relation provide karta hai. Multi-step invariant ke liye lock ya suitable atomic operation chahiye.
 
@@ -175,19 +175,19 @@ Request-scoped correlation IDs, security context aur tenant info aksar `ThreadLo
 
 Two workers se 100,000 increments run karo, unsafe count observe karo, phir atomic correction karo. Inventory race ko coordinated start ke saath test karo. Finally one slow task cancel karke verify karo ki resource release hota hai. Phir do-account transfer deadlock ko reproduce karo (dono directions se simultaneously transfer chala kar), aur consistent lock-ordering se fix karo. Last mein ek pooled-thread ThreadLocal leak simulate karo: cleanup skip karke ek "wrong user" read reproduce karo, phir `finally` block se fix karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Two threads each increment a shared plain int 1000 times. Is 2000 guaranteed, and how would you repair the counter?
+**Apply:** Do threads shared plain int ko 1000-1000 baar increment karti hain. Kya 2000 guaranteed hai? Counter repair karo.
 
-> **Hint:** Reading, adding, and writing are separate steps.
+> **Hint:** Read, add aur write alag steps hain jo interleave ho sakte hain.
 
-**Answer guide — compare after attempting:** 2000 is not guaranteed because increments can overwrite each other. Use a lock around the full update or an appropriate atomic counter. Wait for both threads before inspecting the result. Merely declaring the field volatile does not make increment atomic.
+**Answer guide — compare after attempting:** 2000 guaranteed nahi: increments ek-doosre ka update overwrite kar sakte hain. Full update par lock ya suitable atomic counter use karo. Result dekhne se pehle dono threads finish hone do. volatile visibility deta hai, increment ko atomic nahi banata.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Virtual thread guide](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html)
 - [JDK 24 virtual-thread changes](https://docs.oracle.com/en/java/javase/24/migrate/significant-changes-jdk-24.html)

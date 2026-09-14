@@ -5,15 +5,15 @@ track: javascript
 order: 10
 level: Intermediate
 minutes: 23
-summary: Precision, time zones, Intl, timers aur text matching ke common mistakes avoid karo.
+summary: Number/date ko dikhane ka format aur storage mein uska meaning alag decisions hain.
 tags: numbers, dates, intl, regex, strings, timers
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Data storage aur human display alag responsibilities hain. Amount ko formatted currency string ki form mein calculate mat karo. Timestamp ko user-friendly date ki form mein compare mat karo. Pehle machine representation par logic lagao, phir locale aur timezone ke hisaab se display banao. Date-only values, instants aur recurring local times ko ek hi concept mat samjho.
 
-> **Core takeaway:** Formatting a number or date is different from defining its stored meaning.
+> **Core takeaway:** Number/date ko dikhane ka format aur storage mein uska meaning alag decisions hain.
 
 ## Currency and time display
 
@@ -77,7 +77,7 @@ console.log(match.groups.year, match.groups.month); // 2026 09
 
 Interval drift aur background-tab throttling ki wajah se tick count ko elapsed time mat samjho. Countdown mein deadline store karke each tick par remaining duration calculate karo. Strings immutable hain; replace new string return karta hai. String length UTF-16 code units count karta hai, necessarily visible characters nahi.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** `toFixed(2)` return value ek number hai. **Why it breaks:** `toFixed` string deta hai; `total.toFixed(2) + 1` string concatenation karega, addition nahi, aur UI mein galat total dikh sakta hai. **Fix:** Display ke liye `toFixed` sirf last step par use karo, calculation ke liye plain number arithmetic rakho.
 - **Wrong assumption:** `new Date("2026-01-15")` aur `new Date("2026-01-15T00:00:00")` same instant represent karte hain. **Why it breaks:** Date-only ISO string UTC midnight assume hoti hai, time-included string local timezone assume karti hai — display alag timezone mein different calendar day dikha sakta hai. **Fix:** Date-only values ko explicitly UTC treat karo ya Temporal jaisa explicit-timezone API use karo jab available ho.
@@ -89,24 +89,24 @@ Real app mein invoice/order total display, "posted 3 days ago" style UI timestam
 
 Study-session timer banao jo pause/resume kare aur reload ke baad saved deadline se recover ho. Amount formatter aur slug validator ke invalid cases add karo. Timezone change karke display verify karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Intl timezone store karta hai?** Formatter display rules apply karta hai; underlying Date ka instant change nahi karta.
 
 **Q. `setInterval(fn, 1000)` accurate clock hai?** Nahi. Scheduling delays possible hain; elapsed time actual timestamps se derive karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** For prices already supplied as integer paise, total 1999 and 2501 and display rupees with two decimal places. Why is parsing that display string back a poor storage contract?
+**Apply:** Integer paise mein 1999 aur 2501 add karo; rupees do decimal places mein dikhao. Display string ko parse karke storage banana weak contract kyun hai?
 
-> **Hint:** Perform arithmetic in the supplied minor unit.
+> **Hint:** Calculation given minor unit, yani paise, mein karo.
 
-**Answer guide — compare after attempting:** The total is 4500 paise, displayed as `45.00` before any currency symbol. Keep 4500 as the stored integer. Locale formatting may add separators or symbols; display text is not a canonical numeric representation. Define rounding separately when converting external decimal prices.
+**Answer guide — compare after attempting:** Total 4500 paise hai, display `45.00` hoga before currency symbol. Storage mein integer 4500 rakho. Locale separators/symbols add kar sakta hai; formatted text canonical number nahi hai. External decimal price convert karte waqt rounding rule alag define karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) locale APIs ka reference hai. [MDN regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions) pattern syntax explain karta hai.

@@ -5,16 +5,16 @@ track: system-design
 order: 11
 level: Advanced
 minutes: 31
-summary: Catalog speed aur checkout correctness ko ek complete design mein balance karo.
+summary: Checkout workflow mein DB order state aur external payment state temporarily disagree kar sakti hain.
 tags: case-study, ecommerce, react, java, payments
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Storefront mostly read-heavy discovery hai; checkout correctness-sensitive workflow hai. Same caching and failure policy dono par apply nahi karni chahiye. User ko fast browsing chahiye, but stale price ya duplicate payment unacceptable ho sakti hai. Design requirements separate karke connect karo.
 
-> **Core takeaway:** Checkout is a workflow whose database state and external payment state can temporarily disagree.
+> **Core takeaway:** Checkout workflow mein DB order state aur external payment state temporarily disagree kar sakti hain.
 
 ## Scope and assumed workload
 
@@ -184,7 +184,7 @@ for (CartLine line : lines) {
 
 Is design ka sabse mushkil correctness issue overselling nahi hai — wo ek atomic UPDATE se handle ho jaata hai. Asli problem yeh hai ki **payment authority provider ke paas hai, inventory authority tumhare database ke paas hai, aur dono ke beech koi shared transaction nahi hai.** Un dono ke clocks aur timeouts independent hain.
 
-Concrete failure timeline:
+Failure ko is concrete timeline se samjho:
 
 ```text
 12:00:00  reservation banti hai, expires_at = 12:15:00
@@ -252,7 +252,7 @@ failed           -> confirmed         allowed only via reconciliation, with audi
 
 `confirmed -> failed` ko reject karke silently drop mat karo — usse log aur alert karo, kyunki wo ya toh out-of-order delivery hai (benign) ya ek genuine dispute/chargeback event hai (bilkul benign nahi) aur dono ko distinguish karna padta hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Cart ke total ko client par calculate karke checkout request mein bhejna theek hai, kyunki wo wahi prices use kar raha hai jo server ne diye the. **Why it breaks:** Client-supplied amount attacker-controlled input hai — koi bhi `grandTotalMinor: 1` bhej sakta hai. Aur honest clients ke liye bhi wo stale ho sakta hai agar price ya tax rule beech mein badla ho. **Fix:** Server har checkout par total apne data se recompute kare; client ka amount sirf display confirmation ke liye compare karo aur mismatch par user ko naya total dikhakar re-confirm karao.
 - **Wrong assumption:** Button disable karne se duplicate order nahi banega. **Why it breaks:** Duplicate submission ke teen aur rastey hain jo UI se nahi rukte — user ka browser refresh, network retry (client library ya proxy ka), aur mobile app ka background retry. Aur double-click ke case mein bhi do requests network par already ja chuki ho sakti hain. **Fix:** Server-side idempotency key hi single source of truth hai; UI disable sirf ek UX improvement hai, correctness mechanism nahi.
@@ -261,7 +261,7 @@ failed           -> confirmed         allowed only via reconciliation, with audi
 - **Wrong assumption:** Webhook handler mein poora business processing karna theek hai. **Why it breaks:** Payment providers ke webhook timeouts chhote hote hain (aksar 5-10 s) aur timeout par wo retry karte hain. Agar handler 8 s ka kaam karta hai (order create, email, shipment API) toh provider timeout dekh kar dobara bhejta hai, aur ab do handlers concurrently same event process kar rahe hain. **Fix:** Webhook handler sirf signature verify kare, event ko durably record kare, aur turant 200 return kare; actual processing async worker kare jo idempotent ho.
 - **Wrong assumption:** Refund issue karke compensation complete ho gaya. **Why it breaks:** Refund provider par days le sakta hai, kuch payment methods par partial ya impossible hota hai, aur user ke liye "paisa wapas aayega" aur "paisa aa gaya" mein bada difference hai. Saath hi loyalty points, coupons aur inventory bhi reverse karne padte hain, aur unka apna failure mode hota hai. **Fix:** Compensation ko bhi ek tracked workflow banao apne states ke saath (`refund_requested` → `refund_confirmed`), user ko expected timeline batao, aur stuck refunds par alert rakho.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Why not cache checkout price for hours?** Display price stale tolerate kar sakta hai under explicit policy; payable amount business authority se recompute/validate hona chahiye. User ko changed total confirmation chahiye.
 
@@ -281,19 +281,19 @@ State diagram draw karo with payment-timeout branch. Same checkout request five 
 
 Phir upar wali expiry race deliberately reproduce karo: reservation expiry ko 5 seconds set karo, payment confirmation ko 10 seconds delay karo, aur dekho ki kya hota hai. Phir `payment_pending` state aur conditional updates add karke verify karo ki expiry job us reservation ko chhodti hai. Uske baad webhook out-of-order test karo — `succeeded` pehle aur `failed` baad mein bhejo — aur confirm karo ki order confirmed rehta hai aur rejected transition log/alert hoti hai. Last mein ek reconciliation query likho jo provider ke charges list ko apne confirmed orders se compare kare aur dono directions ke mismatches report kare.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Payment succeeds but the client times out before receiving the order response. What should a retry do, and what should the UI say?
+**Apply:** Payment successful hui lekin order response milne se pehle client timeout ho gaya. Retry kya kare aur UI kya bole?
 
-> **Hint:** The client cannot infer failure from a missing response.
+> **Hint:** Missing response payment failure ka proof nahi hai.
 
-**Answer guide — compare after attempting:** Retry or query status using a stable operation identity so the same purchase is recovered instead of charged again. Show a pending/verification state until the server confirms the outcome. Persist the idempotency result and reconcile uncertain provider responses with durable order state.
+**Answer guide — compare after attempting:** Stable operation ID se retry/status query karo, taaki same purchase recover ho aur double charge na ho. Server confirm hone tak pending/verification state dikhao. Idempotency result persist karo aur uncertain provider result durable order state se reconcile karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Stripe idempotent requests](https://docs.stripe.com/api/idempotent_requests)
 - [Stripe webhook handling](https://docs.stripe.com/webhooks)

@@ -5,19 +5,19 @@ track: react
 order: 9
 level: Advanced
 minutes: 25
-summary: Represent valid UI states and validate unknown data at runtime boundaries.
+summary: Static types trusted program values describe karte hain; external data ko runtime par validate karna padta hai.
 tags: typescript, state, narrowing, api, testing
 ---
 
-## Mental model
+## Mental model — simple soch
 
 TypeScript compile time par JavaScript contracts check karta hai. Browser receives JavaScript, so a type annotation cannot prove that a server actually sent the expected response. Think of two boundaries: runtime parsing protects external input; static types help trusted code use the parsed result correctly.
 
-> **Core takeaway:** Static types describe trusted program values; external data still needs runtime validation.
+> **Core takeaway:** Static types trusted program values describe karte hain; external data ko runtime par validate karna padta hai.
 
 ## Make invalid states harder to represent
 
-Independent booleans like loading, failed and ready allow contradictory combinations. A discriminated union ties each status to the data available in that state.
+Loading/failed/ready ke independent booleans contradictory combinations allow karte hain. Discriminated union har status ko us state ke valid data se jodta hai.
 
 ```typescript
 type Topic = { id: string; title: string };
@@ -41,7 +41,7 @@ function message(result: Result): string {
 }
 ```
 
-Adding a new union member now forces this switch to account for it. This is valuable for UI states such as offline or refreshing, where forgetting a branch otherwise creates an invisible product bug. Do not use a type assertion to silence the exhaustive check; it is evidence that a design decision remains.
+New union member add karne par switch ko uska case handle karna padega. Offline/refreshing branch bhoolne ka UI bug compiler expose kar sakta hai. Exhaustive error assertion se chupao mat; woh pending design decision dikha raha hai.
 
 ## Parse at the boundary
 
@@ -59,27 +59,27 @@ function parseTopics(value: unknown): Topic[] {
 }
 ```
 
-A predicate is executable logic and can itself contain bugs. Test malformed payloads. Use a schema validator for larger nested contracts, following the installed library's documentation. An assertion such as response as Topic[] checks nothing at runtime.
+Predicate executable logic hai; usmein bhi bug ho sakta hai. Malformed payloads test karo. Large nested contracts ke liye installed schema validator ki docs follow karo. `response as Topic[]` runtime par kuch check nahi karta.
 
 ## Component contract decisions
 
-Prefer explicit props that describe domain actions, such as onSelect(topicId), rather than passing a state setter to every child. A generic component is justified when callers share a real structure and behavior; avoid making every small component generic merely to demonstrate syntax.
+onSelect(topicId) jaise domain-action props prefer karo; har child ko raw setter dena zaroori nahi. Generic component tab useful hai jab callers real shared structure/behavior use karte hon. Sirf syntax dikhane ke liye har component generic mat banao.
 
-unknown forces narrowing before use. any opts out of checking and can spread silently through a codebase. Optional props deserve defaults only when absence has a defined meaning. An optional monetary amount should not silently become zero if missing data represents an API failure.
+unknown use se pehle narrowing maangta hai; any checking bypass karke silently spread ho sakta hai. Optional prop ka default tab do jab absence ka defined meaning ho. Missing monetary amount API failure ho toh silently zero mat banao.
 
 ## Practice
 
-Add a refreshing state that preserves old items and an offline state with a retry action. Update every renderer without assertions. Feed parseTopics null, an object, a mixed array and an empty array. Explain which inputs should succeed and why. Finally type an editable row whose onSave returns a Promise and explicitly handle pending and rejection in the UI.
+Old items preserve karne wala refreshing aur retry wala offline state add karo. Assertions ke bina all renderers update karo. parseTopics ko null, object, mixed array aur [] do; valid/invalid explain karo. Promise-returning onSave wali typed row mein pending/rejection handle karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Does readonly mean immutable at runtime?** No. It restricts permitted assignments through that TypeScript view; aliases and runtime mutation still require careful design.
+**readonly runtime immutable banata hai?** Nahi. TypeScript view ke through assignments restrict hoti hain; aliases/runtime mutation ka design phir bhi chahiye.
 
-**Why prefer a union over optional data and optional error?** The union expresses which combinations are valid and lets control-flow narrowing enforce branch-specific access.
+**Optional data/error se union better kyun?** Union valid combinations express karta hai; narrowing har branch ko uske valid fields use karne deta hai.
 
 ## Research notes: Make omitted states visible to the compiler
 
-A discriminated union connects each state to its valid fields. Exhaustive narrowing exposes missing cases.
+Discriminated union state ko valid fields se jodta hai. Exhaustive narrowing missing cases expose karti hai.
 
 ```ts
 type Save = { kind: 'idle' } | { kind: 'failed'; message: string };
@@ -95,28 +95,28 @@ function label(state: Save): string {
 }
 ```
 
-Add a `saving` member and the default branch stops type-checking until it is handled.
+saving member add karo; jab tak uska case handle nahi hota, exhaustive default type-check fail karega.
 
-**Interview check:** Does asserting external JSON as Save validate its contents?
+**Interview check:** External JSON ko Save assert karne se content validate hota hai?
 
-**Answer:** No. Type assertions do not perform runtime checks. Validate untrusted data at the boundary before exposing a typed union to application code.
+**Answer:** Nahi. Type assertion runtime check nahi karti. Boundary par untrusted data validate karke application ko typed union do.
 
-**Practice:** Add success with a saved ID and update each decision point.
+**Practice:** Saved ID wala success case add karke har decision point update karo.
 
-[Read the source — TypeScript](https://www.typescriptlang.org/docs/handbook/2/narrowing.html). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — TypeScript](https://www.typescriptlang.org/docs/handbook/2/narrowing.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** An API returns `{"minutes":"ten"}` while your interface says minutes is a number. Why does a type assertion fail to protect you, and what should the boundary return?
+**Apply:** API `{"minutes":"ten"}` bhejti hai, interface minutes:number bolta hai. Assertion kyun nahi bachaegi? Boundary kya return kare?
 
-> **Hint:** An assertion does not transform or inspect the response.
+> **Hint:** Type assertion response inspect ya convert nahi karti.
 
-**Answer guide — compare after attempting:** Accept external JSON as unknown, inspect its object shape and numeric fields, and return either validated data or an explicit parse failure. Reject this response. Test missing, null, negative, and malformed values according to the contract instead of asserting the expected interface.
+**Answer guide — compare after attempting:** External JSON unknown lo, object shape aur numeric fields inspect karo. Validated data ya explicit parse failure return karo; given response reject karo. Contract ke hisaab se missing, null, negative aur malformed values test karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[TypeScript narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) documents control-flow analysis and discriminated unions.
+[TypeScript narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) mein control-flow analysis aur discriminated unions padho.

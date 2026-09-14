@@ -5,16 +5,16 @@ track: dsa
 order: 6
 level: Intermediate
 minutes: 29
-summary: Design shrinking subproblems, trace call stacks, and undo choices correctly.
+summary: Backtracking mein ek branch ke changes undo karo, tabhi next branch ko sahi starting state milegi.
 tags: recursion, backtracking, call-stack, subsets
 visual: recursion-stack
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Recursive function ek state ko smaller states mein delegate karke solve karta hai. Har active call ke apne parameters aur local bindings hote hain. Base case solved state handle karta hai; progress measure ensure karta hai ki har branch eventually base case tak pahunche. “Function khud ko call karta hai” syntax explain karta hai, correctness nahi.
 
-> **Core takeaway:** Backtracking must restore shared choices before exploring siblings.
+> **Core takeaway:** Backtracking mein ek branch ke changes undo karo, tabhi next branch ko sahi starting state milegi.
 
 ## Write the contract first
 
@@ -235,7 +235,7 @@ Complexity dono ki same hai: O(n) time, O(h) space (skewed tree par O(n)). Diffe
 
 Postorder isse thoda tricky hai kyunki parent ko children ke *baad* process karna hai. Do standard solutions hain: har frame par ek `expanded` flag rakho (pehli baar children push karo, doosri baar process karo), ya preorder ko `node, right, left` order mein chala kar result reverse kar do.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Base case likh diya, matlab recursion terminate ho jayegi. **Why it breaks:** Termination base case se nahi, **progress measure** se aati hai — har recursive call ko base case ki taraf strictly move karna chahiye. `visit(index)` ke andar galti se `visit(index)` likh dena, ya graph traversal mein visited mark na karna (jahan A → B → A cycle hai), infinite recursion deta hai chahe base case perfectly likha ho. **Fix:** Ek nonnegative integer quantity name karo (remaining length, remaining target, unvisited count) aur verify karo ki har call usse strictly decrease karta hai.
 - **Wrong assumption:** Backtracking mein `path.pop()` kar diya, state restore ho gayi. **Why it breaks:** Recursive step ne jo bhi shared state chhui thi — `visited` array, `used` flags, running sum, grid cell ka overwritten character — sab restore honi chahiye. Sirf path pop karne se `used[i]` permanently true reh jaata hai aur baad ki branches valid choices skip kar deti hain, jisse **kam** results milte hain (silent wrong answer, crash nahi). **Fix:** Har `mutate` line ke saath uska mirror `undo` line turant likho, aur code review mein dono ko pair karke dekho.
@@ -274,17 +274,17 @@ Memoization ka production analogue caching hai, aur wahi trap wapas aata hai: ca
 
 **Answer:** Jab tree skewed ho aur depth engine ki call-stack limit cross kare (Node mein typically kuch hazaar frames). Dono O(n) time aur O(h) space hain, lekin recursive version `RangeError` throw karta hai jabki explicit-stack version heap use karta hai aur chalta rehta hai. Complexity identical hone ke bawajood ek production mein fail karta hai — yeh "same big-O, different real behavior" ka clean example hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Generate subsets of `[1,2]` using one mutable path. Why does storing the path object itself in every result corrupt the output?
+**Apply:** Ek mutable path use karke `[1,2]` ke subsets banao. Har result mein wahi path object store karne se output kyun bigadta hai?
 
-> **Hint:** Later push/pop operations change the same object.
+> **Hint:** Baad ke push/pop bhi usi object ko badalte hain jiska reference result mein rakha tha.
 
-**Answer guide — compare after attempting:** Store a copy at each completed choice, producing the four subsets `[]`, `[1]`, `[2]`, and `[1,2]` in an order determined by traversal. Restore the path after each branch. Materializing all subsets costs O(n·2^n) output time/space, not merely O(2^n) scalar work.
+**Answer guide — compare after attempting:** Har completed choice par path ki copy store karo. Subsets `[]`, `[1]`, `[2]`, `[1,2]` milenge; order traversal par depend karega. Har branch ke baad path restore karo. Saare subsets copy karke materialize karne ka output time/space O(n·2^n) hai, sirf O(2^n) nahi.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

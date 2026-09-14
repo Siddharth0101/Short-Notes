@@ -5,15 +5,15 @@ track: javascript
 order: 3
 level: Foundation
 minutes: 12
-summary: Use comparisons to choose a branch without mixing assignment and equality.
+summary: Condition rule ko code mein likhti hai; boundary values batati hain ki rule sahi implement hua ya nahi.
 tags: fundamentals, js, conditionals
 ---
 
-## Mental model
+## Mental model — simple soch
 
-A condition asks a question whose result determines which path runs. Pehle question ko plain language mein likho: is the learner eligible to start? Then turn that question into comparisons. An if statement runs its branch when its condition is truthy; an else branch handles the alternative. A chain of else if branches selects the first matching branch.
+Condition ek sawal hai jiska answer code ka path choose karta hai. Pehle plain words mein likho: learner start karne ke liye eligible hai? Phir comparisons banao. if condition truthy ho toh branch chalegi; warna else. Else-if chain first matching branch choose karti hai. Jaise marks se grade decide karte waqt exact threshold aur checking order matter karte hain.
 
-> **Core takeaway:** Conditions encode a rule; boundaries decide whether the rule is correct.
+> **Core takeaway:** Condition rule ko code mein likhti hai; boundary values batati hain ki rule sahi implement hua ya nahi.
 
 ## Trace one decision
 
@@ -31,34 +31,34 @@ if (!submitted) {
 }
 ```
 
-The result is Revise and try again. Once that branch matches, later branches are skipped. Order matters: putting score >= 50 first would also catch scores above 80. Use braces even for short examples so adding a second statement does not accidentally move it outside the branch.
+Output `Revise and try again` hai. Branch match hone ke baad later branches skip hoti hain. score>=50 pehle likhoge toh 80 se upar scores bhi usi mein aa jayenge. Short examples mein bhi braces rakho, taaki added statement accidentally branch ke bahar na ho.
 
 ## Combine conditions
 
-&& requires both conditions to succeed; || permits either; ! negates a boolean. These operators short circuit, so a later operand may not be evaluated. Start with explicit comparisons such as age >= 18 && hasTicket. JavaScript conditions can also coerce values: an empty string and zero are falsy, while a nonempty string such as 'false' is truthy. A variable named submitted should therefore contain a real boolean if that is the intended contract.
+&& ko dono conditions true chahiye; || ko koi ek; ! boolean reverse karta hai. Short-circuit ke kaaran later operand evaluate na ho sakta hai. `age>=18 && hasTicket` jaise explicit comparisons se start karo. Empty string aur zero falsy hain; nonempty 'false' string truthy hai. submitted ka intended contract boolean hai toh real boolean store karo.
 
-A ternary expression chooses a value, such as const label = passed ? 'Pass' : 'Retry'. Keep longer branching logic in readable statements. A switch can match one expression against multiple cases; learn it after if/else rather than treating it as a required replacement.
+Ternary value choose karta hai: `const label = passed ? 'Pass' : 'Retry'`. Long branching readable statements mein rakho. switch ek expression multiple cases se match karta hai; if/else seekhne ke baad padho, mandatory replacement mat samjho.
 
 ## Practice
 
-Write a delivery-fee rule: free for totals at least 500, otherwise 40. Add an invalid-negative-total branch before the business rule. Test -1, 0, 499 and 500 and explain every result. Then add a boolean premiumMember rule that also grants free delivery.
+Delivery rule likho: total>=500 par free, otherwise 40. Business rule se pehle negative-total invalid branch add karo. -1,0,499,500 test aur explain karo. Phir premiumMember=true par bhi free delivery add karo.
 
-## Check before moving on
+## Aage badhne se pehle check karo
 
-You should be able to explain which branch runs at an exact boundary. The next lesson repeats statements with loops instead of writing the same decision many times.
+Exact boundary par kaunsi branch chalegi, explain karo. Next loops se statements repeat karenge.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A learner passes with score at least 60 and attendance at least 75. Write the condition and classify `(60,75)`, `(59,100)`, and `(90,74)`.
+**Apply:** Pass hone ke liye score kam-se-kam 60 aur attendance kam-se-kam 75 chahiye. `(60,75)`, `(59,100)`, `(90,74)` classify karo.
 
-> **Hint:** Both requirements must hold, including equality.
+> **Hint:** Dono requirements true honi chahiye; equality bhi accepted hai.
 
-**Answer guide — compare after attempting:** Use `score >= 60 && attendance >= 75`. Only the first pair passes. Test values just below, at, and above each threshold; using OR would admit learners who satisfy only one requirement.
+**Answer guide — compare after attempting:** `score >= 60 && attendance >= 75` use karo. Sirf first pair pass hai. Har threshold ke neeche, barabar aur upar test karo. OR lagane se ek requirement poori karne wala bhi galti se pass ho jaega.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[MDN control flow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling) introduces conditional execution.
+[MDN control flow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling) se conditional execution padho.

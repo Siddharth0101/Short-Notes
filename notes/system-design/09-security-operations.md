@@ -5,16 +5,16 @@ track: system-design
 order: 9
 level: Advanced
 minutes: 26
-summary: Trust boundaries, telemetry aur recovery ko architecture ke saath design karo.
+summary: SLO mein good event, eligible request aur measurement window define karo, tab target ka meaning clear hota hai.
 tags: security, observability, deployment, reliability
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Production system ko build karne ke saath operate and recover bhi karna padta hai. Security trust boundaries define karti hai. Observability unexpected behavior investigate karne ka evidence deti hai. Deployment and recovery procedures changes ko controlled banate hain. Har box ke saath owner, failure signal and recovery action socho.
 
-> **Core takeaway:** An SLO must define which events count as good and which requests are eligible.
+> **Core takeaway:** SLO mein good event, eligible request aur measurement window define karo, tab target ka meaning clear hota hai.
 
 ## Trust boundaries
 
@@ -142,7 +142,7 @@ Backfill ko chunked aur throttled rakhna zaroori hai: ek `UPDATE notes SET new_s
 
 Backup ke liye yaad rakho ki untested backup ek assumption hai, guarantee nahi. Drill mein specifically yeh measure karo: restore command kitne minutes mein complete hua (RTO ka bada hissa), restored data kitna purana tha (RPO), aur kya application us restored database se actually boot hui. Teesra step sabse zyada skip hota hai aur sabse zyada surprises deta hai (missing extensions, mismatched schema version, missing secrets).
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** JWT stateless hai isliye logout aur revocation ke liye alag mechanism ki zaroorat nahi. **Why it breaks:** Signed token expiry tak valid rehta hai chahe user logout kare, password badle, ya admin account suspend kare. 24-hour expiry ka matlab hai ek chura hua token 24 ghante tak kaam karega, aur server ke paas usse rokne ka koi tarika nahi. **Fix:** Access token ko short-lived rakho (5-15 minutes) plus refresh token jise revoke kiya ja sake, ya ek revocation list/version check rakho (`token_version` user row mein; mismatch par reject).
 - **Wrong assumption:** Liveness probe ko dependency health check se joda ja sakta hai taaki unhealthy instance restart ho jaaye. **Why it breaks:** Database down hone par *saare* instances ek saath liveness fail karte hain aur orchestrator sabko restart kar deta hai. Restarted instances cold cache aur cold connection pools ke saath aate hain, database ko connection storm milta hai, aur ab recovery database ke theek hone ke baad bhi nahi hoti — restart loop khud outage extend karta hai. **Fix:** Liveness sirf process-level health check kare (deadlock, unrecoverable state). Dependency health readiness mein daalo (traffic mat bhejo) ya better, usse degraded-mode response mein handle karo.
@@ -150,7 +150,7 @@ Backup ke liye yaad rakho ki untested backup ek assumption hai, guarantee nahi. 
 - **Wrong assumption:** Secrets ko environment variables mein rakhna secure enough hai. **Why it breaks:** Env vars child processes ko inherit hote hain, crash dumps aur error reporting tools mein aksar capture ho jaate hain, `/proc` se readable ho sakte hain, aur rotation ke liye redeploy chahiye — isliye practice mein secrets saalon tak rotate nahi hote. **Fix:** Secret manager use karo jo runtime par fetch aur rotate kar sake, secrets ko log/error reporting se explicitly exclude karo, aur rotation ko ek tested routine banao, emergency procedure nahi.
 - **Wrong assumption:** Alert jitne zyada utna better coverage. **Why it breaks:** 50 alerts mein se 45 noise hon toh on-call unhe mute ya ignore karna seekh jaata hai, aur wo ek asli alert bhi usi noise mein kho jaata hai. Alert fatigue observability ki sabse badi practical failure hai. **Fix:** Alert sirf us cheez par lagao jo *user ko affect kar rahi hai aur human action demand karti hai*. Har alert ke saath ek runbook link ho; agar koi alert ke liye runbook nahi likha ja sakta toh wo alert dashboard hona chahiye, page nahi.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **What would you alert on?** User-facing symptoms such as failed requests, latency SLO burn or delayed processing; diagnostic resource metrics investigation guide karengi.
 
@@ -172,31 +172,31 @@ Phir ek authorization test likho jo tenant A ke token se tenant B ke resource ID
 
 ## Research notes: Turn an SLO into a concrete budget
 
-Choose a user-visible indicator before a target. Successful eligible checkouts divided by eligible attempts differs from process uptime. State exclusions and the measurement window.
+Target se pehle user-visible indicator choose karo. Successful eligible checkouts / eligible attempts, process uptime se alag hai. Exclusions/window define karo.
 
-Original arithmetic: at 99.9% success over 1,000,000 eligible requests, 1,000 may be unsuccessful. After 700 failures, 300 remain in that window's budget. A request-based budget is not automatically a fixed number of downtime minutes.
+99.9% success aur 1,000,000 eligible requests par 1000 failures allowed. 700 ke baad window budget mein 300 bachti hain. Request budget automatically downtime minutes nahi hai.
 
-**Interview check:** Why are internal health checks insufficient as the only success indicator?
+**Interview check:** Sirf internal health checks success indicator kyun nahi?
 
-**Answer:** A process may answer health checks while the user workflow fails. Measure the meaningful external outcome and use internal metrics to diagnose it.
+**Answer:** Process healthy response de sakta hai jab actual user workflow fail ho. Meaningful external outcome measure aur internal metrics se diagnose karo.
 
-**Practice:** Decide whether declined cards count as expected business results or service failures.
+**Practice:** Declined cards expected business outcome hain ya service failure, apne SLO mein decide karo.
 
-[Read the source — Google SRE](https://sre.google/sre-book/service-level-objectives/). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Google SRE](https://sre.google/sre-book/service-level-objectives/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** For one million eligible requests and a 99.9% success target, calculate the allowed bad events. What must be specified before building the alert?
+**Apply:** 1,000,000 eligible requests aur 99.9% success target mein kitne bad events allowed hain? Alert se pehle kya define karoge?
 
-> **Hint:** Convert the permitted failure fraction into an event count.
+> **Hint:** Allowed failure fraction ko event count se multiply karo.
 
-**Answer guide — compare after attempting:** The allowance is 1000 bad events for that measurement window. Define the window, eligible traffic, success semantics, and data source. Distinguish request-based availability from time-based downtime; 1000 errors does not by itself specify a number of minutes offline.
+**Answer guide — compare after attempting:** Window mein 1000 bad events allowed hain. Window, eligible traffic, success semantics aur data source define karo. Request-based availability aur time-based downtime alag hain; 1000 errors se automatically offline minutes nahi nikalte.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [OWASP authorization guidance](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html)
 - [OpenTelemetry observability primer](https://opentelemetry.io/docs/concepts/observability-primer/)

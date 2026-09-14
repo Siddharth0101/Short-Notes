@@ -5,15 +5,15 @@ track: dsa
 order: 2
 level: Intermediate
 minutes: 36
-summary: Implement pointer changes and choose LIFO or FIFO without hiding operation costs.
+summary: Data structure operation ke order se choose karo: stack mein last-in-first-out (LIFO), queue mein first-in-first-out (FIFO) hota hai.
 tags: linked-list, stack, queue, pointers, monotonic-stack
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Array positions ko directly access karna easy banata hai. Linked list mein relevant node already ho toh local links change karna easy hota hai. Stack last-in first-out aur queue first-in first-out access expose karte hain. Yeh access contracts hain, jinhe different storage structures se implement kar sakte ho.
 
-> **Core takeaway:** Data-structure choice follows operation order: stack is LIFO, queue is FIFO.
+> **Core takeaway:** Data structure operation ke order se choose karo: stack mein last-in-first-out (LIFO), queue mein first-in-first-out (FIFO) hota hai.
 
 ## Linked list operations
 
@@ -253,7 +253,7 @@ Table asymptotics mein linked list ko achha dikhati hai, lekin **practice mein a
 
 Isiliye modern standard libraries linked list ko rarely default banati hain, aur JavaScript mein toh built-in linked list hai hi nahi — `Array` aur `Map` almost sab kuch cover kar lete hain. Linked lists interview mein pointer-reasoning test karne ke liye zinda hain, aur production mein specific jagah par (LRU cache ki intrusive doubly linked list, free-list allocators, kernel structures) jahan O(1) removal with a held reference genuinely chahiye.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Linked-list deletion O(1) hai. **Why it breaks:** Yeh statement adhoora hai — O(1) tabhi hai jab tumhare paas **predecessor ka reference already ho**. Singly linked list mein value se node dhoondhna O(n) hai, aur last node delete karne ke liye predecessor tak traverse karna bhi O(n). Doubly linked list mein held node ki removal genuinely O(1) hai, lekin har node par ek extra pointer aur zyada invariants ka cost hai. **Fix:** Hamesha bolo "O(1) given a reference to the node and its predecessor"; search cost alag se state karo.
 - **Wrong assumption:** Reversal loop mein `current.next = previous` likhne ke baad `current = current.next` se aage badh jaunga. **Why it breaks:** Us line par `current.next` ko already overwrite kar chuke ho, so tum aage jaane ke bajay peeche (`previous` par) chale jaoge — infinite loop ya truncated list. **Fix:** Pointer rewire karne se **pehle** `const next = current.next` save karo. Rule: koi bhi pointer overwrite karne se pehle usse jo reachable tha usko capture kar lo.
@@ -296,17 +296,17 @@ Doubly linked list ka classic production use LRU cache hai: hash map node refere
 
 **Answer:** Queue implementation. `queue.shift()` har dequeue par baaki elements ko move karta hai, so V dequeues O(V²) ban jaate hain — algorithm O(V + E) hone ke bawajood. Fix head index (`queue[head++]`) ya proper ring buffer hai. Doosra check: visited enqueue ke waqt mark ho raha hai ya dequeue ke waqt — dequeue par marking se same vertex multiple baar queue mein aa sakta hai aur kaam exponentially badh sakta hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Design undo for edits A, B, C, then undo twice. Contrast with a job queue holding the same labels. What should empty removal do?
+**Apply:** Edits A, B, C ke liye undo banao aur do baar undo karo. Wahi labels job queue mein hon toh pehle kaun niklega? Empty structure par removal ka result bhi define karo.
 
-> **Hint:** Trace from the end for undo and from the front for jobs.
+> **Hint:** Undo mein end se aur jobs mein front se dry-run karo.
 
-**Answer guide — compare after attempting:** Undo removes C then B; a queue processes A then B. Define empty removal as a documented sentinel or error. For an array-backed queue, consider a head index instead of shifting every element on each removal.
+**Answer guide — compare after attempting:** Undo C phir B hataega; queue A phir B process karegi. Empty removal par documented sentinel ya error do. Array queue mein har removal par saare elements shift karne ke bajay head index rakh sakte ho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

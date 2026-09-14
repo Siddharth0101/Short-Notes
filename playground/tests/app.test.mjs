@@ -82,7 +82,7 @@ after(async () => {
 test('Dashboard displays actual chapter/reference/visual totals and subject navigation', async () => {
   localStorage.clear();
   await mount('/');
-  assert.match(text(), /A little clearer, every day/);
+  assert.match(text(), /Har din thoda aur clear/);
   assert.equal(document.querySelectorAll('.track-card').length, 7);
   assert.equal(document.querySelectorAll('.stat strong')[0].textContent, `${notes.length}↗`);
   assert.equal(document.querySelectorAll('.stat strong')[1].textContent, String(archive.length));
@@ -133,7 +133,7 @@ test('Source title searches find the owning chapter and source links open exampl
   });
   assert(example.querySelector('.markdown'));
   assert(document.querySelector('.chapter-practice .question-card'));
-  await click(button('Reveal answer'));
+  await click(button('Answer dekho'));
   assert(document.querySelector('.chapter-practice .question-answer'));
   assert(document.querySelector('.chapter-navigation'));
 });
@@ -166,7 +166,7 @@ test('Deep-linked search and track filters show relevant content and empty state
   for (const row of document.querySelectorAll('.note-row'))
     assert.match(row.querySelector('.note-meta').textContent, /React/);
   await mount('/library?q=absolutely-no-such-concept-9999');
-  assert.match(text(), /No notes found/);
+  assert.match(text(), /Koi note nahi mila/);
 });
 
 test('Library and paths share staged course order and keep lesson numbers stable in search', async () => {
@@ -207,8 +207,8 @@ test('Reader saves bookmarks and completion across mounts, renders code and sect
   assert.match(text(), new RegExp(note.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   assert(document.querySelector('.markdown h2#mental-model'));
   assert(document.querySelector('.code-block pre'));
-  await click(button('Save note'));
-  await click(button('Mark complete'));
+  await click(button('Note save karo'));
+  await click(button('Complete mark karo'));
   const persisted = JSON.parse(localStorage.getItem('shortnotes.progress.v1'));
   assert(persisted.saved.includes(note.id));
   assert(persisted.completed.includes(note.id));
@@ -225,9 +225,9 @@ test('Interview questions reveal answers, mark confidence, and filter practiced 
   const initialLimit = Math.min(javaTotal, 12);
   assert.equal(document.querySelectorAll('.question-card').length, initialLimit);
   assert.equal(document.querySelectorAll('.question-answer').length, 0);
-  await click(button('Reveal answer'));
+  await click(button('Answer dekho'));
   assert.equal(document.querySelectorAll('.question-answer').length, 1);
-  await click(button('I know this'));
+  await click(button('Yeh samajh aa gaya'));
   assert.equal(JSON.parse(localStorage.getItem('shortnotes.progress.v1')).known.length, 1);
   await click(document.querySelector('input[type="checkbox"]'));
   assert.equal(
@@ -238,14 +238,14 @@ test('Interview questions reveal answers, mark confidence, and filter practiced 
 
 test('Visual controls step, reset, seek, and exercise missing binary-search targets', async () => {
   await mount('/visuals?topic=binary-search');
-  assert.match(document.querySelector('.step-explanation').textContent, /Compare 31 with 42/);
-  await click(button('Next step'));
-  assert.match(document.querySelector('.step-explanation').textContent, /Compare 56 with 42/);
+  assert.match(document.querySelector('.step-explanation').textContent, /31 ko 42 se compare karo/);
+  await click(button('Agla step'));
+  assert.match(document.querySelector('.step-explanation').textContent, /56 ko 42 se compare karo/);
   await click(button('Reset visualization'));
-  assert.match(document.querySelector('.step-explanation').textContent, /Compare 31 with 42/);
+  assert.match(document.querySelector('.step-explanation').textContent, /31 ko 42 se compare karo/);
   await select(document.querySelector('[aria-label="Binary search target"]'), '44');
-  while (!button('Next step').disabled) await click(button('Next step'));
-  assert.match(document.querySelector('.step-explanation').textContent, /Target is not present/);
+  while (!button('Agla step').disabled) await click(button('Agla step'));
+  assert.match(document.querySelector('.step-explanation').textContent, /Target present nahi hai/);
   await click(button('Play visualization'));
   assert(button('Pause visualization'));
   await click(button('Pause visualization'));
@@ -256,7 +256,7 @@ test('Every visual topic mounts successfully and can reach its final step', asyn
     await mount(`/visuals?topic=${topic}`);
     assert(document.querySelector('.simulation-canvas'), topic);
     let count = 0;
-    while (!button('Next step').disabled && count++ < 100) await click(button('Next step'));
+    while (!button('Agla step').disabled && count++ < 100) await click(button('Agla step'));
     assert(count < 100, `Trace did not finish: ${topic}`);
     assert.match(document.querySelector('.simulation-pill').textContent, /Complete/);
   }
@@ -276,20 +276,20 @@ test('Mock interview keeps a fixed filtered pool, resets answers, and produces a
     );
     textarea.dispatchEvent(new Event('input', { bubbles: true }));
   });
-  await click(button('Pause timer'));
-  assert(button('Resume timer'));
-  await click(button('Resume timer'));
-  await click(button('Reveal answer'));
+  await click(button('Timer pause karo'));
+  assert(button('Timer continue karo'));
+  await click(button('Timer continue karo'));
+  await click(button('Answer dekho'));
   assert(document.querySelector('.answer-reading').getAttribute('href').startsWith('/notes/'));
-  await click(button('Confident · Next'));
+  await click(button('Clear hai · Agla'));
   assert.match(text(), /Question 2 of 5/);
   assert.equal(document.querySelector('textarea').value, '');
   assert.equal(document.querySelector('.question-answer'), null);
-  for (let i = 0; i < 4; i++) await click(button('Needs revision · Next'));
-  assert.match(text(), /1 of 5 self-rated confident/);
+  for (let i = 0; i < 4; i++) await click(button('Revision chahiye · Agla'));
+  assert.match(text(), /1 of 5 answers tumne clear mark kiye/);
   assert.match(text(), /My explanation of identity/);
   assert.equal(document.querySelectorAll('.mock-review').length, 5);
-  await click(button('Back to questions'));
+  await click(button('Questions par wapas'));
   assert.equal(document.querySelectorAll('.filter-chips .active')[0].textContent, 'React');
 });
 
@@ -302,14 +302,14 @@ test('Mock deadline expires without discarding the current answer or forcing sub
     await React.act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
     });
-    assert.match(text(), /Time is up/);
+    assert.match(text(), /Time khatam/);
     assert.equal(document.querySelector('[role="timer"]').textContent, '0:00');
-    assert(button('Reveal answer'));
-    assert(button('Confident · Next'));
+    assert(button('Answer dekho'));
+    assert(button('Clear hai · Agla'));
   } finally {
     Date.now = now;
   }
-  await click(button('End session'));
+  await click(button('Session khatam karo'));
 });
 
 test('Visual subject selection and chapter tabs expose new explanatory traces', async () => {

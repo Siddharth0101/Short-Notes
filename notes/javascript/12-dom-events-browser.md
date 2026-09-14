@@ -5,15 +5,15 @@ track: javascript
 order: 12
 level: Foundation
 minutes: 23
-summary: DOM selection, propagation, delegation, observers aur accessible interaction implement karo.
+summary: Event delegation stable ancestor par events handle karta hai; actual target button ke andar ka icon bhi ho sakta hai.
 tags: dom, events, delegation, browser, accessibility
 ---
 
-## Mental model
+## Mental model — simple soch
 
 HTML document browser mein object tree ban jaata hai jise DOM kehte hain. JavaScript tree ko query aur update kar sakta hai. Event ek interaction ka record hai jo capture, target aur bubble phases se travel kar sakta hai. DOM structure aur event path ko alag socho: clicked icon event target ho sakta hai, lekin action button ka hai.
 
-> **Core takeaway:** Delegation handles events through a stable ancestor; the target may be nested inside the action.
+> **Core takeaway:** Event delegation stable ancestor par events handle karta hai; actual target button ke andar ka icon bhi ho sakta hai.
 
 ## Delegate list actions
 
@@ -98,7 +98,7 @@ form.addEventListener("submit", event => {
 
 `preventDefault()` browser default action cancel karta hai; propagation automatically stop nahi karta. `stopPropagation()` event travel stop karta hai; default action automatically cancel nahi karta. Har event bubble nahi karta. Clickable div banane se keyboard activation aur native semantics free mein nahi milti; actual button/link prefer karo. Reduced-motion preference respect karke decorative animations skip karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Delegated listener ke andar `event.target` hamesha wahi element hai jispar listener lagaya gaya. **Why it breaks:** `target` click ka actual origin hota hai (jaise button ke andar ka icon), `currentTarget` listener wala parent element hota hai — inhe same maan lena galat handler logic likhwa deta hai. **Fix:** `closest()` se intended interactive ancestor dhoondo, phir explicit containment check karo.
 - **Wrong assumption:** `removeEventListener` bina exact same function reference ke bhi kaam karega. **Why it breaks:** Anonymous arrow function har baar naya reference hota hai; `removeEventListener` reference match par depend karta hai, isliye listener kabhi remove nahi hota aur duplicate ho sakta hai. **Fix:** Named function reference store karo, ya cleanup ek jagah rakhne ke liye `AbortController` signal use karo.
@@ -110,7 +110,7 @@ Real app mein yeh pattern shopping cart badge update, toast notifications aur mu
 
 Dynamic task list banao with add/remove buttons, keyboard support aur empty-state message. Parent delegation use karo. Ten times mount/unmount karke check karo ki duplicate listeners aur duplicate actions nahi aa rahe.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Delegation kab useful hai?** Dynamic repeated children par shared action handling ke liye. Event bubbling aur correct target resolution required hai.
 
@@ -118,7 +118,7 @@ Dynamic task list banao with add/remove buttons, keyboard support aur empty-stat
 
 ## Research notes: Own a listener lifecycle
 
-Related listeners can share an abort signal and be disposed together. Use a fresh controller for each independent widget.
+Related listeners same abort signal share karke together dispose ho sakte hain. Har independent widget ka fresh controller banao.
 
 ```js
 function mountCounter(button, output) {
@@ -131,28 +131,28 @@ function mountCounter(button, output) {
 }
 ```
 
-A global controller would couple widget lifetimes: disposing one could remove another's listeners.
+Global controller widget lifetimes jod dega: ek dispose karoge toh doosre ke listeners bhi remove ho sakte hain.
 
-**Interview check:** Does once: true replace lifecycle cleanup?
+**Interview check:** Kya once:true lifecycle cleanup replace karta hai?
 
-**Answer:** It removes a listener after its first invocation. If that event never happens on a long-lived target, explicit disposal still matters. One-event behavior and resource ownership are different requirements.
+**Answer:** Listener first invocation ke baad remove hota hai. Long-lived target par event kabhi hua hi nahi toh explicit disposal phir bhi chahiye. One-event behavior aur resource ownership alag requirements hain.
 
-**Practice:** Mount two counters, dispose one, and verify only the other responds.
+**Practice:** Do counters mount karo, ek dispose karo; sirf doosra respond kare, verify karo.
 
-[Read the source — MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A delete button contains an icon. Explain why checking only `event.target.matches('button')` misses clicks, and describe a fix for dynamically added rows.
+**Apply:** Delete button ke andar icon hai. Sirf `event.target.matches('button')` kyun miss karega? Dynamically added rows bhi handle karo.
 
-> **Hint:** Find the nearest matching action and verify that it belongs to your list.
+> **Hint:** Nearest matching action dhundo aur check karo ki woh intended list ke andar hai.
 
-**Answer guide — compare after attempting:** Use `event.target.closest('button[data-id]')` when the target is an Element, and confirm the button is inside the intended list. Read its stable item ID and remove that item. One ancestor listener also handles rows added later.
+**Answer guide — compare after attempting:** Target Element ho toh `event.target.closest('button[data-id]')` use karo; button ki list membership verify karo. Stable item ID se item remove karo. Ek ancestor listener future mein add hui rows ko bhi handle karega.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) listener options explain karta hai. [MDN Intersection Observer](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) asynchronous observation ka reference hai.

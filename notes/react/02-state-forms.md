@@ -5,16 +5,16 @@ track: react
 order: 2
 level: Foundation
 minutes: 26
-summary: State ownership, batching, updater functions, derived state aur controlled forms implement karo.
+summary: State setter update schedule karta hai; functional updater pending state se next value nikalta hai.
 tags: state, forms, immutability, batching, derived-state
 visual: react-render
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Har render ko state ka snapshot milta hai. Setter current local variable ko turant change nahi karta; future render ke liye update queue karta hai. State ka owner woh closest common component hona chahiye jise value read/update karni hai. Jo value existing props/state se calculate ho sakti hai, uski duplicate state frequently unnecessary hoti hai.
 
-> **Core takeaway:** A state setter schedules work; functional updates express changes relative to pending state.
+> **Core takeaway:** State setter update schedule karta hai; functional updater pending state se next value nikalta hai.
 
 ## A controlled reading filter
 
@@ -161,7 +161,7 @@ Do dependent fields ho, jaise "country" select aur uske hisaab se "state/city" o
 
 Study goal form banao with title, minutes aur track. Blank title reject karo, pending state show karo aur failed save ke baad typed values preserve karo. Reset button implement karo. Explain karo ki `isValid` state rakhna necessary hai ya derived calculation enough hai. Ek quantity stepper banao jisme rapid double-click se do increments reliably apply hon, aur demonstrate karo ki plain `count + 1` version kaise ek increment "kho" deta hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. State lift kab karoge?** Jab siblings ko coordinated value chahiye; unnecessary global state banaane ki need nahi.
 
@@ -169,7 +169,7 @@ Study goal form banao with title, minutes aur track. Blank title reject karo, pe
 
 ## Research notes: Represent coherent request states
 
-Independent booleans can allow contradictory loading and success states. Store a coherent status and derive display flags.
+Independent loading/success booleans contradictory combination allow karti hain. Coherent status store karo aur display flags derive karo.
 
 ```jsx
 const [request, setRequest] = useState({ status: 'idle' });
@@ -178,28 +178,28 @@ const busy = request.status === 'loading';
 // setRequest({ status: 'error', message });
 ```
 
-Store a selected ID instead of duplicating the selected record. Derive that record from the current collection so an edit cannot leave stale copies.
+Selected record duplicate store karne ke bajay selected ID rakho. Current collection se record derive karo taaki edits ke baad stale copy na bache.
 
-**Interview check:** Should every field be merged into one state object?
+**Interview check:** Kya har field ek state object mein merge karni chahiye?
 
-**Answer:** No. Group values that change together and keep independent values separate when clearer. The goal is coherent transitions and less synchronization, not a particular object count.
+**Answer:** Nahi. Saath badalne wali values group karo; independent values separate rakhna clearer ho toh waise rakho. Goal coherent transitions aur less synchronization hai, fixed object count nahi.
 
-**Practice:** Draw allowed form transitions including retry and cancellation.
+**Practice:** Form ke allowed transitions mein retry/cancellation bhi draw karo.
 
-[Read the source — React](https://react.dev/learn/choosing-the-state-structure). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — React](https://react.dev/learn/choosing-the-state-structure). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Starting at zero, call `setCount(count + 1)` twice in one click handler. Compare with calling `setCount(n => n + 1)` twice.
+**Apply:** Zero se start karke ek click handler mein `setCount(count + 1)` do baar call karo. `setCount(n => n + 1)` do baar se compare karo.
 
-> **Hint:** Both direct expressions read the same render snapshot.
+> **Hint:** Dono direct expressions same render snapshot padhti hain.
 
-**Answer guide — compare after attempting:** The direct updates result in 1; functional updates result in 2. Each updater receives the pending result of the previous updater. Use this form when the next value depends on the previous one; keep updater functions pure.
+**Answer guide — compare after attempting:** Direct updates se 1, functional updates se 2 milega. Har updater ko previous updater ka pending result milta hai. Next value previous value par depend ho toh functional form use karo; updater pure rakho.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [React state as a snapshot](https://react.dev/learn/state-as-a-snapshot) queued updates explain karta hai. [React choosing state structure](https://react.dev/learn/choosing-the-state-structure) derived state aur contradictory states discuss karta hai.

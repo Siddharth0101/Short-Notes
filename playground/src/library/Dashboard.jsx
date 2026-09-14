@@ -12,7 +12,7 @@ function HeroDiagram() {
       <div className="orbit orbit-two" />
       <div className="diagram-center">
         <Icon name="layers" size={38} />
-        <span>connect the dots.</span>
+        <span>concepts ko jodo.</span>
       </div>
       <span className="floating-node node-js">JS</span>
       <span className="floating-node node-react">
@@ -25,7 +25,7 @@ function HeroDiagram() {
         <Icon name="database" size={25} />
       </span>
       <div className="diagram-caption">
-        <span /> LESS MEMORIZING. MORE UNDERSTANDING.
+        <span /> SAMJHO, EXAMPLE BANAO, KHUD KARO.
       </div>
     </div>
   );
@@ -54,7 +54,7 @@ export function TrackCard({ track, index }) {
           <Icon name="book" size={14} /> {chapters.length} chapters
         </span>
         <span>
-          {complete > 0 ? `${complete} completed` : 'View course syllabus'}
+          {complete > 0 ? `${complete} completed` : 'Course syllabus dekho'}
           <Icon name="arrow" size={15} />
         </span>
       </div>
@@ -76,42 +76,42 @@ export default function Dashboard() {
   return (
     <div className="dashboard page-enter">
       <div className="page-eyebrow">
-        <span className="small-line" /> YOUR PERSONAL KNOWLEDGE LIBRARY
+        <span className="small-line" /> TUMHARI PERSONAL STUDY LIBRARY
       </div>
       <div className="page-heading">
         <div>
           <h1>
-            A little clearer, every day<span>.</span>
+            Har din thoda aur clear<span>.</span>
           </h1>
-          <p>Your notes, connected. Your next breakthrough, one concept away.</p>
+          <p>Simple Hinglish, step-by-step examples aur deep explanations.</p>
         </div>
         <Link className="subtle-button" to="/paths">
-          My learning paths <Icon name="arrow" size={16} />
+          Mera learning route <Icon name="arrow" size={16} />
         </Link>
       </div>
       <section className="hero-panel">
         <div className="hero-copy">
           <span className="hero-pill">
-            <span /> BUILT FOR YOUR DEVELOPER JOURNEY
+            <span /> BASICS SE PRODUCTION TAK
           </span>
           <h2>
-            Don’t just learn it.
+            Concept ko samjho.
             <br />
-            <em>Make it click.</em>
+            <em>Khud karke dekho.</em>
           </h2>
           <p>
-            From “yeh kaise kaam karta hai?” to “I’ve got this.”
-            <br className="desktop-br" /> Clear notes, visual explanations, and practice that
-            sticks.
+            “Yeh kaise chalta hai?” se “Ab main samjha sakta hoon!” tak.
+            <br className="desktop-br" /> Easy notes, visual examples aur practice se concepts pakke
+            karo.
           </p>
           <div className="hero-actions">
             <Link className="primary-button" to={next ? `/notes/${next.id}` : '/paths'}>
               <Icon name="book" size={17} />
-              {recent.length ? 'Continue learning' : 'Start learning'}
+              {recent.length ? 'Padhna continue karo' : 'Padhna shuru karo'}
               <Icon name="arrow" size={17} />
             </Link>
             <Link className="text-button" to="/visuals">
-              <Icon name="play" size={16} /> Explore visual lab
+              <Icon name="play" size={16} /> Visual lab kholo
             </Link>
           </div>
           <div className="hero-footnote">
@@ -120,7 +120,7 @@ export default function Dashboard() {
               <i>R</i>
               <i>J</i>
             </span>
-            <span>Your entire stack. One thoughtful space.</span>
+            <span>Poora stack, ek jagah, apni language mein.</span>
           </div>
         </div>
         <HeroDiagram />
@@ -150,12 +150,12 @@ export default function Dashboard() {
         <div className="section-heading">
           <div>
             <h2>
-              Find your next rabbit hole<span className="heading-dot">.</span>
+              Agla subject chuno<span className="heading-dot">.</span>
             </h2>
-            <p>Six subjects. A whole lot of “aha!” moments.</p>
+            <p>Har subject ko basics se advanced tak samjho.</p>
           </div>
           <Link className="text-button" to="/library">
-            View all notes <Icon name="arrow" size={16} />
+            Saare notes dekho <Icon name="arrow" size={16} />
           </Link>
         </div>
         <div className="track-grid">
@@ -170,14 +170,14 @@ export default function Dashboard() {
             <span className="card-overline">
               <Icon name="play" size={14} /> THE VISUAL LAB
             </span>
-            <h3>Some things are better seen.</h3>
+            <h3>Dekhkar concept aur clear hota hai.</h3>
             <p>
-              Slow down the event loop. Watch React render.
+              Event loop slow karke dekho. React render trace karo.
               <br />
-              Make the invisible, visible.
+              Andar ka mechanism step-by-step samjho.
             </p>
             <span className="text-button">
-              Let’s see how it works <Icon name="arrow" size={16} />
+              Dekho kaise kaam karta hai <Icon name="arrow" size={16} />
             </span>
           </div>
           <div className="mini-bars" aria-hidden="true">
@@ -190,22 +190,22 @@ export default function Dashboard() {
           <span className="card-overline">
             <Icon name="messages" size={14} /> INTERVIEW, WITH CONFIDENCE
           </span>
-          <h3>Know it. Explain it. Own it.</h3>
+          <h3>Samjho. Samjhao. Practice karo.</h3>
           <p>
-            Thoughtful questions, clear answers, and follow-ups
+            Questions, clear Hinglish answers aur follow-ups
             <br />
-            that help you go one level deeper.
+            se understanding aur deep karo.
           </p>
           <span className="text-button">
-            Start a practice session <Icon name="arrow" size={16} />
+            Practice session shuru karo <Icon name="arrow" size={16} />
           </span>
         </Link>
       </section>
       <section className="practice-paths">
         <div className="section-heading">
           <div>
-            <h2>Build it. Break it. Explain it.</h2>
-            <p>Go from revision notes to a realistic interview round.</p>
+            <h2>Banao. Galti pakdo. Samjhao.</h2>
+            <p>Revision ke baad realistic interview round attempt karo.</p>
           </div>
         </div>
         <div className="practice-path-grid">
@@ -227,7 +227,7 @@ export default function Dashboard() {
             [
               '03',
               'Algorithm reasoning',
-              'Trace candidates → prove invariants → test edge cases',
+              'Candidates trace → invariant prove → edge cases test karo',
               'dsa-monotonic-stack-lab',
               'dsa',
             ],
@@ -237,10 +237,10 @@ export default function Dashboard() {
               <h3>{title}</h3>
               <p>{description}</p>
               <Link className="text-button" to={`/notes/${id}`}>
-                Open practical notes <Icon name="arrow" size={15} />
+                Practical notes kholo <Icon name="arrow" size={15} />
               </Link>
               <Link className="text-button" to={`/interview?track=${track}`}>
-                Practice this subject <Icon name="messages" size={15} />
+                Is subject ki practice karo <Icon name="messages" size={15} />
               </Link>
             </article>
           ))}
@@ -249,8 +249,8 @@ export default function Dashboard() {
       {recent.length > 0 && (
         <section className="recent-section">
           <div className="section-heading">
-            <h2>Pick up where you left off</h2>
-            <span className="muted">Recently opened</span>
+            <h2>Jahan chhoda tha, wahan se padho</h2>
+            <span className="muted">Abhi khole hue chapters</span>
           </div>
           {recent.map((note) => (
             <Link className="recent-row" key={note.id} to={`/notes/${note.id}`}>

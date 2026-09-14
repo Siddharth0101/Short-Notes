@@ -5,7 +5,7 @@ export const TRACKS = [
     symbol: 'JS',
     color: 'var(--track-javascript)',
     tint: 'var(--tint-javascript)',
-    description: 'Understand the language behind the web.',
+    description: 'Web ke peeche ki language step-by-step samjho.',
     mentor: 'Jonas Schmedtmann · topic companion',
     topics: 'Fundamentals · async · the runtime',
     icon: 'code',
@@ -16,7 +16,7 @@ export const TRACKS = [
     symbol: '⚛',
     color: 'var(--track-react)',
     tint: 'var(--tint-react)',
-    description: 'Think in components. Build with confidence.',
+    description: 'Components mein socho aur khud UI banao.',
     mentor: 'Jonas Schmedtmann · topic companion',
     topics: 'Components · hooks · production apps',
     icon: 'react',
@@ -27,7 +27,7 @@ export const TRACKS = [
     symbol: 'J',
     color: 'var(--track-java)',
     tint: 'var(--tint-java)',
-    description: 'Build a strong foundation in the Java language.',
+    description: 'Java ki strong foundation examples se banao.',
     mentor: 'Telusko · topic companion',
     topics: 'OOP · collections · JVM · concurrency',
     icon: 'coffee',
@@ -38,7 +38,7 @@ export const TRACKS = [
     symbol: 'SB',
     color: 'var(--track-spring-boot)',
     tint: 'var(--tint-spring-boot)',
-    description: 'Build, test and operate Java web applications.',
+    description: 'Java web app banao, test karo aur deploy samjho.',
     mentor: 'Spring documentation · practical learning path',
     topics: 'Dependency injection · REST · JPA · security',
     icon: 'layers',
@@ -49,7 +49,7 @@ export const TRACKS = [
     symbol: 'M',
     color: 'var(--track-mongodb)',
     tint: 'var(--tint-mongodb)',
-    description: 'Model data and build reliable backends.',
+    description: 'Data model samjho aur reliable backend banao.',
     mentor: 'Jonas Schmedtmann · topic companion',
     topics: 'Node.js · Express · MongoDB',
     icon: 'database',
@@ -61,7 +61,7 @@ export const TRACKS = [
     symbol: '⌘',
     color: 'var(--track-dsa)',
     tint: 'var(--tint-dsa)',
-    description: 'Learn the patterns behind the problems.',
+    description: 'Problems ke peeche ke patterns samjho.',
     mentor: 'Colt Steele · topic companion',
     topics: 'Patterns · trees · graphs · dynamic programming',
     icon: 'network',
@@ -72,7 +72,7 @@ export const TRACKS = [
     symbol: '◇',
     color: 'var(--track-system-design)',
     tint: 'var(--tint-system-design)',
-    description: 'Design the bigger picture, end to end.',
+    description: 'Requirements se recovery tak complete design samjho.',
     mentor: 'React frontend + Java backend',
     topics: 'Architecture · scale · real-world tradeoffs',
     icon: 'layers',
@@ -83,7 +83,7 @@ export const TRACKS = [
     symbol: '?',
     color: 'var(--track-interview)',
     tint: 'var(--tint-interview)',
-    description: 'Turn what you know into clear answers.',
+    description: 'Jo seekha usse clear answers mein explain karo.',
     mentor: 'Concepts · scenarios · follow-up questions',
     topics: 'Revision · machine coding · communication',
     icon: 'messages',
@@ -121,6 +121,15 @@ export function parseFrontmatter(raw) {
 }
 
 export function headingId(text) {
+  const originalAnchors = {
+    'Mental model — simple soch': 'mental-model',
+    'Common mistakes — in galtiyon se bacho': 'common-mistakes',
+    'Interview questions — bolkar practice karo': 'interview-questions',
+    'Sources — aur padhne ke liye': 'sources',
+    'Revision and practice lab — khud karke samjho': 'revision-and-practice-lab',
+    'Aage badhne se pehle check karo': 'check-before-moving-on',
+  };
+  if (originalAnchors[text]) return originalAnchors[text];
   return text
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')

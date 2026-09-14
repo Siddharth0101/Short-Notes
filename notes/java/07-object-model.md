@@ -5,15 +5,15 @@ track: java
 order: 7
 level: Foundation
 minutes: 19
-summary: Invariants, polymorphism aur value objects se maintainable Java models banao.
+summary: Identity puchti hai same object hai ya nahi; value equality puchti hai meaningful data same hai ya nahi. Hash collections mein equals/hashCode contract match hona chahiye.
 tags: oop, records, equality, interfaces
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Object sirf fields plus getters nahi hai. Achha object apne valid states protect karta hai. Bank balance private rakh kar unrestricted setter dena encapsulation ka purpose miss karta hai. Public methods domain actions express karein: deposit, reserve, cancel. Constructor ke baad instance valid ho, aur har method validity preserve kare.
 
-> **Core takeaway:** Value equality and identity answer different questions; hash-based collections need a matching equality contract.
+> **Core takeaway:** Identity puchti hai same object hai ya nahi; value equality puchti hai meaningful data same hai ya nahi. Hash collections mein equals/hashCode contract match hona chahiye.
 
 ## Composition and polymorphism
 
@@ -109,13 +109,13 @@ static String describe(PaymentResult result) {
 
 Sealed interface ke saath `switch` expression compiler-verified exhaustive hota hai — agar kal koi chautha variant `Pending` add karo aur `permits` list update karo, yeh `switch` bina `default` branch ke compile error dega jab tak naya case handle na ho. Yeh open interface/abstract class se bada advantage hai, jahan naya subtype silently existing switch statements mein `default` branch mein gir jaata.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Constructor ke andar overridable method call karna safe hai kyunki `this` fully constructed object hai. **Why it breaks:** Java superclass constructor pehle chalata hai; agar wahan se overridden method call hota hai, subclass ke fields abhi initialize hi nahi hue hote — override un fields ko unexpected default value (0/null) ke saath dekh sakta hai. **Fix:** Constructor se sirf `private`/`final` methods call karo, ya initialization ko factory method mein move karo.
 - **Wrong assumption:** `getClass()` aur `instanceof` equality check mein interchangeable hain. **Why it breaks:** `getClass()` exact-class match maangta hai, so ek valid subclass instance apne parent ke equal nahi maana jayega even with identical semantic value; `instanceof` yeh allow karta hai but symmetry todne ka risk laata hai agar subclass extra fields add kare. **Fix:** Value classes ko `final` rakho jab possible ho, taaki dono approaches equivalent ban jayein.
 - **Wrong assumption:** Enum sirf named constants hain, behavior nahi rakh sakta. **Why it breaks:** Enum constants apna khud ka method body override kar sakte hain (constant-specific class body), jisse switch-heavy code ki jagah polymorphic dispatch mil jaata hai — is capability ko ignore karna verbose switch statements ki taraf le jaata hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Abstract class versus interface?** Abstract class shared instance state aur constructor behavior model kar sakti hai; interface multiple implementation contracts allow karta hai. Default methods available hain, lekin unrelated behavior share karne ke liye giant interface banana poor design hai.
 
@@ -129,19 +129,19 @@ Sealed interface ke saath `switch` expression compiler-verified exhaustive hota 
 
 PaymentResult ko sealed success/failure variants se model karo. Ek mutable map key ka failing lookup demonstrate karo, phir immutable record key se correct karo. Test equality between independently constructed equal values. Phir ek `Money` class likho jisme `equals`/`hashCode` currency aur amount dono use karein, aur ek failing test likho jo sirf amount compare karne ki galti pakde.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Two independently created IDs contain the same text. Specify when they should compare equal and what happens if equals changes but hashCode does not.
+**Apply:** Do alag ID objects mein same text hai. Kab equal maane jayenge? equals badla lekin hashCode nahi badla toh kya ho sakta hai?
 
-> **Hint:** Equal objects must produce equal hash codes.
+> **Hint:** Equal objects ka hashCode equal hona zaroori hai; reverse guarantee nahi hai.
 
-**Answer guide — compare after attempting:** For a value ID, compare the text value and compute hashCode from the same stable fields. A HashSet should retain one logical ID. Test equal and unequal values. Violating the contract can make lookup and deduplication fail even when equals reports equality.
+**Answer guide — compare after attempting:** Value ID ke liye text compare karo aur same stable fields se hashCode nikalo. HashSet mein ek logical ID rehni chahiye. Equal aur unequal dono cases test karo. Contract tootne par equals true hone ke baad bhi lookup/deduplication fail ho sakti hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Object API contracts](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html)
 - [Records](https://dev.java/learn/records/)

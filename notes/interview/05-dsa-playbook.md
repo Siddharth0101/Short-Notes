@@ -5,16 +5,16 @@ track: interview
 order: 5
 level: Intermediate
 minutes: 31
-summary: Clarification se brute force, invariant, optimized code, and verification tak repeatable process banao.
+summary: Algorithm ko fast bolne se pehle prove karo ki woh requested answer sahi nikalta hai.
 tags: dsa, interview, problem-solving, complexity, practice
 visual: dynamic-programming
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Coding interview mein interviewer ko tumhara reasoning inspect karna hota hai. Har line narrate karne ke bajaye assumptions, invariant aur tradeoff communicate karo. Correct brute force ek useful baseline hai; optimization tab meaningful hai jab lost repeated work clearly identify kar sako.
 
-> **Core takeaway:** Algorithm answers should earn correctness before claiming efficiency.
+> **Core takeaway:** Algorithm ko fast bolne se pehle prove karo ki woh requested answer sahi nikalta hai.
 
 ## A 35-minute structure
 
@@ -86,49 +86,49 @@ Each 0–2 score: problem contract, correctness argument, implementation, comple
 
 ## Assessed mock: Algorithm reasoning round
 
-**Prompt:** Solve target-sum subarrays with negatives, then compare a shortest-path approach for weighted versus unweighted graphs.
+**Prompt:** Negatives ke saath target-sum subarrays solve karo; phir weighted/unweighted graph ke shortest-path approaches compare karo.
 
-**Round structure:** Spend 5 minutes clarifying requirements and assumptions, 20 minutes implementing or drawing the core flow, 10 minutes investigating failures, and 5 minutes defending tradeoffs. These are practice targets, not a claim about any company's interview format.
+**Round structure:** 5 minute requirements/assumptions clear karo, 20 minute core flow implement/draw karo, 10 minute failures inspect karo, aur 5 minute tradeoffs defend karo. Yeh practice timings hain; kisi company ke exact interview format ka claim nahi.
 
-**Failure injection:** Include repeated prefix sums, disconnected vertices, and a misleading first-discovered weighted path.
+**Failure injection:** Repeated prefix sums, disconnected vertices aur misleading first-discovered weighted path do.
 
-**Strong-answer evidence:** A stated invariant, a counterexample to the wrong approach, accurate complexity, and oracle checks.
+**Strong-answer evidence:** Invariant, wrong approach ka counterexample, accurate complexity aur reference-solver checks dikhao.
 
-Score each dimension from 0 to 2: correctness, concrete example, failure handling, and tradeoff reasoning. Zero means missing or incorrect; one means plausible but untested; two means demonstrated with a trace, test, or explicit invariant. A high total with a correctness gap still needs revision.
+Correctness, concrete example, failure handling aur tradeoff reasoning ko 0–2 score do. 0=missing/incorrect; 1=plausible par untested; 2=trace, test ya invariant se demonstrated. Total achha ho lekin correctness gap ho toh revision abhi bhi chahiye.
 
-After the round, write the smallest counterexample that broke your first approach, repair it, and explain the change aloud without notes. Use the chapter's answer-reveal questions for focused revision before repeating the mock.
+Round ke baad first approach todne wala smallest counterexample likho, fix karo aur notes dekhe bina change bolkar samjhao. Mock repeat karne se pehle chapter ke answer-reveal questions se focused revision karo.
 
 ## Research notes: Prove before optimizing
 
-Amazon emphasizes applying fundamentals to problems rather than memorizing details.
+Linked Amazon guidance fundamentals ko problems par apply karne par focus karti hai; sirf details ratna learning goal nahi hai.
 
-**Original practice round:** Find the first position where a sorted array is at least a target. State a half-open search interval and what remains possible after each iteration.
+**Original practice round:** Sorted array mein first position nikalo jahan value target se kam nahi. Half-open interval aur har iteration ke baad possible answer range define karo.
 
-**Failure injection:** Use empty input, all-equal values, a missing target and targets beyond both ends.
+**Failure injection:** Empty input, all-equal values, missing target aur dono ends ke bahar targets do.
 
-**Evidence to bring:** Trace the interval shrinking, justify each discarded region and state O(log n) time with constant auxiliary space. An output example alone is not a proof.
+**Evidence to bring:** Shrinking interval trace karo, discarded regions justify karo, O(log n) time aur constant auxiliary space explain karo. Ek output example full correctness proof nahi hai.
 
-The employer source supports the assessment approach; this exercise is original practice, not a reported company question.
+Employer source assessment approach ka reference hai. Yeh exercise original practice hai; reported company question nahi.
 
-**Interview check:** How should you review this round after attempting it?
+**Interview check:** Attempt ke baad is round ko review kaise karoge?
 
-**Answer:** Keep the first failing example, explain the mistaken assumption, and show how your repair changes the behavior. Separate what you demonstrated from what you would investigate with more time.
+**Answer:** First failing example save karo, wrong assumption batao aur fix se behavior kaise badla dikhao. Jo demonstrate kiya aur jo extra time mein investigate karoge, unhe clearly identify karo.
 
-**Practice:** Repeat with a different failure while explaining your reasoning aloud.
+**Practice:** Different failure ke saath repeat karo aur reasoning bolte jao.
 
-[Read the source — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** In eight minutes, solve first repeated value in a list, then defend complexity and test cases. How would your answer change if extra memory were forbidden?
+**Apply:** Aath minute mein list ki first repeated value nikalo; complexity aur test cases defend karo. Extra memory forbidden ho toh kya badlega?
 
-> **Hint:** Clarify whether modifying input is allowed and whether original scan order matters.
+> **Hint:** Input modify kar sakte ho ya nahi, aur original scan order important hai ya nahi, pehle clear karo.
 
-**Answer guide — compare after attempting:** A Set gives an expected O(n)-time, O(n)-space scan preserving first-repeat order. Test empty, distinct, and multiple repeated values. Without memory or mutation, repeated scans give O(n²) time and O(1) extra space. Sorting changes the order and therefore does not directly preserve the requested semantics.
+**Answer guide — compare after attempting:** Set scan expected O(n) time, O(n) space mein first-repeat order bachata hai. Empty, distinct aur multiple-repeat cases test karo. Extra memory aur mutation dono allowed na hon toh repeated scans O(n²) time, O(1) extra space lete hain. Sorting order badal deti hai, isliye first-repeat semantics directly preserve nahi hoti.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [Princeton's analysis](https://algs4.cs.princeton.edu/14analysis/) aur [graph traversal reference](https://algs4.cs.princeton.edu/41graph/) complexity and BFS properties support karte hain. The mock process and drills original practice material hain.

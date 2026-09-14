@@ -5,16 +5,16 @@ track: mongodb
 order: 7
 level: Advanced
 minutes: 35
-summary: Login, sessions, JWT, reset tokens aur resource-level authorization ko secure application flow mein model karo.
+summary: Private resource par server verified user identity se ownership enforce kare; submitted ownerId par bharosa mat karo.
 tags: authentication, authorization, jwt, sessions, security, passwords
 visual: request-flow
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Authentication identity establish karti hai; authorization decide karti hai ki identified user specific resource par action kar sakta hai. Login successful hona har record access ka permission nahi hai. Browser UI, API input aur stored data sab trust boundaries hain. Security ek middleware package install karne se complete nahi hoti; har boundary par explicit policy chahiye.
 
-> **Core takeaway:** Private-resource access must be scoped by authenticated ownership on the server.
+> **Core takeaway:** Private resource par server verified user identity se ownership enforce kare; submitted ownerId par bharosa mat karo.
 
 ## Authorize the resource in the query
 
@@ -66,7 +66,7 @@ HttpOnly cookie JavaScript reads prevent karti hai, lekin automatically every XS
 
 NoSQL injection avoid karne ke liye strict typed inputs aur explicit query construction use karo. Security headers, payload limits, dependency maintenance aur rate limiting defense layers hain. Proxy trust configuration blindly enable karne se client IP/secure-cookie assumptions wrong ho sakti hain. Secrets aur access tokens log na karo.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Login response time constant rakhna unnecessary hai — sirf password check "wrong" bolna kaafi hai. **Why it breaks:** Agar "user not found" aur "wrong password" alag response times/messages dete hain, attacker timing/response difference se valid usernames enumerate kar sakta hai, phir sirf un par targeted brute-force chala sakta hai. **Fix:** Generic error message aur roughly-constant response time rakho dono cases mein (jaise non-existent user ke liye bhi ek dummy hash-compare operation run karo).
 - **Wrong assumption:** HttpOnly cookie set kar dene se CSRF automatically solved ho jaata hai. **Why it breaks:** HttpOnly sirf JavaScript ko cookie read karne se rokta hai; browser phir bhi cross-site request ke saath cookie automatically attach karega, jo CSRF ka actual mechanism hai. **Fix:** SameSite attribute aur/ya explicit CSRF token defense alag se implement karo — HttpOnly aur CSRF protection do independent concerns hain.
@@ -76,7 +76,7 @@ NoSQL injection avoid karne ke liye strict typed inputs aur explicit query const
 
 Two-user test likho: user A user B ka topic read/update na kar sake. Expired session, modified token, duplicate reset attempt aur forbidden role change test karo. Har endpoint ke liye identity, permission aur ownership rule note karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. JWT encrypted hota hai?** Common signed JWT readable claims rakhta hai; signing tampering detect karti hai. Confidential claims ke liye separate encryption mechanism chahiye.
 
@@ -84,30 +84,30 @@ Two-user test likho: user A user B ka topic read/update na kar sake. Expired ses
 
 ## Research notes: Authorize both the action and its object
 
-Authentication identifies the caller. Authorization decides whether that caller can perform this action on this object, including tenant and ownership constraints. Check each request and deny when no rule permits access.
+Authentication caller identify karti hai. Authorization is object par yeh action allowed hai ya nahi decide karti hai, including tenant/ownership. Har request check karo; koi allow rule na mile toh deny karo.
 
-Original matrix: an owner edits a draft, a reviewer approves it, and an unrelated user does neither. A single logged-in check cannot describe this policy. Test each allowed and denied cell, including changing the object ID with a valid token.
+Policy matrix banao: owner draft edit, reviewer approve, unrelated user neither. Sirf logged-in check yeh policy express nahi karta. Har allowed/denied cell test karo; valid token ke saath object ID badalna bhi include karo.
 
-**Interview check:** Why is hiding an Approve button insufficient?
+**Interview check:** Approve button hide karna enough kyun nahi?
 
-**Answer:** A caller can submit HTTP directly. The server must enforce the action and resource policy independently of UI rendering.
+**Answer:** Caller direct HTTP request bhej sakta hai. Server action/resource policy ko UI se independently enforce kare.
 
-**Practice:** Revoke reviewer membership and retry with the existing session.
+**Practice:** Reviewer membership revoke karke existing session se retry karo.
 
-[Read the source — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A notes update endpoint accepts noteId and ownerId from the body. Explain the attack and rewrite the ownership rule.
+**Apply:** Update endpoint body se noteId aur ownerId leta hai. Attack samjhao aur ownership rule repair karo.
 
-> **Hint:** The caller can alter both submitted fields.
+> **Hint:** Caller dono fields edit karke bhej sakta hai.
 
-**Answer guide — compare after attempting:** Derive user identity from the verified session, and filter the update by note ID plus that identity. Allowlist editable fields so ownerId cannot be reassigned. Test user A attempting to edit user B's note and confirm no write occurs.
+**Answer guide — compare after attempting:** Verified session se user identity nikalo; note ID plus us identity se update filter karo. Editable fields allowlist karo taaki ownerId reassign na ho. User A se user B ka note edit karke test karo; koi write nahi honi chahiye.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [Express production security](https://expressjs.com/en/advanced/best-practice-security/) application hardening discuss karta hai. [OWASP authentication](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) aur [password storage guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) auth lifecycle ka reference hain.

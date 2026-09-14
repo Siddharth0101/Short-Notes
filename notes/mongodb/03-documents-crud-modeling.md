@@ -5,15 +5,15 @@ track: mongodb
 order: 3
 level: Foundation
 minutes: 28
-summary: Collections, BSON, CRUD operators aur embedding-versus-referencing ko actual access patterns se decide karo.
+summary: Documents ko read patterns aur bounded growth se model karo; single-document atomicity unrelated documents ko cover nahi karti.
 tags: mongodb, crud, bson, modeling, embedding, references
 ---
 
-## Mental model
+## Mental model — simple soch
 
 MongoDB document database hai. Collection related documents group karti hai aur BSON strings/numbers ke alawa ObjectId, dates aur other types support karta hai. Flexible schema ka matlab no data design nahi hai. Document shape ko actual read/write patterns, growth, ownership aur consistency requirements ke hisaab se choose karo. Application schema aur database validation dono data quality improve kar sakte hain.
 
-> **Core takeaway:** Model documents around reads and bounded growth; single-document atomicity does not cover unrelated documents.
+> **Core takeaway:** Documents ko read patterns aur bounded growth se model karo; single-document atomicity unrelated documents ko cover nahi karti.
 
 ## CRUD in mongosh
 
@@ -65,7 +65,7 @@ Atlas managed deployment option hai; Compass graphical exploration tool hai; mon
 
 Unbounded arrays document growth aur write contention create kar sakti hain. MongoDB document size limit ko schema planning mein consider karo. Missing field aur explicit null ke query semantics carefully inspect karo. Array ke multiple conditions same element par apply karni ho to `$elemMatch` relevant hai; independent dotted predicates different array elements se match ho sakti hain.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** "Document database hai to schema design ki zaroorat nahi, jo bhi shape aaye insert kar do." **Why it breaks:** Inconsistent document shapes application code ko har jagah defensive `if (field exists)` checks se bhar dete hain, aur query/index design impossible ho jaata hai jab same logical field alag-alag documents mein alag types/names mein ho. **Fix:** Application-level schema (Mongoose ya manual validation) aur/ya database-level `$jsonSchema` validator define karo, chahe fields optional hi kyun na hon.
 - **Wrong assumption:** Ek array field mein items push karte rehna hamesha safe hai kyunki MongoDB "flexible" hai. **Why it breaks:** Array unbounded grow kare to document ek din 16MB BSON limit ke paas pahunch sakta hai, aur har update poora document phir se disk par rewrite kar sakta hai — write latency degrade hoti hai jaise-jaise array badhta jaata hai. **Fix:** Growth ka realistic upper bound estimate karo; agar unbounded hai to separate collection with a reference field use karo.
@@ -75,7 +75,7 @@ Unbounded arrays document growth aur write contention create kar sakti hain. Mon
 
 Notes, users, bookmarks aur reading sessions ka model draw karo. Har relationship ke liye cardinality, read frequency aur maximum growth likho. Bookmark duplicate prevention ke liye compound unique index plan karo. Concurrent view increments run karke result compare karo.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. MongoDB joins support nahi karta?** Aggregation `$lookup` related data combine kar sakta hai; join availability aur ideal data model separate questions hain.
 
@@ -83,32 +83,32 @@ Notes, users, bookmarks aur reading sessions ka model draw karo. Har relationshi
 
 ## Research notes: Model bounded growth and data ownership
 
-Embedding can keep related data together for reading or atomic updates. References can separate lifecycles and avoid unbounded growth. Estimate growth before embedding an array.
+Embedding related data ko reads/atomic updates ke liye saath rakhti hai. References lifecycles separate aur unbounded growth avoid kar sakte hain. Array embed karne se pehle growth estimate karo.
 
-Original decision: an order's purchase-time address is bounded historical data; embedding it can make sense. A customer's entire activity history grows indefinitely and needs a separate or bounded storage model.
+Order ka purchase-time address bounded historical snapshot hai; embed karna useful ho sakta hai. Customer ki entire activity history indefinitely badhegi; separate/bounded storage model chahiye.
 
-For duplicated fields, decide whether each is historical fact or a cache that must follow changes.
+Duplicated field historical fact hai ya changes follow karne wali cache, har field ke liye decide karo.
 
-**Interview check:** Is every duplicated field a schema mistake?
+**Interview check:** Kya har duplicated field schema mistake hai?
 
-**Answer:** No. A deliberate snapshot or read optimization may justify duplication. Specify whether it is immutable history or cached data and define refresh behavior for the latter.
+**Answer:** Nahi. Deliberate snapshot ya read optimization duplication justify kar sakti hai. Immutable history ya cached data clearly identify karo; cache ka refresh rule define karo.
 
-**Practice:** Estimate the size of two years of customer activity.
+**Practice:** Customer ki two-year activity ka size estimate karo.
 
-[Read the source — MongoDB](https://www.mongodb.com/docs/manual/data-modeling/). Reviewed 13 September 2026; examples and exercises here are original.
+[Source yahan padho — MongoDB](https://www.mongodb.com/docs/manual/data-modeling/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** An article may receive millions of comments. Should all comments live in its document? Propose storage for a page of recent comments.
+**Apply:** Article par millions of comments aa sakte hain. Kya sab ek document mein embed karoge? Recent-comments page ke liye storage design do.
 
-> **Hint:** An unbounded child collection changes the embedding tradeoff.
+> **Hint:** Unbounded child collection embedding ke cost ko badal deti hai.
 
-**Answer guide — compare after attempting:** Store comments separately with article identity and a stable ordering field; index for the paginated query. A small bounded preview may be embedded if useful. Specify how it stays consistent. Avoid loading or rewriting the entire comment history for a single page.
+**Answer guide — compare after attempting:** Comments separate store karo, article identity aur stable ordering field rakho, paginated query ka index banao. Useful ho toh small bounded preview embed karo aur consistency rule batao. Ek page ke liye entire comment history load/rewrite mat karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MongoDB CRUD operations](https://www.mongodb.com/docs/manual/crud/) command semantics ka reference hai. [MongoDB data modeling](https://www.mongodb.com/docs/manual/data-modeling/) access-pattern-based schema design explain karta hai.

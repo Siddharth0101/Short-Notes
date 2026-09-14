@@ -5,21 +5,21 @@ track: system-design
 order: 6
 level: Advanced
 minutes: 25
-summary: Design a React catalog with accessible interaction and measurable delivery budgets.
+summary: Design round mein component boxes ke saath contracts aur failure behavior explain karna hota hai.
 tags: frontend, react, system-design, accessibility, caching
 ---
 
-## Mental model
+## Mental model — simple soch
 
-Frontend system design is the design of a user-visible distributed client. Browser storage, network, rendering, accessibility and API contracts all participate. Start with a user journey and make each architecture choice explain a requirement. A component diagram without loading, error and stale-data behavior is incomplete.
+Frontend system design user-visible distributed client ka design hai. Browser storage, network, rendering, accessibility aur API contracts saath work karte hain. User journey se start; har choice ko requirement se justify karo. Loading/error/stale-data ke bina component diagram incomplete hai.
 
-> **Core takeaway:** A design round needs contracts and failure behavior alongside component boxes.
+> **Core takeaway:** Design round mein component boxes ke saath contracts aur failure behavior explain karna hota hai.
 
 ## Design brief and assumptions
 
-Design a searchable learning catalog with shareable filters, paginated results and saved topics. Assume mobile browsers, unreliable networks and authenticated users. For an interview exercise, propose a 200ms local interaction budget and measure real devices before treating it as an achieved target. Clarify which pages need search-engine discoverability and which data is private.
+Shareable filters, pagination aur saved topics wala catalog design karo. Mobile, unreliable networks aur authenticated users assume karo. Practice ke liye 200ms local interaction budget propose karo; real-device measurement se pehle achieved target mat bolo. Discoverable pages aur private data clarify karo.
 
-Use URL parameters for shareable query and filters. Use local state for open panels and an unsaved input draft. Use a server-state cache for result pages and saved-topic mutations. Separate these ownership boundaries so browser Back restores a meaningful view without maintaining three competing copies of the same filter.
+Shareable query/filters URL mein; open panels/unsaved input local state mein; result pages/saved mutations server cache mein. Owners separate rakho taaki Back meaningful view restore kare aur same filter ki three competing copies na hon.
 
 ## Contract and component boundary
 
@@ -35,42 +35,42 @@ GET /topics?q=...&category=...&cursor=...
 → { items, nextCursor, version }
 ```
 
-A cache key includes every input that changes the response, including relevant user or tenant identity. Reset pagination when filters change. Abort obsolete requests and guard result ownership. A successful save can update one item immediately, then reconcile server truth; concurrent optimistic operations need operation-aware rollback rather than restoring an old whole-list snapshot.
+Cache key mein result-affecting all inputs, user/tenant bhi. Filters change par pagination reset. Obsolete requests abort aur ownership guard. Save ek item optimistically update karke server se reconcile kar sakta hai; concurrent rollback operation-aware ho, old whole-list snapshot restore na kare.
 
 ## Rendering and accessibility
 
-Choose server rendering for discoverable initial content when justified. Hydration expects matching initial markup and data; random IDs or browser-only state during the first render can create mismatches. Private data must not leak through shared caches.
+Discoverable content ke liye justified ho toh SSR lo. Hydration initial markup/data match expect karti hai; random IDs/browser-only initial state mismatch la sakti hai. Shared cache se private data leak na ho.
 
-Virtualization bounds mounted rows, but needs a deliberate keyboard and assistive-technology plan. Pagination can be simpler for a catalog. Preserve focus after a save or error and announce result updates appropriately. A search box is not automatically a combobox; add suggestion semantics only when the interaction actually implements them.
+Virtualization mounted rows bound karti hai; keyboard/assistive-tech plan chahiye. Catalog mein pagination simpler ho sakti hai. Save/error ke baad focus preserve aur result updates announce karo. Search input automatically combobox nahi; real suggestions behavior ho tab semantics add karo.
 
 ## Failure and measurement plan
 
-Measure navigation delivery separately from interaction delay and API latency. Test a slow response, stale cached results, logout in another tab and a failed lazy chunk. Give users a recovery path that does not silently discard drafts. Bound persistent cache size and document whether offline access includes private content.
+Navigation delivery, interaction delay aur API latency separately measure karo. Slow response, stale cache, other-tab logout aur failed lazy chunk test karo. Draft silently discard kiye bina recovery do. Persistent cache bound aur private offline access policy define karo.
 
-A CDN improves delivery of public static assets; it does not repair expensive client filtering or a blocking API. Add prefetch only when expected navigation benefit justifies bandwidth, especially on mobile. Report a specific before/after trace rather than a generic claim that memoization made the app fast.
+CDN public static assets delivery improve karta hai; costly local filter/blocking API fix nahi. Mobile bandwidth ke against expected benefit justify karke prefetch add karo. “Memoization se fast” bolne ke bajay specific before/after trace do.
 
 ## Practice
 
-Spend five minutes clarifying requirements, ten on the API/state diagram, ten on race and failure cases, and five on measurement. Change the requirement to ten million searchable topics: move filtering to the backend, limit page size and explain query cancellation and cursor semantics. Then change it to a fully offline personal notebook and identify which decisions reverse.
+5 minute requirements, 10 API/state diagram, 10 races/failures, 5 measurement do. Ten million topics par filtering backend, page size bound, cancellation/cursor explain karo. Phir fully offline personal notebook requirement se kaunse decisions reverse honge, batao.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
-**Would microfrontends help?** Only if organizational ownership and independent delivery benefits justify integration, dependency and UX consistency costs.
+**Microfrontends help karengi?** Tab jab independent ownership/delivery benefit integration, dependencies aur UX consistency cost justify kare.
 
-**What is your first deep dive?** Choose the highest-risk user requirement, such as request races or large-list responsiveness, instead of listing every technology you know.
+**First deep dive kya?** Highest-risk requirement choose karo, jaise races ya large-list responsiveness; every known technology list mat karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Design a searchable catalog that works when the next page fails. Specify the visible state and retry boundary.
+**Apply:** Searchable catalog ki next page fail ho jaati hai. Visible state aur retry boundary define karo.
 
-> **Hint:** Existing successful data need not disappear because a later request fails.
+> **Hint:** Later request fail hone se already-successful data hatana zaroori nahi.
 
-**Answer guide — compare after attempting:** Keep current results visible, show a page-specific failure, and retry that page with the same query identity. Clarify pagination consistency, loading announcements, and duplicate-row handling. Demonstrate rapid filter changes and a failed retry; use a deterministic fake API to review behavior.
+**Answer guide — compare after attempting:** Current results visible rakho; page-specific error dikhao aur same query identity se woh page retry karo. Pagination consistency, loading announcements aur duplicate rows handle karo. Rapid filters aur failed retry ko deterministic fake API se demonstrate karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
-[React state structure](https://react.dev/learn/choosing-the-state-structure) and [WAI combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) support the state and interaction contracts.
+[React state structure](https://react.dev/learn/choosing-the-state-structure) aur [WAI combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) mein state/interaction contracts padho.

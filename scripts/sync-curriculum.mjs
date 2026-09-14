@@ -20,24 +20,24 @@ for (const track of TRACKS) {
 }
 const assigned = new Set();
 const outputs = new Map();
-const studyRoutine = "Each chapter includes a core takeaway and a revision lab with a challenge, hint, answer guide and exit check. Use the [study guide](STUDY_GUIDE.md) for session plans and self-review.\n\n";
+const studyRoutine = "Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](STUDY_GUIDE.md) padho.\n\n";
 let index =
-  "# Course syllabus — start here\n\nEach subject follows a prerequisite-based sequence. Read lesson 01, continue in number order, and complete each stage checkpoint. The app, filenames and this index share the same order. Original source folders remain reference material, not a second course sequence.\n\n**Choose your route:** JavaScript → React → frontend system design; Java → Spring → backend system design. Begin DSA after JavaScript functions and arrays. Begin Node/MongoDB after JavaScript async and modules. Interview playbooks come after the corresponding subject.\n\nSee [course coverage](COURSE_COVERAGE.md) for instructor context and lecture-audit limits.\n\n";
+  "# Poora course syllabus — yahan se shuru karo\n\nHar subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se number order follow karo; stage checkpoint khud complete karke aage badho. App, filenames aur index ka order same hai. Numbered source folders related examples/reference hain.\n\n**Apna route chuno:** JavaScript → React → frontend system design; Java → Spring → backend system design. JS functions/arrays ke baad DSA start karo. Async/modules ke baad Node/MongoDB. Related subject padhkar interview playbook karo.\n\nInstructor context aur lecture mapping ki limits [course coverage](COURSE_COVERAGE.md) mein padho.\n\n";
 index += studyRoutine;
 for (const track of TRACKS) {
   const course = curriculum[track.id];
   if (!course) throw new Error(`Missing course ${track.id}`);
-  let courseText = `# ${track.name} — ordered course\n\n[All courses](../README.md)\n\n`;
-  let section = `## ${track.name}\n\n[Open this course syllabus](${track.id}/README.md)\n\n`;
+  let courseText = `# ${track.name} — step-by-step course\n\n[Saare courses](../README.md)\n\n`;
+  let section = `## ${track.name}\n\n[Is course ka syllabus kholo](${track.id}/README.md)\n\n`;
   const prerequisiteText = course.prerequisites.length
-    ? `${track.id === "interview" ? "Readiness references for the matching subject" : "Before starting"}: ${course.prerequisites
+    ? `${track.id === "interview" ? "Apne subject ke liye pehle yeh padho" : "Shuru karne se pehle"}: ${course.prerequisites
         .map((id) => {
           const n = chapters.get(id);
           if (!n) throw new Error(`Unknown prerequisite ${id}`);
           return `[${n.title}](${n.source})`;
         })
         .join(" · ")}.\n\n`
-    : "No prior programming course required. Start with lesson 01.\n\n";
+    : "Pehle programming course ki zaroorat nahi. Lesson 01 se start karo.\n\n";
   section += prerequisiteText;
   courseText += prerequisiteText.replace(/\]\(([^)]+)\)/g, "](../$1)");
   courseText += studyRoutine.replace("(STUDY_GUIDE.md)", "(../STUDY_GUIDE.md)");
@@ -60,7 +60,7 @@ for (const track of TRACKS) {
       section += `${order}. [${note.title}](${note.source})\n`;
       courseText += `${order}. [${note.title}](${note.file})\n`;
     }
-    const checkpoint = `\n**Stage checkpoint:** ${stage.checkpoint}\n\n`;
+    const checkpoint = `\n**Stage checkpoint — khud karke dikhao:** ${stage.checkpoint}\n\n`;
     section += checkpoint;
     courseText += checkpoint;
   }
@@ -70,12 +70,12 @@ for (const track of TRACKS) {
 if (assigned.size !== chapters.size)
   throw new Error("Unassigned chapters in curriculum");
 index +=
-  "## Existing source references\n\n- [JavaScript](../01_JavaScript/README.md)\n- [DSA](../02_Dsa/README.md)\n- [Frontend and React](../03_Frontend/README.md)\n- [Node, databases, and Java](../04_Backend/README.md)\n- [Interview playgrounds](../05_Interview/README.md)\n- [System design](../06_System_Design/README.md)\n";
+  "## Related source examples\n\n- [JavaScript](../01_JavaScript/README.md)\n- [DSA](../02_Dsa/README.md)\n- [Frontend aur React](../03_Frontend/README.md)\n- [Node, databases aur Java](../04_Backend/README.md)\n- [Interview playgrounds](../05_Interview/README.md)\n- [System design](../06_System_Design/README.md)\n";
 outputs.set("notes/README.md", index);
 const coverage =
-  "# Course coverage and reading order\n\nThe definitive reading order is the [course syllabus](README.md). Each course now has numbered stages, prerequisites, lessons and checkpoints. Chapter filenames and frontmatter order match this syllabus; stable chapter IDs preserve app bookmarks and links.\n\nJavaScript starts with variables, types/operators, decisions, loops, functions, and arrays/objects before collections and scope. Java starts with a runnable program, typed variables, control flow, methods/arrays and classes before advanced core Java and Spring. React begins with JSX/props and state. DSA introduces linear structures and hashing before patterns, then recursion, sorting, trees, heaps, graphs and DP. Node/MongoDB progresses through HTTP, Express, documents, schemas, query performance, security and deployment. System design separates shared foundations, React architecture, Java architecture and integrated case studies.\n\n## Instructor context\n\nThese original study notes are topic companions to Jonas Schmedtmann’s JavaScript, React and Node/MongoDB courses, Telusko’s Java material, and Colt Steele’s DSA material. Exact enrolled editions and complete lecture lists were not supplied. This is a prerequisite-based learning order, not a verified reproduction of an instructor’s every lecture. The 11 new beginner lessons fill learning prerequisites; they are not claims about additional course lectures.\n\n## Course maps\n\n" +
+  "# Course coverage aur padhne ka order\n\nPadhne ka order [course syllabus](README.md) mein hai. Har course ke numbered stages, prerequisites, lessons aur checkpoints follow karo. Stable chapter IDs bookmarks/links preserve karte hain.\n\nJavaScript mein variables se async/tooling, Java mein first program se concurrency, React mein JSX se production tak seekho. DSA mein basic structures se patterns, recursion, trees, graphs aur DP tak badho. Node/MongoDB mein HTTP se deployment; system design mein requirements, frontend/backend aur integrated cases padho. Har stage previous foundation par build hoti hai.\n\n## Instructor references ka matlab\n\nYeh original notes Jonas Schmedtmann ke JavaScript/React/Node, Telusko ke Java aur Colt Steele ke DSA topics ke companions hain. Exact enrolled editions aur complete lecture lists supplied nahi thi. Repo ka syllabus ordered hai, lekin instructor ki har lecture ka verified reproduction claim nahi hai. Beginner lessons learning prerequisites fill karti hain.\n\n## Har course ka map\n\n" +
   TRACKS.map((track) => `- [${track.name}](${track.id}/README.md)`).join("\n") +
-  "\n\n## Verification still needed for every-lecture coverage\n\nRecord the exact course URL, edition/update date, section title and lecture title from the enrolled syllabus. Map each lecture to covered, partial, practice-only or pending. Instructor projects and exercise variants have not been reproduced wholesale. Existing source notes and PDFs remain preserved under their original numbered folders. Technical chapters include official documentation for further study.\n";
+  "\n\n## Har instructor lecture verify karne ke liye kya chahiye\n\nExact course URL, edition/update date, section aur lecture titles enrolled syllabus se chahiye. Har lecture ko covered/partial/practice-only/pending map karna hoga. Instructor projects/exercises wholesale reproduce nahi kiye gaye. Original PDF slides reference files hain; Hinglish teaching chapters notes/ mein padho. Further study ke official links har chapter mein hain.\n";
 outputs.set("notes/COURSE_COVERAGE.md", coverage);
 const check = process.argv.includes("--check");
 for (const [file, content] of outputs) {

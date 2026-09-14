@@ -5,15 +5,15 @@ track: java
 order: 12
 level: Intermediate
 minutes: 18
-summary: Repeatable builds aur behavior-focused tests ke saath reliable feedback lo.
+summary: Useful test observable contract check karta hai aur plausible bug pakad sakta hai.
 tags: maven, junit, testing, build
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Build tool source ko repeatable artifact mein convert karta hai. Test suite change ke impact par feedback deti hai. Dono tab useful hain jab developer machine aur CI same declared inputs use karein. Undocumented global dependencies ya only-IDE configuration reproducibility break karte hain.
 
-> **Core takeaway:** A useful test observes a contract and catches a plausible regression.
+> **Core takeaway:** Useful test observable contract check karta hai aur plausible bug pakad sakta hai.
 
 ## Maven lifecycle and dependencies
 
@@ -93,7 +93,7 @@ Test order dependence hidden shared state suggest karti hai. Transactional test 
 
 CI pipeline mein `./mvnw verify` typically unit tests, integration tests aur static analysis sabko chalata hai before merge — matching production database ke against integration tests (Testcontainers jaisा tool) in-memory H2 substitute se zyada reliable signal dete hain kyunki vendor-specific SQL functions, constraint behavior aur isolation semantics H2 mein different ho sakte hain. Flaky tests (jo kabhi pass kabhi fail hoti hain bina code change ke) usually hidden shared state, unseeded randomness ya real system clock dependency se aati hain — inhe "just rerun karo" bolna root cause ko permanently hide kar deta hai.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Unit versus integration test?** Unit narrow behavior isolate karta hai; integration interacting components and infrastructure contract validate karta hai. Classification speed se alone nahi hoti.
 
@@ -105,19 +105,19 @@ CI pipeline mein `./mvnw verify` typically unit tests, integration tests aur sta
 
 Pricing rule ke boundary tests likho. One duplicate insert integration test add karo. Build ko clean checkout mein run karke missing assumptions identify karo. Report exact command and meaningful coverage, sirf "tested" nahi. Phir ek mock-heavy test likho jo internal method calls over-verify karta ho, refactor karke usse output-based assertion mein convert karo, aur dikhao ki test ab implementation-detail-independent hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A pricing method applies a discount only when quantity is at least 10. Select three tests and explain which bug each detects.
+**Apply:** Quantity kam-se-kam 10 ho tab discount milta hai. Teen tests choose karo aur har test ka purpose samjhao.
 
-> **Hint:** Test immediately below, at, and above the threshold.
+> **Hint:** Boundary se just neeche, boundary par aur just upar test karo.
 
-**Answer guide — compare after attempting:** Quantities 9, 10, and 11 cover no discount, threshold inclusion, and continued eligibility. Assert exact expected prices under the chosen currency representation. A test that computes its expected value by calling the same pricing helper repeats the implementation instead of independently checking it.
+**Answer guide — compare after attempting:** 9 par no discount, 10 par discount start, 11 par discount continue hona chahiye. Chosen currency representation mein exact expected prices assert karo. Expected answer bhi same pricing helper se nikaloge toh test independently correctness check nahi karega.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [Maven lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
 - [JUnit user guide](https://docs.junit.org/current/user-guide/)

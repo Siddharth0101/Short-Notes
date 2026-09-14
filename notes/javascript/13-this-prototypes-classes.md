@@ -5,15 +5,15 @@ track: javascript
 order: 13
 level: Intermediate
 minutes: 24
-summary: Call-site binding, prototype delegation, constructors aur composition ka difference samjho.
+summary: Regular function ka receiver call site se decide hota hai; method extract karne par original receiver automatically saath nahi aata.
 tags: this, prototype, classes, oop, inheritance
 ---
 
-## Mental model
+## Mental model — simple soch
 
 Ordinary function mein `this` usually call ka receiver hota hai. Function kis object par originally stored tha, usse permanent binding create nahi hoti. Arrow function surrounding `this` capture karta hai. Prototype lookup mein object par property missing ho to next prototype par search hoti hai; object ke andar parent ki saari methods copy nahi hoti.
 
-> **Core takeaway:** For a regular function, the call site determines the receiver; extracting a method loses its original receiver.
+> **Core takeaway:** Regular function ka receiver call site se decide hota hai; method extract karne par original receiver automatically saath nahi aata.
 
 ## Predict the receiver
 
@@ -93,7 +93,7 @@ console.log(dog.hasOwnProperty("describe")); // false
 
 Methods mein arrow syntax unnecessarily use karne se per-instance functions create ho sakti hain. Object literal arrow method surrounding `this` lega, object khud nahi. `Object.freeze` shallow hai; nested object mutate ho sakta hai. Prototype mutate karke built-in behavior globally change karna debugging ko difficult banata hai.
 
-## Common mistakes
+## Common mistakes — in galtiyon se bacho
 
 - **Wrong assumption:** Ek bound function ko dobara `bind`/`call` karne se receiver change ho jayega. **Why it breaks:** Bound function ka `this` permanently fix ho chuka hota hai; second `bind`/`call`/`apply` silently ignore ho jaata hai. **Fix:** Agar dusra receiver kabhi chahiye ho, original unbound function ka reference alag se rakho.
 - **Wrong assumption:** `extends` use karne se parent ki private fields (`#field`) subclass directly access kar sakti hai. **Why it breaks:** Private fields class-body-scoped hain; subclass unhe directly padh/likh nahi sakti, sirf parent ke expose kiye hue public method/getter se. **Fix:** Protected-jaisa access chahiye to parent class mein ek getter/method expose karo jo private field return kare.
@@ -105,24 +105,24 @@ Real app mein yeh pattern React class components (legacy) ke constructor mein ha
 
 ReadingList mein duplicate prevention aur remove method add karo. Snapshot mutate karke verify karo ki internal array safe hai. Phir class ki jagah closure factory implement karke compare karo: shared methods, private state aur ergonomics mein kya tradeoff hai?
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Class aur prototype unrelated systems hain?** Nahi. JavaScript classes prototype-based object model par language syntax aur extra rules add karti hain.
 
 **Q. Arrow function ko bind se new `this` de sakte hain?** Nahi. Uska `this` lexical hota hai; call/apply/bind us receiver ko replace nahi karte.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** In strict mode, extract `const read = account.read` from a method returning `this.balance`. Why does `read()` fail, and how can it remain attached to the account?
+**Apply:** Strict mode mein `const read = account.read` nikala; method `this.balance` return karta hai. `read()` kyun fail hoga aur account se attach kaise rakhenge?
 
-> **Hint:** Compare a property call with a standalone call.
+> **Hint:** Property call aur standalone call compare karo.
 
-**Answer guide — compare after attempting:** `account.read()` supplies the account as receiver; standalone `read()` has undefined `this` in strict mode and accessing balance throws. Use `account.read.bind(account)` or a wrapper that calls `account.read()`. An arrow method has different receiver semantics.
+**Answer guide — compare after attempting:** `account.read()` account ko receiver deta hai. Standalone `read()` mein strict mode ka this undefined hai, isliye balance access throw karega. `account.read.bind(account)` ya `() => account.read()` use karo. Arrow method ke this rules alag hain.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [MDN working with objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects) object behavior explain karta hai. [MDN classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) class-specific semantics ka reference hai.

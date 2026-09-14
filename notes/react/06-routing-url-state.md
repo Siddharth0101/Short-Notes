@@ -5,15 +5,15 @@ track: react
 order: 6
 level: Intermediate
 minutes: 26
-summary: Route trees, params, search state, loaders, navigation aur authorization boundaries samjho.
+summary: Jo state refresh aur sharing ke baad bachni chahiye, uske liye URL useful owner hai.
 tags: router, url, loaders, navigation, routing
 ---
 
-## Mental model
+## Mental model — simple soch
 
 URL app state ka shareable address hai. Route path resource/page identify karta hai; search params filters, sort aur page jaise shareable view choices store kar sakte hain. Router URL ko component/layout tree se match karta hai. Local modal state ko har baar URL mein rakhna necessary nahi, lekin refresh/back/share behavior important ho to URL ownership consider karo.
 
-> **Core takeaway:** The URL is a useful owner for state that should survive refresh and sharing.
+> **Core takeaway:** Jo state refresh aur sharing ke baad bachni chahiye, uske liye URL useful owner hai.
 
 ## A nested route tree
 
@@ -124,24 +124,24 @@ E-commerce listing page mein filter (category, price range), sort order aur page
 
 `/topics?track=react&sort=minutes` page banao. Filter change, refresh, copy URL aur browser back se same view recover hona chahiye. Invalid topic id aur request cancellation cases handle karo. `useSearchParams` se ek page-number control banao jisme page filter change hone par 1 par reset ho jaaye, aur pagination click replace ke bajaye push kare (taaki back button page-by-page navigate kare).
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **Q. Filter Redux mein ya URL mein?** Shareable/navigation state ho to URL strong default hai. Ephemeral local UI state local rakho; same state ke two competing owners mat banao.
 
 **Q. ProtectedRoute backend security replace karta hai?** Nahi. Woh UX control hai; authorization server-side resource access par enforce hoti hai.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A search page has query, page number, selected row, and an unsaved editor draft. Choose URL state and define what happens to page when query changes.
+**Apply:** Search page par query, page number, selected row aur unsaved draft hain. URL mein kya rahega? Query change par page kya karega?
 
-> **Hint:** Separate shareable navigation from temporary editing.
+> **Hint:** Shareable navigation aur temporary editing ko alag samjho.
 
-**Answer guide — compare after attempting:** Put query and page in URL parameters; keep the unsaved draft locally or in a deliberate draft store. Row selection belongs in the URL only if it should be linkable. Reset page when query changes, validate malformed values, and verify browser Back restores the prior view.
+**Answer guide — compare after attempting:** Query/page URL params mein; unsaved draft local ya deliberate draft store mein rakho. Selected row tab URL mein ho jab linkable chahiye. Query change par page reset, malformed params validate, aur Back se previous view restore hona verify karo.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 [React Router Data Mode routing](https://reactrouter.com/start/data/routing) router setup ka reference hai. [React Router framework routing](https://reactrouter.com/start/framework/routing) nested route concepts aur mode-specific APIs explain karta hai.

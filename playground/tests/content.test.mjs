@@ -187,6 +187,21 @@ test('Original source conversion preserves Java code and strips only comment for
   ]);
 });
 
+test('Hinglish section titles preserve existing reader deep links', () => {
+  const titles = [
+    ['Mental model — simple soch', 'mental-model'],
+    ['Common mistakes — in galtiyon se bacho', 'common-mistakes'],
+    ['Interview questions — bolkar practice karo', 'interview-questions'],
+    ['Sources — aur padhne ke liye', 'sources'],
+    ['Revision and practice lab — khud karke samjho', 'revision-and-practice-lab'],
+    ['Aage badhne se pehle check karo', 'check-before-moving-on'],
+  ];
+  assert.deepEqual(
+    extractHeadings(titles.map(([title]) => `## ${title}`).join('\n')),
+    titles.map(([title, id]) => ({ title, id })),
+  );
+});
+
 test('Malformed persisted progress is normalized without losing valid unique entries', () => {
   assert.deepEqual(normalizeProgress(null), { saved: [], completed: [], known: [], recent: [] });
   assert.deepEqual(

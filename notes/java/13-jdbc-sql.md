@@ -5,15 +5,15 @@ track: java
 order: 13
 level: Intermediate
 minutes: 22
-summary: Prepared statements, atomic writes aur query plans se database work samjho.
+summary: Transaction related DB changes ko group karti hai; resource cleanup aur safe parameter binding phir bhi alag responsibilities hain.
 tags: jdbc, sql, transactions, indexes
 ---
 
-## Mental model
+## Mental model — simple soch
 
 JDBC Java application aur relational database ke beech standard interface hai. Connection transaction context carry karti hai; PreparedStatement parameterized SQL execute karta hai; ResultSet returned rows traverse karta hai. ORM use karne par bhi SQL, constraints and transaction semantics disappear nahi hote.
 
-> **Core takeaway:** A transaction groups database changes; resource cleanup and parameter binding remain separate responsibilities.
+> **Core takeaway:** Transaction related DB changes ko group karti hai; resource cleanup aur safe parameter binding phir bhi alag responsibilities hain.
 
 ## Parameterized access
 
@@ -96,7 +96,7 @@ N+1 database round trips high network latency mein expensive hote hain. Unbounde
 
 Registration/checkout flows mein unique-constraint race condition ek classic interview-worthy production bug hai: do concurrent requests same username/email check karte hain, dono "available" dekhte hain, dono insert try karte hain — database unique constraint hi final authority banta hai, aur application ko us constraint violation ko gracefully "already taken" response mein translate karna padta hai. Connection pool metrics (active connections, wait time, timeout count) production dashboards mein standard health signals hain jo slow queries ya undersized pool jaldi flag kar dete hain.
 
-## Interview questions
+## Interview questions — bolkar practice karo
 
 **PreparedStatement versus Statement?** PreparedStatement values bind karta hai, SQL injection risk reduce karta hai and database/driver-dependent planning reuse enable kar sakta hai. It does not sanitize dynamically concatenated SQL identifiers.
 
@@ -108,19 +108,19 @@ Registration/checkout flows mein unique-constraint race condition ek classic int
 
 Unique username registration implement karo and two concurrent identical requests test karo. One write intentionally fail karke rollback verify karo. Real database query plan se list endpoint ka index justify karo. Phir 500 rows ko one-by-one insert versus batch insert se compare karo aur round-trip count/latency difference measure karo.
 
-## Revision and practice lab
+## Revision and practice lab — khud karke samjho
 
-**Recall:** Close the notes and explain the core takeaway in your own words. Give one example before reading further.
+**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A transfer debits one row and credits another. The second update fails. Describe the expected persisted state and how you avoid SQL injection.
+**Apply:** Transfer mein ek row debit hui, doosri credit karte waqt failure aayi. Persisted balances kya hone chahiye? SQL injection kaise avoid karoge?
 
-> **Hint:** Both updates belong to one transaction, with bound parameters.
+> **Hint:** Dono updates ek transaction mein aur values bound parameters se bhejo.
 
-**Answer guide — compare after attempting:** Rollback must restore the original balances; success commits both updates. Bind account IDs and amounts through prepared statements. Validate amounts and verify affected-row counts. Closing a connection is not a substitute for a deliberate transaction outcome.
+**Answer guide — compare after attempting:** Failure par rollback original balances restore kare; success par dono commit hon. Prepared statements se IDs/amount bind karo. Amount validate karo aur affected rows check karo. Sirf connection close karna deliberate commit/rollback ka substitute nahi hai.
 
-**Exit check:** Explain why your answer works, reproduce the result or decision without the guide, and identify one assumption that would change it. If you needed the hint, retry this lab in your next study session.
+**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
-## Sources
+## Sources — aur padhne ke liye
 
 - [JDBC transactions](https://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html)
 - [Prepared statements](https://docs.oracle.com/javase/tutorial/jdbc/basics/prepared.html)

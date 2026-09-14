@@ -6,9 +6,11 @@ export function binarySearchTrace(values, target) {
     const mid = Math.floor((left + right) / 2);
     const found = values[mid] === target;
     frames.push({
-      title: found ? `Found ${target} at index ${mid}` : `Compare ${values[mid]} with ${target}`,
+      title: found
+        ? `Target ${target} index ${mid} par mila`
+        : `${values[mid]} ko ${target} se compare karo`,
       explanation: found
-        ? 'Target mil gaya. Sorted order allowed us to discard half the remaining candidates each time.'
+        ? 'Target mil gaya. Sorted order ki wajah se har comparison par bache candidates ka aadha hissa hata sake.'
         : `${values[mid]} ${values[mid] < target ? '<' : '>'} ${target}. ${values[mid] < target ? 'Left half including mid discard karo; left = mid + 1.' : 'Right half including mid discard karo; right = mid − 1.'}`,
       cells: values.map((value, i) => ({
         value,
@@ -23,9 +25,9 @@ export function binarySearchTrace(values, target) {
     else right = mid - 1;
   }
   frames.push({
-    title: 'Target is not present',
+    title: 'Target present nahi hai',
     explanation:
-      'Search interval empty hai: left > right. Return −1. Missing values are a normal result, not an error.',
+      'Search interval empty hai: left > right. −1 return karo. Target absent hona valid result hai, program error nahi.',
     cells: values.map((value, i) => ({ value, label: `index ${i}`, status: 'muted' })),
     metrics: [`left = ${left}`, `right = ${right}`, 'return −1'],
     found: false,
@@ -37,9 +39,9 @@ export function bubbleSortTrace(input) {
   const values = [...input];
   const frames = [
     {
-      title: 'Start with an unsorted array',
+      title: 'Unsorted array se shuru karo',
       explanation:
-        'Adjacent elements compare karo. Agar left value badi hai, swap them. Each pass fixes the largest remaining value at the end.',
+        'Paas-paas ke elements compare karo. Left value badi ho toh swap karo. Har pass remaining maximum ko end tak pahunchata hai.',
       bars: values.map((value) => ({ value, status: 'idle' })),
     },
   ];
@@ -47,11 +49,11 @@ export function bubbleSortTrace(input) {
     let swapped = false;
     for (let j = 0; j < end; j++) {
       frames.push({
-        title: `Compare ${values[j]} and ${values[j + 1]}`,
+        title: `${values[j]} aur ${values[j + 1]} compare karo`,
         explanation:
           values[j] > values[j + 1]
             ? 'Wrong order. Next step mein in dono ko swap karenge.'
-            : 'Already ordered. Move to the next adjacent pair.',
+            : 'Order sahi hai. Agle adjacent pair par jao.',
         bars: values.map((value, i) => ({
           value,
           status: i === j || i === j + 1 ? 'active' : i > end ? 'found' : 'idle',
@@ -61,9 +63,8 @@ export function bubbleSortTrace(input) {
         [values[j], values[j + 1]] = [values[j + 1], values[j]];
         swapped = true;
         frames.push({
-          title: 'Swap the adjacent pair',
-          explanation:
-            'The larger value moves one position to the right. Sirf adjacent pair change hua.',
+          title: 'Adjacent pair ko swap karo',
+          explanation: 'Badi value ek position right gayi. Sirf adjacent pair badla hai.',
           bars: values.map((value, i) => ({
             value,
             status: i === j || i === j + 1 ? 'active' : i > end ? 'found' : 'idle',
@@ -74,9 +75,9 @@ export function bubbleSortTrace(input) {
     if (!swapped) break;
   }
   frames.push({
-    title: 'Every element is in order',
+    title: 'Saare elements sorted hain',
     explanation:
-      'Worst/average time O(n²), best O(n) with early exit; auxiliary space O(1). This animation stores snapshots for teaching, so its own memory usage is larger.',
+      'Worst/average time O(n²), early exit ke saath best O(n); extra space O(1). Animation samjhane ke liye snapshots store karti hai, isliye animation ki apni memory zyada hai.',
     bars: values.map((value) => ({ value, status: 'found' })),
     result: values,
   });
@@ -99,7 +100,7 @@ export function bfsTrace(graph = GRAPH, start = 'A') {
   frames.push({
     title: `Enqueue ${start}`,
     explanation:
-      'Queue FIFO hoti hai. Start vertex ko enqueue karte waqt visited mark karo, so duplicates cannot enter.',
+      'Queue FIFO hoti hai. Start vertex ko enqueue karte waqt visited mark karo, taaki duplicate entry na aaye.',
     graph: true,
     seen: [...seen],
     active: start,
@@ -115,8 +116,8 @@ export function bfsTrace(graph = GRAPH, start = 'A') {
         queue.push(neighbor);
       }
     frames.push({
-      title: `Visit ${node} and discover its neighbors`,
-      explanation: `Unseen neighbors ko queue ke end mein add kiya. Queue: ${queue.join(', ') || 'empty'}. Discovery on enqueue avoids revisiting cycles.`,
+      title: `${node} visit karo aur neighbors discover karo`,
+      explanation: `Unseen neighbors ko queue ke end mein add kiya. Queue: ${queue.join(', ') || 'empty'}. Enqueue par visited mark karne se cycle mein same vertex baar-baar add nahi hota.`,
       graph: true,
       active: node,
       seen: [...seen],
@@ -125,9 +126,9 @@ export function bfsTrace(graph = GRAPH, start = 'A') {
     });
   }
   frames.push({
-    title: 'Traversal complete',
+    title: 'Traversal complete ho gaya',
     explanation:
-      'BFS visits reachable vertices in distance layers. For unweighted graphs, first discovery gives a shortest edge-count distance. O(V + E) time with adjacency lists and an efficient queue.',
+      'BFS reachable vertices ko distance layers mein visit karta hai. Unweighted graph mein first discovery minimum edge-count distance deti hai. Adjacency list aur efficient queue ke saath O(V + E) time; yahan animation ke snapshots aur Array.shift ka extra cost alag hai.',
     graph: true,
     seen: [...seen],
     order: [...order],
@@ -159,7 +160,7 @@ export function fibonacciTrace(n) {
   });
   const frames = [
     snapshot(
-      'Start with the base cases',
+      'Base cases se shuru karo',
       'dp[0] = 0 and dp[1] = 1. Har larger answer previous two answers se banega.',
       -1,
     ),
@@ -169,7 +170,7 @@ export function fibonacciTrace(n) {
     frames.push(
       snapshot(
         `dp[${i}] = ${dp[i - 1]} + ${dp[i - 2]} = ${dp[i]}`,
-        'Same subproblem dobara solve mat karo. Store the answer and reuse it. Tabulation fills dependencies before their dependents.',
+        'Same subproblem dobara solve mat karo. Answer store karke reuse karo. Tabulation mein jis answer par agla answer depend hai, use pehle calculate karte hain.',
         i,
       ),
     );
@@ -177,7 +178,7 @@ export function fibonacciTrace(n) {
   frames.push(
     snapshot(
       `Fibonacci(${n}) = ${dp[n]}`,
-      'O(n) time and O(n) space for this table. Only the previous two values are needed, so a value-only solution can reduce auxiliary space to O(1).',
+      'Is table ka time O(n), space O(n) hai. Sirf final value chahiye toh pichhli do values rakho; extra space O(1) ho sakta hai.',
       n,
     ),
   );

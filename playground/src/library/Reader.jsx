@@ -58,7 +58,7 @@ function Chapter({ note }) {
     () => [
       ...extractHeadings(body),
       ...(note.references?.length
-        ? [{ id: 'source-examples', title: 'Source examples and walkthroughs' }]
+        ? [{ id: 'source-examples', title: 'Source examples — step-by-step samjho' }]
         : []),
       ...(note.questions?.length ? [{ id: 'chapter-practice', title: 'Interview practice' }] : []),
     ],
@@ -93,13 +93,13 @@ function Chapter({ note }) {
           onClick={() => toggle('saved', note.id)}
         >
           <Icon name="bookmark" size={17} />
-          {progress.saved.includes(note.id) ? 'Saved' : 'Save note'}
+          {progress.saved.includes(note.id) ? 'Saved' : 'Note save karo'}
         </button>
       </div>
       {note.stage && (
         <div className="reader-course-context">
           <Link to={`/paths?track=${note.track}`}>
-            Full course syllabus <Icon name="arrow" size={14} />
+            Poora course syllabus <Icon name="arrow" size={14} />
           </Link>
           <strong>
             Stage {note.stageNumber}: {note.stage.title}
@@ -117,7 +117,7 @@ function Chapter({ note }) {
           aria-pressed={tab === 'notes'}
           onClick={() => setParams({})}
         >
-          <Icon name="book" size={16} /> Read & understand
+          <Icon name="book" size={16} /> Padho aur samjho
         </button>
         {note.visual && (
           <button
@@ -125,12 +125,12 @@ function Chapter({ note }) {
             aria-pressed={tab === 'visual'}
             onClick={() => setParams({ tab: 'visual' })}
           >
-            <Icon name="play" size={16} /> Visualize it
+            <Icon name="play" size={16} /> Visual se samjho
           </button>
         )}
       </div>
       {tab === 'visual' ? (
-        <Suspense fallback={<p>Loading visualization…</p>}>
+        <Suspense fallback={<p>Visual load ho raha hai…</p>}>
           <VisualLab embedded topic={note.visual} />
         </Suspense>
       ) : (
@@ -142,8 +142,8 @@ function Chapter({ note }) {
               <section className="chapter-practice" aria-labelledby="chapter-practice">
                 <h2 id="chapter-practice">Interview practice</h2>
                 <p>
-                  Answer aloud first. Include an example, a failure case, and the tradeoff. Reveal
-                  the answer to check your reasoning.
+                  Pehle bolkar answer do. Example, failure case aur tradeoff samjhao. Phir answer
+                  dekhkar apni reasoning compare karo.
                 </p>
                 {note.questions.map((item, index) => (
                   <QuestionCard key={item.id} item={item} number={index + 1} />
@@ -155,9 +155,9 @@ function Chapter({ note }) {
                 <Icon name="complete" size={27} />
                 <div>
                   <h3>
-                    {complete ? 'One more concept connected.' : 'Make it yours before moving on.'}
+                    {complete ? 'Ek aur concept clear hua.' : 'Aage badhne se pehle khud samjhao.'}
                   </h3>
-                  <p>Close the notes. Explain the idea. Try the exercise.</p>
+                  <p>Notes band karo. Concept samjhao. Exercise attempt karo.</p>
                 </div>
               </div>
               <button
@@ -166,7 +166,7 @@ function Chapter({ note }) {
                 onClick={() => toggle('completed', note.id)}
               >
                 <Icon name={complete ? 'check' : 'circle'} size={17} />
-                {complete ? 'Completed' : 'Mark complete'}
+                {complete ? 'Completed' : 'Complete mark karo'}
               </button>
             </div>
             <div className="chapter-navigation">
