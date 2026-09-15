@@ -1,5 +1,7 @@
 # Repo coverage audit — kya missing tha aur kya add hua
 
+**Latest depth pass:** [108-chapter Hinglish depth review](DEPTH_REVIEW.md) — approx 17,400 added words; 50 tests pass. Neeche earlier additions ka historical record hai.
+
 First pass: 14 September 2026. Second pass: 15 September 2026. Audit mein eight tracks ke chapter topics, syllabus/prerequisites, relevant numbered source examples, interview mappings aur practice coverage compare ki. Core course ko duplicate karne ke bajay un jagahon par depth add ki jahan topic sirf short map, brief mention ya source reference tak limited tha.
 
 **First-pass result: 9 new chapters, 7 extension stages, 18 linked interview questions aur all 6 interview playbooks mein project/debugging practice. Total: 101 chapters, 39 stages, 301 app questions.** Existing 142 source examples aur 20 visuals preserve hain. New topics ke liye unrelated visual attach nahi kiya.

@@ -77,7 +77,7 @@ Track request rate, error fraction and latency distributions. Dependencies ke li
 
 ## SLO and alert example
 
-Assume study API target 99.9% successful eligible requests over 30 days, and p95 latency below 300 ms under agreed load. Define eligible requests and excluded expected errors explicitly. Alert based on sustained user impact or error-budget consumption, not every transient spike. High average latency p99 tail hide kar sakti hai; distribution inspect karo.
+Is exercise mein study API ka target lo: 30 days mein eligible requests ki 99.9% success aur agreed load par p95 latency 300 ms se kam. Define eligible requests and excluded expected errors explicitly. Alert based on sustained user impact or error-budget consumption, not every transient spike. High average latency p99 tail hide kar sakti hai; distribution inspect karo.
 
 Error-budget burn rate alerting threshold-based alerting se behtar hai kyunki wo urgency ko severity se link karti hai. 30-day window par 99.9% target ka budget 0.1% failed requests hai. Burn rate = current error rate ÷ budget rate:
 
@@ -152,7 +152,7 @@ Backup ke liye yaad rakho ki untested backup ek assumption hai, guarantee nahi. 
 
 ## Interview questions — bolkar practice karo
 
-**What would you alert on?** User-facing symptoms such as failed requests, latency SLO burn or delayed processing; diagnostic resource metrics investigation guide karengi.
+**Kis symptom par alert karoge?** Failed requests, latency SLO burn ya delayed processing jaise user-facing symptoms par; resource metrics investigation guide karengi.
 
 **What is the difference between RPO and RTO?** RPO data loss tolerance time window hai. RTO service restore karne ka target time hai. Backup frequency and restore automation respectively influence karte hain.
 

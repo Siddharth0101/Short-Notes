@@ -2,6 +2,8 @@
 
 Yahan concepts **simple Roman Hinglish** mein samjhaye hain. Technical terms aur code identifiers English mein hain, taaki documentation, coding aur interviews mein wahi terms pehchaan sako. Har concept ko meaning → mechanism → example → galti → practice ke order mein padho.
 
+[Har chapter ka depth review](notes/DEPTH_REVIEW.md): 108 chapters mein detailed Hinglish walkthroughs, execution traces aur failure-case practice.
+
 **108 chapters · 43 course stages · 142 linked source examples · 323 interview questions · 20 interactive visuals.**
 
 Shuru karne ke liye [poora syllabus](notes/README.md) kholo. Padhai ka tareeka [study guide](notes/STUDY_GUIDE.md) mein aur difficult terms ke easy meanings [Hinglish glossary](notes/GLOSSARY_HINGLISH.md) mein milenge.

@@ -95,7 +95,7 @@ Per-room `seq` allocate karna ek serialization point hai. Ek normal room (kuch m
 
 ## Capacity example
 
-Assume 50,000 concurrent connections and average gateway state/buffer budget 20 KB each: roughly 1 GB aggregate connection memory before runtime/network overhead. At 2,000 messages/s with average 20 recipients, fan-out roughly 40,000 deliveries/s hai. Big public room distribution highly skewed ho sakti hai, so average room size alone insufficient hai.
+50,000 concurrent connections aur average per-connection gateway state/buffer 20 KB assume karo: runtime/network overhead se pehle roughly 1 GB aggregate connection memory banti hai. At 2,000 messages/s with average 20 recipients, fan-out roughly 40,000 deliveries/s hai. Big public room distribution highly skewed ho sakti hai, so average room size alone insufficient hai.
 
 Per-client send queue bound karo. Slow client ke presence events coalesce/drop kar sakte ho; durable message backlog excessive ho toh reconnect-and-catch-up instruct karo. User-visible backpressure states silently freezing browser se better hain.
 

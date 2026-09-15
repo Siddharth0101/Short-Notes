@@ -18,13 +18,13 @@ Fast frontend ka matlab sirf small bundle nahi. Content jaldi visible ho, intera
 
 ## Measure user experience
 
-Core Web Vitals LCP loading, INP interaction responsiveness and CLS layout stability indicate karte hain. Good thresholds at the 75th percentile are LCP at most 2.5 seconds, INP at most 200 milliseconds, CLS at most 0.1. Lab diagnostics repeatable conditions provide karte hain; real-user data device/network diversity reveal karta hai. [Web Vitals](https://web.dev/articles/vitals)
+Core Web Vitals LCP loading, INP interaction responsiveness and CLS layout stability indicate karte hain. 75th percentile par good thresholds LCP maximum 2.5 seconds, INP maximum 200 milliseconds aur CLS maximum 0.1 hain. Lab diagnostics repeatable conditions provide karte hain; real-user data device/network diversity reveal karta hai. [Web Vitals](https://web.dev/articles/vitals)
 
 Instrument route, device class and release version dimensions carefully. Personal user IDs high-cardinality metric labels mein mat daalo. User-visible issue identify karo, trace or profile se expensive work locate karo, then targeted change verify karo. Universal `useMemo` insertion measurement ka substitute nahi.
 
 ## A performance budget example
 
-Assume slow-device study reader target: initial compressed JavaScript under a chosen 150 KB budget and useful content visible in roughly two seconds on the selected test network. These are project example budgets, universal standards nahi. Markdown rendering or syntax highlighting ko every navigation par unnecessarily repeat mat karo. Heavy visual lab route lazily load ho sakta hai.
+Is exercise mein slow-device study reader ke liye chosen target lo: initial compressed JavaScript 150 KB budget ke andar aur selected test network par useful content roughly two seconds mein visible ho. These are project example budgets, universal standards nahi. Markdown rendering or syntax highlighting ko every navigation par unnecessarily repeat mat karo. Heavy visual lab route lazily load ho sakta hai.
 
 ```text
 critical path: HTML -> critical CSS -> chapter content

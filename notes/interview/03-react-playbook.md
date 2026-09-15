@@ -64,7 +64,7 @@ Real application mein framework loader ya server-state library caching, deduplic
 
 ## A 40-minute mock
 
-5 minutes requirements, 15 minutes working component, 8 minutes race/error handling, 7 minutes accessibility, 5 minutes performance discussion. Keyboard se complete flow try karo. Labels, focus visibility, loading announcements aur stable keys verify karo. Snapshot testing alone interaction correctness prove nahi karta.
+5 minutes requirements clear karo, 15 mein working component, 8 mein race/error handling, 7 mein accessibility aur 5 mein performance discuss karo. Keyboard se complete flow try karo. Labels, focus visibility, loading announcements aur stable keys verify karo. Snapshot testing alone interaction correctness prove nahi karta.
 
 ## Self-review rubric
 

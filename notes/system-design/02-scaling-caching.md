@@ -99,7 +99,7 @@ Write-behind ko business data ke liye choose karna ek classic design-review red 
 
 ## Worked estimate
 
-Assume 10,000 reads/s and 95% cache hit rate. Miss path approximately 500 reads/s receive karega, excluding refresh work and uneven key distribution. Hit rate 80% par database load 2,000 reads/s ho jata hai: fourfold increase. Capacity planning average cache success pe overly depend na kare. Cached 1 million values at estimated 1 KB payload require about 1 GB payload, plus keys and storage-engine overhead.
+Assume 10,000 reads/s and 95% cache hit rate. Miss path approximately 500 reads/s receive karega, excluding refresh work and uneven key distribution. Hit rate 80% par database load 2,000 reads/s ho jata hai: fourfold increase. Capacity planning average cache success pe overly depend na kare. 1 million cached values aur estimated 1 KB per payload se roughly 1 GB payload banta hai; keys aur storage-engine overhead extra hain.
 
 ## Replication and sharding
 

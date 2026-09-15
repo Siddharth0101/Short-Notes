@@ -265,7 +265,7 @@ failed           -> confirmed         allowed only via reconciliation, with audi
 
 **Why not cache checkout price for hours?** Display price stale tolerate kar sakta hai under explicit policy; payable amount business authority se recompute/validate hona chahiye. User ko changed total confirmation chahiye.
 
-**How do you prevent overselling?** Atomic availability check/update or suitable reservation locking, transaction boundary and durable reservation lifecycle enforce karunga. App-side pre-check alone race karta hai.
+**Available stock se zyada sale kaise rokoge?** Atomic availability check/update or suitable reservation locking, transaction boundary and durable reservation lifecycle enforce karunga. App-side pre-check alone race karta hai.
 
 **Payment succeed ho gaya lekin aapka database write fail ho gaya — user ko kya dikhaoge?** User ko "processing" dikhaunga, failure nahi — kyunki paisa ja chuka hai aur "failed" dikhana galat information hai jo support ticket aur chargeback dono generate karti hai. Backend side par payment attempt `succeeded` record ho chuka hoga (ya reconciliation se ho jaayega), aur ek retry/recovery job order creation ko complete karega. Agar wo bhi repeatedly fail kare toh order `pending_review` mein jaakar operator queue mein aata hai, aur user ko ek clear status page plus support reference milta hai. Sabse important yeh hai ki system ke paas ek record ho ki paisa liya gaya hai — us record ke bina yeh situation detectable hi nahi hoti.
 

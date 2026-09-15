@@ -32,7 +32,7 @@ Large table ke liye cursor pagination aur virtualization evaluate karo. Keyboard
 
 ## Backend prompt
 
-**Design a Java order API that tolerates retries.** POST request stable idempotency key carry kare. Authentication ke baad server key ko tenant/user scope aur request fingerprint ke saath durable store kare. Unique constraint/transaction concurrent duplicates coordinate kare; completed duplicate ko original result return karo, conflicting payload ko reject karo.
+**Retries handle karne wali Java order API kaise design karoge?** POST request stable idempotency key carry kare. Authentication ke baad server key ko tenant/user scope aur request fingerprint ke saath durable store kare. Unique constraint/transaction concurrent duplicates coordinate kare; completed duplicate ko original result return karo, conflicting payload ko reject karo.
 
 ```text
 React client -> API gateway -> Java order service -> database

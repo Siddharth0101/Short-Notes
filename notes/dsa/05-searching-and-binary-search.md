@@ -117,7 +117,7 @@ Complexity: `canShip` O(n), aur range ki width R = total − max par log R itera
 
 Binary search ka ek non-obvious use hai: kabhi kabhi log factor accept karna better engineering hai. Agar tumhe ek array par **many** membership queries chalani hain, toh options hain — har query O(n) linear scan (total O(qn)), ya ek baar sort O(n log n) + per query O(log n) (total O(n log n + q log n)), ya hash set O(n) build + O(1) per query (total O(n + q) expected).
 
-Hash set asymptotically best hai, phir bhi sorted array + binary search real systems mein aksar jeet jaata hai: memory contiguous hai (better cache behavior), koi hash collision worst case nahi, order-based queries (range, predecessor, successor, k-th) bhi free mil jaati hain, aur data immutable ho toh serialize/mmap karna trivial hai. Hash set sirf equality queries de sakta hai. Yahi reason hai ki database indexes B-trees par bane hain, hash tables par nahi — range scans ke bina index adhoora hai.
+Exact membership ke liye hash set expected fast lookup de sakta hai; sorted array ordered queries aur compact storage ke workload mein useful ho sakti hai. Range ke endpoints binary search se O(log n), phir k results output O(k) hain; queries “free” nahi. Direct sorted-array k-th access O(1) hai, dynamic ranked structure ka contract alag hai. Insertion/copying aur key comparison cost bhi count karo. Database engines B-tree ke saath hash aur other index types bhi offer kar sakte hain; type actual query se choose hota hai.
 
 ## String searching
 
@@ -177,7 +177,7 @@ In failure modes ko detail mein dekho, kyunki har ek ka signature interview mein
 
 ## Where this shows up in real systems
 
-Database indexes binary search ka sabse bada production deployment hain. B-tree ek high-fanout generalization hai: har node mein hazaaron sorted keys hoti hain, aur ek node ke andar binary search chalti hai. Fanout isliye bada rakha jaata hai kyunki disk/SSD read ki cost per-node fixed hai — teen-chaar levels mein billions of rows tak pahunch jaate hain. Yehi reason hai ki B-tree index range queries (`WHERE created_at BETWEEN …`) aur `ORDER BY` support karta hai jabki hash index nahi.
+B-tree family ke indexes sorted keys aur high fanout se search path short rakh sakte hain. Node capacity page size, key size aur engine layout par depend karti hai; “har node thousands keys” universal rule nahi. PostgreSQL B-tree equality/range aur suitable ordered retrieval support karti hai, jabki PostgreSQL hash index equality queries ke liye hai. Other index families different workloads serve karti hain. [PostgreSQL index types](https://www.postgresql.org/docs/current/indexes-types.html).
 
 Feasibility-space binary search operations mein bhi dikhta hai: "minimum instance count jo p99 latency SLO meet kare", "largest batch size jo memory limit ke andar fit ho", "first commit jisme bug aaya" — `git bisect` literally binary search hai ek monotone predicate (`commit is broken`) par, aur uski correctness usi monotonicity assumption par tikki hai. Agar bug intermittent hai toh predicate monotone nahi rehta aur bisect galat commit blame karta hai — theory ka direct practical consequence.
 

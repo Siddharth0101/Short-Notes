@@ -79,3 +79,7 @@ Weak area ke liye ek failed lab, ek related example aur ek interview question ch
 ## Interview ke pehle focused revision
 
 [52-question priority guide](INTERVIEW_PRIORITY_GUIDE.md) se apne role ka route chuno. Pehle answer khud bolo, phir explanation aur follow-up padho. Ismein 6 behavioral prompts aur 14-session practice plan bhi hai.
+
+## Concept deep mein samajhne ka checkpoint
+
+Har chapter ki **Depth walkthrough — andar kya ho raha hai?** ko main example ke baad aur revision lab se pehle padho. [Complete depth review](DEPTH_REVIEW.md) se chapter-wise scope aur verification dekho. Output yaad karne ke bajay changed input/failure par reasoning dobara apply karo.

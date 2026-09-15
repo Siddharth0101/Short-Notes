@@ -46,7 +46,7 @@ function shortestPath(graph, start, goal) {
 }
 ```
 
-Example string vertex labels aur consistent adjacency list assume karta hai; null reserved sentinel hai. BFS first edge-distance layer, phir next layer explore karta hai. Isliye unweighted graph mein first discovery minimum edges deti hai. O(V + E) time with typical Map costs, O(V) extra storage including parent and queue. Graph disconnected ho to sirf reachable part process hota hai.
+Example string vertex labels aur consistent adjacency list assume karta hai; null reserved sentinel hai. BFS first edge-distance layer, phir next layer explore karta hai. Isliye unweighted graph mein first discovery minimum edges deti hai. Typical Map costs assume karke time O(V + E) aur parent/queue samet extra storage O(V) hai. Graph disconnected ho to sirf reachable part process hota hai.
 
 Visited enqueue ke waqt mark karo; dequeue tak delay karne par same vertex many times queue mein aa sakta hai. `shift()` ki jagah head index use karne se repeated front-removal cost avoid hota hai.
 
