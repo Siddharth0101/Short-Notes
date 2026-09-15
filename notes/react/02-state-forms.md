@@ -4,7 +4,7 @@ title: State snapshots forms and immutable updates
 track: react
 order: 2
 level: Foundation
-minutes: 26
+minutes: 29
 summary: State setter update schedule karta hai; functional updater pending state se next value nikalta hai.
 tags: state, forms, immutability, batching, derived-state
 visual: react-render
@@ -188,17 +188,29 @@ Selected record duplicate store karne ke bajay selected ID rakho. Current collec
 
 [Source yahan padho — React](https://react.dev/learn/choosing-the-state-structure). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Ek event ke updates ko queue ki tarah trace karo
+
+Count 0 wale render ke handler mein `setCount(count + 1)` do baar call karo: dono expressions 1 calculate karti hain. Same handler mein `setCount(n => n + 1)` do baar ho toh updates previous queued result use karti hain: 0→1→2. Setter existing closure ki count binding rewrite nahi karta. [React state snapshot](https://react.dev/learn/state-as-a-snapshot).
+
+Controlled numeric input mein raw text aur validated number ko alag socho. User field clear kare toh raw value '' hona normal editing state hai. Har keystroke `Number('')` ko 0 bana doge toh blank/required state disappear ho jaayegi. Raw string edit hone do, submit/appropriate boundary par validate aur parse karo.
+
+State shape impossible combinations reduce kare. `isLoading=true` aur `isSuccess=true` ek saath possible hon toh booleans contradictory UI bana sakti hain. Status idle/loading/success/error aur relevant payload ka model clearer hai. Derived filtered list ko duplicate state mein rakhne se source/query change par synchronization bug aa sakta hai.
+
+**Practice:** Submit blank, zero, valid number aur slow failure. Pending state mein duplicate action policy define karo. Server error par draft retain ho; success ke baad reset intentional ho. UI event aur server acknowledgement ka state transition table likho.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Zero se start karke ek click handler mein `setCount(count + 1)` do baar call karo. `setCount(n => n + 1)` do baar se compare karo.
+**Apply — khud try karo:** Zero se start karke ek click handler mein `setCount(count + 1)` do baar call karo. `setCount(n => n + 1)` do baar se compare karo.
 
-> **Hint:** Dono direct expressions same render snapshot padhti hain.
+> **Hint — chhota ishara:** Dono direct expressions same render snapshot padhti hain.
 
-**Answer guide — compare after attempting:** Direct updates se 1, functional updates se 2 milega. Har updater ko previous updater ka pending result milta hai. Next value previous value par depend ho toh functional form use karo; updater pure rakho.
+**Answer guide — pehle khud karo, phir compare karo:** Direct updates se 1, functional updates se 2 milega. Har updater ko previous updater ka pending result milta hai. Next value previous value par depend ho toh functional form use karo; updater pure rakho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

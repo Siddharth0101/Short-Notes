@@ -4,7 +4,7 @@ title: Complexity and problem solving
 track: dsa
 order: 1
 level: Foundation
-minutes: 27
+minutes: 30
 summary: Complexity batati hai ki input badhne par kitna time aur extra memory lagegi; hidden operations bhi gino.
 tags: big-o, complexity, problem-solving, invariants
 ---
@@ -190,17 +190,27 @@ Amortized reasoning system design mein bhi wahi hai: log-structured storage (jai
 
 **Answer:** Jab n aur m independently vary karte hain. Correct bound O(nm) hai. Dono ko ek hi `n` mein collapse karna tab hi valid hai jab problem constraint kehti ho ki m = O(n). Interview mein multiple input sizes ko alag naam dena precision ka signal hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Input variable define kiye bina Big-O incomplete hai
+
+n users aur m orders hon toh separate scans O(n+m) hain. Har user ke liye all orders scan O(nm) ho sakta hai. Same letter n laga dene se independent dimensions hide hoti hain. String comparison/hash cost key length par depend kar sakti hai; “Map access O(1)” assumption ke scope ko label karo.
+
+Worst-case one operation aur amortized sequence cost alag hain. Dynamic array occasional resize O(n) le sakti hai, while many appends ka aggregate linear ho. Average-case input probability model maangti hai; amortized proof random input assume karna zaroori nahi.
+
+**Practice:** Nested loop mein inner pointer reset nahi hota aur total n positions move karta hai toh operation count directly gino. Syntax nested hone se automatic O(n²) nahi. Output khud size k hai toh enumerate karne ka Ω(k) lower bound ignore nahi ho sakta.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Outer loop n baar chalta hai. Inner loop j=1 se shuru karke j ko double karta hai jab tak j<n. Iska runtime nikalo; phir j++ wale version se compare karo.
+**Apply — khud try karo:** Outer loop n baar chalta hai. Inner loop j=1 se shuru karke j ko double karta hai jab tak j<n. Iska runtime nikalo; phir j++ wale version se compare karo.
 
-> **Hint:** 1, 2, 4, 8 likho aur gino ki n tak pahunchne mein kitne steps lagte hain.
+> **Hint — chhota ishara:** 1, 2, 4, 8 likho aur gino ki n tak pahunchne mein kitne steps lagte hain.
 
-**Answer guide — compare after attempting:** Doubling wale inner loop mein O(log n) steps hain, isliye total O(n log n) hai. j++ mein O(n) inner steps, yani total O(n²). Sirf counters store ho rahe hon toh auxiliary space O(1) hai. Logarithm samjhate waqt n>1 assume karo.
+**Answer guide — pehle khud karo, phir compare karo:** Doubling wale inner loop mein O(log n) steps hain, isliye total O(n log n) hai. j++ mein O(n) inner steps, yani total O(n²). Sirf counters store ho rahe hon toh auxiliary space O(1) hai. Logarithm samjhate waqt n>1 assume karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

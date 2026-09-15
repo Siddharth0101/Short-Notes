@@ -6,17 +6,13 @@
  * ========================================================================
  * SOURCE: Distributed Systems & Chirag Goel Case Studies
  *
- * PARADIGMS BREAKDOWN:
- * ┌──────────────┬──────────────────┬─────────────────┬─────────────────┐
- * │ Feature      │ REST             │ GraphQL         │ gRPC            │
- * ├──────────────┼──────────────────┼─────────────────┼─────────────────┤
- * │ Data Format  │ JSON / XML       │ JSON            │ Protocol Buffer │
- * │ Network Base │ HTTP/1.1 or 2    │ HTTP (POST)     │ HTTP/2 only     │
- * │ Fetch Model  │ Multiple URIs    │ Single Endpoint │ Remote Function │
- * │ Over-fetching│ Common           │ Zero (precise)  │ Minimal binary  │
- * │ Caching      │ Easy (HTTP GET)  │ Complex (POST)  │ Complex         │
- * │ Streaming    │ Polling / SSE    │ Subscriptions   │ Bidirectional   │
- * └──────────────┴──────────────────┴─────────────────┴─────────────────┘
+ * COMPARISON KO WORKLOAD KE SAATH PADHO:
+ * - REST HTTP resource contracts use karta hai; representation JSON-only nahi.
+ * - GraphQL client fields select karta hai, lekin expensive resolvers/N+1 ab bhi possible hain.
+ * - GraphQL queries HTTP GET ya POST se serve ho sakti hain; cache strategy explicit chahiye.
+ * - gRPC commonly HTTP/2 + Protocol Buffers use karta hai; browser gRPC-Web path alag evaluate karo.
+ * - Binary payload se total latency guaranteed kam nahi; backend work measure karo.
+ * - Structured course: notes/system-design/14-api-contracts.md
  */
 
 /**
@@ -37,6 +33,8 @@
  */
 
 // Simulated DataLoader batching in single event loop tick
+// Teaching helper: batching only; no memoization, per-key errors, or cancellation.
+// batchLoadFn sync/async ho sakta hai; result keys ke order aur length mein ho.
 class SimpleDataLoader {
   constructor(batchLoadingFunction) {
     this.batchLoadFn = batchLoadingFunction;
@@ -45,25 +43,24 @@ class SimpleDataLoader {
   }
 
   load(key) {
-    return new Promise((resolve) => {
-      this.queue.push({ key, resolve });
-
-      if (!this.scheduled) {
-        this.scheduled = true;
-        // Batch queue in microtask tick
-        Promise.resolve().then(() => {
-          const keys = this.queue.map((item) => item.key);
-          const currentQueue = [...this.queue];
-          this.queue = [];
-          this.scheduled = false;
-
-          console.log(`[DataLoader Batch Query] Batched ${keys.length} keys in 1 call:`, keys);
-          const results = this.batchLoadFn(keys);
-          currentQueue.forEach((item, index) => {
-            item.resolve(results[index]);
-          });
-        });
-      }
+    return new Promise((resolve, reject) => {
+      this.queue.push({ key, resolve, reject });
+      if (this.scheduled) return;
+      this.scheduled = true;
+      Promise.resolve().then(async () => {
+        const batch = this.queue;
+        this.queue = [];
+        this.scheduled = false;
+        try {
+          const results = await this.batchLoadFn(batch.map(item => item.key));
+          if (!Array.isArray(results) || results.length !== batch.length) {
+            throw new Error('Batch result must match input key count');
+          }
+          batch.forEach((item, index) => item.resolve(results[index]));
+        } catch (error) {
+          batch.forEach(item => item.reject(error));
+        }
+      });
     });
   }
 }

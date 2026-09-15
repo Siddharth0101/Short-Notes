@@ -4,7 +4,7 @@ title: Monotonic stacks and amortized reasoning
 track: dsa
 order: 8
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Monotonic stack un candidates ko rakhta hai jinka answer aage aane wali value decide kar sakti hai.
 tags: dsa, monotonic-stack, amortized, arrays
 visual: monotonic-stack
@@ -62,17 +62,29 @@ Histogram maximum rectangle mein increasing heights rakho. Chhota bar aane par c
 
 **Monotonic stack kab unsuitable hai?** Arbitrary online updates ya range queries mein tree jaisa structure chahiye ho sakta hai. Updates allowed hon toh aaj eliminated candidate future mein relevant ho sakta hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Stack mein values nahi, unresolved questions rakhe hain
+
+Daily temperatures `[73,71,72,74]` lo. Index 0 ka answer unresolved, stack [0]. Index 1 colder, stack [0,1]. Index 2 value 72, index 1 ka warmer day mil gaya: answer[1]=2−1=1, pop. Index 0 ab bhi unresolved. Index 3 value 74, index 2 resolve distance 1, phir index 0 resolve distance 3. Final answers `[3,1,1,0]` hain.
+
+Inner while nested dikhti hai, lekin every index one push aur at most one pop hota hai. Total stack operations O(n), isliye total time O(n), O(n²) nahi. Unresolved indices ka invariant future decisions ko justify karta hai.
+
+Equal temperature strictly warmer nahi. Comparison `<` versus `<=` change karoge toh problem ka contract badlega. “Next greater or equal” alag variant hai. Values store karke indices lose kar doge toh waiting distance calculate difficult hogi.
+
+**Practice:** Increasing, decreasing, equal aur empty arrays. Decreasing input mein stack maximum grow hoti hai, phir bhi linear operations. Pehle slow forward scan oracle banao aur small inputs par both answers compare karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** `[2,2,3,1]` mein har item ke right ka next strictly greater value nikalo. Equal values pop condition ko kaise affect karti hain?
+**Apply — khud try karo:** `[2,2,3,1]` mein har item ke right ka next strictly greater value nikalo. Equal values pop condition ko kaise affect karti hain?
 
-> **Hint:** Equal ka matlab strictly greater nahi hota.
+> **Hint — chhota ishara:** Equal ka matlab strictly greater nahi hota.
 
-**Answer guide — compare after attempting:** Answer `[3,3,-1,-1]` hai. Left-to-right unresolved-index stack mein tab pop karo jab nayi value stacked value se strictly badi ho. Har index maximum ek baar push aur ek baar pop hota hai; total O(n) time aur O(n) auxiliary space.
+**Answer guide — pehle khud karo, phir compare karo:** Answer `[3,3,-1,-1]` hai. Left-to-right unresolved-index stack mein tab pop karo jab nayi value stacked value se strictly badi ho. Har index maximum ek baar push aur ek baar pop hota hai; total O(n) time aur O(n) auxiliary space.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

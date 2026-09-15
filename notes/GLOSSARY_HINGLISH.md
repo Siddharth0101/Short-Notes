@@ -44,3 +44,19 @@ Term ko sirf translate mat karo: example mein uska role dekho. Code keywords Eng
 | Tradeoff | Ek benefit ke badle ka cost | Cache faster reads, freshness/invalidation work |
 
 Agar term ab bhi vague lage toh teen lines likho: **meaning → example → kab assumption tootegi**. Isi se deep understanding banti hai.
+
+## New extension terms — quick meaning
+
+| Term | Easy meaning | Example aur limit |
+| --- | --- | --- |
+| Working tree | Files ka current editable state | Edit yahan hoti hai; necessarily committed nahi |
+| Index / staging area | Next commit ka proposed snapshot | Same file ke later unstaged edits commit mein automatically nahi aate |
+| IndexedDB | Browser ka asynchronous structured-data store | Drafts/indexes useful; server sync aur permanent backup alag concerns |
+| Conflict resolution | Concurrent changes ke final meaning ka rule | Add/remove completion ko blindly union karna remove undo kar sakta hai |
+| Servlet container | Java web requests aur servlet lifecycle manage karne wala runtime | Shared servlet instance concurrent requests handle kar sakta hai |
+| RAG | Retrieved evidence ko generation context ke saath jodna | Model weights train nahi hote; relevant text truthful/authorized automatically nahi |
+| Grounding | Answer ka supplied evidence se supported hona | Valid JSON ya citation ID alone claim ki sachchai prove nahi karta |
+| Batch loader | Pending key lookups ko grouped backend fetch mein combine karna | Output original keys order mein ho; failures har waiter settle karein |
+| RPC deadline | Caller operation ke liye bounded time budget | Timeout se already committed write rollback nahi hoti |
+
+Worked examples: [browser persistence](javascript/19-browser-persistence.md), [Git](javascript/20-git-workflow.md), [Servlet/MVC](spring-boot/12-servlet-mvc.md), [RAG](spring-boot/13-ai-retrieval.md) aur [API contracts](system-design/14-api-contracts.md).

@@ -4,7 +4,7 @@ title: Loops counters and accumulators
 track: javascript
 order: 4
 level: Foundation
-minutes: 12
+minutes: 15
 summary: Loop ko starting state, continue karne ka rule aur stop ki taraf progress chahiye.
 tags: fundamentals, js, loops
 ---
@@ -44,17 +44,29 @@ for header ka let variable loop scope mein hota hai; independent next loop mein 
 
 Off-by-one error aur missing update pehchano. Total loop ke bahar initialize kyun karna hai, batao. Next repeatable task ko function mein pack karke different inputs par use karenge.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Loop ki teen responsibilities: start, continue, progress
+
+Array ke n items process karne ka indexed loop `i=0`, condition `i<n`, progress `i++` rakhta hai. `i<=n` ek extra invalid index visit karega. Empty array mein n=0 hai, isliye pehla condition check false aur body zero times chalti hai; yeh special hack nahi, correct boundary hai.
+
+Sum banate waqt invariant bolo: iteration i ke start par total pehle i elements ka sum hai. Initially zero elements ka sum 0. Body element i add karti hai, isliye next iteration ke liye statement phir true. Exit par i=n, toh saare n elements included. Yeh reasoning later DSA proofs ki foundation hai.
+
+`break` poora current loop chhodta hai; `continue` current iteration ka remaining work skip karta hai. `while` mein progress statement continue ke baad ho toh accidentally skip hokar infinite loop ban sakta hai. `for` loop ka update clause continue ke baad bhi execute hota hai.
+
+**Trace task:** Values `[2,-1,3]` mein negative skip karke sum 5 banao. Phir “first negative milte hi stop” rule do: sum 2 hoga. Same input par `continue` aur `break` ka contract alag answer deta hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Loop se `[3,-2,0,5]` ki sirf positive values add karo. Empty array kya return kare? Accumulator 1 se start kiya toh kya badlega?
+**Apply — khud try karo:** Loop se `[3,-2,0,5]` ki sirf positive values add karo. Empty array kya return kare? Accumulator 1 se start kiya toh kya badlega?
 
-> **Hint:** Koi item process hone se pehle sum kya hai, usse initial accumulator decide karo.
+> **Hint — chhota ishara:** Koi item process hone se pehle sum kya hai, usse initial accumulator decide karo.
 
-**Answer guide — compare after attempting:** Total 0 se start karo; value>0 ho tab add karo. Results 8 aur empty input ke liye 0 hain. 1 se start karne par har result mein extra 1 aaega. Har item ek baar visit karo.
+**Answer guide — pehle khud karo, phir compare karo:** Total 0 se start karo; value>0 ho tab add karo. Results 8 aur empty input ke liye 0 hain. 1 se start karne par har result mein extra 1 aaega. Har item ek baar visit karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

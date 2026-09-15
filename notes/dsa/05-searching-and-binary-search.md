@@ -4,7 +4,7 @@ title: Searching and binary search boundaries
 track: dsa
 order: 5
 level: Intermediate
-minutes: 31
+minutes: 34
 summary: Binary search ke liye monotone decision aur exact interval rule chahiye: har step par pata ho ki answer kis range mein bach sakta hai.
 tags: linear-search, binary-search, lower-bound, strings
 visual: binary-search
@@ -209,17 +209,27 @@ Version rollouts aur capacity autoscaling mein bhi yehi shape hai. Aur distribut
 
 **Answer:** **Calls ki count**, jo exactly O(log n) hai — aur wahi optimize karna hai, per-call constant nahi. Yahan linear scan O(n) API calls karega, jo latency aur rate limits ki wajah se practically unusable hai. Yeh ek accha example hai jahan cost model "operations" nahi, "expensive external calls" hai; complexity analysis ke liye sahi unit choose karna answer ka hissa hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Boundary search mein invariant answer ko interval mein rakhti hai
+
+Lower bound first index jahan value target se kam nahi. Half-open [lo,hi) unknown interval lo. Mid value target se chhoti ho toh mid included prefix discard: lo=mid+1. Otherwise answer mid ya left ho sakta hai: hi=mid. Har step interval strictly shrink, exit lo==hi insertion boundary.
+
+Result n ho sakta hai jab every value smaller ho; result valid index guarantee nahi. Target present check karna ho toh boundary<n aur value equality separately check karo. Duplicates par first match contract random matching index se stronger hai.
+
+**Practice:** [], [2], [2,2,2], target below/all-above cases trace karo. Binary search on answer mein feasible predicate monotone prove karo; sorted input absence ke bawajood monotone capacity question applicable ho sakta hai. Arbitrary yes/no function par halves discard karna invalid hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** `[1,2,2,4]` mein pehla index nikalo jahan value kam-se-kam 2 ho. Target 0, target 5 aur empty array ke results bhi batao.
+**Apply — khud try karo:** `[1,2,2,4]` mein pehla index nikalo jahan value kam-se-kam 2 ho. Target 0, target 5 aur empty array ke results bhi batao.
 
-> **Hint:** Half-open interval `[lo,hi)` rakho; qualifying index na mile toh array length return karo.
+> **Hint — chhota ishara:** Half-open interval `[lo,hi)` rakho; qualifying index na mile toh array length return karo.
 
-**Answer guide — compare after attempting:** Answers respectively 1, 0, 4 aur 0 hain. hi ko length se start karo. Middle value target se chhoti ho toh lo=mid+1; warna hi=mid. End mein lo return karo. Is rule se duplicates aur missing answer dono consistently handle hote hain.
+**Answer guide — pehle khud karo, phir compare karo:** Answers respectively 1, 0, 4 aur 0 hain. hi ko length se start karo. Middle value target se chhoti ho toh lo=mid+1; warna hi=mid. End mein lo return karo. Is rule se duplicates aur missing answer dono consistently handle hote hain.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

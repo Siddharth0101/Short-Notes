@@ -4,7 +4,7 @@ title: JDBC SQL and transaction boundaries
 track: java
 order: 13
 level: Intermediate
-minutes: 22
+minutes: 25
 summary: Transaction related DB changes ko group karti hai; resource cleanup aur safe parameter binding phir bhi alag responsibilities hain.
 tags: jdbc, sql, transactions, indexes
 ---
@@ -108,20 +108,34 @@ Registration/checkout flows mein unique-constraint race condition ek classic int
 
 Unique username registration implement karo and two concurrent identical requests test karo. One write intentionally fail karke rollback verify karo. Real database query plan se list endpoint ka index justify karo. Phir 500 rows ko one-by-one insert versus batch insert se compare karo aur round-trip count/latency difference measure karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Transaction block aur isolation guarantee alag cheezein hain
+
+Two transactions stock 1 read karti hain aur both reserve karna chahti hain. Begin/commit wrap alone stale-read race prevent nahi karta. Atomic conditional update `stock > 0`, affected-row check ya suitable lock/isolation protocol invariant preserve kare. Business success sirf SQL statement execute hone se infer mat karo.
+
+Parameterized SQL data values separate karti hai; dynamic table/column names arbitrary input se concatenate safe nahi ho jaate. Structural choices allowlist se derive karo. Connection borrowed hai toh transaction outcome aur connection state cleanup deliberate ho, taaki next borrower dirty session inherit na kare.
+
+**Practice:** One transaction fail after first write: rollback final state verify karo. Two contenders overlap: exactly allowed outcomes assert karo. Isolation level ki behavior target database par verify karo; same label har engine ki every edge semantics identical prove nahi karta.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Transfer mein ek row debit hui, doosri credit karte waqt failure aayi. Persisted balances kya hone chahiye? SQL injection kaise avoid karoge?
+**Apply — khud try karo:** Transfer mein ek row debit hui, doosri credit karte waqt failure aayi. Persisted balances kya hone chahiye? SQL injection kaise avoid karoge?
 
-> **Hint:** Dono updates ek transaction mein aur values bound parameters se bhejo.
+> **Hint — chhota ishara:** Dono updates ek transaction mein aur values bound parameters se bhejo.
 
-**Answer guide — compare after attempting:** Failure par rollback original balances restore kare; success par dono commit hon. Prepared statements se IDs/amount bind karo. Amount validate karo aur affected rows check karo. Sirf connection close karna deliberate commit/rollback ka substitute nahi hai.
+**Answer guide — pehle khud karo, phir compare karo:** Failure par rollback original balances restore kare; success par dono commit hon. Prepared statements se IDs/amount bind karo. Amount validate karo aur affected rows check karo. Sirf connection close karna deliberate commit/rollback ka substitute nahi hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
 - [JDBC transactions](https://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html)
 - [Prepared statements](https://docs.oracle.com/javase/tutorial/jdbc/basics/prepared.html)
 - [PostgreSQL indexes](https://www.postgresql.org/docs/current/indexes.html)
+
+## Is concept ko aur practice karo
+
+- [SQL schema design aur safe migrations — data ka contract evolve karo](18-schema-migrations.md)

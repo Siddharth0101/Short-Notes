@@ -4,7 +4,7 @@ title: Java operators decisions and loops
 track: java
 order: 2
 level: Foundation
-minutes: 12
+minutes: 15
 summary: Control flow business rule ko code banata hai; har boundary aur zero-iteration case check karo.
 tags: fundamentals, java, decisions, loops
 ---
@@ -47,17 +47,29 @@ Else-if chain first matching branch chalati hai. Overlapping rules mein specific
 
 Counter aur accumulator alag trace karo; short-circuit logic explain karo. Next repeated calculation ko method mein nikaal kar values explicitly pass karenge.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Integer arithmetic ka type intermediate result decide karta hai
+
+`5 / 2` int operands se 2 deta hai. `double result = 5 / 2` bhi 2.0 store karega: division pehle integer arithmetic mein ho chuki. `5 / 2.0` floating-point division se 2.5 deta hai. Final variable double hone se already truncated result recover nahi hota.
+
+Loop invariant sum ke liye useful hai: iteration start par accumulator processed values ka total hai. Empty input par zero processed values ka sum 0, isliye loop zero times run karke meaningful result de sakta hai. `i <= array.length` invalid final index visit karega.
+
+Overflow ko normal bigger number mat samjho. int range exceed hone par ordinary integer arithmetic wrap kar sakti hai. Large total ke liye long choose karna range badhata hai, unlimited nahi. Exact overflow failure chahiye toh suitable checked arithmetic choose karo.
+
+**Practice:** Average nikalte waqt empty collection, int division aur overflow teen separate cases likho. `[1,2]` ka average 1.5 hona chahiye; total/count ko correct operand type mein calculate karo. “Program compile ho gaya” numeric contract prove nahi karta.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** 1 se n inclusive tak even integers count karne ka loop likho. n=0, 1, 2, 5 ke outputs batao.
+**Apply — khud try karo:** 1 se n inclusive tak even integers count karne ka loop likho. n=0, 1, 2, 5 ke outputs batao.
 
-> **Hint:** Upper bound inclusive rakho aur `% 2 == 0` se divisibility check karo.
+> **Hint — chhota ishara:** Upper bound inclusive rakho aur `% 2 == 0` se divisibility check karo.
 
-**Answer guide — compare after attempting:** Counts 0, 0, 1, 2 hain. Count zero se start karo; index 1 se n tak chalao aur even value par increment karo. Negative n reject karoge ya empty range maanoge, contract mein clear karo.
+**Answer guide — pehle khud karo, phir compare karo:** Counts 0, 0, 1, 2 hain. Count zero se start karo; index 1 se n tak chalao aur even value par increment karo. Negative n reject karoge ya empty range maanoge, contract mein clear karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

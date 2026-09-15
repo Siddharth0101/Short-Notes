@@ -4,7 +4,7 @@ title: Indexes aggregation geospatial queries and transactions
 track: mongodb
 order: 5
 level: Advanced
-minutes: 35
+minutes: 38
 summary: Atomic conditional update ek document ke invariant ko check aur change ek saath karke bacha sakti hai.
 tags: indexes, aggregation, transactions, geospatial, explain, performance
 visual: aggregation-pipeline
@@ -129,17 +129,27 @@ Conflict par fresh decision chahiye. Actual repository boundary par tenant/autho
 
 [Source yahan padho — MongoDB](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Pipeline stage order intermediate data ka meaning badalta hai
+
+Orders match, unwind items, group by product: unwind ke baad one row one item occurrence represent karti hai. Order-level total sum us stage par repeat karoge toh order amount multiply ho sakta hai. Har stage ke baad sample row aur count likho.
+
+Early selective match workload reduce kar sakta hai, lekin optimizer behavior/query support verify karo. Compound index field order actual equality/sort/range pattern se derive karo. Extra indexes reads improve karke write/storage maintenance cost badha sakti hain.
+
+**Practice:** Two orders with multiple items ka hand-calculated expected aggregation banao. Empty array/missing field behavior decide karo. Transaction multi-document writes coordinate kar sakti hai; deployment support, retryable errors aur side effects outside DB separate concerns hain. Transaction retry callback mein external charge blindly repeat mat karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Stock 1 hai aur do buyers ek-ek item kharid rahe hain. Filter, update aur success signal define karo.
+**Apply — khud try karo:** Stock 1 hai aur do buyers ek-ek item kharid rahe hain. Filter, update aur success signal define karo.
 
-> **Hint:** Eligibility aur decrement same write mein rakho.
+> **Hint — chhota ishara:** Eligibility aur decrement same write mein rakho.
 
-**Answer guide — compare after attempting:** Product ID plus stock>=1 filter use karo; `$inc` se -1 karo. Pehla successful decrement stock zero karega; doosri operation match nahi karegi. Matched/modified result check karo. Related multi-document work ke liye separate consistency design chahiye.
+**Answer guide — pehle khud karo, phir compare karo:** Product ID plus stock>=1 filter use karo; `$inc` se -1 karo. Pehla successful decrement stock zero karega; doosri operation match nahi karegi. Matched/modified result check karo. Related multi-document work ke liye separate consistency design chahiye.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

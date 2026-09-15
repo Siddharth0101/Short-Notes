@@ -4,7 +4,7 @@ title: Mongoose schemas validation and relationships
 track: mongodb
 order: 4
 level: Intermediate
-minutes: 31
+minutes: 34
 summary: Schema validation ek layer hai; concurrent writes ke rules DB constraints aur explicit update conditions se enforce hote hain.
 tags: mongoose, schemas, validation, populate, middleware, lean
 ---
@@ -120,17 +120,27 @@ Duplicate slug, missing author, invalid track aur too-large minutes create karke
 
 **Q. Populate referential integrity ensure karta hai?** Nahi. It resolves reads; missing/deleted references aur lifecycle rules application/schema design handle karta hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Model validation database invariant ka replacement nahi
+
+Document save aur query update ke validation/middleware paths differ kar sakte hain. Chosen operation ka exact behavior inspect karo; pre-save hook every update method par fire hoga, assume mat karo. Validation option enable karne se all race conditions solve nahi hoti.
+
+Unique index concurrent duplicate insert ka final guard hai. Schema mein unique declaration validation error ki same timing/type guarantee nahi. Index actually created hai ya nahi deployment/test evidence chahiye. Recognized duplicate-key error ko documented conflict response map karo.
+
+Populate related data read convenience deti hai; join cost, missing reference aur authorization own karna phir bhi zaroori hai. **Practice:** Save, atomic update aur bulk path ke liye same invariant test matrix banao. Lean object aur hydrated document methods interchangeable nahi; caller ko expected shape/behavior define karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Same email ke do requests application existence check pass karke user create karti hain. Duplicate committed records kaun rokega?
+**Apply — khud try karo:** Same email ke do requests application existence check pass karke user create karti hain. Duplicate committed records kaun rokega?
 
-> **Hint:** Pre-check aur write ke beech doosri request aa sakti hai.
+> **Hint — chhota ishara:** Pre-check aur write ke beech doosri request aa sakti hai.
 
-**Answer guide — compare after attempting:** Canonical email representation par DB unique index rakho aur duplicate-key error handle karo. Normalization before write define karo. Mongoose validation/existence query alone concurrency serialize nahi karti. Simultaneous submissions aur existing duplicate dono test karo.
+**Answer guide — pehle khud karo, phir compare karo:** Canonical email representation par DB unique index rakho aur duplicate-key error handle karo. Normalization before write define karo. Mongoose validation/existence query alone concurrency serialize nahi karti. Simultaneous submissions aur existing duplicate dono test karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

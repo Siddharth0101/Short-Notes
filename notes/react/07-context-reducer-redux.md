@@ -4,7 +4,7 @@ title: Context reducers and Redux Toolkit
 track: react
 order: 7
 level: Advanced
-minutes: 29
+minutes: 32
 summary: Reducer state transitions centralize karta hai; context value consumers tak pahunchata hai.
 tags: context, reducer, redux, redux-toolkit, state-management
 visual: context-flow
@@ -165,17 +165,29 @@ Reading session reducer ke invalid transitions test karo: idle state ko pause, p
 
 **Q. RTK mein mutation-looking syntax allowed kyun?** Reducer ko Immer draft milta hai, jo updates ko immutable result mein convert karta hai. Draft ko reducer lifetime ke bahar retain mat karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Reducer ko transition table aur Context ko delivery mechanism dekho
+
+Cart state mein item IDs aur quantities hain. `added`, `quantityChanged`, `removed` events ko previous state se next state mein transform karo. Reducer network request ya current time read kare toh replay/testing unpredictable ho sakti hai; needed data action payload se do. Invalid quantity ka contract reducer/boundary mein explicit ho.
+
+Context value provide karta hai; woh updates ko automatically fine-grained select nahi karta. Provider mein fresh `{state,dispatch}` object banne par consumers notify ho sakte hain. Split state/dispatch contexts, smaller providers ya store selectors workload ke hisaab se choose karo. Memoization ke pehle owner boundary dekho.
+
+Redux client state workflow aur query library remote data lifecycle alag responsibilities own kar sakti hain. Same server record do caches mein maintain karoge toh invalidation double ho sakti hai. “Global” useful tab hai jab multiple distant consumers ko coherent shared state chahiye; every input global store mein rakhna requirement nahi.
+
+**Practice:** Cart quantity update ke baad subtotal derive karo; subtotal alag stored field na ho toh drift impossible hoti hai. Same action twice apply karne ka outcome bolo: increment repeat hota hai, absolute quantity set duplicate-safe ho sakta hai. Action semantics interview mein defend karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Item ID se cart quantity increment action banao. Missing ID aur old state ka behavior define karo.
+**Apply — khud try karo:** Item ID se cart quantity increment action banao. Missing ID aur old state ka behavior define karo.
 
-> **Hint:** State library choose karne se pehle transition rule likho.
+> **Hint — chhota ishara:** State library choose karne se pehle transition rule likho.
 
-**Answer guide — compare after attempting:** Items map karo; matching item ko incremented quantity ke new object se replace karo. Missing ID ko no-op ya explicit error define karo. Previous array/objects mutate mat karo. Reducer ko context/Redux wiring se independently test karo.
+**Answer guide — pehle khud karo, phir compare karo:** Items map karo; matching item ko incremented quantity ke new object se replace karo. Missing ID ko no-op ya explicit error define karo. Previous array/objects mutate mat karo. Reducer ko context/Redux wiring se independently test karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

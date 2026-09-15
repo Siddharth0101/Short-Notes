@@ -4,7 +4,7 @@ title: React machine coding and identity bugs
 track: react
 order: 11
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Machine coding mein explicit states, stable identity aur edge cases ka visible handling important hai.
 tags: machine-coding, identity, keys, requests, accessibility
 visual: react-identity
@@ -12,7 +12,7 @@ visual: react-identity
 
 ## Mental model — simple soch
 
-Machine coding round mein working happy path sirf starting point hai. Strong solution has a small state model, clear component contracts, predictable identity and observable failure states. Write acceptance criteria before styling. For a search interface, clarify minimum query length, keyboard behavior, loading state, empty results and what happens when old responses arrive late.
+Machine coding round mein working happy path sirf starting point hai. Strong solution mein small state model, clear component contracts, predictable identity aur visible failure states hoti hain. Write acceptance criteria before styling. Search interface mein minimum query length, keyboard behavior, loading, empty results aur late old responses ka rule pehle clear karo.
 
 > **Core takeaway:** Machine coding mein explicit states, stable identity aur edge cases ka visible handling important hai.
 
@@ -91,17 +91,33 @@ URL filters, stable IDs, editable draft aur paginated adapter wali table banao. 
 
 URL state, local draft aur server data ke owners draw karo. Props-to-state copies ka sync cost explain karo. Ten-thousand rows versus windowing mein keyboard/screen-reader tradeoffs compare karo. Identity/races/navigation tests aur short recording do; static happy-path screenshot enough evidence nahi.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Search exercise ko five observable states mein tod do
+
+Idle mein prompt, loading mein progress, success-with-items mein list, success-empty mein no-results aur error mein retry dikhana explicit contract hai. Sirf items array aur loading boolean se stale error/old results combinations hide ho sakti hain. Requirements ke hisaab se previous results retain karna allowed ho toh label bhi honest ho.
+
+Timeline: A search start, B search start, B success, A late success. Latest-request identity B ko visible rakhe. Abort optimization hai; identity check correctness boundary hai. Unmount par update/resource cleanup aur retry par new request identity decide karo.
+
+Components ko responsibilities se split karo: input editing, async query ownership, result rendering. Har line alag component banana goal nahi. Stable IDs selection preserve karein; result order ko selection identity na banao. Keyboard user submit, choose aur retry kar sake.
+
+**Self-review:** Happy-path demo ke baad empty input, network failure, late response, duplicate click aur unmount run karo. Time short ho toh unsupported behavior explicitly state karo. Working core contract, targeted tests aur readable reasoning half-built generic framework se zyada assessable hain.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Search A, phir B kiya. B pehle aur A baad mein return hota hai. Visible result aur deterministic test define karo.
+**Apply — khud try karo:** Search A, phir B kiya. B pehle aur A baad mein return hota hai. Visible result aur deterministic test define karo.
 
-> **Hint:** Test mein promise resolution ka order khud control karo.
+> **Hint — chhota ishara:** Test mein promise resolution ka order khud control karo.
 
-**Answer guide — compare after attempting:** Sirf B visible rehna chahiye. Request identity ya equivalent stale-response protection rakho; supported ho toh cancellation bhi. Test mein B ko A se pehle resolve karo aur final query/result B assert karo. Purani failure bhi B ki success overwrite na kare.
+**Answer guide — pehle khud karo, phir compare karo:** Sirf B visible rehna chahiye. Request identity ya equivalent stale-response protection rakho; supported ho toh cancellation bhi. Test mein B ko A se pehle resolve karo aur final query/result B assert karo. Purani failure bhi B ki success overwrite na kare.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 [React identity and state](https://react.dev/learn/preserving-and-resetting-state) and [WAI combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) explain the relevant contracts.
+
+## Is concept ko aur practice karo
+
+- [React testing — user behavior aur accessibility verify karo](12-testing-accessibility.md)

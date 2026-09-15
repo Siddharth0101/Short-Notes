@@ -4,7 +4,7 @@ title: Java backend API and data architecture
 track: system-design
 order: 7
 level: Intermediate
-minutes: 26
+minutes: 29
 summary: Service boundary business invariants enforce kare aur persistence decisions own kare.
 tags: java, api, data-modeling, consistency
 visual: request-flow
@@ -141,7 +141,7 @@ Pool sizing ka counter-intuitive part: pool badhana aksar galat fix hai. 100 con
 
 ## Interview questions — bolkar practice karo
 
-**Why not microservices immediately?** Team ownership, independently scaling workloads and deployment cadence can justify them. Otherwise distributed consistency, monitoring and operations additional costs hain that modular monolith avoid kar sakta hai.
+**Why not microservices immediately?** Team ownership, independently scaling workloads aur deployment cadence microservices justify kar sakti hain. Otherwise distributed consistency, monitoring and operations additional costs hain that modular monolith avoid kar sakta hai.
 
 **How do you prevent lost updates?** Version checking or appropriate locking use karo, and conflict behavior client ko expose karo. "Read then write" without concurrency check unsafe ho sakta hai.
 
@@ -157,20 +157,34 @@ Bookmark create/delete semantics document karo. Same version se two title update
 
 Uske baad pool exhaustion reproduce karo: pool size 5 set karo, ek endpoint mein transaction ke andar 500 ms sleep daalo, aur 50 concurrent requests bhejo — observe karo ki *unrelated* endpoints bhi slow ho gaye. Phir sleep ko transaction ke bahar nikalo aur difference dekho. Last mein idempotency table implement karke same POST 5 baar bhejo (parallel mein bhi), aur verify karo ki exactly ek row bani aur paanchon responses identical the.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Modular boundary aur transaction boundary ko align karke dekho
+
+Order creation inventory claim, order row aur idempotency result update own karti hai. Same database transaction invariant fit kar sakti hai; external payment call same local transaction ka participant nahi ban jaati. Long network call while holding row lock contention badha sakti hai.
+
+Connection pool requests ko database tak limited concurrency deti hai; queue timeout end-to-end deadline ke andar fit hona chahiye. Every service replica ka own pool total DB connections multiply kar sakta hai. App instance scale karte waqt aggregate budget count karo.
+
+**Practice:** Endpoint ke validation, auth, transaction, external effect aur response phases draw karo. Failure har phase mein inject karne par durable state kya hogi? Modular monolith se start karna reasonable ho sakta hai; service split ka trigger team/data ownership aur independent workload ho, sirf folder size nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Do requests last seat reserve karti hain. Availability check aur later insert bina coordination unsafe kyun hain?
+**Apply — khud try karo:** Do requests last seat reserve karti hain. Availability check aur later insert bina coordination unsafe kyun hain?
 
-> **Hint:** Dono callers kisi bhi write se pehle available seat dekh sakte hain.
+> **Hint — chhota ishara:** Dono callers kisi bhi write se pehle available seat dekh sakte hain.
 
-**Answer guide — compare after attempting:** Chosen transaction design mein atomic conditional update, suitable lock ya constraint use karo. Ek request success aur doosri defined unavailable/conflict de. Affected rows aur concurrent attempts test karo. Scarce inventory ka sole authority cache nahi ho sakta.
+**Answer guide — pehle khud karo, phir compare karo:** Chosen transaction design mein atomic conditional update, suitable lock ya constraint use karo. Ek request success aur doosri defined unavailable/conflict de. Affected rows aur concurrent attempts test karo. Scarce inventory ka sole authority cache nahi ho sakta.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
 - [HTTP semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [PostgreSQL isolation](https://www.postgresql.org/docs/current/transaction-iso.html)
 - [Spring Modulith fundamentals](https://docs.spring.io/spring-modulith/reference/fundamentals.html)
+
+## Related extension — aur samjho
+
+- [REST, GraphQL aur gRPC — protocol se pehle contract choose karo](14-api-contracts.md)

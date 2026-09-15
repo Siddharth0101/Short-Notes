@@ -69,3 +69,7 @@ npm run check
 Algorithm invariants aur empty/boundary cases check karo. Exercise ko answer dekhe bina attempt karo; numeric results aur claimed failure verify karo. Design answer ko ek defensible approach bolo jab alternatives possible hain. Revision takeaway short rakho; detail concept section mein do. Raw HTML disclosure current Markdown renderer support nahi karta; hidden answers ke liye existing cards hain.
 
 UI changes par light/dark themes, narrow viewport, keyboard, long code blocks aur direct URL reload check karo. Source mapping, old links/bookmarks, search aur inline practice tests pass hone chahiye. [Study guide](notes/STUDY_GUIDE.md) learner ki routine ka reference hai; [glossary](notes/GLOSSARY_HINGLISH.md) mein new difficult terms ke easy meanings add kar sakte ho.
+
+## Priority interview guide maintain karna
+
+Final revision selection `notes/interview-priorities.json` mein hai. Canonical answers question bank mein edit karo; naya gap-focused set `playground/src/data/finalInterviewQuestions.js` hai. Hinglish introduction `scripts/templates/interview-priority-intro.md` mein rakho. `node scripts/sync-priority-interviews.mjs` se guide regenerate karo; `npm run check` (playground directory) selection, chapter links aur generated content sync verify karta hai.

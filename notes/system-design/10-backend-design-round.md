@@ -4,7 +4,7 @@ title: Java backend design interview and reservation correctness
 track: system-design
 order: 10
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Reservation ki correctness competing state transitions, especially expiry aur confirmation, par depend karti hai.
 tags: backend, java, system-design, idempotency, transactions
 visual: transaction-race
@@ -12,7 +12,7 @@ visual: transaction-race
 
 ## Mental model — simple soch
 
-Backend design ki starting point database brand nahi, invariant hai. For a booking service: one seat can have at most one active reservation, a confirmed payment must be traceable, and retries must not create a second logical booking. Availability and latency choices follow these correctness requirements.
+Backend design ki starting point database brand nahi, invariant hai. Booking service mein one seat ki maximum one active reservation ho; confirmed payment traceable ho aur retries second logical booking create na karein. Availability and latency choices follow these correctness requirements.
 
 > **Core takeaway:** Reservation ki correctness competing state transitions, especially expiry aur confirmation, par depend karti hai.
 
@@ -66,17 +66,29 @@ Three timelines banao: two users one seat; payment success response lost; expiry
 
 **Local lock multiple instances ki seats protect karega?** Nahi. All writers shared authority ya valid distributed ownership protocol se coordinate karein.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Booking workflow mein “unknown” bhi real state hai
+
+Client reserve request bhejti hai. Server commit karta hai, response network mein lost. Client timeout se booking failure conclude nahi kar sakti. Same idempotency identity par retry/status lookup se committed result recover karna hoga. New identity se duplicate booking risk create hota hai.
+
+One seat ki active reservation invariant atomic conditional update/constraint own kare. Payment provider aur local database ek ordinary transaction share nahi karte. Provider success ke baad local update fail ho toh webhook/reconciliation recovery define karo. Expired reservation par late payment aaye toh re-acquire/refund/manual handling policy product decide kare.
+
+Read cache catalog fast kar sakti hai; final seat claim authoritative write path se check hoga. Queue throughput smooth kar sakti hai, sold-out truth magically create nahi karti. Scale diagram se pehle durable state transitions prove karo.
+
+**Practice:** Timeline table mein client action, local DB state, provider state, retry identity aur next recovery action columns banao. Duplicate webhook aur reversed event order include karo. “Exactly once” bolne ke bajay deduplication scope aur atomic boundary specify karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Payment confirmation aate waqt reservation expire hoti hai. Possible terminal outcomes aur forbidden outcome likho.
+**Apply — khud try karo:** Payment confirmation aate waqt reservation expire hoti hai. Possible terminal outcomes aur forbidden outcome likho.
 
-> **Hint:** Expiry aur payment ko durable state par competing transitions samjho.
+> **Hint — chhota ishara:** Expiry aur payment ko durable state par competing transitions samjho.
 
-**Answer guide — compare after attempting:** Atomically decide karo ki confirmation active reservation consume kar sakti hai ya nahi. Expiry jeete toh payment refund/reconcile karo ya explicit new fulfillment decision lo. Already-reallocated seat ka silent promise kabhi mat karo. Transition history persist aur duplicate callbacks safe rakho.
+**Answer guide — pehle khud karo, phir compare karo:** Atomically decide karo ki confirmation active reservation consume kar sakti hai ya nahi. Expiry jeete toh payment refund/reconcile karo ya explicit new fulfillment decision lo. Already-reallocated seat ka silent promise kabhi mat karo. Transition history persist aur duplicate callbacks safe rakho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: Express REST APIs middleware and errors
 track: mongodb
 order: 2
 level: Intermediate
-minutes: 30
+minutes: 33
 summary: Middleware order decide karta hai ki handler ko kaunsa parsed data aur kaunse checks milenge.
 tags: express, rest, middleware, errors, validation, pagination
 visual: request-flow
@@ -157,17 +157,27 @@ Routes ke baad error middleware register karo. Response finish hone ke baad back
 
 [Source yahan padho — Express](https://expressjs.com/en/guide/error-handling/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Middleware chain ko control-flow program ki tarah trace karo
+
+Parser request body prepare karta hai, auth identity establish karti hai, route validation/use case chalati hai, error handler recognized failures map karta hai. Handler response send karke bhi next work continue kare toh duplicate response/header errors aa sakte hain. Return/next ka ownership explicit rakho.
+
+Async helper call karke uski promise return/await nahi ki toh framework request lifecycle se rejection disconnect ho sakti hai. Route succeed dikhne ke baad background failure hidden reh sakti hai. Deliberate background work ko separate observable job contract chahiye.
+
+**Practice:** Malformed JSON, missing auth, unknown route aur service rejection trace karo. Har path par exactly one response aur expected cleanup ho. Validation input shape check kare; arbitrary client-supplied ownerId ko authenticated identity mat banao. Error payload safe aur stable ho, stack trace internal diagnostics mein rahe.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** JSON endpoint ko req.body undefined milta hai. Ordering cause batao; malformed JSON par controlled response kaise doge?
+**Apply — khud try karo:** JSON endpoint ko req.body undefined milta hai. Ordering cause batao; malformed JSON par controlled response kaise doge?
 
-> **Hint:** Handler body padhe usse pehle parser chalna chahiye.
+> **Hint — chhota ishara:** Handler body padhe usse pehle parser chalna chahiye.
 
-**Answer guide — compare after attempting:** Relevant routes se pehle JSON parser install karo aur correct content type bhejo. Parsing failure error path se documented client-error response de. Fake empty body bana kar business logic continue mat karo; internal stack trace expose mat karo.
+**Answer guide — pehle khud karo, phir compare karo:** Relevant routes se pehle JSON parser install karo aur correct content type bhejo. Parsing failure error path se documented client-error response de. Fake empty body bana kar business logic continue mat karo; internal stack trace expose mat karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

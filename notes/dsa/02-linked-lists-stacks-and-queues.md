@@ -4,7 +4,7 @@ title: Linked lists stacks and queues
 track: dsa
 order: 2
 level: Intermediate
-minutes: 36
+minutes: 39
 summary: Data structure operation ke order se choose karo: stack mein last-in-first-out (LIFO), queue mein first-in-first-out (FIFO) hota hai.
 tags: linked-list, stack, queue, pointers, monotonic-stack
 ---
@@ -296,17 +296,27 @@ Doubly linked list ka classic production use LRU cache hai: hash map node refere
 
 **Answer:** Queue implementation. `queue.shift()` har dequeue par baaki elements ko move karta hai, so V dequeues O(V²) ban jaate hain — algorithm O(V + E) hone ke bawajood. Fix head index (`queue[head++]`) ya proper ring buffer hai. Doosra check: visited enqueue ke waqt mark ho raha hai ya dequeue ke waqt — dequeue par marking se same vertex multiple baar queue mein aa sakta hai aur kaam exponentially badh sakta hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Pointer update order lost nodes se bachata hai
+
+Singly linked list reverse karte waqt current.next ko previous assign karne se pehle old next save karo. Nahi toh remaining chain ka only reference lose ho sakta hai. Invariant: previous reversed prefix head, current unprocessed suffix head. Har iteration one node prefix mein move hota hai.
+
+Head/tail special cases representation contract hain. Last item pop ke baad both null hon; size zero ho. Queue array shift repeatedly use kare toh chosen language implementation mein moving elements expensive ho sakta hai; head index/ring buffer ownership cleaner performance model de sakta hai.
+
+**Practice:** Empty, one node aur two nodes trace draw karo. Reverse twice original sequence de, lekin yeh alone cycle-freedom proof nahi. Reachable node count, termination aur head/tail consistency bhi check karo. Stack undo aur queue processing different order promises hain.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Edits A, B, C ke liye undo banao aur do baar undo karo. Wahi labels job queue mein hon toh pehle kaun niklega? Empty structure par removal ka result bhi define karo.
+**Apply — khud try karo:** Edits A, B, C ke liye undo banao aur do baar undo karo. Wahi labels job queue mein hon toh pehle kaun niklega? Empty structure par removal ka result bhi define karo.
 
-> **Hint:** Undo mein end se aur jobs mein front se dry-run karo.
+> **Hint — chhota ishara:** Undo mein end se aur jobs mein front se dry-run karo.
 
-**Answer guide — compare after attempting:** Undo C phir B hataega; queue A phir B process karegi. Empty removal par documented sentinel ya error do. Array queue mein har removal par saare elements shift karne ke bajay head index rakh sakte ho.
+**Answer guide — pehle khud karo, phir compare karo:** Undo C phir B hataega; queue A phir B process karegi. Empty removal par documented sentinel ya error do. Array queue mein har removal par saare elements shift karne ke bajay head index rakh sakte ho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

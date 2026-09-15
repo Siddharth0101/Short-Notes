@@ -41,3 +41,11 @@ Payments/uploads/deployment se pehle authentication/authorization add karo.
 8. [SSR uploads payments email and deployment](08-production-integrations.md)
 
 **Stage checkpoint — khud karke dikhao:** Unauthorized access reject aur duplicate webhook se safely recover karo.
+
+## Stage 5: API lifecycle verify karo
+
+Real HTTP testing, database isolation aur bounded shutdown practice karo.
+
+9. [Node API testing aur graceful shutdown — request se resource cleanup tak](09-testing-shutdown.md)
+
+**Stage checkpoint — khud karke dikhao:** Parallel-safe request test aur in-flight shutdown acceptance cases run karo.

@@ -4,14 +4,14 @@ title: HTML CSS and browser rendering essentials
 track: javascript
 order: 11
 level: Foundation
-minutes: 25
+minutes: 28
 summary: Semantic HTML meaning aur built-in interaction deta hai; CSS uski layout/style decide karta hai.
 tags: html, css, accessibility, browser, layout
 ---
 
 ## Mental model — simple soch
 
-Browser UI teen connected contracts hai: HTML describes meaning, CSS describes presentation, and JavaScript adds behavior. Framework components eventually produce these same browser primitives. A button-looking div does not acquire native keyboard behavior, and a React render does not necessarily cause a browser paint.
+Browser UI teen connected contracts hai: HTML describes meaning, CSS describes presentation, and JavaScript adds behavior. Framework components eventually produce these same browser primitives. Button jaisa dikhne wala div native keyboard behavior automatically nahi leta; React render se har baar browser paint hona bhi zaroori nahi.
 
 > **Core takeaway:** Semantic HTML meaning aur built-in interaction deta hai; CSS uski layout/style decide karta hai.
 
@@ -93,17 +93,29 @@ Placeholder persistent visible label nahi hai. Pehle native behavior sahi karo, 
 
 [Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/HTML). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Layout bug ko DOM se pixels tak trace karo
+
+HTML structure batata hai, CSS matching declarations choose karti hai, layout boxes ki geometry nikalta hai, paint visual content banata hai aur compositing layers combine kar sakti hai. Har property change har stage repeat karaye, zaroori nahi. `width` change layout affect kar sakta hai; transform frequently different rendering path use karta hai, lekin “GPU means always free” guarantee nahi.
+
+Box model mein content width ke saath padding/border count karo. `box-sizing: border-box` declared width mein padding/border include karta hai. Flex child content ke minimum size ki wajah se shrink na ho toh `min-width: 0` relevant ho sakta hai; blindly overflow hidden karke content accessibility lose mat karo.
+
+Semantic button keyboard activation, focus aur disabled behavior ka built-in contract deta hai. Click listener wala div dekhne mein same lagkar bhi equivalent interaction nahi deta. Label/input association aur form submit behavior basic HTML ki responsibility hain, React use magically add nahi karega.
+
+**Debug drill:** Card small viewport par overflow karti hai. Inspect computed width, padding, min-width aur long unbroken content. Ek cause change karke narrow viewport plus keyboard navigation dobara verify karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Heading, description aur expand-details action wala lesson card banao. Keyboard aur narrow screen par behavior samjhao.
+**Apply — khud try karo:** Heading, description aur expand-details action wala lesson card banao. Keyboard aur narrow screen par behavior samjhao.
 
-> **Hint:** Action ke liye button aur navigation ke liye link use karo.
+> **Hint — chhota ishara:** Action ke liye button aur navigation ke liye link use karo.
 
-**Answer guide — compare after attempting:** Accessible name wala real button use karo; expanded state ko controlled content se associate karo. Visible focus aur flexible width rakho. Enter/Space activation test karo; long text wrap ho aur action hide na ho.
+**Answer guide — pehle khud karo, phir compare karo:** Accessible name wala real button use karo; expanded state ko controlled content se associate karo. Visible focus aur flexible width rakho. Enter/Space activation test karo; long text wrap ho aur action hide na ho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

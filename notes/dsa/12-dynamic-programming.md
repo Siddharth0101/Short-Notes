@@ -4,7 +4,7 @@ title: Dynamic programming from state to recurrence
 track: dsa
 order: 12
 level: Advanced
-minutes: 40
+minutes: 43
 summary: DP state mein itni information honi chahiye ki future choices decide ho sakein; irrelevant history store karna zaroori nahi.
 tags: dynamic-programming, memoization, tabulation, coin-change, knapsack
 visual: dynamic-programming
@@ -88,7 +88,7 @@ function minimumCoins(coins, amount) {
 
 Last selected coin c ho to previous amount `a - c` solve karna padta hai. Har valid last coin try karne se optimal possibility cover hoti hai. O(A*C) time, O(A) space, where A target amount aur C denomination count hai. Ye pseudo-polynomial hai: A ki numeric value mein polynomial, uske binary encoding length mein necessarily polynomial nahi.
 
-For coins `[1,3,4]` and amount 6, greedy `4+1+1` uses 3 coins, DP `3+3` finds 2. Local largest coin choice globally optimal hona guaranteed nahi.
+Coins `[1,3,4]` aur amount 6 mein greedy `4+1+1` se 3 coins leti hai; DP `3+3` se 2 find karti hai. Local largest coin choice globally optimal hona guaranteed nahi.
 
 ### Reconstructing the actual answer, not just its value
 
@@ -328,17 +328,32 @@ O(nW) knapsack numeric capacity W par depend karta hai. W ko binary mein likhne 
 
 [Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/3484e876d81aba07911a1109f5b5e81e_MIT6_006F11_lec21.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### State ka meaning recurrence se pehle define karo
+
+0/1 knapsack mein dp[i][capacity] first i items se best value represent kar sakta hai. Item i choose karo toh previous-row remaining capacity use hoti hai, taaki same item repeat na ho. One-dimensional optimization mein capacity descending iterate karna isi dependency ko preserve karta hai. Ascending update same item reuse karke unbounded variant ban sakti hai.
+
+Minimum coins, number of combinations aur number of ordered sequences same input par different transitions/loop orders maangte hain. State meaning mix karne se plausible number wrong question answer karta hai. Base zero amount ka result min-coins mein 0, count-combinations mein 1 empty choice ho sakta hai.
+
+**Practice:** Tiny amount/items brute-force enumerate karo. Optimized answer ke saath reconstruction chahiye toh parent/choice storage plan karo; compressed memory se lost decisions automatically recover nahi hote. Complexity reachable states × per-state transition cost se derive karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Nonnegative house values `[2,7,9,3,1]` ke liye maximum nonadjacent sum nikalo. State define karke har prefix ka answer likho.
+**Apply — khud try karo:** Nonnegative house values `[2,7,9,3,1]` ke liye maximum nonadjacent sum nikalo. State define karke har prefix ka answer likho.
 
-> **Hint:** Current house skip karne aur use lene plus do positions pehle ka best answer compare karo.
+> **Hint — chhota ishara:** Current house skip karne aur use lene plus do positions pehle ka best answer compare karo.
 
-**Answer guide — compare after attempting:** `best[i]` first i houses ka best sum hai. best[0]=0 se prefix answers 2, 7, 11, 11, 12 milte hain. Final 12. Recurrence `max(best[i-1], value[i-1]+best[i-2])` hai; first house ka base case alag handle karo. Empty input ka answer 0 hai.
+**Answer guide — pehle khud karo, phir compare karo:** `best[i]` first i houses ka best sum hai. best[0]=0 se prefix answers 2, 7, 11, 11, 12 milte hain. Final 12. Recurrence `max(best[i-1], value[i-1]+best[i-2])` hai; first house ka base case alag handle karo. Empty input ka answer 0 hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [Princeton's recursion and dynamic programming discussion](https://introcs.cs.princeton.edu/java/23recursion/) repeated recursive work aur memoization ko cover karta hai. [Princeton's analysis chapter](https://algs4.cs.princeton.edu/14analysis/) states × work-per-state wale cost model ko support karta hai. Coin-change, knapsack, LIS aur edit-distance recurrences aur unke derivations original exercises hain.
+
+## Is concept ko aur practice karo
+
+- [Greedy aur intervals — choice ka proof aur boundary ka contract](13-greedy-intervals.md)
+- [Tries, bitmasks aur range queries — advanced structures ka practical bridge](14-tries-range-bits.md)

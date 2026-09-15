@@ -4,7 +4,7 @@ title: Exceptions resources files and time
 track: java
 order: 9
 level: Intermediate
-minutes: 17
+minutes: 20
 summary: Resource ka owner decide karta hai use kaun close karega; exception aane par bhi cleanup hona chahiye.
 tags: exceptions, io, time, resources
 ---
@@ -108,17 +108,27 @@ Payment/order APIs mein exception translation exactly is pattern se dikhti hai: 
 
 UTF-8 file importer banao. Invalid row number ke saath error report karo. Fixed Clock se midnight-boundary test likho, phir Europe/Berlin daylight-saving day par 24-hour duration aur one-day calendar addition compare karo. Phir ek token-expiry checker likho jo injected `Clock` use kare, aur teen tests likho: expiry se pehle, exactly at expiry, aur expiry ke baad.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Resource ownership aur error ownership ek saath define karo
+
+Method stream open karti hai toh close ka owner normally wahi boundary hona chahiye, unless ownership explicitly caller ko transfer hoti hai. Try-with-resources normal return aur exception dono par close coordinate karta hai. Caller-owned stream ko helper unexpectedly close kare toh later caller operation fail ho sakti hai.
+
+Exception wrap karte waqt cause retain karo, warna original diagnostic context lose ho sakta hai. Catch-all karke empty result return karna “valid no data” aur “failed to read” mix karta hai. Checked exception compiler handling requirement hai; unchecked exception automatically harmless nahi.
+
+Time model mein Instant event point hai, LocalDate calendar date hai, ZoneId conversion rules identify karta hai. **Practice:** File missing, malformed content aur close failure alag outcomes trace karo. Business duration measurement ke liye wall-clock jumps ka effect socho; timestamps aur elapsed timing ka purpose alag hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** File read karte waqt beech mein exception aa gayi. Owned reader close kaise hoga aur caller ko failure kaise pata chalega?
+**Apply — khud try karo:** File read karte waqt beech mein exception aa gayi. Owned reader close kaise hoga aur caller ko failure kaise pata chalega?
 
-> **Hint:** Aisa construct use karo jo normal aur exceptional exit dono par cleanup kare.
+> **Hint — chhota ishara:** Aisa construct use karo jo normal aur exceptional exit dono par cleanup kare.
 
-**Answer guide — compare after attempting:** Reader try-with-resources mein kholo. Exception propagate karo ya meaningful context ke saath wrap karo. Success aur failure dono paths check karo. Exception chupakar fake complete result mat do. Caller-owned resource tabhi close karo jab contract ownership transfer karta ho.
+**Answer guide — pehle khud karo, phir compare karo:** Reader try-with-resources mein kholo. Exception propagate karo ya meaningful context ke saath wrap karo. Success aur failure dono paths check karo. Exception chupakar fake complete result mat do. Caller-owned resource tabhi close karo jab contract ownership transfer karta ho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

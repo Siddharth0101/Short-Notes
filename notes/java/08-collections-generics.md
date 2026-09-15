@@ -4,7 +4,7 @@ title: Collections generics and choosing data structures
 track: java
 order: 8
 level: Intermediate
-minutes: 20
+minutes: 23
 summary: Collection required operations aur contracts se choose karo; key mutable hai ya immutable, yeh bhi matter karta hai.
 tags: collections, generics, hashmap, pecs
 ---
@@ -146,17 +146,27 @@ Copy structural ownership separate karti hai. Elements mutable objects hon toh s
 
 [Source yahan padho — Oracle Java API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html#unmodifiableList(java.util.List)). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### PECS ko allowed operation se derive karo
+
+`List<? extends Number>` se read value Number treat kar sakte ho. Lekin list actual Integer list ho sakti hai, isliye arbitrary Double add karna safe nahi. `List<? super Integer>` mein Integer add safe hai; read ka guaranteed type Object hai, kyunki actual list broader values contain kar sakti hai.
+
+Generics invariance isi safety ko preserve karti hai: List<Integer> ko List<Number> maan kar Double insert karna underlying integer-only contract tod dega. Wildcard use ka purpose API mein producer/consumer flexibility hai, har declaration ko complex banana nahi.
+
+Collection selection mein lookup ke saath iteration order, duplicate policy, mutation aur thread ownership dekho. Unmodifiable view backing collection changes reflect kar sakti hai; immutable snapshot ka claim alag hai. **Practice:** Copy(source,destination) signature design karo, phir kaunse values read/write allowed hain compile-time reasoning se justify karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** HashMap mein key insert karke uska hashCode mein used field mutate kar diya. Same object reference se lookup bhi fail kyun ho sakta hai?
+**Apply — khud try karo:** HashMap mein key insert karke uska hashCode mein used field mutate kar diya. Same object reference se lookup bhi fail kyun ho sakta hai?
 
-> **Hint:** Entry old hash ke basis par bucket mein rakhi gayi thi.
+> **Hint — chhota ishara:** Entry old hash ke basis par bucket mein rakhi gayi thi.
 
-**Answer guide — compare after attempting:** Lookup new hash se doosri bucket search kar sakta hai. Hash/equality fields immutable rakho; ya change se pehle remove karke baad mein reinsert karo. Immutable identifier better key hai. Accidental collision lookup bacha de, is par depend mat karo.
+**Answer guide — pehle khud karo, phir compare karo:** Lookup new hash se doosri bucket search kar sakta hai. Hash/equality fields immutable rakho; ya change se pehle remove karke baad mein reinsert karo. Immutable identifier better key hai. Accidental collision lookup bacha de, is par depend mat karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

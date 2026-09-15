@@ -4,7 +4,7 @@ title: Observability with Actuator, metrics and tracing
 track: spring-boot
 order: 9
 level: Advanced
-minutes: 18
+minutes: 21
 summary: Observability se pata chalna chahiye ki request ka time kahan gaya aur failure ne user ko kaise affect kiya.
 tags: actuator, observability, metrics, tracing, logging
 ---
@@ -125,17 +125,27 @@ Explicit reservation state machine ke around reserve/confirm/release implement k
 
 Invariant, transaction boundary aur commit-ke-baad-lost-response recovery explain karo. Conditional update, pessimistic lock aur optimistic version compare karo. Contention mein measured conflict/latency results do; HTTP success race safety prove nahi karti.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Same incident ko logs, metrics aur traces alag evidence deti hain
+
+Metric checkout failure rate badhne ka aggregate signal deti hai. Trace ek sampled request ke spans se waiting boundary locate kar sakti hai. Structured log recognized failure ka context de sakti hai. One signal doosre ka universal replacement nahi.
+
+Metrics label mein userId/orderId high cardinality create kar sakta hai; count/rate aggregation ke liye bounded dimensions choose karo. Correlation ID diagnosis help kare, secret/session token log mat karo. Sampling ka matlab missing trace se event never happened infer nahi kar sakte.
+
+**Practice:** Database pool exhaustion inject karne ka controlled plan banao. User latency, pool wait aur acquisition failures correlate karo. Readiness/liveness endpoint output expose karte waqt access aur sensitive detail policy deliberate ho. Alert sustained user symptom par actionable ho; every transient CPU spike pager incident nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Endpoint latency badhi, DB execution time same hai. Do aur timings aur useful trace boundary batao.
+**Apply — khud try karo:** Endpoint latency badhi, DB execution time same hai. Do aur timings aur useful trace boundary batao.
 
-> **Hint:** Execution timing queueing aur downstream wait include nahi karti.
+> **Hint — chhota ishara:** Execution timing queueing aur downstream wait include nahi karti.
 
-**Answer guide — compare after attempting:** Connection-pool acquisition wait, outbound-service latency aur relevant request queueing inspect karo. Correlated context se controller→service→DB/outbound spans trace karo. Healthy/affected requests compare karo; unbounded user IDs metric labels mein mat daalo.
+**Answer guide — pehle khud karo, phir compare karo:** Connection-pool acquisition wait, outbound-service latency aur relevant request queueing inspect karo. Correlated context se controller→service→DB/outbound spans trace karo. Healthy/affected requests compare karo; unbounded user IDs metric labels mein mat daalo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/index.html)

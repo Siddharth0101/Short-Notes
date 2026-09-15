@@ -2,21 +2,25 @@
 
 Yahan concepts **simple Roman Hinglish** mein samjhaye hain. Technical terms aur code identifiers English mein hain, taaki documentation, coding aur interviews mein wahi terms pehchaan sako. Har concept ko meaning → mechanism → example → galti → practice ke order mein padho.
 
-**92 chapters · 32 course stages · 142 linked source examples · 283 interview questions · 20 interactive visuals.**
+**108 chapters · 43 course stages · 142 linked source examples · 323 interview questions · 20 interactive visuals.**
 
 Shuru karne ke liye [poora syllabus](notes/README.md) kholo. Padhai ka tareeka [study guide](notes/STUDY_GUIDE.md) mein aur difficult terms ke easy meanings [Hinglish glossary](notes/GLOSSARY_HINGLISH.md) mein milenge.
+
+Interview ke liye [52 priority questions aur preparation plan](notes/INTERVIEW_PRIORITY_GUIDE.md) kholo.
+
+Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho.
 
 ## Kya aur kis order mein padhna hai?
 
 | Course | Chapters | Padhai ka flow |
 | --- | ---: | --- |
-| JavaScript | 17 | Variables → types/operators → decisions/loops → functions → arrays/objects → scope → browser → OOP → async/tooling |
-| React | 11 | JSX/props → state → rendering/identity → composition → effects → routing/shared state → server data/types → performance/practice |
-| Java | 16 | First program → control flow → classes → packages/interfaces → collections/JVM → builds/tests → SQL → concurrency |
-| Spring Boot | 10 | First app → beans/DI → configuration → REST/validation → JPA/security → testing → observability → deployment |
-| Node & MongoDB | 8 | Node/HTTP → Express → documents/CRUD → Mongoose → indexes/query plans → security → production |
-| DSA | 12 | Complexity → lists/stacks/queues → hashing → search/patterns → recursion/sorting → monotonic stacks → trees/heaps → graphs/DP |
-| System design | 12 | Requirements/scaling → React frontend → Java backend → complete case studies |
+| JavaScript | 20 | Variables → types/operators → decisions/loops → functions → arrays/objects → scope → browser → OOP → async/tooling → testing → storage/Git |
+| React | 12 | JSX/props → state → rendering/identity → composition → effects → routing/shared state → server data/types → performance/practice → behavior testing |
+| Java | 19 | First program → control flow → classes → packages/interfaces → collections/JVM → builds/tests → SQL → concurrency → type metadata/schema migrations → LLD |
+| Spring Boot | 13 | First app → beans/DI → configuration → REST/validation → JPA/security → testing → observability → deployment → jobs/cache → Servlet/MVC → optional AI/RAG |
+| Node & MongoDB | 9 | Node/HTTP → Express → documents/CRUD → Mongoose → indexes/query plans → security → production → testing/shutdown |
+| DSA | 14 | Complexity → lists/stacks/queues → hashing → search/patterns → recursion/sorting → monotonic stacks → trees/heaps → graphs/DP → greedy/advanced structures |
+| System design | 15 | Requirements/scaling → React frontend → Java backend → complete case studies → consistency/limiting → API contracts → OS/network debugging |
 | Interview playbooks | 6 | Related course ke baad language, application, algorithm aur design rounds |
 
 Frontend ke liye JavaScript → React → frontend design follow karo. Backend ke liye Java → Spring Boot → backend design, ya JavaScript → Node/MongoDB route lo. DSA ko apne main track ke saath padh sakte ho. Syllabus mein har stage ke prerequisites aur checkpoint diye hain; beginner ho toh unhe skip mat karo.

@@ -4,14 +4,14 @@ title: TypeScript contracts for React applications
 track: react
 order: 9
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Static types trusted program values describe karte hain; external data ko runtime par validate karna padta hai.
 tags: typescript, state, narrowing, api, testing
 ---
 
 ## Mental model — simple soch
 
-TypeScript compile time par JavaScript contracts check karta hai. Browser receives JavaScript, so a type annotation cannot prove that a server actually sent the expected response. Think of two boundaries: runtime parsing protects external input; static types help trusted code use the parsed result correctly.
+TypeScript compile time par JavaScript contracts check karta hai. Browser ko JavaScript milti hai; type annotation prove nahi karti ki server ne expected shape ka response bheja. Do boundaries socho: runtime parsing external input check karti hai; static types parsed result ko trusted code mein sahi use karne mein help karti hain.
 
 > **Core takeaway:** Static types trusted program values describe karte hain; external data ko runtime par validate karna padta hai.
 
@@ -105,17 +105,46 @@ saving member add karo; jab tak uska case handle nahi hota, exhaustive default t
 
 [Source yahan padho — TypeScript](https://www.typescriptlang.org/docs/handbook/2/narrowing.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Union narrowing ko real request state se derive karo
+
+```ts
+type LoadResult =
+  | { status: 'loading' }
+  | { status: 'success'; title: string }
+  | { status: 'error'; message: string };
+
+function describe(result: LoadResult): string {
+  switch (result.status) {
+    case 'loading': return 'Load ho raha hai';
+    case 'success': return result.title;
+    case 'error': return result.message;
+    default: {
+      const unreachable: never = result;
+      return unreachable;
+    }
+  }
+}
+```
+
+TypeScript module excerpt ko strict type-checker se check karo. Status check compiler ko relevant member narrow karne deta hai. Loading branch mein title read nahi kar sakte, kyunki data abhi available hone ka contract nahi. New cancelled variant add karoge toh exhaustive default missing handling highlight karega.
+
+`unknown` external value par use karna inspection force karta hai; `any` checks bypass kar sakta hai. `as LoadResult` runtime parser nahi. Network se `{status:'success',title:12}` aaye toh boundary validation reject kare; interface annotation browser mein guard code nahi banati.
+
+**Practice:** Nullable title aur optional title same contract nahi. Optional absence allow karta hai, null explicit value ho sakti hai. API patch mein omitted=unchanged aur null=clear ho toh types aur parser dono distinction retain karein.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** API `{"minutes":"ten"}` bhejti hai, interface minutes:number bolta hai. Assertion kyun nahi bachaegi? Boundary kya return kare?
+**Apply — khud try karo:** API `{"minutes":"ten"}` bhejti hai, interface minutes:number bolta hai. Assertion kyun nahi bachaegi? Boundary kya return kare?
 
-> **Hint:** Type assertion response inspect ya convert nahi karti.
+> **Hint — chhota ishara:** Type assertion response inspect ya convert nahi karti.
 
-**Answer guide — compare after attempting:** External JSON unknown lo, object shape aur numeric fields inspect karo. Validated data ya explicit parse failure return karo; given response reject karo. Contract ke hisaab se missing, null, negative aur malformed values test karo.
+**Answer guide — pehle khud karo, phir compare karo:** External JSON unknown lo, object shape aur numeric fields inspect karo. Validated data ya explicit parse failure return karo; given response reject karo. Contract ke hisaab se missing, null, negative aur malformed values test karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

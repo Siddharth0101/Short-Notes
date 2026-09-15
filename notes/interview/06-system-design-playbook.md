@@ -4,7 +4,7 @@ title: React and Java system design interview playbook
 track: interview
 order: 6
 level: Advanced
-minutes: 38
+minutes: 41
 summary: Design ke decisions workload assumptions aur failure traces se samjhao, taaki tradeoffs ko check kiya ja sake.
 tags: system-design, interview, react, java, architecture
 visual: outbox-pattern
@@ -67,7 +67,7 @@ Outbox database change aur event intent ko same transaction mein persist karta h
 
 ## Self-review rubric
 
-Each 0–2 score: requirements, API/data model, bottleneck analysis, failure handling, communication. Strong answer one tradeoff explicitly defends, one failure trace shows, aur one metric se success define karta hai. Har design mein microservices ya queue add karna required nahi; ownership aur scale justify karein.
+Requirements, API/data model, bottleneck analysis, failure handling aur communication ko separately 0–2 score do. Strong answer one tradeoff explicitly defends, one failure trace shows, aur one metric se success define karta hai. Har design mein microservices ya queue add karna required nahi; ownership aur scale justify karein.
 
 ## Practice and answer
 
@@ -113,17 +113,37 @@ Employer source assessment approach ka reference hai. Yeh exercise original prac
 
 [Source yahan padho — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Design discussion ko decisions aur recovery evidence mein rakho
+
+First narrow requirements/invariants, then API/data model, then workload, then failure/scaling. Early diagram mein every fashionable component add karne se ownership unclear ho sakti hai. Cache, queue, shard ya service split har addition ke benefit, cost aur revisit trigger bolo.
+
+Payment timeout, duplicate event, cache outage aur partial deploy timeline architecture ko test karte hain. “Exactly once” phrase ke badle dedup scope, durable atomic boundary aur crash recovery specify karo. Estimated capacity aur measured benchmark clearly distinguish karo.
+
+**Mock drill:** One whiteboard timeline mein client, API, DB, worker aur external provider columns banao. Har failure point par user-visible status aur next action likho. Behavioral follow-up mein actual personal contribution, uncertainty aur measurable evidence batao; fabricated scale/impact claim answer stronger nahi banata.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** 1000 concurrent editors ke notes service ka das-minute design do. Transport ya storage choose karne se pehle kaunse teen sawal clear karoge?
+**Apply — khud try karo:** 1000 concurrent editors ke notes service ka das-minute design do. Transport ya storage choose karne se pehle kaunse teen sawal clear karoge?
 
-> **Hint:** Concurrent users ki count se edit rate, same-document contention aur durability needs nahi pata chalti.
+> **Hint — chhota ishara:** Concurrent users ki count se edit rate, same-document contention aur durability needs nahi pata chalti.
 
-**Answer guide — compare after attempting:** Edit frequency, ek document par simultaneous editors aur offline/conflict expectations pucho. Traffic derive karo; consistency, durable writes aur reconnect recovery decide karo. Ek rejected alternative ki concrete cost batao. Sirf boxes wala diagram in decisions ko replace nahi karta.
+**Answer guide — pehle khud karo, phir compare karo:** Edit frequency, ek document par simultaneous editors aur offline/conflict expectations pucho. Traffic derive karo; consistency, durable writes aur reconnect recovery decide karo. Ek rejected alternative ki concrete cost batao. Sirf boxes wala diagram in decisions ko replace nahi karta.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [AWS safe retries and idempotency](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/), [AWS transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html), aur [W3C combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) design details ke primary references hain.
+
+## Tradeoff disagreement aur decision record
+
+Original prompt: “Team global limiter chahti hai, lekin shared store outage ka risk hai.” Pehle endpoint ka business impact poochho. Login-abuse control, paid quota aur public browse ki fail-open/fail-closed requirements same nahi ho sakti. Capacity, burst aur failure response ko numbers/history se define karo.
+
+Short decision record mein requirement, options, chosen tradeoff, rejected alternative ka reason, measurement aur revisit trigger likho. Unknown workload ko assumption label karo; fabricated production scale mat bolo. Architecture ka sketch tab useful hai jab har box ka owned state aur failure responsibility clear ho.
+
+**Practice:** Three replicas each 10-token bucket ko global limit 10 bola gaya. **Answer guide:** Initial total credits 30 hain. Shared atomic state ya total-10 quota allocation propose karo. Store outage, hot key aur replica failover ki policy add karo. “Redis use karenge” complete answer nahi; atomic operation aur fallback ka contract chahiye.
+
+[Consistency/rate-limiting chapter](../system-design/13-consistency-limits.md) se failure table aur observable acceptance checks banao.

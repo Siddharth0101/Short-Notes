@@ -4,7 +4,7 @@ title: Performance suspense and production quality
 track: react
 order: 10
 level: Advanced
-minutes: 30
+minutes: 33
 summary: Measured bottleneck optimize karo aur verify karo ki user ko improvement dikhi.
 tags: performance, memoization, suspense, lazy, testing, production
 visual: react-render
@@ -130,7 +130,7 @@ Test `getByRole` se accessible name ke through element dhoondta hai, `data-testi
 
 - `memo` ko poori list ke top-level component par lagana lekin har row ko fresh inline props dena — optimization silently no-op ho jaata hai aur profiler chalaye bina yeh pata bhi nahi chalta.
 - Route-level code splitting mein `lazy(() => import(...))` ko render ke andar (component body mein) likhna — har render par naya lazy component banta hai aur React use "naya component type" samajh kar remount + refetch karta hai.
-- Error boundary ko event handler ke andar throw hui error ke against bharosa karna — error boundaries sirf render-phase errors catch karte hain, async callback aur event handler ki try/catch khud likhni padti hai.
+- Error boundary ko event handler ke andar throw hui error ke against bharosa karna — error boundaries descendant rendering aur supported lifecycle failures handle karti hain, async callback aur event handler ki try/catch khud likhni padti hai.
 - Virtualization library lagane ke baad bhi poora dataset ek saath fetch karna — DOM node count kam hui, lekin network/memory cost wahi rahi; large lists ke liye server-side pagination bhi zaroori hota hai.
 
 ## Where this shows up in a real app
@@ -163,17 +163,29 @@ Exercise: page fast load hoti hai lekin low-end phone par sorting freeze karti h
 
 [Source yahan padho — web.dev](https://web.dev/articles/vitals). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Optimization ko controlled experiment banao
+
+Typing slow hai: pehle trace mein input event, filtering calculation, React rendering aur browser layout alag dekho. Agar filter 80 ms le raha hai toh row memo alone woh calculation nahi hatayegi. Agar filter cheap aur 10,000 DOM rows expensive hain toh virtualization relevant ho sakti hai. Same device/data/interaction par before-after compare karo.
+
+Transition/deferred rendering urgent input ko priority dene mein help kar sakti hai; arbitrary synchronous long function ko mid-execution interrupt karke background worker nahi banati. Worker CPU computation move kar sakta hai, par serialization, cancellation aur result ordering ka cost add hota hai. Optimize bottleneck ke hisaab se.
+
+Memo cached value correctness ka permanent storage nahi. App cache discard hone par bhi correct ho. Dependency missing karke fast-but-stale result banana optimization failure hai. Custom comparator callback props ignore kare toh old closure retain ho sakti hai.
+
+**Practice:** Baseline, suspected cause, chosen change, measured improvement aur correctness regression ek short report mein likho. Error boundary ke saath retry UX inspect karo: lazy chunk failure, API failure aur click handler error same catch mechanism use nahi karte. User ka current draft preserve karna performance se separate but equally visible requirement hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** 10,000 rows filter karte waqt typing slow hai. Filtering cost aur rendering cost alag karne ka experiment do.
+**Apply — khud try karo:** 10,000 rows filter karte waqt typing slow hai. Filtering cost aur rendering cost alag karne ka experiment do.
 
-> **Hint:** Same workload mein calculation aur render dono ka time measure karo.
+> **Hint — chhota ishara:** Same workload mein calculation aur render dono ka time measure karo.
 
-**Answer guide — compare after attempting:** Baseline record karo, filtering timing isolate karo aur rendering profile karo. DOM volume problem ho toh virtualization; filtering costly ho toh better computation strategy try karo. Baad mein responsiveness aur correctness compare karo. Har keystroke par input badlega toh memoization alone calculation hata nahi sakti.
+**Answer guide — pehle khud karo, phir compare karo:** Baseline record karo, filtering timing isolate karo aur rendering profile karo. DOM volume problem ho toh virtualization; filtering costly ho toh better computation strategy try karo. Baad mein responsiveness aur correctness compare karo. Har keystroke par input badlega toh memoization alone calculation hata nahi sakti.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

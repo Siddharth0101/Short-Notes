@@ -57,3 +57,20 @@ Promises/fetch se concurrency limits aur modules tak badho.
 17. [Modules web delivery and debugging](17-modules-tooling-debugging.md)
 
 **Stage checkpoint — khud karke dikhao:** Failed request handle, active work cap aur browser tak app delivery explain karo.
+
+## Stage 6: Code ka behavior verify karo
+
+Modules aur async knowledge ko repeatable tests aur debugging workflow se verify karo.
+
+18. [Testing aur debugging — bug ko repeatable proof banao](18-testing-workflow.md)
+
+**Stage checkpoint — khud karke dikhao:** Boundary tests aur controlled async failure case run karke regression explain karo.
+
+## Stage 7: Persistence aur collaboration samjho
+
+Local data lifecycle, offline conflicts aur reviewed Git changes practice karo.
+
+19. [Browser persistence aur offline behavior — save ka meaning clear karo](19-browser-persistence.md)
+20. [Git workflow — working tree se reviewed commit tak](20-git-workflow.md)
+
+**Stage checkpoint — khud karke dikhao:** Two-tab conflict policy aur staged/unstaged diff ka exact meaning explain karo.

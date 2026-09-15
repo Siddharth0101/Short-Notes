@@ -4,7 +4,7 @@ title: Spring Boot first application and project structure
 track: spring-boot
 order: 1
 level: Intermediate
-minutes: 16
+minutes: 19
 summary: Boot application context aur server tayyar karta hai; registered components actual requests handle karte hain.
 tags: spring, boot, startup
 ---
@@ -63,17 +63,29 @@ main Boot start karta hai. Component scan application package ke neeche controll
 
 GET `/api/course` add karo jo name Java aur lessons 1 ka record return kare. JSON mein lessons number hona chahiye. Nonexistent route ka status valid route se compare karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Startup failure aur request failure ki boundary
+
+main se Spring application start hoti hai, configuration/component definitions process hoti hain, dependencies create hoti hain aur web server requests accept kar sakta hai. Required dependency missing ho toh startup fail ho sakta hai; route method tak request pahunchi hi nahi. Application started ho aur wrong URL se 404 aaye toh routing contract inspect karo.
+
+Controller return value response conversion ke through JSON ban sakti hai. Java object create karna aur HTTP response serialize karna different steps hain. Serialization failure valid service computation ke baad bhi ho sakti hai; supported response DTO use karo.
+
+Package location component discovery affect karti hai. Application class common root package mein rakhna conventional simple setup hai. Arbitrary folder placement ko “Spring automatically sab scan karega” assume mat karo.
+
+**Practice:** Healthy app start karo, documented endpoint call karo, wrong path call karo, phir required dependency intentionally absent karke startup diagnostic compare karo. Request status, safe application log aur process health alag evidence hain. Browser page load alone all endpoints correct hone ka proof nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Which responsibilities belong to Boot and which belong to the controller?
+**Recall — yaad karke bolo:** Boot aur controller kaun-kaunsi responsibilities own karte hain?
 
-**Apply:** GreetingController ko scan configuration badle bina `com.other` mein move karo. Request result predict karo; phir matching package ke saath `com.example.study.web` mein restore karo.
+**Apply — khud try karo:** GreetingController ko scan configuration badle bina `com.other` mein move karo. Request result predict karo; phir matching package ke saath `com.example.study.web` mein restore karo.
 
-> **Hint:** Default scanning application class ke package se neeche shuru hoti hai.
+> **Hint — chhota ishara:** Default scanning application class ke package se neeche shuru hoti hai.
 
-**Answer guide — compare after attempting:** Default scan out-of-tree controller register nahi karegi; mapping absent hogi aur request normally 404 degi. Application package ke neeche restore karne se discovery possible hoti hai. Sirf URL badalne se missing bean register nahi hota.
+**Answer guide — pehle khud karo, phir compare karo:** Default scan out-of-tree controller register nahi karegi; mapping absent hogi aur request normally 404 degi. Application package ke neeche restore karne se discovery possible hoti hai. Sirf URL badalne se missing bean register nahi hota.
 
-**Exit check:** Explain the full path from main to the JSON response and distinguish startup failure from routing failure.
+**Exit check — aage badhne se pehle:** main se JSON response tak flow samjhao; startup failure aur routing failure alag pehchano.
 
 ## Sources — aur padhne ke liye
 

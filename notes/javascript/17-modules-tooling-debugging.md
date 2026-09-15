@@ -4,7 +4,7 @@ title: Modules web delivery and debugging
 track: javascript
 order: 17
 level: Advanced
-minutes: 26
+minutes: 29
 summary: Modules dependencies clear banate hain; delivery fail ho toh reproducible diagnosis phir bhi chahiye.
 tags: modules, tooling, http, debugging, testing, npm
 ---
@@ -136,17 +136,37 @@ Cycle debug karte waqt evaluation dependencies draw karo. Shared pure logic lowe
 
 [Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Import graph ko startup aur ownership ke lens se dekho
+
+A module B import karta hai, B C import karta hai: source files alag hone se runtime order random nahi hota. Top-level side effect import par execute ho sakta hai. Utility module import karte hi HTTP server start karna tests aur reuse ko difficult banata hai; configuration/create/start boundaries separate rakho.
+
+ES module imported binding live hoti hai, importer usse reassign nahi kar sakta. Circular imports mein dependency abhi initialize na hui ho toh access fail ho sakta hai. Cycle ko “bundler fix kar dega” assume karne ke bajay shared contract extract karo ya initialization direction clear karo.
+
+Dev server success production delivery prove nahi karta. Build output, base path, case-sensitive filenames aur dynamically loaded chunk URL deployment par differ kar sakte hain. Source map minified stack ko source location se map karne mein help karti hai; public map exposure project policy se decide karo.
+
+**Debug workflow:** Reproduce → smallest failing input → expected/actual → responsible layer → one change → regression check. Console logs mein credentials mat dump karo; network status, safe IDs aur error category enough evidence de sakte hain. Clean-install/build check hidden local dependency pakad sakta hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Lazy-loaded screen sirf deployment ke baad fail hoti hai, baaki screens chalti hain. First teen checks aur user recovery path likho.
+**Apply — khud try karo:** Lazy-loaded screen sirf deployment ke baad fail hoti hai, baaki screens chalti hain. First teen checks aur user recovery path likho.
 
-> **Hint:** Component logic badalne se pehle failed chunk ki network request dekho.
+> **Hint — chhota ishara:** Component logic badalne se pehle failed chunk ki network request dekho.
 
-**Answer guide — compare after attempting:** Chunk URL/status, HTML ke referenced assets ki availability aur releases ke across caching check karo. Compatible assets retain karo ya cache invalidation coordinate karo. Relevant drafts bachakar deliberate reload/retry do; infinite auto-reload loop mat banao.
+**Answer guide — pehle khud karo, phir compare karo:** Chunk URL/status, HTML ke referenced assets ki availability aur releases ke across caching check karo. Compatible assets retain karo ya cache invalidation coordinate karo. Relevant drafts bachakar deliberate reload/retry do; infinite auto-reload loop mat banao.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 [MDN JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) module semantics explain karta hai. [MDN HTTP overview](https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview) web delivery ka reference hai.
+
+## Is concept ko aur practice karo
+
+- [Testing aur debugging — bug ko repeatable proof banao](18-testing-workflow.md)
+
+## Related extension — aur samjho
+
+- [Git workflow — working tree se reviewed commit tak](20-git-workflow.md)

@@ -4,7 +4,7 @@ title: SSR uploads payments email and deployment
 track: mongodb
 order: 8
 level: Advanced
-minutes: 36
+minutes: 39
 summary: External callbacks repeat ho sakte hain; durable state se repeated delivery ko safe banao.
 tags: production, pug, stripe, uploads, email, deployment, observability
 visual: request-flow
@@ -148,17 +148,31 @@ Authenticated order-create endpoint aur MongoDB-backed webhook handler banao. Fa
 
 Unique constraints, single-document atomicity aur multi-document transactions ka difference samjhao. Transaction supported deployment par test karo. Dedup-record retention aur payment/order mismatch reconciliation define karo. Replay script aur concurrent reproduction deliver karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Webhook duplicate delivery ko normal input samjho
+
+Provider event pehle process hui, acknowledgement lost, phir same event repeat. Stable event ID par deduplicate karo aur state transition atomic/durable boundary mein own karo. Duplicate ignored bolne se pehle previous processing actually committed hai ya nahi ensure karo.
+
+Signature verification trusted raw payload representation require kar sakti hai; middleware body transform order chosen provider contract se align ho. Verified signature event ko authenticated provider message banati hai, desired business state already true hone ka proof nahi. Out-of-order events stale status regress na karein.
+
+**Practice:** Duplicate, reversed order, crash-before-commit aur commit-before-response timelines draw karo. Email/upload/payment each external service independent failure boundary hai. User response, durable job acceptance aur eventual completion alag statuses hon. Process memory mein event ID cache only crash-safe deduplication nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Provider same payment-success event do baar bhejta hai. Order do baar fulfill na ho, aisa processing/storage sketch do.
+**Apply — khud try karo:** Provider same payment-success event do baar bhejta hai. Order do baar fulfill na ho, aisa processing/storage sketch do.
 
-> **Hint:** Event ID persist karke business transition ke saath coordinate karo.
+> **Hint — chhota ishara:** Event ID persist karke business transition ke saath coordinate karo.
 
-**Answer guide — compare after attempting:** Unique provider event ID record karo aur chosen storage design mein order transition atomic rakho. Repeat no-op bane. External fulfillment ke liye durable outbox task aur idempotent downstream operation use karo. Local flag unrelated network call ko atomically cover nahi karta.
+**Answer guide — pehle khud karo, phir compare karo:** Unique provider event ID record karo aur chosen storage design mein order transition atomic rakho. Repeat no-op bane. External fulfillment ke liye durable outbox task aur idempotent downstream operation use karo. Local flag unrelated network call ko atomically cover nahi karta.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 [Stripe webhooks](https://docs.stripe.com/webhooks) signatures aur delivery handling explain karta hai. [Express production performance](https://expressjs.com/en/advanced/best-practice-performance.html) operational patterns aur [Pug interpolation](https://pugjs.org/language/interpolation.html) template escaping ka reference hain.
+
+## Is concept ko aur practice karo
+
+- [Node API testing aur graceful shutdown — request se resource cleanup tak](09-testing-shutdown.md)

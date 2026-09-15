@@ -4,7 +4,7 @@ title: Scaling caching replication and partitioning
 track: system-design
 order: 2
 level: Advanced
-minutes: 27
+minutes: 30
 summary: Cache sirf safely reusable requests ka origin work kam karta hai; har request hit nahi hoti.
 tags: caching, scaling, replication, sharding
 visual: caching
@@ -42,7 +42,7 @@ read: cache hit -> return
 write: commit database -> invalidate affected cache keys
 ```
 
-Simple invalidate-after-write pattern mein race still possible: in-flight old read invalidation ke baad stale value refill kar sakti hai. Versioned values, event-driven invalidation, short TTL or stronger coordination choose based on tolerated staleness. TTL expiry freshness bound ka part hai, strict latest-value guarantee nahi.
+Simple invalidate-after-write pattern mein race still possible: in-flight old read invalidation ke baad stale value refill kar sakti hai. Allowed staleness ke hisaab se versioned values, event-driven invalidation, short TTL ya stronger coordination choose karo. TTL expiry freshness bound ka part hai, strict latest-value guarantee nahi.
 
 Stampede tab hota hai jab hot key expire hote hi many callers database hit karein. Single-flight refresh, randomized TTL and stale-while-refresh where safe help kar sakte hain. Cache outage ko all traffic straight database par dump karna dependency cascade create kar sakta hai; fallback rate limits plan karo.
 
@@ -179,20 +179,34 @@ Example: overload par recommendations omit karke article serve kar sakte ho. Che
 
 [Source yahan padho — Google SRE](https://sre.google/sre-book/handling-overload/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Cache invalidation ko adversarial timeline se test karo
+
+Reader old DB value read karti hai. Writer new value commit karke cache delete karti hai. Reader late old value cache set karti hai. Cache-aside invalidate call present hone ke baad bhi stale value reappear hui. Versioned write, bounded TTL ya stronger coordination allowed staleness ke hisaab se choose karo.
+
+Cache hit ratio high ho lekin hot key expiry par stampede database overload kar sakti hai. Request coalescing, refresh policy aur jitter load smooth kar sakte hain. Cache unavailable ho toh unlimited fallback DB traffic collapse create na kare; degraded behavior/admission bound define karo.
+
+**Practice:** Hit, miss, stale refill, cache outage aur hot-key expiry trace karo. Read replica freshness aur cache freshness different layers hain. Sharding write ownership distribute kar sakti hai, but cross-shard operations/rebalancing cost add karegi; automatic linear scaling assumption mat karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** 1000 reads/second aur 90% hit rate par origin reads nikalo. Cold restart ke turant baad kya ho sakta hai?
+**Apply — khud try karo:** 1000 reads/second aur 90% hit rate par origin reads nikalo. Cold restart ke turant baad kya ho sakta hai?
 
-> **Hint:** 90% hit-rate estimate warm cache ke liye hai.
+> **Hint — chhota ishara:** 90% hit-rate estimate warm cache ke liye hai.
 
-**Answer guide — compare after attempting:** Warm cache mein refresh overhead ignore karke ≈100 origin reads/second. Cold cache fill hone tak close to 1000 ja sakti hain. Request coalescing, controlled warming aur admission limits discuss karo. Failure capacity ko steady-state hit rate se assume mat karo.
+**Answer guide — pehle khud karo, phir compare karo:** Warm cache mein refresh overhead ignore karke ≈100 origin reads/second. Cold cache fill hone tak close to 1000 ja sakti hain. Request coalescing, controlled warming aur admission limits discuss karo. Failure capacity ko steady-state hit rate se assume mat karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
 - [HTTP caching guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)
 - [PostgreSQL replication](https://www.postgresql.org/docs/current/high-availability.html)
 - [Amazon Builders Library caching challenges](https://aws.amazon.com/builders-library/caching-challenges-and-strategies/)
+
+## Is concept ko aur practice karo
+
+- [Consistency aur distributed rate limiting — guarantees pehle likho](13-consistency-limits.md)

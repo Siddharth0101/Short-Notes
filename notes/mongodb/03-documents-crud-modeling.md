@@ -4,7 +4,7 @@ title: Documents CRUD and access-driven modeling
 track: mongodb
 order: 3
 level: Foundation
-minutes: 28
+minutes: 31
 summary: Documents ko read patterns aur bounded growth se model karo; single-document atomicity unrelated documents ko cover nahi karti.
 tags: mongodb, crud, bson, modeling, embedding, references
 ---
@@ -97,17 +97,27 @@ Duplicated field historical fact hai ya changes follow karne wali cache, har fie
 
 [Source yahan padho — MongoDB](https://www.mongodb.com/docs/manual/data-modeling/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Embed/reference choice ko growth aur atomicity se derive karo
+
+Order ke bounded line items order aggregate ke saath read/update hote hain toh embedding useful ho sakti hai. User ke lifetime millions events one array mein embed karna unbounded growth create karta hai. Reference extra reads introduce kar sakti hai, lekin lifecycle/storage boundary better fit ho sakti hai.
+
+Historical order price snapshot aur current product price different facts hain. Product price update par old order total change nahi hona chahiye. Duplication ko blindly normalize karne se history corrupt semantics ban sakti hai.
+
+**Practice:** One document ke owner, maximum growth, common read shape aur update invariant likho. Atomic single-document update same document ke invariant preserve kar sakti hai; two independent documents automatically coordinated nahi. Schema flexible hone se application validation/version migration ki need disappear nahi hoti.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Article par millions of comments aa sakte hain. Kya sab ek document mein embed karoge? Recent-comments page ke liye storage design do.
+**Apply — khud try karo:** Article par millions of comments aa sakte hain. Kya sab ek document mein embed karoge? Recent-comments page ke liye storage design do.
 
-> **Hint:** Unbounded child collection embedding ke cost ko badal deti hai.
+> **Hint — chhota ishara:** Unbounded child collection embedding ke cost ko badal deti hai.
 
-**Answer guide — compare after attempting:** Comments separate store karo, article identity aur stable ordering field rakho, paginated query ka index banao. Useful ho toh small bounded preview embed karo aur consistency rule batao. Ek page ke liye entire comment history load/rewrite mat karo.
+**Answer guide — pehle khud karo, phir compare karo:** Comments separate store karo, article identity aur stable ordering field rakho, paginated query ka index banao. Useful ho toh small bounded preview embed karo aur consistency rule batao. Ek page ke liye entire comment history load/rewrite mat karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

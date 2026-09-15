@@ -4,7 +4,7 @@ title: Recursion and backtracking
 track: dsa
 order: 6
 level: Intermediate
-minutes: 29
+minutes: 32
 summary: Backtracking mein ek branch ke changes undo karo, tabhi next branch ko sahi starting state milegi.
 tags: recursion, backtracking, call-stack, subsets
 visual: recursion-stack
@@ -274,17 +274,27 @@ Memoization ka production analogue caching hai, aur wahi trap wapas aata hai: ca
 
 **Answer:** Jab tree skewed ho aur depth engine ki call-stack limit cross kare (Node mein typically kuch hazaar frames). Dono O(n) time aur O(h) space hain, lekin recursive version `RangeError` throw karta hai jabki explicit-stack version heap use karta hai aur chalta rehta hai. Complexity identical hone ke bawajood ek production mein fail karta hai — yeh "same big-O, different real behavior" ka clean example hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Recursive call ka contract output se pehle bolo
+
+Function subtree ka height return karti hai: empty subtree base height chosen convention se define karo, nonempty result 1+max(child heights). Child answer assume karke parent combine proof banta hai. Base case ke toward progress na ho toh call stack grow hoti rahegi.
+
+Backtracking mein choose→explore→undo shared partial state ko next branch ke liye restore karta hai. Completed path result mein push karte waqt copy na lo toh later undo saved result mutate kar sakta hai. Visited set path-local hai ya globally processed, problem decide karti hai.
+
+**Practice:** Two-letter permutations ka call tree draw karo. Har recursive edge par remaining choices decrease hon. Duplicate inputs ke liye deduplication same recursion depth par kaise apply hogi, explain karo. Memoization tab useful hai jab state future result fully describe kare; history-dependent missing state wrong reuse karegi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Ek mutable path use karke `[1,2]` ke subsets banao. Har result mein wahi path object store karne se output kyun bigadta hai?
+**Apply — khud try karo:** Ek mutable path use karke `[1,2]` ke subsets banao. Har result mein wahi path object store karne se output kyun bigadta hai?
 
-> **Hint:** Baad ke push/pop bhi usi object ko badalte hain jiska reference result mein rakha tha.
+> **Hint — chhota ishara:** Baad ke push/pop bhi usi object ko badalte hain jiska reference result mein rakha tha.
 
-**Answer guide — compare after attempting:** Har completed choice par path ki copy store karo. Subsets `[]`, `[1]`, `[2]`, `[1,2]` milenge; order traversal par depend karega. Har branch ke baad path restore karo. Saare subsets copy karke materialize karne ka output time/space O(n·2^n) hai, sirf O(2^n) nahi.
+**Answer guide — pehle khud karo, phir compare karo:** Har completed choice par path ki copy store karo. Subsets `[]`, `[1]`, `[2]`, `[1,2]` milenge; order traversal par depend karega. Har branch ke baad path restore karo. Saare subsets copy karke materialize karne ka output time/space O(n·2^n) hai, sirf O(2^n) nahi.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

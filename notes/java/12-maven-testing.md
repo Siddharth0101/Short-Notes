@@ -4,7 +4,7 @@ title: Maven builds and useful Java tests
 track: java
 order: 12
 level: Intermediate
-minutes: 18
+minutes: 21
 summary: Useful test observable contract check karta hai aur plausible bug pakad sakta hai.
 tags: maven, junit, testing, build
 ---
@@ -62,7 +62,7 @@ Yeh focused assertion domain rule protect karti hai. Sirf getter ko setter ke va
 
 External time ko Clock inject karo. Randomness ke seed control karo. Concurrent tests mein synchronization primitives use karo. Production relational database behavior verify karne ke liye matching database integration environment use karo; in-memory substitute vendor-specific SQL and isolation differences miss kar sakta hai.
 
-Mocks external side effects aur hard-to-control dependencies isolate karte hain. Every collaborator interaction assert karna implementation couple karta hai. Prefer observable output/state assertions, and only meaningful interaction checks like payment charged once. Failure cases cover karo: invalid input, duplicate request, unavailable dependency, permission denied and rollback.
+Mocks external side effects aur hard-to-control dependencies isolate karte hain. Every collaborator interaction assert karna implementation couple karta hai. Observable output/state assert karo; interaction check tab rakho jab meaningful contract ho, jaise payment once charge hui. Failure cases cover karo: invalid input, duplicate request, unavailable dependency, permission denied and rollback.
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -83,7 +83,7 @@ Isme `verify(gateway, times(1))` justified hai kyunki double-charging ek real bu
 
 ## Common traps
 
-Test order dependence hidden shared state suggest karti hai. Transactional test automatic rollback can hide behavior occurring only after commit, such as async event processing. Coverage percentage executed lines batata hai; assertion quality or business correctness guarantee nahi. Skipped tests ko passing verification report mat bolo.
+Test order dependence hidden shared state suggest karti hai. Transactional test ka automatic rollback commit ke baad hone wala behavior hide kar sakta hai, jaise async event processing. Coverage percentage executed lines batata hai; assertion quality or business correctness guarantee nahi. Skipped tests ko passing verification report mat bolo.
 
 - **Wrong assumption:** Mock object ko strict interaction verification (`verify`) dena hamesha better testing practice hai. **Why it breaks:** Over-verification (har internal call check karna) test ko implementation detail se couple kar deta hai — method ka naam ya call order refactor karte hi test todh deta hai, chahe observable behavior same rahe. **Fix:** Sirf genuinely important side effects verify karo (payment charged, email sent); baaki behavior output/state assertions se check karo.
 - **Wrong assumption:** `@Transactional` test method automatically production behavior replicate karta hai. **Why it breaks:** Test framework transaction ko test ke end mein rollback kar deta hai by default — agar production code commit ke baad trigger hone wale kisi async listener/event par depend karta hai, wo behavior test mein kabhi execute hi nahi hoga, aur bug sirf production mein dikhega. **Fix:** Commit-dependent behavior ke liye `@Commit` annotation ya separate non-transactional integration test use karo.
@@ -105,17 +105,27 @@ CI pipeline mein `./mvnw verify` typically unit tests, integration tests aur sta
 
 Pricing rule ke boundary tests likho. One duplicate insert integration test add karo. Build ko clean checkout mein run karke missing assumptions identify karo. Report exact command and meaningful coverage, sirf "tested" nahi. Phir ek mock-heavy test likho jo internal method calls over-verify karta ho, refactor karke usse output-based assertion mein convert karo, aur dikhao ki test ab implementation-detail-independent hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Build reproducibility hidden local state ko expose karti hai
+
+IDE mein dependency resolve ho aur clean command-line build fail ho sakti hai: undeclared dependency, wrong JDK ya plugin configuration hidden ho sakti hai. Project pom actual contract hai; local manually added jar fresh machine ko nahi milegi.
+
+Dependency scope compile/runtime/test availability affect karta hai. Test dependency production code mein use ho toh packaged runtime fail ho sakta hai. Transitive version conflict mein resolved dependency tree inspect karo; direct declaration ka version hi actual runtime assume mat karo.
+
+**Practice:** Fresh checkout-equivalent build, chosen JDK aur documented command se package/test karo. One pure unit test intentional bug par fail ho; one integration test real boundary verify kare. Passing tests ka set explicitly name karo: mock HTTP client provider compatibility prove nahi karta. Build artifact run karke packaging behavior separately verify karna useful hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Quantity kam-se-kam 10 ho tab discount milta hai. Teen tests choose karo aur har test ka purpose samjhao.
+**Apply — khud try karo:** Quantity kam-se-kam 10 ho tab discount milta hai. Teen tests choose karo aur har test ka purpose samjhao.
 
-> **Hint:** Boundary se just neeche, boundary par aur just upar test karo.
+> **Hint — chhota ishara:** Boundary se just neeche, boundary par aur just upar test karo.
 
-**Answer guide — compare after attempting:** 9 par no discount, 10 par discount start, 11 par discount continue hona chahiye. Chosen currency representation mein exact expected prices assert karo. Expected answer bhi same pricing helper se nikaloge toh test independently correctness check nahi karega.
+**Answer guide — pehle khud karo, phir compare karo:** 9 par no discount, 10 par discount start, 11 par discount continue hona chahiye. Chosen currency representation mein exact expected prices assert karo. Expected answer bhi same pricing helper se nikaloge toh test independently correctness check nahi karega.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

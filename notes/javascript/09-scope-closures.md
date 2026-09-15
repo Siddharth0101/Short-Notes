@@ -4,7 +4,7 @@ title: Execution contexts scope and closures
 track: javascript
 order: 9
 level: Intermediate
-minutes: 26
+minutes: 29
 summary: Closure apni lexical bindings access kar sakta hai; separate factory calls apna-apna state bana sakti hain.
 tags: scope, closures, hoisting, execution-context, memory
 visual: closures
@@ -151,17 +151,42 @@ Dono readers closures hain. Ek changing number ki binding read karta hai; doosra
 
 [Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Closure value ki photo nahi, lexical binding tak access hai
+
+```js
+function makeLabel() {
+  let count = 0;
+  const initial = `Count: ${count}`;
+  return {
+    increment() { count++; },
+    current() { return count; },
+    originalLabel() { return initial; }
+  };
+}
+const label = makeLabel();
+label.increment();
+console.log(label.current(), label.originalLabel()); // 1, Count: 0
+```
+
+current updated count binding padhta hai. initial string sirf creation time par calculate hui thi; count change hone se woh expression automatically repeat nahi hoti. Closure dono bindings retain karti hai, par unki values update hone ka rule alag hai. Yeh distinction stale UI callbacks samajhne mein useful hai.
+
+makeLabel dobara call karoge toh new lexical environment aur independent count milega. “Function return ho gayi toh saare locals destroy” accurate rule nahi: reachable closures ko jo data chahiye woh reachable reh sakta hai.
+
+**Lifetime check:** Long-lived event listener large data capture kare aur listener remove na ho toh data retained reh sakta hai. Har closure leak nahi; ownership aur reachability matter karti hain. Practice mein two counters create karke ek increment karo aur doosre ka zero rehna prove karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Zero se start hone wale do counters banao. First ko do baar, second ko ek baar call karo. Outputs batao aur global count ka effect samjhao.
+**Apply — khud try karo:** Zero se start hone wale do counters banao. First ko do baar, second ko ek baar call karo. Outputs batao aur global count ka effect samjhao.
 
-> **Hint:** Count factory ke andar declare karo aur use increment karne wali function return karo.
+> **Hint — chhota ishara:** Count factory ke andar declare karo aur use increment karne wali function return karo.
 
-**Answer guide — compare after attempting:** `function makeCounter() { let n = 0; return () => ++n; }` se calls ka output 1, 2, 1 hai. Har factory invocation n ki nayi binding banati hai. Global binding share hoti toh output 1, 2, 3 hota.
+**Answer guide — pehle khud karo, phir compare karo:** `function makeCounter() { let n = 0; return () => ++n; }` se calls ka output 1, 2, 1 hai. Har factory invocation n ki nayi binding banati hai. Global binding share hoti toh output 1, 2, 3 hota.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

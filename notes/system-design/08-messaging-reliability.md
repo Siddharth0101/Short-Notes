@@ -4,7 +4,7 @@ title: Messaging outbox retries and distributed workflows
 track: system-design
 order: 8
 level: Advanced
-minutes: 28
+minutes: 31
 summary: Reliable delivery ke liye replay-safe consumers aur bounded retries chahiye; message dobara aa sakta hai.
 tags: messaging, outbox, idempotency, sagas
 visual: outbox-pattern
@@ -72,7 +72,7 @@ Ordering usually partition or aggregate key scope mein practical hoti hai. Event
 
 ## Backpressure and retry budgets
 
-Assume 2,000 events/s arrive and worker fleet 1,500/s process karti hai. Backlog 500/s grow karega, approximately 1.8 million events per hour. Queue durable hone se overload disappear nahi hota. Scale workers if downstream capacity permits, reduce intake or defer noncritical work. Oldest-message age user-facing delay reveal karta hai.
+Assume 2,000 events/s arrive and worker fleet 1,500/s process karti hai. Backlog 500/s grow karega, approximately 1.8 million events per hour. Queue durable hone se overload disappear nahi hota. Downstream capacity allow kare toh workers scale karo; warna intake reduce ya noncritical work defer karo. Oldest-message age user-facing delay reveal karta hai.
 
 Retry exponential backoff plus jitter se synchronized retry storms reduce karo. Retry budget end-to-end rakho: three layers each three attempts can amplify one user request into 27 downstream attempts. Circuit breaker dependency failure par attempts reduce karta hai; bulkhead resources isolate karta hai.
 
@@ -187,17 +187,27 @@ Retry boundary choose, attempts cap, end-to-end deadline honor aur jitter se ret
 
 [Source yahan padho — AWS Builders’ Library](https://d1.awsstatic.com/builderslibrary/pdfs/timeouts-retries-and-backoff-with-jitter.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Acknowledgement aur side effect ke beech crash window locate karo
+
+Consumer message receive, DB update commit, phir ack send karne se pehle crash. Broker redelivery par duplicate possible hai. Ack pehle kar do aur DB write se pehle crash toh work lost ho sakti hai. Dedup record plus state transition same durable transaction mein own karna common way hai, scope clearly define karo.
+
+Outbox local business write aur event intent atomically store kar sakti hai; publisher duplicate delivery still possible. Consumer idempotency phir bhi needed ho sakti hai. Partition ordering same key ke scope mein ho sakti hai, whole system total order assume mat karo.
+
+**Practice:** Commit-before-ack, ack-before-commit aur poison message timelines compare karo. Retry/backoff budget bounded ho; dead-letter destination operational review/replay process ke bina silent graveyard ban sakti hai. Backlog drain speed downstream sustainable capacity se bounded rahe.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Consumer order update commit karke acknowledgement se pehle crash karta hai. Redelivery aur safe response explain karo.
+**Apply — khud try karo:** Consumer order update commit karke acknowledgement se pehle crash karta hai. Redelivery aur safe response explain karo.
 
-> **Hint:** Broker ko apne aap nahi pata ki business effect commit ho chuka hai.
+> **Hint — chhota ishara:** Broker ko apne aap nahi pata ki business effect commit ho chuka hai.
 
-**Answer guide — compare after attempting:** Message dobara expect karo. Durable processed-message ID aur business update coordinate karo taaki replay no-op ho; phir ack karo. Retries bound karo, poison messages isolate karo. External side effect ko apni idempotency strategy chahiye; in-memory dedup enough nahi.
+**Answer guide — pehle khud karo, phir compare karo:** Message dobara expect karo. Durable processed-message ID aur business update coordinate karo taaki replay no-op ho; phir ack karo. Retries bound karo, poison messages isolate karo. External side effect ko apni idempotency strategy chahiye; in-memory dedup enough nahi.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

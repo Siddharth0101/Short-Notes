@@ -4,7 +4,7 @@ title: Requirements capacity and design interviews
 track: system-design
 order: 1
 level: Foundation
-minutes: 21
+minutes: 24
 summary: Capacity estimate clear assumptions aur units se nikalta hai; guessed number ko fact mat samjho.
 tags: requirements, capacity, interviews, tradeoffs
 visual: request-flow
@@ -141,17 +141,27 @@ Video-learning platform ke liye same worksheet fill karo. Read-heavy catalog and
 
 Phir ek sensitivity exercise: apne estimate mein peak factor 10 se 50 karo aur likho ki kaunsa component *pehle* fail karega — app instances, connection pool, database CPU, ya bandwidth. Usually answer connection pool ya database hota hai, app instances nahi; yeh identify karna hi capacity work ka real output hai. Last mein retention rule design karo: kaunsa data 90 din baad aggregate mein collapse ho sakta hai, aur usse storage growth curve kitni flat hoti hai?
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Estimate ke har number ke saath unit aur assumption rakho
+
+Daily requests ko 86,400 se divide average requests/second deta hai, peak nahi. Peak factor workload evidence/assumption hai; launch sale aur ordinary weekday same distribution nahi. Average arrival rate × average time average in-flight estimate karti hai under stable conditions; p99 values substitute karke same relation claim mat karo.
+
+Payload storage ke saath indexes, replicas, metadata, retained versions aur growth horizon separately count karo. Compression factor observed ho ya explicit estimate. Latency budget mein serial waits add hoti hain; independent parallel calls ka critical path often slowest dependency se constrained hota hai, unlimited resource assumption nahi.
+
+**Practice:** Base, 3× demand aur 10× demand scenarios calculate karo. Kaunsa component first capacity cross karega aur admission/recovery behavior kya hoga? Assumption wrong ho toh design kis measurable trigger par revisit karoge, specify karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** 100,000 daily users har din 20 reads karte hain. Average reads/second aur 10× peak nikalo. Pehle kaunsi assumption validate karoge?
+**Apply — khud try karo:** 100,000 daily users har din 20 reads karte hain. Average reads/second aur 10× peak nikalo. Pehle kaunsi assumption validate karoge?
 
-> **Hint:** Ek din mein 86,400 seconds hote hain.
+> **Hint — chhota ishara:** Ek din mein 86,400 seconds hote hain.
 
-**Answer guide — compare after attempting:** 2,000,000 daily reads / 86,400 ≈23.1 requests/second; 10× peak ≈231. Actual burstiness aur per-active-user reads validate karo. Retries, background work aur downstream fan-out is estimate mein included nahi; unhe alag gino.
+**Answer guide — pehle khud karo, phir compare karo:** 2,000,000 daily reads / 86,400 ≈23.1 requests/second; 10× peak ≈231. Actual burstiness aur per-active-user reads validate karo. Retries, background work aur downstream fan-out is estimate mein included nahi; unhe alag gino.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

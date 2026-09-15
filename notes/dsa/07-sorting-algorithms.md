@@ -4,7 +4,7 @@ title: Sorting from elementary methods to divide and conquer
 track: dsa
 order: 7
 level: Intermediate
-minutes: 40
+minutes: 43
 summary: Stable sort equal sort-key wale items ka pehle wala relative order bachata hai.
 tags: sorting, merge-sort, quick-sort, radix-sort, stability
 visual: sorting
@@ -321,17 +321,27 @@ Product-level examples bhi wahi tradeoffs dikhate hain: leaderboards ke liye top
 
 **Answer:** Comparator boolean return kar raha hai, jo `1`/`0` mein coerce hota hai — negative value kabhi return hi nahi hoti. Sort ke liye "a, b se pehle aata hai" wali information hi missing hai, so behavior implementation-defined hai aur output aksar input jaisa hi (`[3, 1, 2]`) reh jaata hai. Correct comparator `(a, b) => a - b` hai, jo teenon cases (negative, zero, positive) return karta hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Comparator ko consistent order define karna chahiye
+
+Numeric compare a−b intended ascending order express karta hai for valid finite numeric inputs. Boolean comparator negative/zero/positive relation correctly represent nahi karta. NaN ya heterogeneous input ka contract undefined chhodoge toh expected order reasoning weak hogi.
+
+Stable sort equal keys ka previous relative order preserve karti hai. Yeh independent primary/secondary sort reasoning mein useful hai; key uniqueness guarantee nahi. In-place mutation caller data change karti hai, copy-first preserves outer input sequence but memory cost add karti hai.
+
+**Practice:** Duplicate keys ke saath labeled records sort karo aur sortedness ke saath original multiset preserve hona assert karo. Just ascending output test deletion bug miss kar sakta hai. Quicksort partition ke invariant aur pivot worst case explain karo; merge sort merge step already sorted halves assume karta hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Records `(A,2)`, `(B,1)`, `(C,2)` ko number se sort karo. Stable result kya hoga aur yeh guarantee kab useful hai?
+**Apply — khud try karo:** Records `(A,2)`, `(B,1)`, `(C,2)` ko number se sort karo. Stable result kya hoga aur yeh guarantee kab useful hai?
 
-> **Hint:** Stability sirf equal-key items ke aapas ke order ki guarantee deti hai.
+> **Hint — chhota ishara:** Stability sirf equal-key items ke aapas ke order ki guarantee deti hai.
 
-**Answer guide — compare after attempting:** Stable result `(B,1)`, `(A,2)`, `(C,2)` hai: A, C se pehle rahega. Pehle kisi aur field se sorting hui ho toh yeh order meaningful ho sakta hai. Stability, runtime complexity aur input mutate hone ka behavior teen alag properties hain.
+**Answer guide — pehle khud karo, phir compare karo:** Stable result `(B,1)`, `(A,2)`, `(C,2)` hai: A, C se pehle rahega. Pehle kisi aur field se sorting hui ho toh yeh order meaningful ho sakta hai. Stability, runtime complexity aur input mutate hone ka behavior teen alag properties hain.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

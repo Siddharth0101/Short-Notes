@@ -45,3 +45,20 @@ Dono sides padhkar frontend/backend reasoning combine karo.
 12. [Case study collaborative notes and real-time chat](12-realtime-case-study.md)
 
 **Stage checkpoint — khud karke dikhao:** Checkout/reconnect failure mein durable state bachne ka flow trace karo.
+
+## Stage 5: Distributed guarantees aur API contracts defend karo
+
+Read consistency, global limits aur API styles ko workload/failure history se compare karo.
+
+13. [Consistency aur distributed rate limiting — guarantees pehle likho](13-consistency-limits.md)
+14. [REST, GraphQL aur gRPC — protocol se pehle contract choose karo](14-api-contracts.md)
+
+**Stage checkpoint — khud karke dikhao:** Replica lag, limiter outage aur batch lookup failure ke expected outcomes define karo.
+
+## Stage 6: OS aur networking fundamentals se diagnose karo
+
+Request latency ko process, memory, network aur shared-resource layers mein trace karo.
+
+15. [OS aur networking interviews — slow request ko layer-wise diagnose karo](15-os-network-debugging.md)
+
+**Stage checkpoint — khud karke dikhao:** DNS/TCP/TLS failure, pool wait aur unknown write outcome ko evidence se separate karo.

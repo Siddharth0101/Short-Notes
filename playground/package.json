@@ -9,10 +9,11 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "node --test tests/*.test.mjs",
-    "check": "npm run curriculum:check && npm run interviews:check && npm run test && npm run lint && npm run build",
+    "check": "npm run curriculum:check && npm run interviews:check && npm run priority:check && npm run test && npm run lint && npm run build",
     "format": "prettier --write \"src/library/**/*.{js,jsx}\" \"src/lib/**/*.{js,jsx}\" \"src/data/*.js\" src/App.jsx src/index.css src/theme.css \"tests/*.mjs\" vite.config.js",
     "curriculum:check": "node ../scripts/sync-curriculum.mjs --check",
-    "interviews:check": "node ../scripts/sync-interviews.mjs --check"
+    "interviews:check": "node ../scripts/sync-interviews.mjs --check",
+    "priority:check": "node ../scripts/sync-priority-interviews.mjs --check"
   },
   "dependencies": {
     "lucide-react": "^1.44.0",

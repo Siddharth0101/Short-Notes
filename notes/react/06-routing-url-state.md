@@ -4,7 +4,7 @@ title: Routing nested layouts and URL state
 track: react
 order: 6
 level: Intermediate
-minutes: 26
+minutes: 29
 summary: Jo state refresh aur sharing ke baad bachni chahiye, uske liye URL useful owner hai.
 tags: router, url, loaders, navigation, routing
 ---
@@ -130,17 +130,29 @@ E-commerce listing page mein filter (category, price range), sort order aur page
 
 **Q. ProtectedRoute backend security replace karta hai?** Nahi. Woh UX control hai; authorization server-side resource access par enforce hoti hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### URL ko shareable state ka serialized contract samjho
+
+`/topics?track=java&page=2` reload/share par same meaningful view recover kar sakta hai. Selected hover row ya open tooltip URL mein rakhna usually unnecessary hai. Filter change par page reset karna domain rule hai: old page 8 new small result set mein invalid ho sakta hai.
+
+Query parameters strings hain aur user manually edit kar sakta hai. `page=-1`, duplicate params, unknown track aur huge page size validate karo. Defaults predictable rakho; invalid URL ko silently conflicting local state ke saath render mat karo. Navigation se state change ho toh browser Back/Forward bhi same source-of-truth follow kare.
+
+Nested routes parent layout retain karke child content replace kar sakti hain. Layout retention ka matlab child data universally fresh nahi. Loading/error boundaries aur route parameter identity independent concerns hain. Frontend protected-route redirect UX gate hai; API authorization server par enforce hogi.
+
+**Practice:** Filter choose → page 2 → detail → Back → reload. Filter/page retention aur scroll behavior define karo. URL se recoverable state ko parallel useState copy mein synchronize karne ke bajay URL parse karke derive karna drift kam karta hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Search page par query, page number, selected row aur unsaved draft hain. URL mein kya rahega? Query change par page kya karega?
+**Apply — khud try karo:** Search page par query, page number, selected row aur unsaved draft hain. URL mein kya rahega? Query change par page kya karega?
 
-> **Hint:** Shareable navigation aur temporary editing ko alag samjho.
+> **Hint — chhota ishara:** Shareable navigation aur temporary editing ko alag samjho.
 
-**Answer guide — compare after attempting:** Query/page URL params mein; unsaved draft local ya deliberate draft store mein rakho. Selected row tab URL mein ho jab linkable chahiye. Query change par page reset, malformed params validate, aur Back se previous view restore hona verify karo.
+**Answer guide — pehle khud karo, phir compare karo:** Query/page URL params mein; unsaved draft local ya deliberate draft store mein rakho. Selected row tab URL mein ho jab linkable chahiye. Query change par page reset, malformed params validate, aur Back se previous view restore hona verify karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: JavaScript interview playbook
 track: interview
 order: 1
 level: Intermediate
-minutes: 24
+minutes: 27
 summary: Achhe language answer mein output prediction, andar ka mechanism aur ek changed example teeno hote hain.
 tags: javascript, interview, closures, event-loop, coding
 visual: event-loop
@@ -75,7 +75,7 @@ Contract trailing-only hai. Return value delayed function result nahi hota; asyn
 
 ## Self-review rubric
 
-Har dimension ko 0–2 score do: semantics, example, edge cases, implementation, communication. 0 = missing/wrong, 1 = mostly correct but prompted, 2 = independently correct with justification. Total 8/10 target rakho aur missed dimension ko next practice mein repeat karo. Memorized terms ke bajaye “why this update is safe” explain karna high-signal hai.
+Har dimension ko 0–2 score do: semantics, example, edge cases, implementation, communication. 0 = missing/galat, 1 = prompt ke baad mostly correct, 2 = independently correct aur reason clear. Total 8/10 target rakho aur missed dimension ko next practice mein repeat karo. Memorized terms ke bajaye “why this update is safe” explain karna high-signal hai.
 
 ## Practice and answer
 
@@ -117,17 +117,37 @@ Employer source assessment approach ka reference hai. Yeh exercise original prac
 
 [Source yahan padho — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Unknown snippet ko mechanically solve karne ka route
+
+Pehle execution environment bolo: browser/module/strict mode ya Node. Phir synchronous statements, lexical bindings, receiver aur scheduled continuations mark karo. Output pehle guess karne ke bajay har transition likho. Closure live binding padhti hai ya precomputed string, distinguish karo.
+
+Coding task mein input contract, invalid values, order aur mutation permission clarify karo. Async task mein result order, active limit, rejection aur cancellation separately define karo. Short happy-path utility ke missing production boundaries honestly label karo.
+
+**Mock follow-up:** Interviewer input mein emoji, duplicate item ya never-settling promise add kare. Existing proof ka kaunsa assumption badla? Implementation modify karne se pehle reasoning revise karo. Score answer vocabulary se nahi, predicted behavior aur independent tests se do.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Do factory-created counters independent kyun hain, do minute mein samjhao. Phir example badalkar unse intentionally shared state use karwao.
+**Apply — khud try karo:** Do factory-created counters independent kyun hain, do minute mein samjhao. Phir example badalkar unse intentionally shared state use karwao.
 
-> **Hint:** Har returned function exactly kis binding ko access karta hai, woh identify karo.
+> **Hint — chhota ishara:** Har returned function exactly kis binding ko access karta hai, woh identify karo.
 
-**Answer guide — compare after attempting:** Separate factory calls separate bindings banati hain; shared counters ek outer binding read karte hain. Dono ka short call trace aur alag outputs dikhao. Sirf closure word bolna kaafi nahi; mechanism aur evidence bhi do.
+**Answer guide — pehle khud karo, phir compare karo:** Separate factory calls separate bindings banati hain; shared counters ek outer binding read karte hain. Dono ka short call trace aur alag outputs dikhao. Sirf closure word bolna kaafi nahi; mechanism aur evidence bhi do.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [MDN closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures), [JavaScript execution model](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model), aur [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) semantics ke references hain.
+
+## Project explanation aur debugging handoff
+
+Original practice prompt: “Search feature mein kabhi old results dikhte the. Tumne kaise diagnose aur fix kiya?” Pehle user impact batao, phir smallest reproduction: A slow request, B fast request, A late response. Apna actual contribution separate bolo; team ne jo kiya use apna solo work mat present karo. Agar production metrics available nahi toh invented percentage ki jagah observed test/result bolo.
+
+Do-minute answer ka order: context → expected contract → first wrong assumption → evidence → fix → remaining limitation. Network cancellation aur stale response guard ko distinct responsibilities ki tarah explain karo. Follow-up: server ne request already process kar li thi toh abort ka meaning kya hai?
+
+**Practice:** Ek bug handoff likho: steps, expected/actual, minimal input, runtime, failed hypothesis aur next check. **Answer guide:** “Async broken hai” weak handoff hai. “B resolve ke baad A response list overwrite karta hai; controlled promise test reproduces; current request identity guard missing” actionable hai. Reviewer ko exact failed contract aur verification path milna chahiye.
+
+[Testing workflow](../javascript/18-testing-workflow.md) se reproducible regression banane ki practice karo.

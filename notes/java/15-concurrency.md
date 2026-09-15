@@ -4,7 +4,7 @@ title: Concurrency synchronization and virtual threads
 track: java
 order: 15
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Read-modify-write ke poore operation ko coordinate karna hota hai; alag reads/writes safe hona kaafi nahi.
 tags: concurrency, threads, virtual-threads, locks
 visual: thread-sync
@@ -96,7 +96,7 @@ Ab dono directions se transfer same order mein locks acquire karta hai, isliye c
 
 ## Executors and cancellation
 
-Raw threads create karne se lifecycle management tedious hota hai. Executor task submission aur execution policy separate karta hai. Bound resource access with semaphore, queue limit, timeout and rejection policy. Cancellation cooperative hai: interrupted status check karo, blocking APIs ka InterruptedException handle karo, aur interruption swallow mat karo. `Thread.sleep` synchronization mechanism nahi hai.
+Raw threads create karne se lifecycle management tedious hota hai. Executor task submission aur execution policy separate karta hai. Resource access semaphore, queue limit, timeout aur rejection policy se bound karo. Cancellation cooperative hai: interrupted status check karo, blocking APIs ka InterruptedException handle karo, aur interruption swallow mat karo. `Thread.sleep` synchronization mechanism nahi hai.
 
 ```java
 ExecutorService pool = Executors.newFixedThreadPool(4);
@@ -175,17 +175,27 @@ Request-scoped correlation IDs, security context aur tenant info aksar `ThreadLo
 
 Two workers se 100,000 increments run karo, unsafe count observe karo, phir atomic correction karo. Inventory race ko coordinated start ke saath test karo. Finally one slow task cancel karke verify karo ki resource release hota hai. Phir do-account transfer deadlock ko reproduce karo (dono directions se simultaneously transfer chala kar), aur consistent lock-ordering se fix karo. Last mein ek pooled-thread ThreadLocal leak simulate karo: cleanup skip karke ek "wrong user" read reproduce karo, phir `finally` block se fix karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Visibility, atomicity aur ordering teen separate questions hain
+
+Volatile flag reader ko updated state observe karne ka memory-model contract de sakta hai; `count++` read-add-write ko atomic compound operation nahi banata. AtomicInteger single counter update own kar sakta hai. Multiple related fields ka invariant ho toh independently atomic fields enough nahi.
+
+Synchronized block same monitor use karne wale critical sections coordinate karta hai. Different locks par same shared state protect karne ka claim invalid hai. Deadlock mein A lock X hold karke Y wait aur B Y hold karke X wait karti hai; consistent acquisition order circular wait prevent karne ka common design hai.
+
+**Practice:** Account transfer total balance preserve kare. Exception path, lock order aur competing transfers reason karo. Correct final total one lucky run se proof nahi; critical-section invariant explain karo aur controlled overlapping operations test karo. Performance ke liye lock hatane se pehle correctness argument replace hona chahiye.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Do threads shared plain int ko 1000-1000 baar increment karti hain. Kya 2000 guaranteed hai? Counter repair karo.
+**Apply — khud try karo:** Do threads shared plain int ko 1000-1000 baar increment karti hain. Kya 2000 guaranteed hai? Counter repair karo.
 
-> **Hint:** Read, add aur write alag steps hain jo interleave ho sakte hain.
+> **Hint — chhota ishara:** Read, add aur write alag steps hain jo interleave ho sakte hain.
 
-**Answer guide — compare after attempting:** 2000 guaranteed nahi: increments ek-doosre ka update overwrite kar sakte hain. Full update par lock ya suitable atomic counter use karo. Result dekhne se pehle dono threads finish hone do. volatile visibility deta hai, increment ko atomic nahi banata.
+**Answer guide — pehle khud karo, phir compare karo:** 2000 guaranteed nahi: increments ek-doosre ka update overwrite kar sakte hain. Full update par lock ya suitable atomic counter use karo. Result dekhne se pehle dono threads finish hone do. volatile visibility deta hai, increment ko atomic nahi banata.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

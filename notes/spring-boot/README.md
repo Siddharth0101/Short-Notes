@@ -43,3 +43,27 @@ Boundaries test, telemetry inspect aur deployment capstone complete karo.
 10. [Package deploy and defend a Spring Boot capstone](10-deployment-capstone.md)
 
 **Stage checkpoint — khud karke dikhao:** API acceptance cases run karke failed-deployment recovery defend karo.
+
+## Stage 5: Background work aur cache operate karo
+
+Proxy boundaries, scheduled jobs aur cache identity ko failure scenarios se connect karo.
+
+11. [Spring background jobs aur caching — lifecycle aur ownership samjho](11-spring-background-cache.md)
+
+**Stage checkpoint — khud karke dikhao:** Duplicate job aur stale cache recovery ka measurable contract do.
+
+## Stage 6: Web runtime ko neeche tak trace karo
+
+Servlet concurrency, forwarding aur view rendering ko Spring MVC se connect karo.
+
+12. [Servlets, JSP aur Spring MVC — request ka underlying runtime](12-servlet-mvc.md)
+
+**Stage checkpoint — khud karke dikhao:** Shared request-field race aur redirect attribute loss diagnose karo.
+
+## Stage 7: Optional AI retrieval extension
+
+Authorized retrieval, evidence quality aur model integration ki limits samjho.
+
+13. [Spring AI aur RAG — retrieval, permissions aur answer evaluation](13-ai-retrieval.md)
+
+**Stage checkpoint — khud karke dikhao:** Known, unsupported aur unauthorized questions ka evaluation contract do.

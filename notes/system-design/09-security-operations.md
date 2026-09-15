@@ -4,7 +4,7 @@ title: Security observability and production operations
 track: system-design
 order: 9
 level: Advanced
-minutes: 26
+minutes: 29
 summary: SLO mein good event, eligible request aur measurement window define karo, tab target ka meaning clear hota hai.
 tags: security, observability, deployment, reliability
 visual: request-flow
@@ -166,7 +166,7 @@ Backup ke liye yaad rakho ki untested backup ek assumption hai, guarantee nahi. 
 
 ## Practice
 
-Database outage tabletop run karo: API status, retries, alerts and recovery list karo. Restore sample backup into isolated environment. Simulate rolling deployment where old and new code overlap against one schema.
+Database outage tabletop run karo: API status, retries, alerts and recovery list karo. Restore sample backup into isolated environment. Rolling deployment simulate karo jahan old aur new code ek schema ke saath simultaneously chalti hain.
 
 Phir ek authorization test likho jo tenant A ke token se tenant B ke resource IDs par har endpoint hit kare; dekho kitne endpoints 200 return karte hain. Uske baad apne service ke top 5 dependencies ke liye degradation ladder likho — har ek ke fail hone par kya band hoga aur kya chalta rahega — aur verify karo ki kam se kam do behaviors actually implemented hain, sirf documented nahi. Last mein apne metrics mein cardinality audit karo: koi label aisa hai jo user/request/order ID carry kar raha ho?
 
@@ -184,17 +184,27 @@ Target se pehle user-visible indicator choose karo. Successful eligible checkout
 
 [Source yahan padho — Google SRE](https://sre.google/sre-book/service-level-objectives/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Trust boundary har hop par explicit honi chahiye
+
+Browser userId bhejta hai; API authenticated principal derive karti hai; downstream service forwarded identity consume karti hai. Kaunsa hop header replace/verify karta hai, specify karo. Internal network location alone authenticated identity nahi. Resource ownership query enforce kare.
+
+Operations mein deploy success process started se stronger claim hai: correct version, healthy dependency access, successful representative traffic aur compatible schema verify karo. Rollback decision user impact aur recovery path par based ho, just log volume par nahi.
+
+**Practice:** Shared database outage mein liveness fail karake all instances restart karna kya improve karega? Often reconnect storm worsen ho sakti hai. Readiness, dependency diagnosis aur bounded retries separately reason karo. Restore drill backup exists claim se stronger evidence deta hai: restored data usable aur recovery target ke andar ho.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** 1,000,000 eligible requests aur 99.9% success target mein kitne bad events allowed hain? Alert se pehle kya define karoge?
+**Apply — khud try karo:** 1,000,000 eligible requests aur 99.9% success target mein kitne bad events allowed hain? Alert se pehle kya define karoge?
 
-> **Hint:** Allowed failure fraction ko event count se multiply karo.
+> **Hint — chhota ishara:** Allowed failure fraction ko event count se multiply karo.
 
-**Answer guide — compare after attempting:** Window mein 1000 bad events allowed hain. Window, eligible traffic, success semantics aur data source define karo. Request-based availability aur time-based downtime alag hain; 1000 errors se automatically offline minutes nahi nikalte.
+**Answer guide — pehle khud karo, phir compare karo:** Window mein 1000 bad events allowed hain. Window, eligible traffic, success semantics aur data source define karo. Request-based availability aur time-based downtime alag hain; 1000 errors se automatically offline minutes nahi nikalte.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

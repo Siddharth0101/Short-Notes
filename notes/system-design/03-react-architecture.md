@@ -4,7 +4,7 @@ title: React architecture rendering and delivery
 track: system-design
 order: 3
 level: Intermediate
-minutes: 25
+minutes: 28
 summary: Rendering approach route requirements aur data freshness se choose karo; poori app ko ek hi rule dena zaroori nahi.
 tags: react, architecture, ssr, hydration, cdn
 visual: react-render
@@ -113,7 +113,7 @@ CDN cache ka ek aur subtle failure: `Cache-Control: public` accidentally kisi au
 
 **How would you split components?** User capabilities, independent state and reusable interaction contracts ke around. Every div ko component banana readability necessarily improve nahi karta.
 
-**Does SSR remove JavaScript cost?** Nahi. Interactive client components ka code and hydration still required ho sakta hai. Measure total transferred bytes, main-thread work and time to usable interaction.
+**Does SSR remove JavaScript cost?** Nahi. Interactive client components ka code and hydration still required ho sakta hai. Transferred bytes, main-thread work aur usable interaction tak ka time measure karo.
 
 **When micro-frontends?** Independent teams and deployment ownership strong need ho tab consider karo. Runtime duplication, cross-app state and visual consistency cost explicitly accept karni hogi.
 
@@ -127,17 +127,27 @@ Notes product ke routes ko public catalog, reader and private dashboard mein cla
 
 Phir deployment failure reproduce karo: app build karo, browser mein open karo, phir rebuild karke purane hashed chunks delete kar do aur ek lazy route click karo. Blank screen dekho, phir chunk-load catch plus reload prompt add karke fix karo. Last mein ek rendering-strategy budget likho: har route ke liye estimated CDN hit rate, origin rps at 2,000 total rps, aur us route ka fallback behavior jab origin down ho.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Rendering strategy route ke data aur interaction se derive karo
+
+Public mostly-static lesson page cached/static output benefit le sakti hai. Personalized dashboard authorization, freshness aur interaction requirements maangti hai. SSR initial HTML de sakta hai; hydration interactive client behavior attach karti hai, but client work zero nahi.
+
+Server/client first output differ ho toh hydration mismatch aa sakti hai: random values, local timezone ya browser-only storage during first render common causes hain. Initial data snapshot aur client-only changes ki boundary intentional rakho.
+
+**Practice:** One public route aur one private route ke bytes, data fetch timing, cache scope aur failure fallback diagram banao. Route-level chunk loading network bottleneck reduce kar sakti hai but first-open delay introduce karegi. Microfrontend choose karne se pehle team ownership/release independence ka benefit runtime duplication, shared design system aur cross-app state cost se compare karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Public course landing page aur private live progress dashboard ka rendering approach choose karo. Ek deployment risk batao.
+**Apply — khud try karo:** Public course landing page aur private live progress dashboard ka rendering approach choose karo. Ek deployment risk batao.
 
-> **Hint:** Discoverability aur personalized fresh data ki priorities alag hain.
+> **Hint — chhota ishara:** Discoverability aur personalized fresh data ki priorities alag hain.
 
-**Answer guide — compare after attempting:** Generated/server-rendered landing page discoverable content jaldi de sakti hai. Private dashboard ko authenticated data aur interactive update strategy chahiye. Dono techniques combine kar sakte hain. Releases ke assets compatible rakho aur private data shared cache mein na jaane do.
+**Answer guide — pehle khud karo, phir compare karo:** Generated/server-rendered landing page discoverable content jaldi de sakti hai. Private dashboard ko authenticated data aur interactive update strategy chahiye. Dono techniques combine kar sakte hain. Releases ke assets compatible rakho aur private data shared cache mein na jaane do.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

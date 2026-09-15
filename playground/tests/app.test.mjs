@@ -35,6 +35,7 @@ const React = await import('react');
 const { createRoot } = await import('react-dom/client');
 const { MemoryRouter } = await import('react-router-dom');
 const { default: App } = await server.ssrLoadModule('/src/App.jsx');
+const { courses } = await server.ssrLoadModule('/src/data/curriculum.js');
 const { notes, archive } = await server.ssrLoadModule('/src/data/catalog.js');
 const { VISUAL_IDS } = await server.ssrLoadModule('/src/lib/visualIds.js');
 const { interviewQuestions } = await server.ssrLoadModule('/src/data/interviewQuestions.js');
@@ -173,9 +174,15 @@ test('Library and paths share staged course order and keep lesson numbers stable
   for (const route of ['/library?track=javascript', '/paths?track=javascript']) {
     await mount(route);
     assert.equal(document.querySelectorAll('.course-outline').length, 1);
-    assert.equal(document.querySelectorAll('.course-stage').length, 5);
+    assert.equal(
+      document.querySelectorAll('.course-stage').length,
+      courses.javascript.stages.length,
+    );
     assert.match(document.querySelector('.note-row h3').textContent, /Variables and assignment/);
-    assert.equal(document.querySelectorAll('.stage-checkpoint').length, 5);
+    assert.equal(
+      document.querySelectorAll('.stage-checkpoint').length,
+      courses.javascript.stages.length,
+    );
   }
   await mount('/library?track=javascript&q=closures');
   for (const row of document.querySelectorAll('.note-row')) {
@@ -455,7 +462,10 @@ test('Java and Spring Boot expose independent courses with stable reader links',
   assert(document.querySelector('.course-readiness a[href="/notes/java-maven-testing"]'));
   await mount('/notes/java-jpa-transactions');
   assert(document.querySelector('.reader-course-context a[href="/paths?track=spring-boot"]'));
-  assert.match(document.querySelector('.reader-course-context').textContent, /Lesson 6 of 10/);
+  assert.match(
+    document.querySelector('.reader-course-context').textContent,
+    new RegExp(`Lesson 6 of ${notes.filter((n) => n.track === 'spring-boot').length}\\b`),
+  );
   await mount('/interview?track=spring-boot');
   assert(document.querySelector('.question-card'));
 });

@@ -58,6 +58,25 @@
           "javascript-async-patterns",
           "js-modules-tooling-debugging"
         ]
+      },
+      {
+        "id": "javascript-6",
+        "title": "Code ka behavior verify karo",
+        "goal": "Modules aur async knowledge ko repeatable tests aur debugging workflow se verify karo.",
+        "checkpoint": "Boundary tests aur controlled async failure case run karke regression explain karo.",
+        "chapters": [
+          "javascript-testing-workflow"
+        ]
+      },
+      {
+        "id": "javascript-7",
+        "title": "Persistence aur collaboration samjho",
+        "goal": "Local data lifecycle, offline conflicts aur reviewed Git changes practice karo.",
+        "checkpoint": "Two-tab conflict policy aur staged/unstaged diff ka exact meaning explain karo.",
+        "chapters": [
+          "javascript-browser-persistence",
+          "javascript-git-workflow"
+        ]
       }
     ]
   },
@@ -110,6 +129,15 @@
         "chapters": [
           "react-performance-production",
           "react-machine-coding"
+        ]
+      },
+      {
+        "id": "react-5",
+        "title": "User journey test karo",
+        "goal": "Forms, async screens aur accessibility ke observable contracts check karo.",
+        "checkpoint": "Accessible queries se form test likho aur browser-only checks separately identify karo.",
+        "chapters": [
+          "react-testing-accessibility"
         ]
       }
     ]
@@ -164,6 +192,17 @@
           "java-concurrency",
           "java-concurrency-production"
         ]
+      },
+      {
+        "id": "java-5",
+        "title": "Types, schema aur object design evolve karo",
+        "goal": "Finite variants, metadata, compatible migrations aur invariant-based low-level design practice karo.",
+        "checkpoint": "Immutable model, safe migration aur concurrent loan claim ka contract verify karo.",
+        "chapters": [
+          "java-type-metadata",
+          "java-schema-migrations",
+          "java-low-level-design"
+        ]
       }
     ]
   },
@@ -215,6 +254,33 @@
           "java-observability-actuator",
           "spring-deployment-capstone"
         ]
+      },
+      {
+        "id": "spring-boot-5",
+        "title": "Background work aur cache operate karo",
+        "goal": "Proxy boundaries, scheduled jobs aur cache identity ko failure scenarios se connect karo.",
+        "checkpoint": "Duplicate job aur stale cache recovery ka measurable contract do.",
+        "chapters": [
+          "spring-background-cache"
+        ]
+      },
+      {
+        "id": "spring-boot-6",
+        "title": "Web runtime ko neeche tak trace karo",
+        "goal": "Servlet concurrency, forwarding aur view rendering ko Spring MVC se connect karo.",
+        "checkpoint": "Shared request-field race aur redirect attribute loss diagnose karo.",
+        "chapters": [
+          "spring-servlet-mvc"
+        ]
+      },
+      {
+        "id": "spring-boot-7",
+        "title": "Optional AI retrieval extension",
+        "goal": "Authorized retrieval, evidence quality aur model integration ki limits samjho.",
+        "checkpoint": "Known, unsupported aur unauthorized questions ka evaluation contract do.",
+        "chapters": [
+          "spring-ai-retrieval"
+        ]
       }
     ]
   },
@@ -263,6 +329,15 @@
         "chapters": [
           "mongo-auth-security",
           "mongo-production-integrations"
+        ]
+      },
+      {
+        "id": "mongodb-5",
+        "title": "API lifecycle verify karo",
+        "goal": "Real HTTP testing, database isolation aur bounded shutdown practice karo.",
+        "checkpoint": "Parallel-safe request test aur in-flight shutdown acceptance cases run karo.",
+        "chapters": [
+          "mongodb-testing-shutdown"
         ]
       }
     ]
@@ -316,6 +391,16 @@
           "dsa-graphs",
           "dsa-dynamic-programming"
         ]
+      },
+      {
+        "id": "dsa-5",
+        "title": "Advanced choices ko prove karo",
+        "goal": "Greedy/interval proofs aur trie, bitmask, range-query structures seekho.",
+        "checkpoint": "Greedy ko brute-force oracle se compare karo aur Fenwick update trace karo.",
+        "chapters": [
+          "dsa-greedy-intervals",
+          "dsa-tries-range-bits"
+        ]
       }
     ]
   },
@@ -368,6 +453,25 @@
         "chapters": [
           "design-commerce-case-study",
           "design-realtime-case-study"
+        ]
+      },
+      {
+        "id": "system-design-5",
+        "title": "Distributed guarantees aur API contracts defend karo",
+        "goal": "Read consistency, global limits aur API styles ko workload/failure history se compare karo.",
+        "checkpoint": "Replica lag, limiter outage aur batch lookup failure ke expected outcomes define karo.",
+        "chapters": [
+          "system-design-consistency-limits",
+          "system-design-api-contracts"
+        ]
+      },
+      {
+        "id": "system-design-6",
+        "title": "OS aur networking fundamentals se diagnose karo",
+        "goal": "Request latency ko process, memory, network aur shared-resource layers mein trace karo.",
+        "checkpoint": "DNS/TCP/TLS failure, pool wait aur unknown write outcome ko evidence se separate karo.",
+        "chapters": [
+          "system-design-os-network-debugging"
         ]
       }
     ]

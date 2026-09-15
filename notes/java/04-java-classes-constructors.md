@@ -4,7 +4,7 @@ title: Classes objects constructors and encapsulation
 track: java
 order: 4
 level: Foundation
-minutes: 12
+minutes: 15
 summary: Constructor valid object banata hai; methods ko uske invariants, yani valid state ke rules, bachane chahiye.
 tags: fundamentals, java, classes, constructors
 ---
@@ -62,17 +62,29 @@ Do learners banao aur alag numbers of lessons complete karo; counters independen
 
 Class, instance, constructor, field aur method ka meaning alag samjhao. Next language edge cases review karke interfaces, composition, equality aur polymorphism padho.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Constructor valid object banane ka gate hai
+
+CourseSession ke title aur minutes fields hain. Constructor blank title ya negative minutes allow kar de toh har later method ko invalid state defend karni padegi. Constructor invariant establish kare; mutation methods bhi preserve karein. Private field alone validation nahi karti.
+
+Do objects same class se banne par own instance fields rakhte hain. Static field class-level shared state hai; per-student progress static bana diya toh students ek doosre ka count change karenge. Static useful shared constant ho sakti hai, automatically wrong nahi—ownership decide karo.
+
+`this.minutes = minutes` mein left current object's field aur right constructor parameter hai. Parameter shadow hone se names same hain; this distinction explicit karti hai. Constructor return type nahi declare karta aur object initialization own karta hai.
+
+**Practice:** Two sessions create karo; one duration update karo, doosri unchanged verify karo. Invalid duration reject karne par existing object half-updated na ho. Pehle validate, phir fields change. Immutable design chahiye toh mutation methods omit karke updated new value return karna consider karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Name aur completed count wala learner banao. Negative starting count reject karo. Do learners banao aur sirf ek ka count badhao.
+**Apply — khud try karo:** Name aur completed count wala learner banao. Negative starting count reject karo. Do learners banao aur sirf ek ka count badhao.
 
-> **Hint:** Instance fields alag rakho; assignment se pehle validation karo.
+> **Hint — chhota ishara:** Instance fields alag rakho; assignment se pehle validation karo.
 
-**Answer guide — compare after attempting:** Private instance fields rakho, constructor count validate karo aur unchecked writes ke bajay completion method do. Doosre learner ka count same rahega. static count sab learners mein share hoga; yeh tabhi sahi hai jab shared total intentionally chahiye.
+**Answer guide — pehle khud karo, phir compare karo:** Private instance fields rakho, constructor count validate karo aur unchecked writes ke bajay completion method do. Doosre learner ka count same rahega. static count sab learners mein share hoga; yeh tabhi sahi hai jab shared total intentionally chahiye.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

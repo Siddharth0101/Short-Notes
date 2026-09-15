@@ -4,7 +4,7 @@ title: OOP pillars and a banking mini-project
 track: javascript
 order: 14
 level: Advanced
-minutes: 24
+minutes: 27
 summary: Encapsulation ka purpose valid state transitions bachana hai; sirf fields hide karna kaafi nahi.
 tags: oop, encapsulation, inheritance, polymorphism, abstraction, classes, closures, capstone
 ---
@@ -244,17 +244,29 @@ Kuch cheezein jo yeh example jaanbujh kar exercise karta hai:
 
 **Q. Composition ko inheritance se kab prefer karoge?** Jab relationship "is-a" nahi, "has-a"/"can-do" ho, ya jab multiple independent features (logging, retry, caching) ek object mein combine karni ho. Deep inheritance chains fragile hoti hain; composition flat aur mix-and-match rehta hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Abstraction ko changing requirement se test karo
+
+Bank account mein balance private karna tab useful hai jab public operations invariant preserve karein. `withdraw(amount)` ko finite positive amount aur available balance check karna chahiye; sirf private field laga dene se negative withdrawal se balance badhne ka bug nahi rukta. Getters se mutable internal transaction array expose kar doge toh external caller history edit kar sakta hai.
+
+Ab requirement add karo: notification email ya SMS se bhejni hai. Account ko EmailAccount/SmsAccount subclasses mein baantna unnecessary identity explosion ho sakta hai. Notification dependency ko small interface/behavior ke through compose karo. Account funds own kare, notifier delivery own kare.
+
+Failure boundary bhi decide karo: withdrawal commit ho gaya, email fail hui. Kya balance rollback karoge? Teaching memory model mein clear result do; durable backend mein notification retry/outbox separate design hai. “OOP” network side effects ko automatically atomic nahi banata.
+
+**Practice:** Duplicate transaction request ka scenario likho. Same logical operation twice charge na ho, iske liye stable operation identity chahiye. Class diagram mein method names ke saath precondition, state transition aur failure outcome likhna deeper design hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Balance 100 hai. Pehle 30, phir 80, phir -5 withdraw karo. Har step ka result aur rejected withdrawal ki notification define karo.
+**Apply — khud try karo:** Balance 100 hai. Pehle 30, phir 80, phir -5 withdraw karo. Har step ka result aur rejected withdrawal ki notification define karo.
 
-> **Hint:** Amount aur available balance validate karne ke baad hi state mutate karo.
+> **Hint — chhota ishara:** Amount aur available balance validate karne ke baad hi state mutate karo.
 
-**Answer guide — compare after attempting:** First withdrawal ke baad 70. Next dono reject: 80 balance se zyada aur -5 positive amount nahi hai. Balance 70 hi rahe. Documented result return karo ya documented error throw karo; rejected transition state nahi badalni chahiye.
+**Answer guide — pehle khud karo, phir compare karo:** First withdrawal ke baad 70. Next dono reject: 80 balance se zyada aur -5 positive amount nahi hai. Balance 70 hi rahe. Documented result return karo ya documented error throw karo; rejected transition state nahi badalni chahiye.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

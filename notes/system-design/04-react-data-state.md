@@ -4,7 +4,7 @@ title: React state server data and cache consistency
 track: system-design
 order: 4
 level: Intermediate
-minutes: 25
+minutes: 28
 summary: State ownership aur response identity se ek request/user ka result doosre view ko overwrite nahi karta.
 tags: react, state, caching, optimistic-ui
 visual: caching
@@ -106,7 +106,7 @@ Sketch intentionally error handling omit karta hai; real caller abort error and 
 
 Local storage small synchronous key/value persistence deta hai. Larger structured offline data ke liye IndexedDB more appropriate ho sakta hai. Offline write queue mein operation ID, base version and replay policy chahiye. Multi-tab updates events/channel se coordinate karo where needed. Last-write-wins simple hai, but conflicting user edits silently lose kar sakta hai.
 
-Offline queue ka sabse underestimated failure mode replay storm hai. User 2 ghante offline raha, 40 operations queue hui, phir network wapas aaya — ab client 40 requests ek saath fire karta hai. Agar 10,000 users ek hi network outage se recover kar rahe hain, toh server ko ek instant mein 400,000 queued writes milti hain, jo normal write load se kai guna zyada hai. Fixes: queue ko serially drain karo (parallelism 2-4), har operation par stable ID rakho taaki duplicate replay safe ho, aur client-side jitter add karo taaki sab clients same millisecond par reconnect na karein.
+Offline queue ka sabse underestimated failure mode replay storm hai. User 2 ghante offline raha, 40 operations queue hui, phir network wapas aaya — ab client 40 requests ek saath fire karta hai. Agar 10,000 users ek hi network outage se recover kar rahe hain, toh server ko ek instant mein 400,000 queued writes milti hain, jo normal write load se kai guna zyada hai. Fixes: dependent operations serially drain karo (parallelism 1); independent operations ke liye measured bounded concurrency, jaise 2-4, use karo, har operation par stable ID rakho taaki duplicate replay safe ho, aur client-side jitter add karo taaki sab clients same millisecond par reconnect na karein.
 
 ### Cache memory aur cardinality
 
@@ -116,7 +116,9 @@ Client-side cache unbounded nahi ho sakti, aur cache key design hi uska size dec
 key: ["notes", ownerId, { q: "reac", topic: "java", sort: "recent", page: 1 }]
 ```
 
-User "react" type karta hai toh 5 keystrokes = 5 distinct cache entries. 20 searches per session × 5 prefixes = 100 entries, har ek 20 items × ~2 KB = ~40 KB → ~4 MB ek session mein. Mobile browser par yeh memory pressure aur GC pauses create karta hai. Do fixes: query ko debounce karke normalize karo (trim, lowercase, collapse spaces) taaki key space chhota rahe, aur `gcTime` short rakho (jaise 5 minutes) taaki unused entries evict ho jaayein. Filters ko serialize karte waqt key order stable rakho — `{a:1,b:2}` aur `{b:2,a:1}` ko alag key banana silent cache-miss doubling hai.
+Har fetched search prefix alag cache entry bana sakta hai. Example estimate: 100 entries × 20 items × 2 KB roughly 4 MB payload hai; actual memory object overhead aur library behavior par depend karegi. Debounce requests reduce karta hai; unused entries ke liye suitable `gcTime` choose karo. Trim/lowercase/space normalization sirf tab karo jab backend search semantics bhi equivalent hon, warna valid query ka meaning badal sakta hai.
+
+TanStack Query object keys ko deterministically hash karti hai: `['notes', {a:1,b:2}]` aur `['notes', {b:2,a:1}]` same identity hain. Array element order matter karta hai. Custom `JSON.stringify` string key mein object insertion order different strings de sakta hai; us case ko TanStack ke behavior se mix mat karo. [Official query-key rules](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys).
 
 ## Common mistakes — in galtiyon se bacho
 
@@ -158,17 +160,27 @@ Test: user apna draft title edit kar sakta hai lekin owner doosre account mein b
 
 [Source yahan padho — Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Optimistic rollback ko concurrent edits ke saath prove karo
+
+Value 0 se mutation A optimistic 1 karti hai. Mutation B newer edit 2 karti hai. A fail hone par whole old snapshot 0 restore karoge toh successful/newer B intent lose ho sakti hai. Rollback operation-specific patch, mutation version ya refetch/reconciliation policy se latest ownership respect kare.
+
+Server response authoritative ho tab bhi old request response current selected resource ki identity match kare. “Latest response” arrival-time latest hai, business version latest necessarily nahi. Version tokens aur server ordering contract distinct evidence hain.
+
+**Practice:** A fail/B succeed, B fail/A succeed, both pending/logout aur offline replay timelines likho. Har cell mein displayed value, durable value aur next action specify karo. Cache library use karna these domain decisions remove nahi karta; framework mechanics ke upar application consistency policy clear chahiye.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Old request pending hai aur user notes filter badal deta hai. Query identity aur old response ka behavior define karo.
+**Apply — khud try karo:** Old request pending hai aur user notes filter badal deta hai. Query identity aur old response ka behavior define karo.
 
-> **Hint:** Visible result current selected filter se match hona chahiye.
+> **Hint — chhota ishara:** Visible result current selected filter se match hona chahiye.
 
-**Answer guide — compare after attempting:** Request/cache identity mein user aur filter inputs include karo. Old result apni identity ke cache mein rakho ya active view ke liye ignore karo. Loading/error bhi current request se attach ho. Reverse completion aur account switching test karo.
+**Answer guide — pehle khud karo, phir compare karo:** Request/cache identity mein user aur filter inputs include karo. Old result apni identity ke cache mein rakho ya active view ke liye ignore karo. Loading/error bhi current request se attach ho. Reverse completion aur account switching test karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

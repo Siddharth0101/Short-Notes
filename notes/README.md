@@ -66,6 +66,23 @@ Promises/fetch se concurrency limits aur modules tak badho.
 
 **Stage checkpoint — khud karke dikhao:** Failed request handle, active work cap aur browser tak app delivery explain karo.
 
+### Stage 6: Code ka behavior verify karo
+
+Modules aur async knowledge ko repeatable tests aur debugging workflow se verify karo.
+
+18. [Testing aur debugging — bug ko repeatable proof banao](javascript/18-testing-workflow.md)
+
+**Stage checkpoint — khud karke dikhao:** Boundary tests aur controlled async failure case run karke regression explain karo.
+
+### Stage 7: Persistence aur collaboration samjho
+
+Local data lifecycle, offline conflicts aur reviewed Git changes practice karo.
+
+19. [Browser persistence aur offline behavior — save ka meaning clear karo](javascript/19-browser-persistence.md)
+20. [Git workflow — working tree se reviewed commit tak](javascript/20-git-workflow.md)
+
+**Stage checkpoint — khud karke dikhao:** Two-tab conflict policy aur staged/unstaged diff ka exact meaning explain karo.
+
 ## React
 
 [Is course ka syllabus kholo](react/README.md)
@@ -110,6 +127,14 @@ Machine coding se pehle production behavior profile karo.
 11. [React machine coding and identity bugs](react/11-machine-coding.md)
 
 **Stage checkpoint — khud karke dikhao:** Stale-request protection, keyboard behavior aur ek measured improvement dikhao.
+
+### Stage 5: User journey test karo
+
+Forms, async screens aur accessibility ke observable contracts check karo.
+
+12. [React testing — user behavior aur accessibility verify karo](react/12-testing-accessibility.md)
+
+**Stage checkpoint — khud karke dikhao:** Accessible queries se form test likho aur browser-only checks separately identify karo.
 
 ## Java
 
@@ -161,6 +186,16 @@ Thread safety, virtual threads aur bounded resources seekho.
 
 **Stage checkpoint — khud karke dikhao:** Race-safe operation dikhao aur backpressure ki need explain karo.
 
+### Stage 5: Types, schema aur object design evolve karo
+
+Finite variants, metadata, compatible migrations aur invariant-based low-level design practice karo.
+
+17. [Java type modeling — enums, sealed types aur annotations](java/17-type-metadata.md)
+18. [SQL schema design aur safe migrations — data ka contract evolve karo](java/18-schema-migrations.md)
+19. [Low-level design — requirements se classes aur invariants tak](java/19-low-level-design.md)
+
+**Stage checkpoint — khud karke dikhao:** Immutable model, safe migration aur concurrent loan claim ka contract verify karo.
+
 ## Spring Boot
 
 [Is course ka syllabus kholo](spring-boot/README.md)
@@ -205,6 +240,30 @@ Boundaries test, telemetry inspect aur deployment capstone complete karo.
 
 **Stage checkpoint — khud karke dikhao:** API acceptance cases run karke failed-deployment recovery defend karo.
 
+### Stage 5: Background work aur cache operate karo
+
+Proxy boundaries, scheduled jobs aur cache identity ko failure scenarios se connect karo.
+
+11. [Spring background jobs aur caching — lifecycle aur ownership samjho](spring-boot/11-spring-background-cache.md)
+
+**Stage checkpoint — khud karke dikhao:** Duplicate job aur stale cache recovery ka measurable contract do.
+
+### Stage 6: Web runtime ko neeche tak trace karo
+
+Servlet concurrency, forwarding aur view rendering ko Spring MVC se connect karo.
+
+12. [Servlets, JSP aur Spring MVC — request ka underlying runtime](spring-boot/12-servlet-mvc.md)
+
+**Stage checkpoint — khud karke dikhao:** Shared request-field race aur redirect attribute loss diagnose karo.
+
+### Stage 7: Optional AI retrieval extension
+
+Authorized retrieval, evidence quality aur model integration ki limits samjho.
+
+13. [Spring AI aur RAG — retrieval, permissions aur answer evaluation](spring-boot/13-ai-retrieval.md)
+
+**Stage checkpoint — khud karke dikhao:** Known, unsupported aur unauthorized questions ka evaluation contract do.
+
 ## Node & MongoDB
 
 [Is course ka syllabus kholo](mongodb/README.md)
@@ -246,6 +305,14 @@ Payments/uploads/deployment se pehle authentication/authorization add karo.
 8. [SSR uploads payments email and deployment](mongodb/08-production-integrations.md)
 
 **Stage checkpoint — khud karke dikhao:** Unauthorized access reject aur duplicate webhook se safely recover karo.
+
+### Stage 5: API lifecycle verify karo
+
+Real HTTP testing, database isolation aur bounded shutdown practice karo.
+
+9. [Node API testing aur graceful shutdown — request se resource cleanup tak](mongodb/09-testing-shutdown.md)
+
+**Stage checkpoint — khud karke dikhao:** Parallel-safe request test aur in-flight shutdown acceptance cases run karo.
 
 ## Data structures & algorithms
 
@@ -293,6 +360,15 @@ Queues, recursion, hashing/heaps se dependencies aur repeated subproblems samjho
 
 **Stage checkpoint — khud karke dikhao:** BFS/Dijkstra choose karo, phir DP state/recurrence derive karo.
 
+### Stage 5: Advanced choices ko prove karo
+
+Greedy/interval proofs aur trie, bitmask, range-query structures seekho.
+
+13. [Greedy aur intervals — choice ka proof aur boundary ka contract](dsa/13-greedy-intervals.md)
+14. [Tries, bitmasks aur range queries — advanced structures ka practical bridge](dsa/14-tries-range-bits.md)
+
+**Stage checkpoint — khud karke dikhao:** Greedy ko brute-force oracle se compare karo aur Fenwick update trace karo.
+
 ## System design
 
 [Is course ka syllabus kholo](system-design/README.md)
@@ -338,6 +414,23 @@ Dono sides padhkar frontend/backend reasoning combine karo.
 12. [Case study collaborative notes and real-time chat](system-design/12-realtime-case-study.md)
 
 **Stage checkpoint — khud karke dikhao:** Checkout/reconnect failure mein durable state bachne ka flow trace karo.
+
+### Stage 5: Distributed guarantees aur API contracts defend karo
+
+Read consistency, global limits aur API styles ko workload/failure history se compare karo.
+
+13. [Consistency aur distributed rate limiting — guarantees pehle likho](system-design/13-consistency-limits.md)
+14. [REST, GraphQL aur gRPC — protocol se pehle contract choose karo](system-design/14-api-contracts.md)
+
+**Stage checkpoint — khud karke dikhao:** Replica lag, limiter outage aur batch lookup failure ke expected outcomes define karo.
+
+### Stage 6: OS aur networking fundamentals se diagnose karo
+
+Request latency ko process, memory, network aur shared-resource layers mein trace karo.
+
+15. [OS aur networking interviews — slow request ko layer-wise diagnose karo](system-design/15-os-network-debugging.md)
+
+**Stage checkpoint — khud karke dikhao:** DNS/TCP/TLS failure, pool wait aur unknown write outcome ko evidence se separate karo.
 
 ## Interview playbooks
 

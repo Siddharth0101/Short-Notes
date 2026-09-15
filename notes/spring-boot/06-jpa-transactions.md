@@ -4,7 +4,7 @@ title: JPA Hibernate and Spring transactions
 track: spring-boot
 order: 6
 level: Advanced
-minutes: 26
+minutes: 29
 summary: Transaction ka behavior actual invocation boundary aur uske andar ki operations se decide hota hai.
 tags: jpa, hibernate, transactions, n-plus-one
 ---
@@ -143,17 +143,27 @@ checkout already transactional ho toh internal call us transaction mein chal sak
 
 [Source yahan padho — Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Persistence context SQL execution ka live transcript nahi
+
+Managed entity field mutate karne par dirty checking later flush mein SQL issue kar sakti hai. Flush database se synchronization hai; commit transaction successful durable outcome ka separate boundary hai. Flush ke baad bhi rollback possible hai. Constraint failure method ke end/flush par aa sakti hai, assignment line par nahi.
+
+N+1 mein list query ke baad each row relation access extra query trigger karti hai. Eager globally set karna every screen ka best fix nahi. Screen-required shape ke liye projection/fetch plan choose karo; collection fetch with pagination ka actual behavior verify karo.
+
+**Practice:** Query count, returned rows aur transaction boundary log/inspect karo. Self-invocation proxy advice bypass case trace karo. readOnly performance hint ko authorization/write-proof substitute mat samjho. Concurrent updates mein optimistic version conflict losing write detect kar sakta hai; retry se pehle business intent still valid hai ya nahi check karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Usual Spring proxy-based setup mein method `this` par doosra annotated method call karta hai. Intended transaction kyun start nahi ho sakti?
+**Apply — khud try karo:** Usual Spring proxy-based setup mein method `this` par doosra annotated method call karta hai. Intended transaction kyun start nahi ho sakti?
 
-> **Hint:** Internal call external proxy se hokar nahi jaati.
+> **Hint — chhota ishara:** Internal call external proxy se hokar nahi jaati.
 
-**Answer guide — compare after attempting:** Self-invocation transactional interceptor bypass karti hai. Transaction externally invoked service boundary par rakho ya suitable separate managed collaborator call karo. Integration test se rollback verify karo; annotation dikhna interception ka proof nahi.
+**Answer guide — pehle khud karo, phir compare karo:** Self-invocation transactional interceptor bypass karti hai. Transaction externally invoked service boundary par rakho ya suitable separate managed collaborator call karo. Integration test se rollback verify karo; annotation dikhna interception ka proof nahi.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

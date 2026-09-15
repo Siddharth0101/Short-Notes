@@ -4,14 +4,14 @@ title: Packages access control and interface boundaries
 track: java
 order: 6
 level: Intermediate
-minutes: 16
+minutes: 19
 summary: Chhote public contract ke peeche implementation rakho; constructor se required dependencies do.
 tags: packages, interfaces, encapsulation
 ---
 
 ## Mental model — simple soch
 
-Package related types ka namespace hai. Interface behavior ka contract hai; implementation us behavior ko perform karti hai. Dono alag problems solve karte hain: package names collisions aur visibility organize karte hain, interface caller ko concrete implementation se separate karta hai. Start with a small notification feature before introducing any framework.
+Package related types ka namespace hai. Interface behavior ka contract hai; implementation us behavior ko perform karti hai. Dono alag problems solve karte hain: package names collisions aur visibility organize karte hain, interface caller ko concrete implementation se separate karta hai. Framework introduce karne se pehle small notification feature se concept samjho.
 
 > **Core takeaway:** Chhote public contract ke peeche implementation rakho; constructor se required dependencies do.
 
@@ -69,17 +69,29 @@ Interface caller ka contract batata hai. Inheritance implementation share karke 
 
 Console notifier ko List mein messages add karne wale notifier se replace karo. Do lessons complete karke values dekho; StudyService ke andar change nahi chahiye. Nested StudyService ko other package se import karke visibility restriction explain karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Caller ko implementation se kitna pata hona chahiye?
+
+StudyService ko notification bhejni hai. Agar constructor concrete EmailNotifier maange toh test aur SMS variation concrete dependency se tied hain. Notifier interface ka send contract maange toh service operation par depend karegi, transport par nahi. Lekin interface useful tab hai jab implementations same promised behavior preserve karein.
+
+Package-private type same package ke implementation detail tak visibility restrict kar sakta hai. Public type external callers ka supported contract ban sakta hai. Har class public karna reuse ka free benefit nahi; later change karne ka compatibility surface badhta hai.
+
+Import source name resolution simplify karta hai, runtime dependency download nahi karta. Package declaration directory/build configuration se align honi chahiye. Different packages mein same simple class name ho toh ambiguity resolve karo; framework problem assume karne se pehle Java compile error padho.
+
+**Practice:** Fake notifier messages list mein collect kare. Service ko fake inject karke assert correct message send hui. Email server ki need nahi. Phir failure contract decide karo: send exception propagate kare, retry queue own kare ya outcome return kare? Interface signature ke peeche failure semantics bhi contract hain.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** What changes when a type is public instead of package-private?
+**Recall — yaad karke bolo:** Type package-private ki jagah public ho toh kaun access kar sakta hai?
 
-**Apply:** StudyService se print kiye bina Packages aur Interfaces ki notifications order mein record karo.
+**Apply — khud try karo:** StudyService se print kiye bina Packages aur Interfaces ki notifications order mein record karo.
 
-> **Hint:** Constructor ko behavior chahiye, koi ek fixed delivery mechanism nahi.
+> **Hint — chhota ishara:** Constructor ko behavior chahiye, koi ek fixed delivery mechanism nahi.
 
-**Answer guide — compare after attempting:** `List<String> messages = new ArrayList<>();` banao; Notifier ke liye `messages::add` pass karo aur complete do baar call karo. Expected strings `Completed: Packages`, `Completed: Interfaces` hain. Is void contract mein method-reference ka boolean result discard ho sakta hai. Main mein List aur ArrayList import karo.
+**Answer guide — pehle khud karo, phir compare karo:** `List<String> messages = new ArrayList<>();` banao; Notifier ke liye `messages::add` pass karo aur complete do baar call karo. Expected strings `Completed: Packages`, `Completed: Interfaces` hain. Is void contract mein method-reference ka boolean result discard ho sakta hai. Main mein List aur ArrayList import karo.
 
-**Exit check:** Add a third implementation without modifying StudyService and explain which type each caller depends on.
+**Exit check — aage badhne se pehle:** StudyService change kiye bina third implementation add karo; har caller kis type par depend karta hai, samjhao.
 
 ## Sources — aur padhne ke liye
 

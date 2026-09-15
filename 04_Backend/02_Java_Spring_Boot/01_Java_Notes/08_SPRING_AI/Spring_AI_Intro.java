@@ -3,9 +3,9 @@
  * 08. SPRING AI (GENERATIVE AI IN JAVA)
  * ========================================================================
  * NOTES:
- * - Generative AI pehle mostly Python (LangChain, LlamaIndex) tak limited tha.
+ * - Spring AI Java applications mein model integrations ke liye common abstractions deta hai.
  * - Spring AI ek official project hai jo LLMs (OpenAI, Anthropic, Gemini, Ollama) ko Spring Boot me smoothly integrate karta hai.
- * - Benefit: Ek standard API (ChatClient) likho. Kal ko agar ChatGPT se Gemini pe switch karna ho, toh code change nahi hoga, sirf application.properties me API key change hogi.
+ * - Common ChatClient API migration effort reduce karti hai; provider change par starter/config, model capabilities, embeddings aur evaluation dobara verify karo. Sirf API key badalna enough guaranteed nahi.
  * 
  * 1. CORE CONCEPTS:
  * - Model (LLM): The brain (GPT-4, Llama 3).
@@ -14,15 +14,16 @@
  * - Vector Database: In embeddings ko store aur search karne wala special database (Pinecone, Chroma, pgvector).
  * 
  * 2. RAG (RETRIEVAL-AUGMENTED GENERATION):
- * - Problem: LLM ke paas general knowledge hoti hai, par aapki private company data ki nahi. Agar usse pucho "kal meri leave approve hui?", wo fail ho jayega.
+ * - Problem: Company policy ke liye authorized documents retrieve karo. Personal leave approval live workflow state hai; policy text se approval infer mat karo.
  * - Solution (RAG):
  *   a) User ka question vector me convert karo.
- *   b) Vector DB se uss question se milti julti apni private company policy documents nikalo (Retrieve).
+ *   b) Trusted tenant/user scope ke andar relevant authorized policy chunks retrieve karo; current permissions bhi verify karo.
  *   c) LLM ko dono cheezein do: (System prompt: "Is document ke basis pe answer do" + User question + Retrieved Document).
- *   d) LLM generate karke answer dega (Augmented Generation).
+ *   d) LLM evidence se answer draft karega; grounding/source checks karo, evidence missing ho toh limitation do.
  * 
  * 3. SPRING AI API (ChatClient):
- * - `ChatClient` interface is the fluent API to interact with any Model.
+ * - `ChatClient` supported ChatModel integrations ke saath fluent API deta hai.
+ * - Complete Hinglish lesson: notes/spring-boot/13-ai-retrieval.md
  */
 
 /*

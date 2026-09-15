@@ -4,7 +4,7 @@ title: Objects OOP records and equality
 track: java
 order: 7
 level: Foundation
-minutes: 19
+minutes: 22
 summary: Identity puchti hai same object hai ya nahi; value equality puchti hai meaningful data same hai ya nahi. Hash collections mein equals/hashCode contract match hona chahiye.
 tags: oop, records, equality, interfaces
 ---
@@ -129,19 +129,37 @@ Sealed interface ke saath `switch` expression compiler-verified exhaustive hota 
 
 PaymentResult ko sealed success/failure variants se model karo. Ek mutable map key ka failing lookup demonstrate karo, phir immutable record key se correct karo. Test equality between independently constructed equal values. Phir ek `Money` class likho jisme `equals`/`hashCode` currency aur amount dono use karein, aur ek failing test likho jo sirf amount compare karne ki galti pakde.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Equality contract collection behavior kyun badalta hai?
+
+Hash-based collection pehle hash se candidate bucket locate karti hai, phir equality se match decide karti hai. Two equal objects unequal hash return karein toh lookup expected contract tod sakta hai. Same hash hona equality prove nahi; collision allowed hai.
+
+Mutable key insert ke baad equality/hash fields change kare toh lookup different bucket search kar sakta hai. Object ab bhi stored ho sakta hai, phir bhi contains/remove expected match miss kare. Stable immutable identity choose karo; arbitrary mutable display name key identity na banao.
+
+Inheritance mein subclass extra fields add kare toh equals symmetry/transitivity preserve karna tricky ho sakta hai. “Same ID means equal” aur “all fields equal” different domain definitions hain. **Practice:** Two independent instances same intended identity se Set mein add karo; count, contains aur removal verify karo. Phir field mutation counterexample dikhao aur immutable-key fix explain karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Do alag ID objects mein same text hai. Kab equal maane jayenge? equals badla lekin hashCode nahi badla toh kya ho sakta hai?
+**Apply — khud try karo:** Do alag ID objects mein same text hai. Kab equal maane jayenge? equals badla lekin hashCode nahi badla toh kya ho sakta hai?
 
-> **Hint:** Equal objects ka hashCode equal hona zaroori hai; reverse guarantee nahi hai.
+> **Hint — chhota ishara:** Equal objects ka hashCode equal hona zaroori hai; reverse guarantee nahi hai.
 
-**Answer guide — compare after attempting:** Value ID ke liye text compare karo aur same stable fields se hashCode nikalo. HashSet mein ek logical ID rehni chahiye. Equal aur unequal dono cases test karo. Contract tootne par equals true hone ke baad bhi lookup/deduplication fail ho sakti hai.
+**Answer guide — pehle khud karo, phir compare karo:** Value ID ke liye text compare karo aur same stable fields se hashCode nikalo. HashSet mein ek logical ID rehni chahiye. Equal aur unequal dono cases test karo. Contract tootne par equals true hone ke baad bhi lookup/deduplication fail ho sakti hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
 - [Object API contracts](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html)
 - [Records](https://dev.java/learn/records/)
+
+## Is concept ko aur practice karo
+
+- [Java type modeling — enums, sealed types aur annotations](17-type-metadata.md)
+
+## Aage ki practice
+
+[LLD mein apply karo](19-low-level-design.md): copy identity, atomic ownership aur testable clock ka complete example.

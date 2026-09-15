@@ -4,7 +4,7 @@ title: MongoDB interview playbook
 track: interview
 order: 4
 level: Intermediate
-minutes: 28
+minutes: 31
 summary: Database answer mein query pattern, correctness rule aur execution plan ka evidence hona chahiye.
 tags: mongodb, interview, indexes, schema, transactions
 visual: mongo-index
@@ -60,7 +60,7 @@ Explain mein index scan hai, but 500,000 keys examine karke 20 documents return 
 
 ## Self-review rubric
 
-Score each 0–2: access-pattern clarity, bounded schema, index reasoning, consistency, evidence. Strong candidate field order justify karta hai, exact query likhta hai, aur expected plan explain karta hai. “NoSQL fast hota hai” actionable answer nahi.
+Access-pattern clarity, bounded schema, index reasoning, consistency aur evidence ko separately 0–2 score do. Strong candidate field order justify karta hai, exact query likhta hai, aur expected plan explain karta hai. “NoSQL fast hota hai” actionable answer nahi.
 
 ## Practice and answer
 
@@ -102,17 +102,37 @@ Employer source assessment approach ka reference hai. Yeh exercise original prac
 
 [Source yahan padho — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Query optimize karne se pehle workload ka evidence maango
+
+Exact filter, sort, page size, tenant skew aur write rate identify karo. Index candidate ke baad examined keys/documents, returned rows aur sort behavior compare karo. Index exists ko optimized prove mat bolo. Schema mein bounded aggregate aur unbounded event history distinguish karo.
+
+Auth answer valid token se start hokar resource authorization tak jaaye. Integration answer duplicate webhook aur crash window handle kare. Stream answer producer pacing aur disconnect cleanup explain kare, just “chunks use hoti hain” nahi.
+
+**Mock drill:** 20 rows return, huge scan, one hot tenant. Pehle competing causes do, phir discriminating measurements. Proposed index ka write/storage cost mention karo. No database available ho toh plan expected behavior label karo; measured performance invent mat karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Ek customer ke recent-orders endpoint ka design do: filter, stable pagination, index candidate aur verification explain karo.
+**Apply — khud try karo:** Ek customer ke recent-orders endpoint ka design do: filter, stable pagination, index candidate aur verification explain karo.
 
-> **Hint:** Same timestamp par unique ID tie-breaker deterministic order deta hai.
+> **Hint — chhota ishara:** Same timestamp par unique ID tie-breaker deterministic order deta hai.
 
-**Answer guide — compare after attempting:** Authorized customer se filter karo; timestamp plus unique ID se sort karo. Matching compound index try karo aur cursor mein ordering values rakho. Realistic data par execution stats aur tied timestamps test karo. Concurrent inserts aur index ke write cost ko bhi explain karo.
+**Answer guide — pehle khud karo, phir compare karo:** Authorized customer se filter karo; timestamp plus unique ID se sort karo. Matching compound index try karo aur cursor mein ordering values rakho. Realistic data par execution stats aur tied timestamps test karo. Concurrent inserts aur index ke write cost ko bhi explain karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [MongoDB atomicity](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/), [compound indexes](https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/), aur [explain results](https://www.mongodb.com/docs/manual/reference/explain-results/) claims ke official references hain.
+
+## Backend debugging ka clear handoff
+
+Original prompt: “CI mein tests kabhi pass, kabhi fail hote hain.” Pehle failure isolate karo: fixed port conflict, shared collection cleanup, unfinished promise ya unstable external dependency? Ek hi baar sab timeouts increase karna root-cause evidence nahi deta.
+
+Handoff mein test command, isolated reproduction, fixture identity, expected/actual response aur first divergent observation do. Real database constraint ka test mock se replace karne se suite fast ho sakti hai, lekin original guarantee disappear ho jaayegi; tradeoff explain karo.
+
+**Practice:** Graceful shutdown ke dauran 500 errors aati hain aur teammate DB pehle close karta hai. **Answer guide:** Existing requests abhi DB use kar rahi hain. New work drain, bounded active-request grace aur uske baad resource close sequence propose karo. Hung dependency ka deadline case bhi test karo. Report mein “server stopped” ke saath accepted operation ka outcome aur remaining recovery work likho.
+
+[Node testing aur shutdown](../mongodb/09-testing-shutdown.md) se real local request evidence banao.

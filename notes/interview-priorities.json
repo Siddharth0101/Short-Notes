@@ -1,0 +1,201 @@
+{
+  "reviewed": "2026-09-15",
+  "selection": [
+    {
+      "id": "iq-js-02",
+      "reading": "javascript/09-scope-closures.md"
+    },
+    {
+      "id": "iq-js-03",
+      "reading": "javascript/13-this-prototypes-classes.md"
+    },
+    {
+      "id": "iq-js-04",
+      "reading": "javascript/15-async-event-loop.md"
+    },
+    {
+      "id": "iq-js-07",
+      "reading": "javascript/16-async-patterns.md"
+    },
+    {
+      "id": "iq-js-10",
+      "reading": "javascript/15-async-event-loop.md"
+    },
+    {
+      "id": "iq-lab-02",
+      "reading": "javascript/16-async-patterns.md"
+    },
+    {
+      "id": "iq-lab-03",
+      "reading": "javascript/11-browser-foundations.md"
+    },
+    {
+      "id": "iq-lab-04",
+      "reading": "javascript/11-browser-foundations.md"
+    },
+    {
+      "id": "iq-react-02",
+      "reading": "react/03-components-rendering.md"
+    },
+    {
+      "id": "iq-react-03",
+      "reading": "react/05-effects-custom-hooks.md"
+    },
+    {
+      "id": "iq-react-06",
+      "reading": "react/10-performance-production.md"
+    },
+    {
+      "id": "iq-react-09",
+      "reading": "react/08-query-supabase.md"
+    },
+    {
+      "id": "iq-react-12",
+      "reading": "react/11-machine-coding.md"
+    },
+    {
+      "id": "iq-react-20",
+      "reading": "react/12-testing-accessibility.md"
+    },
+    {
+      "id": "iq-java-02",
+      "reading": "java/07-object-model.md"
+    },
+    {
+      "id": "iq-java-07",
+      "reading": "java/15-concurrency.md"
+    },
+    {
+      "id": "iq-java-10",
+      "reading": "java/16-concurrency-production.md"
+    },
+    {
+      "id": "iq-lab-11",
+      "reading": "java/14-sql-interview-lab.md"
+    },
+    {
+      "id": "iq-coverage-08",
+      "reading": "java/18-schema-migrations.md"
+    },
+    {
+      "id": "iq-java-09",
+      "reading": "spring-boot/06-jpa-transactions.md"
+    },
+    {
+      "id": "iq-added-spring-nplusone",
+      "reading": "spring-boot/06-jpa-transactions.md"
+    },
+    {
+      "id": "iq-added-spring-locking",
+      "reading": "spring-boot/06-jpa-transactions.md"
+    },
+    {
+      "id": "iq-spring-testing",
+      "reading": "spring-boot/08-testing.md"
+    },
+    {
+      "id": "iq-mongo-01",
+      "reading": "mongodb/03-documents-crud-modeling.md"
+    },
+    {
+      "id": "iq-mongo-03",
+      "reading": "mongodb/05-indexes-aggregation-transactions.md"
+    },
+    {
+      "id": "iq-mongo-08",
+      "reading": "mongodb/05-indexes-aggregation-transactions.md"
+    },
+    {
+      "id": "iq-scenario-12",
+      "reading": "mongodb/08-production-integrations.md"
+    },
+    {
+      "id": "iq-scenario-26",
+      "reading": "mongodb/07-auth-security.md"
+    },
+    {
+      "id": "iq-dsa-04",
+      "reading": "dsa/05-searching-and-binary-search.md"
+    },
+    {
+      "id": "iq-dsa-06",
+      "reading": "dsa/11-graphs-and-shortest-paths.md"
+    },
+    {
+      "id": "iq-dsa-08",
+      "reading": "dsa/02-linked-lists-stacks-and-queues.md"
+    },
+    {
+      "id": "iq-dsa-12",
+      "reading": "dsa/08-monotonic-stack-lab.md"
+    },
+    {
+      "id": "iq-dsa-17",
+      "reading": "dsa/11-graphs-and-shortest-paths.md"
+    },
+    {
+      "id": "iq-added-dsa-prefix-count",
+      "reading": "dsa/04-problem-solving-patterns.md"
+    },
+    {
+      "id": "iq-added-dsa-lru",
+      "reading": "dsa/03-hash-tables-and-sets.md"
+    },
+    {
+      "id": "iq-design-01",
+      "reading": "system-design/01-requirements-capacity.md"
+    },
+    {
+      "id": "iq-design-06",
+      "reading": "system-design/08-messaging-reliability.md"
+    },
+    {
+      "id": "iq-design-07",
+      "reading": "system-design/08-messaging-reliability.md"
+    },
+    {
+      "id": "iq-scenario-18",
+      "reading": "system-design/12-realtime-case-study.md"
+    },
+    {
+      "id": "iq-added-design-disaster-recovery",
+      "reading": "system-design/09-security-operations.md"
+    },
+    {
+      "id": "iq-final-01"
+    },
+    {
+      "id": "iq-final-02"
+    },
+    {
+      "id": "iq-final-03"
+    },
+    {
+      "id": "iq-final-04"
+    },
+    {
+      "id": "iq-final-05"
+    },
+    {
+      "id": "iq-final-06"
+    },
+    {
+      "id": "iq-final-07"
+    },
+    {
+      "id": "iq-final-08"
+    },
+    {
+      "id": "iq-final-09"
+    },
+    {
+      "id": "iq-final-10"
+    },
+    {
+      "id": "iq-final-11"
+    },
+    {
+      "id": "iq-final-12"
+    }
+  ]
+}

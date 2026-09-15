@@ -4,7 +4,7 @@ title: Objects arrays and modern data transformations
 track: javascript
 order: 7
 level: Intermediate
-minutes: 26
+minutes: 29
 summary: Output ke shape se transformation choose karo: filter items chunta hai, map badalta hai, reduce accumulated result banata hai.
 tags: arrays, objects, map, set, destructuring, immutability
 ---
@@ -92,17 +92,29 @@ Orders ko customer-wise group karo, totals calculate karo aur top two customers 
 
 **Q. Map object se kab better hai?** Jab dynamic keys, non-string key identity, direct size aur entry iteration ki need ho. API JSON payload ke liye plain object usually simpler hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Transformation chain ko intermediate values se padho
+
+Orders `[{paid:true,total:10},{paid:false,total:50},{paid:true,total:7}]` lo. `filter(order => order.paid)` do paid objects ki new array deta hai; objects themselves clone nahi hote. `map(order => order.total)` `[10,7]` deta hai. `reduce((sum,value) => sum+value,0)` pehle 0+10, phir 10+7 se 17 deta hai.
+
+Initial accumulator 0 empty input ko bhi meaningful total deta hai. Initial value omit karoge toh empty array reduce error dega. `map` callback mein braces laga kar return bhoolna `[undefined,...]` banata hai; `forEach` transformed array return nahi karta.
+
+Three passes ab bhi O(n) total time hain, O(n³) nahi: loops nested nahi, sequential hain. Intermediate arrays memory allocate karti hain. Large measured workload mein one-pass loop choose kar sakte ho; chhote data par readable chain reasonable hai.
+
+**Choice practice:** IDs ki uniqueness ke liye Set; ID→object lookup ke liye Map; display order ke liye array. Same records ke do independently created object values Set mein automatically content-deduplicate nahi honge. Pehle stable ID choose karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** `[{name:'A',done:true},{name:'B',done:false},{name:'C',done:true}]` se completed lesson names nikalo; input mutate mat karo.
+**Apply — khud try karo:** `[{name:'A',done:true},{name:'B',done:false},{name:'C',done:true}]` se completed lesson names nikalo; input mutate mat karo.
 
-> **Hint:** Pehle matching records select karo, phir unka required field nikalo.
+> **Hint — chhota ishara:** Pehle matching records select karo, phir unka required field nikalo.
 
-**Answer guide — compare after attempting:** `lessons.filter(x => x.done).map(x => x.name)` se `['A','C']` milega. Empty input par `[]`. Original array aur records same rehne chahiye; hidden mutation doosri UI ko unexpectedly badal sakti hai.
+**Answer guide — pehle khud karo, phir compare karo:** `lessons.filter(x => x.done).map(x => x.name)` se `['A','C']` milega. Empty input par `[]`. Original array aur records same rehne chahiye; hidden mutation doosri UI ko unexpectedly badal sakti hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

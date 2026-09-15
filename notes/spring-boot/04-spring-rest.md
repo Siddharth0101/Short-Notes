@@ -4,7 +4,7 @@ title: Spring dependency injection and REST APIs
 track: spring-boot
 order: 4
 level: Intermediate
-minutes: 23
+minutes: 26
 summary: DI collaborators deta hai; HTTP boundary request ko stable application contract mein translate karti hai.
 tags: spring, rest, dependency-injection, validation
 visual: request-flow
@@ -139,20 +139,34 @@ Production APIs mein `@RestControllerAdvice` se centralized error mapping consis
 
 Create/list notes API design karo with validation, maximum page size and consistent errors. Two simultaneous users ke requests se verify karo ki singleton controller mein accidental shared request state nahi hai. Phir ek self-invocation `@Transactional` bug reproduce karo (method ko same class se call karke), aur method ko separate bean mein extract karke fix karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### HTTP layer aur use-case layer ke error contracts alag hain
+
+Controller path/query/body ko typed request mein translate karti hai. Service use case coordinate karti hai. Repository persistence operation own karti hai. Entity ko directly response return karne se internal fields/lazy relations public serialization surface ban sakti hain; explicit DTO external contract narrow rakhti hai.
+
+GET list mein pagination maximum bound karo; valid integer ka matlab safe unbounded workload nahi. Creation Location actual resource route ke saath align ho. Update/delete retries ka semantics resource/version contract se derive karo.
+
+**Practice:** Same business service HTTP ke bina call karo, phir web integration malformed input/status/JSON shape verify kare. Cross-cutting proxy behavior ka entry path inspect karo; plain method call aur container-proxied call same extra behavior necessarily nahi deti. Error mapper expected conflict aur unexpected defect ko distinguish kare, taaki clients correct recovery choose kar sakein.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Controller ko negative quantity milti hai. Database logic controller mein daale bina flow aur response define karo.
+**Apply — khud try karo:** Controller ko negative quantity milti hai. Database logic controller mein daale bina flow aur response define karo.
 
-> **Hint:** Input validation, business decision aur persistence ki responsibilities alag rakho.
+> **Hint — chhota ishara:** Input validation, business decision aur persistence ki responsibilities alag rakho.
 
-**Answer guide — compare after attempting:** Boundary par validate karke documented client-error response do. Valid request use-case-owning service tak jaaye, jo persistence collaborators call kare. Invalid response test karo aur verify karo ki write attempt hi nahi hui.
+**Answer guide — pehle khud karo, phir compare karo:** Boundary par validate karke documented client-error response do. Valid request use-case-owning service tak jaaye, jo persistence collaborators call kare. Invalid response test karo aur verify karo ki write attempt hi nahi hui.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
 - [Dependency injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html)
 - [Spring MVC annotated controllers](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller.html)
 - [Spring Boot external configuration](https://docs.spring.io/spring-boot/reference/features/external-config.html)
+
+## Related extension — aur samjho
+
+- [Servlets, JSP aur Spring MVC — request ka underlying runtime](12-servlet-mvc.md)

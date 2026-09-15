@@ -75,3 +75,7 @@ Design question ka ek universal answer nahi: assumptions aur acceptance criteria
 Weak area ke liye ek failed lab, ek related example aur ek interview question choose karo. Misconception repair karke changed input try karo. Course ke end mein capstone/mock complete karo; exposed weak chapters par wapas aao.
 
 [Source map](RESEARCH_SOURCES.md) further reading aur [coverage guide](COURSE_COVERAGE.md) lecture-mapping limits batata hai.
+
+## Interview ke pehle focused revision
+
+[52-question priority guide](INTERVIEW_PRIORITY_GUIDE.md) se apne role ka route chuno. Pehle answer khud bolo, phir explanation aur follow-up padho. Ismein 6 behavioral prompts aur 14-session practice plan bhi hai.

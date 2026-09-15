@@ -4,7 +4,7 @@ title: Frequency counters and pointer patterns
 track: dsa
 order: 4
 level: Foundation
-minutes: 32
+minutes: 35
 summary: Pattern tabhi sahi hai jab uska invariant, yani har step par sach rehne wala rule, input ki conditions se match kare.
 tags: frequency-counter, two-pointers, sliding-window, prefix-sum
 ---
@@ -35,7 +35,7 @@ function isAnagram(a, b) {
 
 Usual hash-map assumption par expected O(n + m) time aur distinct characters ke liye O(k) space. Sirf Set use karne se multiplicity lose hogi: `aab` aur `abb` mein distinct characters same hain, lekin anagrams nahi hain.
 
-Alternative approach hai dono strings sort karke compare karna — correct hai, code chhota hai, lekin O(n log n) time hai. Counter version linear hai. Interview mein dono mention karo aur tradeoff bolo: sorting version zero extra state rakhta hai aur unusual alphabets par bhi kaam karta hai, counting version faster hai lekin alphabet ke proportional memory leta hai.
+Alternative approach hai dono strings sort karke compare karna — correct hai, code chhota hai, lekin O(n log n) time hai. Counter version linear hai. Interview mein dono mention karo aur tradeoff bolo: JavaScript sorting version ko character arrays aur sorting workspace chahiye; use zero extra space mat bolo. Dono lengths n aur m hon toh sorting O(n log n + m log m), counting expected O(n + m) time leti hai.
 
 ### Deriving the sliding anagram search
 
@@ -50,6 +50,9 @@ Frequency counter ka asli power tab dikhta hai jab woh window ke saath move kare
 // dobara build kar rahe hain.
 
 function containsPermutation(text, pattern) {
+  // Dono inputs ko Unicode code points mein padho.
+  text = Array.from(text);
+  pattern = Array.from(pattern);
   const m = pattern.length;
   if (m === 0 || m > text.length) return m === 0;
 
@@ -79,7 +82,7 @@ function containsPermutation(text, pattern) {
 
 Derivation ka core yeh hai: har window ke liye poora count compare karne ke bajay hum ek **aggregate counter `deficit`** maintain karte hain jo "kitne characters abhi mismatch hain" batata hai. Window slide karne par sirf do characters change hote hain, so `deficit` ko O(1) mein update kiya ja sakta hai — aur final check `deficit === 0` bhi O(1) hai.
 
-Har index at most do `adjust` calls trigger karta hai, so O(n) time aur pattern ke distinct characters ke liye O(k) space. Yeh "per-window recompute → maintain an aggregate" transformation sliding window ka sabse reusable idea hai, chahe aggregate sum ho, distinct count ho ya deficit.
+Har index at most do `adjust` calls trigger karta hai. n aur m code-point lengths hain: expected O(n + m) time, converted arrays ke liye O(n + m) space aur counts ke liye O(k) space. `Array.from` emoji surrogate pairs ko ek code point rakhta hai; combined emoji/grapheme clusters aur Unicode normalization alag requirements hain. Yeh "per-window recompute → maintain an aggregate" transformation sliding window ka sabse reusable idea hai, chahe aggregate sum ho, distinct count ho ya deficit.
 
 ## Two pointers on sorted data
 
@@ -292,17 +295,27 @@ Frequency counters observability pipelines mein har jagah hain — log lines par
 
 **Answer:** O(n). Jab saare prefix sums distinct hon (jaise saare elements positive), map mein n + 1 entries jaati hain. "Map sirf O(k) leta hai" bolna tab valid hota jab values ki range chhoti ho — general signed input par aisi koi bound nahi hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Sliding window tabhi shrink kar sakti hai jab decision safe ho
+
+Positive numbers mein sum target se bada ho toh left remove karne se sum decrease ho sakta hai. Negative numbers add hone par right extend karke bhi sum decrease ho sakta hai; old shrink proof no longer applies. Pattern ka naam input assumptions replace nahi karta.
+
+Exact-sum count ke liye prefix relation use karo: currentPrefix−previousPrefix=target. Isliye previously seen currentPrefix−target ki frequency answers contribute karti hai. Prefix 0 frequency 1 initialize karna start-at-index-0 subarrays count karta hai. Frequency lookup current prefix insert karne se pehle ho, warna target 0 par empty interval accidental count ho sakta hai.
+
+**Practice:** `[1,-1,1]`, target 1 ke expected subarrays manually enumerate karo. Same implementation positive-only input par pass karke general signed input correct prove nahi hoti. Distinct count, max length aur number of solutions different accumulator contracts hain.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Target-sum subarray ke liye nonnegative values wala shrinking window use kiya. Negative values aane par reasoning kyun toot sakti hai?
+**Apply — khud try karo:** Target-sum subarray ke liye nonnegative values wala shrinking window use kiya. Negative values aane par reasoning kyun toot sakti hai?
 
-> **Hint:** Element hatane se sum hamesha kam nahi hota; negative hataoge toh sum badhega.
+> **Hint — chhota ishara:** Element hatane se sum hamesha kam nahi hota; negative hataoge toh sum badhega.
 
-**Answer guide — compare after attempting:** `[4,-1]` ka sum 3 hai. Agar sum zyada dekhkar 4 pehle hata diya toh valid answer miss hoga. Negative remove karne se sum badh bhi sakta hai, isliye window move karne ka purana rule reliable nahi. Negatives allowed hon toh suitable prefix-sum approach dekho.
+**Answer guide — pehle khud karo, phir compare karo:** `[4,-1]` ka sum 3 hai. Agar sum zyada dekhkar 4 pehle hata diya toh valid answer miss hoga. Negative remove karne se sum badh bhi sakta hai, isliye window move karne ka purana rule reliable nahi. Negatives allowed hon toh suitable prefix-sum approach dekho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

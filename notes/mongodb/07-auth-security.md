@@ -4,7 +4,7 @@ title: Authentication authorization and secure boundaries
 track: mongodb
 order: 7
 level: Advanced
-minutes: 35
+minutes: 38
 summary: Private resource par server verified user identity se ownership enforce kare; submitted ownerId par bharosa mat karo.
 tags: authentication, authorization, jwt, sessions, security, passwords
 visual: request-flow
@@ -96,17 +96,27 @@ Policy matrix banao: owner draft edit, reviewer approve, unrelated user neither.
 
 [Source yahan padho — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Token possession aur object permission ko test matrix se alag karo
+
+A valid authenticated user apna draft edit kar sakta hai, reviewer publish kar sakta hai, unrelated user neither. Query resource ID ke saath authenticated tenant/owner/policy scope enforce kare. Client hidden button API access prevent nahi karta.
+
+Password reset token short-lived, single-use aur securely stored/validated flow ka part hai. User enumeration avoid karne ke liye public response policy choose karo. Session revoke hone ke baad stale token ka behavior expiry/revocation design se define hoga; logout button alone every copy invalidate nahi karta.
+
+**Practice:** Same endpoint owner, other tenant, expired credential aur revoked role se call karne ka contract likho. Authentication failure aur authorized-but-forbidden outcome distinguish karo. Audit logs safe actor/action/resource reference retain karein, credential material nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Update endpoint body se noteId aur ownerId leta hai. Attack samjhao aur ownership rule repair karo.
+**Apply — khud try karo:** Update endpoint body se noteId aur ownerId leta hai. Attack samjhao aur ownership rule repair karo.
 
-> **Hint:** Caller dono fields edit karke bhej sakta hai.
+> **Hint — chhota ishara:** Caller dono fields edit karke bhej sakta hai.
 
-**Answer guide — compare after attempting:** Verified session se user identity nikalo; note ID plus us identity se update filter karo. Editable fields allowlist karo taaki ownerId reassign na ho. User A se user B ka note edit karke test karo; koi write nahi honi chahiye.
+**Answer guide — pehle khud karo, phir compare karo:** Verified session se user identity nikalo; note ID plus us identity se update filter karo. Editable fields allowlist karo taaki ownerId reassign na ho. User A se user B ka note edit karke test karo; koi write nahi honi chahiye.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

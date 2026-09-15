@@ -4,7 +4,7 @@ title: This binding prototypes and classes
 track: javascript
 order: 13
 level: Intermediate
-minutes: 24
+minutes: 27
 summary: Regular function ka receiver call site se decide hota hai; method extract karne par original receiver automatically saath nahi aata.
 tags: this, prototype, classes, oop, inheritance
 ---
@@ -111,17 +111,40 @@ ReadingList mein duplicate prevention aur remove method add karo. Snapshot mutat
 
 **Q. Arrow function ko bind se new `this` de sakte hain?** Nahi. Uska `this` lexical hota hai; call/apply/bind us receiver ko replace nahi karte.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Method detach karte hi receiver kyun badalta hai?
+
+```js
+'use strict';
+const meter = {
+  value: 5,
+  read() { return this.value; }
+};
+const read = meter.read;
+console.log(meter.read()); // 5
+console.log(read.call({ value: 9 })); // 9
+const fixed = read.bind(meter);
+console.log(fixed()); // 5
+```
+
+Method value copy karne se object ka receiver permanent attach nahi hota. `meter.read()` ka call shape meter receiver deta hai. `call` explicit receiver deta hai; bind new bound function banata hai. Strict-mode bare `read()` mein this undefined hone se property access fail hogi. Arrow apna dynamic this create nahi karti; surrounding lexical this use karti hai.
+
+Prototype lookup mein pehle own property, phir prototype chain search hoti hai. Instance par same name set karna inherited property shadow kar sakta hai; prototype ke sab instances automatically rewrite nahi hote. Class method normally shared prototype behavior hai, instance field per-instance state.
+
+**Interview follow-up:** Har method constructor mein bind karna correctness requirement hai? Nahi. Detached callback use aur receiver contract dekho; unnecessary binding per-instance function allocation badha sakti hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Strict mode mein `const read = account.read` nikala; method `this.balance` return karta hai. `read()` kyun fail hoga aur account se attach kaise rakhenge?
+**Apply — khud try karo:** Strict mode mein `const read = account.read` nikala; method `this.balance` return karta hai. `read()` kyun fail hoga aur account se attach kaise rakhenge?
 
-> **Hint:** Property call aur standalone call compare karo.
+> **Hint — chhota ishara:** Property call aur standalone call compare karo.
 
-**Answer guide — compare after attempting:** `account.read()` account ko receiver deta hai. Standalone `read()` mein strict mode ka this undefined hai, isliye balance access throw karega. `account.read.bind(account)` ya `() => account.read()` use karo. Arrow method ke this rules alag hain.
+**Answer guide — pehle khud karo, phir compare karo:** `account.read()` account ko receiver deta hai. Standalone `read()` mein strict mode ka this undefined hai, isliye balance access throw karega. `account.read.bind(account)` ya `() => account.read()` use karo. Arrow method ke this rules alag hain.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

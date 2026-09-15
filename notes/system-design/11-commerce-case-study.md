@@ -4,7 +4,7 @@ title: Case study React storefront and Java checkout
 track: system-design
 order: 11
 level: Advanced
-minutes: 31
+minutes: 34
 summary: Checkout workflow mein DB order state aur external payment state temporarily disagree kar sakti hain.
 tags: case-study, ecommerce, react, java, payments
 visual: request-flow
@@ -40,11 +40,11 @@ Flash sale scenario baseline se poori tarah alag hai aur usse alag design karna 
 
 checkout attempts ≈ 30,000 in 10 s = 3,000 rps
    (normal peak 2,320 reads/s tha, aur writes 0.12/s)
-inventory row par contention: ek hi row, 3,000 concurrent update attempts
+inventory row par load: 3,000 attempts/s; concurrent attempts latency par depend hain
 successful orders: maximum 500 — baaki 29,500 ko fail karna hai, fast
 ```
 
-Yahan do alag problems hain. Ek, single inventory row serialized hai — database usse ~500-2,000 updates/s se zyada nahi kar paayegi, aur baaki lock wait mein baithkar connection pool khaa jaayenge. Do, 98% requests ko fail hona hi hai, toh unhe *jaldi* fail karna chahiye. Practical mitigations: ek atomic counter (cache ya dedicated service) se pehle admission control karo taaki sirf ~600 requests database tak pahunchein, aur baaki ko turant "sold out" do; ya waiting-room pattern lagao jo users ko token deta hai aur unhe controlled rate se checkout mein bhejta hai. Inventory row ko "hot row" maanna aur usse database transaction ke andar contend karana flash sale mein kaam nahi karta.
+Same inventory row par conflicting writes serialize ho sakti hain. Koi universal 500-2,000 updates/s limit nahi: transaction duration, hardware, indexes aur lock/pool waits measure karo. 3,000 requests/s ka matlab 3,000 concurrent requests nahi; stable load mein average in-flight ≈ arrival rate × average duration hai. Bounded admission ya waiting room se database tak measured safe rate bhejo. Gate capacity exhaust hone par “busy / retry later” ya waitlist do; non-authoritative cache rejection se “sold out” prove nahi hota. Final inventory invariant database ke atomic conditional update/constraint mein preserve karo. Database transaction valid design reh sakti hai; overload ko unlimited contenders bhejna problem hai.
 
 Normal operation aur flash sale ke liye alag code path rakhna legitimate design choice hai — ek generic path jo dono handle kare, usually dono ke liye suboptimal hota hai.
 
@@ -237,7 +237,7 @@ Button disable duplicate clicks reduce karta hai, server idempotency replace nah
 
 ## Failure scenarios
 
-Payment succeeds but response lost: retry/query provider with same intent, do not create new charge blindly. Webhook duplicate or out of order arrives: event ID dedupe, signature verification and allowed state transitions apply karo. Shipping unavailable: paid order queued state mein remain kare and operational alert trigger ho. Refund compensation instantaneous reversal assume mat karo.
+Payment successful lekin response lost ho: same intent se provider retry/query karo; blindly new charge create mat karo. Webhook duplicate or out of order arrives: event ID dedupe, signature verification and allowed state transitions apply karo. Shipping unavailable: paid order queued state mein remain kare and operational alert trigger ho. Refund compensation instantaneous reversal assume mat karo.
 
 Webhook out-of-order ka concrete case: `payment_failed` (first attempt declined) aur `payment_succeeded` (retry) dono webhooks network ke through aate hain, aur `failed` baad mein deliver ho sakta hai. Agar handler blindly status set kare toh confirmed order failed mark ho jaayega. Isliye transitions ko explicitly guard karo — ek allowed-transition table, aur provider ka event timestamp/sequence bhi check karo:
 
@@ -269,7 +269,7 @@ failed           -> confirmed         allowed only via reconciliation, with audi
 
 **Payment succeed ho gaya lekin aapka database write fail ho gaya — user ko kya dikhaoge?** User ko "processing" dikhaunga, failure nahi — kyunki paisa ja chuka hai aur "failed" dikhana galat information hai jo support ticket aur chargeback dono generate karti hai. Backend side par payment attempt `succeeded` record ho chuka hoga (ya reconciliation se ho jaayega), aur ek retry/recovery job order creation ko complete karega. Agar wo bhi repeatedly fail kare toh order `pending_review` mein jaakar operator queue mein aata hai, aur user ko ek clear status page plus support reference milta hai. Sabse important yeh hai ki system ke paas ek record ho ki paisa liya gaya hai — us record ke bina yeh situation detectable hi nahi hoti.
 
-**Flash sale ke liye kya alag karoge?** Inventory contention ko database se bahar nikaal dunga: ek atomic counter (jaise Redis `DECR`) se admission control karunga taaki sirf thode zyada requests (500 units ke liye ~600) actual checkout tak pahunchein aur baaki ko instantly "sold out" mile. Ye counter authoritative nahi hai — authoritative inventory database hi rehta hai — wo sirf ek fast gate hai jo database ko bacha leta hai. Saath mein product page ko fully CDN-cached rakhunga (countdown client-side ho), queue/waiting-room lagaunga agar expected demand supply se 10x zyada hai, aur write path se saara non-essential kaam (recommendations, analytics, email) async kar dunga.
+**Flash sale ke liye kya alag karoge?** Load test se safe admission rate nikalunga, bounded queue/waiting room aur retry jitter use karunga. Admission cache database ko protect karega; final stock truth aur atomic reservation database own karega. Gate full ka response busy/waitlist hoga, sold-out sirf authoritative inventory result par. Expired reservations, idempotent checkout aur payment reconciliation define karunga. Product pages CDN se serve aur email/analytics async karunga.
 
 **Currency aur money ko kaise represent karoge?** Integer minor units (paise/cents) mein, har amount ke saath uski currency code. Floating point kabhi nahi — `0.1 + 0.2` wali classic precision problem reconciliation ke waqt paise ke differences ke roop mein dikhti hai, aur unhe debug karna bahut mehenga hai. Rounding rules ko explicitly define karta hoon (tax calculation kis level par round hoga — line item ya order total) kyunki do valid approaches alag totals dete hain aur dono jagah same rule hona chahiye — display aur charge dono mein.
 
@@ -281,17 +281,27 @@ State diagram draw karo with payment-timeout branch. Same checkout request five 
 
 Phir upar wali expiry race deliberately reproduce karo: reservation expiry ko 5 seconds set karo, payment confirmation ko 10 seconds delay karo, aur dekho ki kya hota hai. Phir `payment_pending` state aur conditional updates add karke verify karo ki expiry job us reservation ko chhodti hai. Uske baad webhook out-of-order test karo — `succeeded` pehle aur `failed` baad mein bhejo — aur confirm karo ki order confirmed rehta hai aur rejected transition log/alert hoti hai. Last mein ek reconciliation query likho jo provider ke charges list ko apne confirmed orders se compare kare aur dono directions ke mismatches report kare.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Order, reservation aur payment ki identities separate rakho
+
+One logical checkout ke retries same operation identity carry karein. Order ID business record hai, reservation ID stock hold lifecycle, payment intent provider-side attempt/workflow identify kar sakti hai. IDs interchangeable bana doge toh duplicate detection ya reconciliation ambiguous ho sakti hai.
+
+Reservation expire, payment later confirm: local state aur provider state conflict handle karne ka product rule chahiye. Stock re-acquire possible ho toh fulfill, warna refund/manual resolution; callback arrival ko unconditional order success mat banao. Authoritative amounts server recompute/validate kare.
+
+**Practice:** Timeline mein every durable transition mark karo. Browser success screen refresh, duplicate webhook aur worker crash ke baad same order status recover ho. “Checkout failed” show karne se pehle unknown payment outcome distinguish karo. Analytics/email failure payment state revert karne ki automatic reason nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Payment successful hui lekin order response milne se pehle client timeout ho gaya. Retry kya kare aur UI kya bole?
+**Apply — khud try karo:** Payment successful hui lekin order response milne se pehle client timeout ho gaya. Retry kya kare aur UI kya bole?
 
-> **Hint:** Missing response payment failure ka proof nahi hai.
+> **Hint — chhota ishara:** Missing response payment failure ka proof nahi hai.
 
-**Answer guide — compare after attempting:** Stable operation ID se retry/status query karo, taaki same purchase recover ho aur double charge na ho. Server confirm hone tak pending/verification state dikhao. Idempotency result persist karo aur uncertain provider result durable order state se reconcile karo.
+**Answer guide — pehle khud karo, phir compare karo:** Stable operation ID se retry/status query karo, taaki same purchase recover ho aur double charge na ho. Server confirm hone tak pending/verification state dikhao. Idempotency result persist karo aur uncertain provider result durable order state se reconcile karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

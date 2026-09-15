@@ -4,7 +4,7 @@ title: JVM memory garbage collection and diagnosis
 track: java
 order: 11
 level: Advanced
-minutes: 22
+minutes: 25
 summary: Jo object reachable hai lekin ab useful nahi, woh bhi memory leak ka part ho sakta hai.
 tags: jvm, memory, garbage-collection, profiling
 visual: gc-sweep
@@ -108,17 +108,27 @@ Long-running Spring Boot services mein sabse common leak sources hote hain: unbo
 
 Unbounded cache ko bounded eviction policy mein convert karo. Increasing-load test se post-GC live memory compare karo. Ek retained listener ka reference path draw karo, aur removal lifecycle document karo. Phir ek non-static inner class ko static registry mein register karke outer-instance leak reproduce karo, aur static nested class se fix karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Memory leak ka matlab unreachable garbage bachna hi nahi
+
+GC reachable objects ko valid live data treat kar sakti hai. Static map har request ka payload retain kare toh application ke liye useless objects still reachable hain; GC unhe remove nahi karegi. Root→cache→payload path draw karke retention owner locate karo.
+
+Heap usage aur process RSS same metric nahi: native buffers, thread stacks, mapped pages aur runtime overhead contribute kar sakte hain. Heap stable but RSS rising ho toh sirf heap-size flag badhana unsupported fix hai. Allocation rate, live-set size aur pause behavior ko distinct measures samjho.
+
+**Investigation drill:** Repeated workload ke baad retained objects grow karte hain ya temporary allocations reclaim ho jaati hain? Baseline/after snapshots aur retaining paths compare karo. Cache bound/eviction fix ke baad same workload repeat karo. “GC chal gayi” memory problem solve hone ka proof nahi; user latency aur retained live set dono inspect karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Service har processed request static map mein rakhti hai. GC chalne ke baad bhi heap kyun badhti rahegi?
+**Apply — khud try karo:** Service har processed request static map mein rakhti hai. GC chalne ke baad bhi heap kyun badhti rahegi?
 
-> **Hint:** Business work khatam hone se references automatically remove nahi hote.
+> **Hint — chhota ishara:** Business work khatam hone se references automatically remove nahi hote.
 
-**Answer guide — compare after attempting:** Static map requests ko reachable rakhta hai. Heap retention paths aur map growth inspect karo; actual need ke hisaab se size bound/expiry lagao. Zyada GC unbounded owner ko fix nahi karta. Repeated load par memory stabilize hoti hai ya nahi, verify karo.
+**Answer guide — pehle khud karo, phir compare karo:** Static map requests ko reachable rakhta hai. Heap retention paths aur map growth inspect karo; actual need ke hisaab se size bound/expiry lagao. Zyada GC unbounded owner ko fix nahi karta. Repeated load par memory stabilize hoti hai ya nahi, verify karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

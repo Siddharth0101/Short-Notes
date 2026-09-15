@@ -4,7 +4,7 @@ title: Java backend interview playbook
 track: interview
 order: 2
 level: Advanced
-minutes: 32
+minutes: 35
 summary: Backend answer ko concurrency aur failures ke beech business rule bachana chahiye, jaise ek seat do logon ko na mile.
 tags: java, interview, spring, concurrency, transactions
 visual: thread-sync
@@ -69,7 +69,7 @@ Virtual threads blocking-task concurrency ko help kar sakte hain, CPU capacity y
 
 ## Self-review rubric
 
-Each 0–2 score: Java semantics, collection contract, concurrency proof, transaction scope, diagnosis. High-quality concurrency answer ek failing interleaving dikha sakta hai. High-quality performance answer metric se bottleneck tak reasoning dikhata hai, random tuning flags nahi.
+Java semantics, collection contract, concurrency proof, transaction scope aur diagnosis ko separately 0–2 score do. High-quality concurrency answer ek failing interleaving dikha sakta hai. High-quality performance answer metric se bottleneck tak reasoning dikhata hai, random tuning flags nahi.
 
 ## Practice and answer
 
@@ -111,17 +111,37 @@ Employer source assessment approach ka reference hai. Yeh exercise original prac
 
 [Source yahan padho — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Concurrency answer mein exact shared state aur atomic operation bolo
+
+“Thread-safe collection use karunga” tab incomplete hai jab business operation find-then-update ke multiple steps mein split hai. One copy one loan ya one seat one reservation invariant state karo. Same process ke lock aur multiple instances ke DB constraint/transaction boundary distinguish karo.
+
+SQL question mein row grain, index workload aur isolation assumption bolo. API failure mein known rejection aur unknown committed outcome alag recover karo. Thread count, pool count aur throughput ko interchangeable numbers mat banao.
+
+**Mock drill:** Two requests same key process karein, winner commit ke baad response lose ho. Durable state, loser response aur retry result timeline explain karo. Tests overlapping operations create karein; sequential double call concurrency proof nahi. Interview answer ko [LLD worked chapter](../java/19-low-level-design.md) se connect karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Paanch minute mein last-item purchase endpoint defend karo. Concurrent request aur failed payment include karo; DB transaction provider ki payment rollback kar degi, yeh assume mat karo.
+**Apply — khud try karo:** Paanch minute mein last-item purchase endpoint defend karo. Concurrent request aur failed payment include karo; DB transaction provider ki payment rollback kar degi, yeh assume mat karo.
 
-> **Hint:** Inventory reservation aur external payment lifecycle ko alag state transitions mein dekho.
+> **Hint — chhota ishara:** Inventory reservation aur external payment lifecycle ko alag state transitions mein dekho.
 
-**Answer guide — compare after attempting:** Atomic reservation, stable idempotent purchase ID, durable status aur payment reconciliation/compensation explain karo. Har failure par kaunsa state save reh gaya, trace karo. Concurrent test mein sirf ek reservation jeete; replay test mein duplicate charge request na ho.
+**Answer guide — pehle khud karo, phir compare karo:** Atomic reservation, stable idempotent purchase ID, durable status aur payment reconciliation/compensation explain karo. Har failure par kaunsa state save reh gaya, trace karo. Concurrent test mein sirf ek reservation jeete; replay test mein duplicate charge request na ho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [Java concurrency package](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html), [HashMap contract](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html), [virtual threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html), aur [Spring transaction annotations](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) official references hain.
+
+## Ownership aur incident explanation
+
+Original prompt: “Deployment ke baad duplicate enrollment aayi. Incident mein tumhari responsibility kya thi?” Blame list ki jagah impact, containment, diagnosis aur durable correction bolo. App ka pre-check concurrent writers ko serialize nahi karta; database unique constraint aur controlled conflict response ko verification ke saath explain karo.
+
+Evidence packet mein same learner/course ke two concurrent requests, successful row count, error translation aur rollout assumptions do. Real incident experience nahi hai toh clearly practice simulation bolo. Improvement metric tabhi quote karo jab measurement ya recorded observation ho.
+
+**Practice:** Schema migration ke risk par teammate disagrees. Do-minute response do. **Answer guide:** Unki concern restate karo, mixed-version deployment ki requirement agree karo, direct rename versus expand/backfill/contract compare karo aur smallest staging experiment propose karo. “Meri approach best hai” ke bajay acceptance criteria par agreement banao. Explain karo ki old app rollback aur dropped-data recovery alag problems hain.
+
+[Schema migrations](../java/18-schema-migrations.md) aur [type modeling](../java/17-type-metadata.md) se concrete examples lo.

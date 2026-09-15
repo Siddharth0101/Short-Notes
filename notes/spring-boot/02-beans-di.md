@@ -4,14 +4,14 @@ title: Beans constructor injection and lifecycle
 track: spring-boot
 order: 2
 level: Intermediate
-minutes: 16
+minutes: 19
 summary: Constructor injection dependencies clear banata hai; singleton scope mutable state ko thread-safe nahi banata.
 tags: spring, beans, dependency-injection
 ---
 
 ## Mental model — simple soch
 
-ApplicationContext ek managed object graph banata hai. Bean simply woh object hai jiska creation aur lifecycle container manage karta hai. Dependencies constructor mein declare karne se object ki requirements visible rehti hain. Injected reference magic nahi hai: method invocation still ordinary Java hai unless an explicit proxy adds behavior.
+ApplicationContext ek managed object graph banata hai. Bean woh object hai jiska creation aur lifecycle container manage karta hai. Dependencies constructor mein declare karne se object ki requirements visible rehti hain. Injected reference magic nahi hai: method ordinary Java call hai; explicit proxy ho toh extra behavior add ho sakta hai.
 
 > **Core takeaway:** Constructor injection dependencies clear banata hai; singleton scope mutable state ko thread-safe nahi banata.
 
@@ -59,17 +59,29 @@ Circular constructor dependencies normally create nahi ho sakti: har object pehl
 
 Interface ke peeche second formatter add karo. Explicit selection se pehle ambiguity explain karo. Service manually construct karke prove karo formatting ko running HTTP server nahi chahiye.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Dependency graph aur shared state ko alag draw karo
+
+Controller → LessonService → LessonFormatter graph construction-time requirements dikhata hai. Container formatter create karke service constructor ko deta hai. Final reference dependency replacement rokta hai, lekin referenced object's internal mutable state ko thread-safe nahi banata.
+
+Two HTTP requests same singleton service method call kar sakti hain. Request A field currentTitle=A set karti hai, B same field B karti hai, A field read karke B title use kar sakti hai. Title method parameter/local rakhna request-specific state separate karta hai. Stateless collaborator sharing aur mutable request field sharing different designs hain.
+
+Two Notifier implementations ho toh qualifier selection business intent reflect kare. Primary default choice establish karta hai; runtime user preference select karni ho toh strategy lookup alag need ho sakti hai. Constructor cycle responsibility-direction issue signal kar sakti hai.
+
+**Practice:** Container ke bina service instantiate karke pure formatting test karo. Phir container integration mein correct bean selection verify karo. First test business logic aur second wiring verify karta hai; dono different claims verify karte hain. Lifecycle-owned resources ke close behavior ko failure/shutdown par inspect karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Does singleton scope serialize calls to a bean?
+**Recall — yaad karke bolo:** Kya singleton scope bean ki calls ko automatically serial banati hai?
 
-**Apply:** Singleton service last request title field mein rakhti hai. A Java store karta hai, B Spring store karta hai, phir A field format karta hai. Result trace karke fix karo.
+**Apply — khud try karo:** Singleton service last request title field mein rakhti hai. A Java store karta hai, B Spring store karta hai, phir A field format karta hai. Result trace karke fix karo.
 
-> **Hint:** Ek shared instance ka matlab ek shared field hai.
+> **Hint — chhota ishara:** Ek shared instance ka matlab ek shared field hai.
 
-**Answer guide — compare after attempting:** A ko Spring mil sakta hai kyunki B ne field overwrite ki. Title formatter ko directly pass karo; per-request mutable field mat rakho. Constructor injection aur final dependency references unrelated mutable fields ki race nahi rokte.
+**Answer guide — pehle khud karo, phir compare karo:** A ko Spring mil sakta hai kyunki B ne field overwrite ki. Title formatter ko directly pass karo; per-request mutable field mat rakho. Constructor injection aur final dependency references unrelated mutable fields ki race nahi rokte.
 
-**Exit check:** Explain why the corrected service can handle independent requests without a lock around the entire method.
+**Exit check — aage badhne se pehle:** Corrected service entire method lock kiye bina independent requests handle kaise karti hai, samjhao.
 
 ## Sources — aur padhne ke liye
 

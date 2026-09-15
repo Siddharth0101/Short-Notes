@@ -4,7 +4,7 @@ title: Frontend system design interview from requirements to failure
 track: system-design
 order: 6
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Design round mein component boxes ke saath contracts aur failure behavior explain karna hota hai.
 tags: frontend, react, system-design, accessibility, caching
 ---
@@ -59,17 +59,29 @@ CDN public static assets delivery improve karta hai; costly local filter/blockin
 
 **First deep dive kya?** Highest-risk requirement choose karo, jaise races ya large-list responsiveness; every known technology list mat karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Diagram ko ek user journey se challenge karo
+
+User search type, result open, edit save aur back navigation karti hai. Har step par source of truth identify karo: input draft local, shareable filters URL, remote result query cache, committed record server. Same record multiple owners mein independent copies ho toh reconciliation explicitly chahiye.
+
+Slow A search aur fast B search mein stale response handling diagram par arrow ke saath show karo. Save success ke baad list stale ho toh mutation response, detail update aur list invalidation path explain karo. Cache hit authorization substitute nahi.
+
+Accessibility contract mein focus entry/return, loading announcement, keyboard selection aur error association include karo. Performance budget user journey ke measured bottleneck se nikle: network, calculation, render aur layout separate hain.
+
+**Practice:** One happy path aur three failures draw karo: offline save, permission revoked, chunk load fail. Har failure mein retained state, user message, retry owner aur verification method likho. Architecture ka completeness box count se nahi, observable journeys se assess karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Searchable catalog ki next page fail ho jaati hai. Visible state aur retry boundary define karo.
+**Apply — khud try karo:** Searchable catalog ki next page fail ho jaati hai. Visible state aur retry boundary define karo.
 
-> **Hint:** Later request fail hone se already-successful data hatana zaroori nahi.
+> **Hint — chhota ishara:** Later request fail hone se already-successful data hatana zaroori nahi.
 
-**Answer guide — compare after attempting:** Current results visible rakho; page-specific error dikhao aur same query identity se woh page retry karo. Pagination consistency, loading announcements aur duplicate rows handle karo. Rapid filters aur failed retry ko deterministic fake API se demonstrate karo.
+**Answer guide — pehle khud karo, phir compare karo:** Current results visible rakho; page-specific error dikhao aur same query identity se woh page retry karo. Pagination consistency, loading announcements aur duplicate rows handle karo. Rapid filters aur failed retry ko deterministic fake API se demonstrate karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

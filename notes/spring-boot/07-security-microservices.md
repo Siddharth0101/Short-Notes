@@ -4,7 +4,7 @@ title: Spring Security and reliable service boundaries
 track: spring-boot
 order: 7
 level: Advanced
-minutes: 26
+minutes: 29
 summary: Authentication caller ko identify karti hai; authorization requested resource ki permission check karti hai.
 tags: security, jwt, csrf, microservices
 visual: request-flow
@@ -110,17 +110,27 @@ IDOR (insecure direct object reference) bugs — jahan URL/body mein resource ID
 
 Notes API mein user A ko user B ka note ID guess karwa kar authorization test karo. Then notification consumer ko same event twice deliver karo and verify exactly one logical notification record. Dependency timeout ke time API ka user-visible behavior document karo. Phir ek IDOR vulnerability intentionally reproduce karo (sirf `hasRole` check ke saath endpoint banao jisme dusre user ka ID access ho jaaye), phir `@PreAuthorize` ownership check se fix karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Authentication ke baad authorization har resource par baaki hai
+
+Valid token identity establish kar sakta hai; user A ko user B ka order read permission automatically nahi milti. Query authenticated principal/tenant scope enforce kare, route parameter ko trusted identity mat banao. Token signature ke saath issuer, audience, expiry aur allowed algorithm policy check hoti hai.
+
+CORS browser response-sharing policy hai; non-browser attacker ko API call se stop nahi karti. CSRF credential transport context se derive hota hai, sirf “REST API” label se disappear nahi hota. Secret browser bundle mein ship karna environment-variable syntax se safe nahi hota.
+
+**Practice:** Owner, unrelated user, expired token aur revoked permission ka matrix banao. Downstream service timeout mein retry safe/idempotent work aur bounded budget tak rakho. Gateway auth ke baad internal service ka trust contract document karo; arbitrary forwarded user header trusted nahi hona chahiye.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Logged-in user A guessed ID se user B ka private order maangta hai. Access check kahan lagega aur test kya prove karega?
+**Apply — khud try karo:** Logged-in user A guessed ID se user B ka private order maangta hai. Access check kahan lagega aur test kya prove karega?
 
-> **Hint:** Login success ownership establish nahi karta.
+> **Hint — chhota ishara:** Login success ownership establish nahi karta.
 
-**Answer guide — compare after attempting:** Order return/change se pehle backend par ownership/role rule enforce karo. Cross-user read/write attempts mein private data aur mutation leak na ho. API contract ke hisaab se consistent forbidden/not-found behavior choose karo.
+**Answer guide — pehle khud karo, phir compare karo:** Order return/change se pehle backend par ownership/role rule enforce karo. Cross-user read/write attempts mein private data aur mutation leak na ho. API contract ke hisaab se consistent forbidden/not-found behavior choose karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
@@ -128,3 +138,7 @@ Notes API mein user A ko user B ka note ID guess karwa kar authorization test ka
 - [Spring CSRF protection](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html)
 - [OAuth2 client](https://docs.spring.io/spring-security/reference/servlet/oauth2/client/index.html)
 - [Spring Modulith](https://docs.spring.io/spring-modulith/reference/)
+
+## Related extension — aur samjho
+
+- [Spring AI aur RAG — retrieval, permissions aur answer evaluation](13-ai-retrieval.md)

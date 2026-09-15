@@ -4,7 +4,7 @@ title: Case study collaborative notes and real-time chat
 track: system-design
 order: 12
 level: Advanced
-minutes: 31
+minutes: 34
 summary: Reconnect ke liye durable ordering aur missing-message recovery chahiye; live socket akela kaafi nahi.
 tags: case-study, websocket, sse, collaboration, java
 visual: request-flow
@@ -230,17 +230,27 @@ React client, durable backend aur replayable stream se collaborative notes desig
 
 Happy path aur two failure paths draw karo. Har durable fact ka owner aur first scaling bottleneck identify karo. Transport delivery versus exactly-once business effect alag samjhao. Observability, rollout aur claimed consistency tod sakne wala test ke saath finish karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Reconnect mein history aur live stream ke beech gap close karo
+
+Client history fetch karti hai, phir live subscribe. Dono moments ke beech message aaye toh miss ho sakti hai. Subscribe-first with buffering aur history catch-up, ya server-issued consistent cursor protocol gap close karne ke possible mechanisms hain. Duplicate boundary messages sequence/ID se deduplicate karo.
+
+Connection alive hona message durable hone ka proof nahi. Client optimistic message ID, server durable acknowledgement aur room sequence alag roles rakhte hain. Reconnect last confirmed cursor se missing durable events recover kare; local draft loss policy separate ho.
+
+**Practice:** Disconnect-before-ack, duplicate send, reordered network delivery aur permission revoked scenarios. Buffer bounded ho aur slow client policy explicit rahe. Collaborative edits mein concurrent operation merge semantics chahiye; simple last-write-wins full document update every collaboration requirement satisfy nahi karti.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Client ne last message 41 acknowledge kiya; disconnect ke dauran 42–45 aaye. Reconnect par replay aur duplicates kaise handle honge?
+**Apply — khud try karo:** Client ne last message 41 acknowledge kiya; disconnect ke dauran 42–45 aaye. Reconnect par replay aur duplicates kaise handle honge?
 
-> **Hint:** Sirf live subscribe karne se disconnection ke messages miss ho sakte hain.
+> **Hint — chhota ishara:** Sirf live subscribe karne se disconnection ke messages miss ho sakte hain.
 
-**Answer guide — compare after attempting:** Durable cursor ke baad messages maango; 42–45 order mein replay karke stable IDs se merge karo. Replay/live handoff coordinate karo taaki beech mein new messages lose na hon. Overlap deduplicate karo. Cursor retained history se purana ho toh recovery behavior define karo.
+**Answer guide — pehle khud karo, phir compare karo:** Durable cursor ke baad messages maango; 42–45 order mein replay karke stable IDs se merge karo. Replay/live handoff coordinate karo taaki beech mein new messages lose na hon. Overlap deduplicate karo. Cursor retained history se purana ho toh recovery behavior define karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 - [Server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)

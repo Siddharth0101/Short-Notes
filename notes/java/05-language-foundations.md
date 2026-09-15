@@ -4,7 +4,7 @@ title: Java foundations review and conversion edge cases
 track: java
 order: 5
 level: Foundation
-minutes: 16
+minutes: 19
 summary: Destination type bada karne se pehle ho chuki arithmetic ka type nahi badalta.
 tags: types, casting, strings, arrays
 visual: java-memory
@@ -102,17 +102,27 @@ Request validation code mein yeh foundations directly dikhte hain: incoming JSON
 
 Temperature converter likho jisme integer-division bug intentionally introduce karke fix karo. Ek array ka min/max find karo, empty input ka behavior document karo. Phir reference reassignment aur object mutation ke outputs execution se pehle predict karo. Last mein ek status-code mapper ko purane colon-style `switch` se likho, ek fallthrough bug intentionally introduce karo, phir arrow-style expression se rewrite karke bug class ko eliminate karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Promotion, boxing aur null ko ek expression mein mat chhupao
+
+`Integer count = null` reference absence hai. `count + 1` unboxing maangta hai aur NullPointerException de sakta hai; compiler numeric expression allow karega, runtime absence phir bhi possible hai. Boundary par missing value ka policy define karo: reject, optional ya meaningful default.
+
+Small numeric type ka arithmetic promoted ho sakta hai. Cast result ko narrower type mein fit karne ka proof nahi; information truncate ho sakti hai. Overflow aur floating-point rounding alag failure categories hain. Switch expression value produce karti hai; covered cases aur default business meaning ke saath choose karo.
+
+**Trace practice:** Text `'42'` ko numeric input samajhne se pehle parsing, allowed range aur downstream arithmetic type teen decisions likho. String content equals se compare karo; interned literals par == kabhi true dekar wrong general rule sikha sakta hai. New String instances se identity/content distinction check karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** `long total = 100000 * 100000;` galat kyun ho sakta hai? Fix karke expected result likho.
+**Apply — khud try karo:** `long total = 100000 * 100000;` galat kyun ho sakta hai? Fix karke expected result likho.
 
-> **Hint:** Multiplication shuru hone se pehle ek operand long hona chahiye.
+> **Hint — chhota ishara:** Multiplication shuru hone se pehle ek operand long hona chahiye.
 
-**Answer guide — compare after attempting:** Dono original operands int hain; assignment se pehle multiplication overflow ho jaati hai. `long total = 100000L * 100000;` se 10000000000 milega. Sirf final variable nahi, intermediate calculation ki maximum value bhi dekho.
+**Answer guide — pehle khud karo, phir compare karo:** Dono original operands int hain; assignment se pehle multiplication overflow ho jaati hai. `long total = 100000L * 100000;` se 10000000000 milega. Sirf final variable nahi, intermediate calculation ki maximum value bhi dekho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

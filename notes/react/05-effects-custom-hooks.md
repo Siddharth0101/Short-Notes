@@ -4,7 +4,7 @@ title: Effects refs and reusable synchronization
 track: react
 order: 5
 level: Intermediate
-minutes: 31
+minutes: 34
 summary: Effect external system se synchronization own karta hai; jo resource start kare uska cleanup bhi kare.
 tags: effects, useEffect, useRef, custom-hooks, races
 ---
@@ -78,7 +78,7 @@ function useLocalStorage(key, initialValue) {
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
     } catch {
-      // Storage full ya disabled ho sakta hai; silently ignore karna UX ke liye safe hai
+      // Sirf best-effort preference demo; save fail ho sakta hai, durable-save success claim mat karo
     }
   }, [key, value]);
 
@@ -108,7 +108,7 @@ Effect timing neeche explain hai. Paint-blocking useLayoutEffect necessary visua
 ## Gotchas
 
 - Dependency array se ek value isliye hata dena ki effect "bahut baar chal raha hai" bug ko chhupata hai, fix nahi karta — effect us stale value ko forever capture kar leta hai. Asli fix usually functional updater, `useRef`, ya effect ko chhote effects mein todna hai.
-- Object ya array ko dependency mein dena har render par naya reference banata hai, isliye effect har render par dobara chalta hai. Primitive values (`user.id`) par depend karo, ya object ko `useMemo` se stabilize karo.
+- Render ke andar naya object/array create karke dependency doge toh har render par identity change hogi. Existing stable object ko dependency mein rakhna khud naya reference nahi banata. Primitive values (`user.id`) par depend karo, ya object ko `useMemo` se stabilize karo.
 - Async function ko directly `useEffect(async () => …)` pass karna galat hai — woh promise return karta hai, cleanup function nahi. Effect ke andar ek async function define karke usse call karo, aur cleanup alag se return karo.
 - Cleanup ko sirf unmount ka kaam samajhna common galti hai: cleanup **har** dependency change par bhi chalta hai, naye effect run se pehle. Isi wajah se subscription switch aur stale-request cancellation kaam karte hain.
 - Jo kaam user action ka seedha result hai (form submit, button click par analytics) usse effect mein rakhna usse indirect aur duplicate-prone bana deta hai. Usse event handler mein rakho; effect sirf external system ke saath synchronization ke liye hai.
@@ -142,17 +142,29 @@ Dependencies change par old cleanup, phir new setup. Comparison Object.is se hot
 
 [Source yahan padho — React](https://react.dev/reference/react/useEffect). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Effect ko subscription timeline ki tarah padho
+
+ID A render commit hui: A setup apna controller/active flag banata hai. ID B commit hone par A cleanup us flag ko false aur request abort karta hai; B setup apne separate values banata hai. Late A continuation B ka flag use nahi karti. Isi ownership se old request result current screen overwrite karne se guard hota hai. [Effect synchronization](https://react.dev/learn/synchronizing-with-effects).
+
+Ek nuance: ID badalne wale render mein previous result state already stored ho sakti hai; effect reset commit ke baad chalega. Agar old topic ko new heading ke neeche temporarily dikhana unacceptable hai, result ke saath request ID store karke render mein identity match karo, ya route/query state boundary use karo. Active flag future stale completion rokta hai; already stored result ko magically relabel nahi karta.
+
+Upar ka localStorage hook fixed key, client-only, best-effort preference demo hai. Key runtime par A→B badloge toh initial read repeat nahi hoti aur A ki value B mein write ho sakti hai. Dynamic keys, schema validation, save-error status aur multi-tab synchronization ke liye [persistence chapter](../javascript/19-browser-persistence.md) ka contract apply karo. Same hook call logic reuse karti hai, shared state create nahi karti.
+
+**Practice:** Setup-cleanup-setup ke baad exactly one active listener rahe. Failed storage write ko “saved” mat bolo. External store subscription chahiye toh React ka [useSyncExternalStore contract](https://react.dev/reference/react/useSyncExternalStore) padho; snapshot stable aur SSR policy deliberate honi chahiye.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** roomId A se B hota hai, phir component unmount hota hai. Subscribe/unsubscribe ka order batao.
+**Apply — khud try karo:** roomId A se B hota hai, phir component unmount hota hai. Subscribe/unsubscribe ka order batao.
 
-> **Hint:** Har setup ka cleanup same room aur resource ke liye pair karo.
+> **Hint — chhota ishara:** Har setup ka cleanup same room aur resource ke liye pair karo.
 
-**Answer guide — compare after attempting:** A subscribe; B subscribe karne se pehle A cleanup; unmount par B cleanup. Effect se cleanup return karo aur reactive dependencies include karo. Development checks extra setup/cleanup cycle chala sakte hain, isliye cleanup actual subscription undo kare.
+**Answer guide — pehle khud karo, phir compare karo:** A subscribe; B subscribe karne se pehle A cleanup; unmount par B cleanup. Effect se cleanup return karo aur reactive dependencies include karo. Development checks extra setup/cleanup cycle chala sakte hain, isliye cleanup actual subscription undo kare.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

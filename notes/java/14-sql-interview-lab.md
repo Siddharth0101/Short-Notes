@@ -4,7 +4,7 @@ title: SQL joins windows and transaction races
 track: java
 order: 14
 level: Advanced
-minutes: 25
+minutes: 28
 summary: LEFT JOIN unmatched left rows bachata hai, lekin baad ka WHERE filter unhe phir hata sakta hai.
 tags: sql, postgres, joins, windows, transactions
 visual: transaction-race
@@ -12,7 +12,7 @@ visual: transaction-race
 
 ## Mental model — simple soch
 
-SQL set-oriented hai: first decide what one output row represents. Most wrong joins come from mixing grains, such as one customer with many orders and many payments, then aggregating the multiplied result. Java mapping cannot repair an incorrect relational query.
+SQL set-oriented hai: first decide what one output row represents. Join errors aksar row ka meaning mix karne se aati hain: one customer ke many orders aur many payments join karke multiplied result aggregate kar diya jaata hai. Java mapping cannot repair an incorrect relational query.
 
 PostgreSQL assume karo: customers(id,name), orders(id,customer_id,total,created_at). total ek specified currency ka decimal amount hai. Production schema mein currency aur nullability explicit rakho.
 
@@ -98,17 +98,29 @@ Most rows chahiye hon toh sequential scan reasonable ho sakta hai. Large estimat
 
 [Source yahan padho — PostgreSQL](https://www.postgresql.org/docs/current/using-explain.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Join se pehle har row ka meaning likho
+
+Customer C ke 2 orders aur 3 payments hain. Dono child tables ko independently customer_id par join karoge toh 2×3=6 combinations mil sakti hain. Order amounts aggregation mein repeat honge. DISTINCT ko random patch lagane ke bajay intended grain define karo: one row per customer, per order ya per payment?
+
+Customer totals chahiye toh orders aur payments ko separately per-customer aggregate karke resulting one-row summaries join kar sakte ho. Payment actual order belong karti ho toh correct relationship order_id ho sakta hai. Schema relation aur asked result dono inspect karo.
+
+LEFT JOIN ke baad child filter WHERE mein lagao toh null-extended rows remove ho sakti hain; “customers without orders bhi chahiye” contract toot sakta hai. Filter ON mein ya aggregate conditional expression mein rakhne ka decision semantics se karo.
+
+**Practice:** One customer zero orders, one two orders, duplicate timestamps aur null optional fields ka tiny dataset banao. Expected rows haath se likho, phir query run karo. Window function ranking ke tie behavior ko ROW_NUMBER/RANK/DENSE_RANK choice se explain karo; sirf syntax correct hona enough nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Customers A aur B hain; sirf A ka ek paid order hai. Dono ko paid-order count ke saath return karo. Paid-status condition kahan rakho?
+**Apply — khud try karo:** Customers A aur B hain; sirf A ka ek paid order hai. Dono ko paid-order count ke saath return karo. Paid-status condition kahan rakho?
 
-> **Hint:** Joined order par WHERE condition B ki NULL wali row remove kar sakti hai.
+> **Hint — chhota ishara:** Joined order par WHERE condition B ki NULL wali row remove kar sakti hai.
 
-**Answer guide — compare after attempting:** Status condition JOIN ke ON mein rakho, customer identity se group karo aur non-null order ID count karo. A=1, B=0 milega. COUNT(*) B ki preserved row ko bhi 1 ginega; woh matching orders ki count nahi hai.
+**Answer guide — pehle khud karo, phir compare karo:** Status condition JOIN ke ON mein rakho, customer identity se group karo aur non-null order ID count karo. A=1, B=0 milega. COUNT(*) B ki preserved row ko bhi 1 ginega; woh matching orders ki count nahi hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

@@ -1,6 +1,6 @@
 # Interview workbook — Hinglish mein practice aur answers
 
-App mein 283 questions hain. Yeh workbook supplied checklist aur extra backend, DSA, design topics ko canonical questions se jodta hai. 104 questions add hue; 21 existing questions reuse hue. Repeat topic ke liye duplicate card nahi banaya.
+App mein 323 questions hain. Yeh workbook supplied checklist aur extra backend, DSA, design topics ko canonical questions se jodta hai. 104 questions add hue; 21 existing questions reuse hue. Repeat topic ke liye duplicate card nahi banaya.
 
 App ka **Interview topic** filter subject-specific practice ke liye use karo. HTML/CSS JavaScript ke browser-foundation chapter se linked hain. App mein answers reveal karne par dikhte hain; yeh Markdown workbook offline reference hai. Pehle khud attempt karo, phir answer padho. Code original hai; framework excerpts ki setup assumptions saath padho.
 

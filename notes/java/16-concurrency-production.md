@@ -4,14 +4,14 @@ title: Java concurrency under real resource limits
 track: java
 order: 16
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Zyada tasks banane se DB connections ya downstream service ki capacity automatically nahi badhti.
 tags: java, concurrency, virtual-threads, executors, backpressure
 ---
 
 ## Mental model — simple soch
 
-Threads execution schedule karte hain; they do not create database connections, CPU cores or downstream capacity. A service can accept thousands of concurrent requests and still have only twenty usable database connections. Bound the scarce resource explicitly instead of hoping the scheduler protects it.
+Threads execution schedule karte hain; they do not create database connections, CPU cores or downstream capacity. Service thousands concurrent requests accept karke bhi sirf twenty usable database connections rakh sakti hai. Scarce resource access explicitly bound karo; scheduler automatically protect karega, assume mat karo.
 
 > **Core takeaway:** Zyada tasks banane se DB connections ya downstream service ki capacity automatically nahi badhti.
 
@@ -82,17 +82,29 @@ Virtual threads Java 21 se non-preview hain. Pinning behavior JDK-dependent hai;
 
 [Source yahan padho — Dev.java](https://dev.java/learn/new-features/virtual-threads/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Request count, thread count aur resource count alag hain
+
+Application 1,000 requests receive karti hai lekin database 20 useful concurrent operations handle kar sakta hai. More threads waiters badha sakti hain; database throughput automatically 50× nahi hota. Queue wait, acquisition timeout, execution time aur end-to-end deadline separately observe karo.
+
+Request cancel hone par downstream operation cooperate kare toh resource jaldi release ho sakti hai. Future cancel return hone ko database transaction definitely stopped mat samjho. Connection/permit finally boundary mein release ho; failure path capacity permanently leak na kare.
+
+Task ownership ke liye caller ko pata ho kaunse child jobs start hue aur kis deadline tak wait karna hai. Fire-and-forget exception lose kar sakta hai. Background work truly durable chahiye toh in-memory executor process crash survive nahi karta.
+
+**Practice:** 20 permits, 25 tasks: maximum 20 active, 5 waiting/rejected policy ke hisaab se. One task throw kare, permit release verify karo. One timeout ho, late completion ka visible result define karo. Low CPU with high latency par queue/pool metrics dekhna thread count blindly badhane se zyada diagnostic hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** 100 request tasks aur 10-connection DB pool hai. Tasks badhane se pehle kya measure karoge?
+**Apply — khud try karo:** 100 request tasks aur 10-connection DB pool hai. Tasks badhane se pehle kya measure karoge?
 
-> **Hint:** Connection ke wait time ko query execution time se alag dekho.
+> **Hint — chhota ishara:** Connection ke wait time ko query execution time se alag dekho.
 
-**Answer guide — compare after attempting:** Pool acquisition wait, active connections, query latency, timeouts aur throughput measure karo. Ek waqt maximum 10 tasks connections hold kar sakti hain. Admission bound aur deadlines rakho. Tasks badhane se wait badh sakta hai bina completed work badhe.
+**Answer guide — pehle khud karo, phir compare karo:** Pool acquisition wait, active connections, query latency, timeouts aur throughput measure karo. Ek waqt maximum 10 tasks connections hold kar sakti hain. Admission bound aur deadlines rakho. Tasks badhane se wait badh sakta hai bina completed work badhe.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

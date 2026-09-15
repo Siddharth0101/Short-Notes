@@ -4,7 +4,7 @@ title: Graph traversal and shortest paths
 track: dsa
 order: 11
 level: Advanced
-minutes: 40
+minutes: 43
 summary: Shortest-path algorithm edge weights ki conditions par depend karta hai; unweighted graph mein BFS minimum edges deta hai.
 tags: graph, bfs, dfs, dijkstra, topological-sort
 visual: bfs
@@ -338,17 +338,27 @@ Example: A→B=4, A→C=2, B→C=-5. Order A,B,C se distance(C)=-1 milta hai. C 
 
 [Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/6277a1f06100c26a7ff21031af6757b5_MIT6_006F11_lec16.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Visited kab mark karte ho, queue size aur proof badalta hai
+
+Unweighted BFS vertex enqueue karte waqt discovered mark kare toh multiple neighbors same vertex repeatedly queue nahi karte. First discovery shortest edge-count distance deti hai, kyunki layers increasing distance mein expand hoti hain. Weighted edges par same proof valid nahi.
+
+Dijkstra nonnegative edge assumption se smallest unsettled distance final kar sakti hai. Negative edge later cheaper path create kar sakti hai, isliye algorithm label alone enough nahi. DAG topological DP negative edges ke saath possible hai kyunki acyclic dependency order different proof deta hai.
+
+**Practice:** Disconnected vertex, self-loop, duplicate edges aur directed cycle handle karo. Directed cycle detection mein active recursion path versus fully processed state distinguish karo. Union-Find connectivity component membership batati hai; directed reachability ya actual shortest path reconstruct nahi karti.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** A→B cost 10, A→C cost 1, C→B cost 1 hain. Minimum-edge path aur minimum-cost path compare karo.
+**Apply — khud try karo:** A→B cost 10, A→C cost 1, C→B cost 1 hain. Minimum-edge path aur minimum-cost path compare karo.
 
-> **Hint:** Ek edge ki cost do edges ki total cost se badi ho sakti hai.
+> **Hint — chhota ishara:** Ek edge ki cost do edges ki total cost se badi ho sakti hai.
 
-**Answer guide — compare after attempting:** BFS edge count se A→B choose karega. Cheapest path A→C→B hai, total 2. Weights nonnegative hain isliye Dijkstra applicable hai. Unreachable nodes ka result define karo aur zero-weight edges test karo. Ordinary BFS arbitrary weighted cost minimize nahi karta.
+**Answer guide — pehle khud karo, phir compare karo:** BFS edge count se A→B choose karega. Cheapest path A→C→B hai, total 2. Weights nonnegative hain isliye Dijkstra applicable hai. Unreachable nodes ka result define karo aur zero-weight edges test karo. Ordinary BFS arbitrary weighted cost minimize nahi karta.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

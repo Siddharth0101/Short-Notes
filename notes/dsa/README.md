@@ -45,3 +45,12 @@ Queues, recursion, hashing/heaps se dependencies aur repeated subproblems samjho
 12. [Dynamic programming from state to recurrence](12-dynamic-programming.md)
 
 **Stage checkpoint — khud karke dikhao:** BFS/Dijkstra choose karo, phir DP state/recurrence derive karo.
+
+## Stage 5: Advanced choices ko prove karo
+
+Greedy/interval proofs aur trie, bitmask, range-query structures seekho.
+
+13. [Greedy aur intervals — choice ka proof aur boundary ka contract](13-greedy-intervals.md)
+14. [Tries, bitmasks aur range queries — advanced structures ka practical bridge](14-tries-range-bits.md)
+
+**Stage checkpoint — khud karke dikhao:** Greedy ko brute-force oracle se compare karo aur Fenwick update trace karo.

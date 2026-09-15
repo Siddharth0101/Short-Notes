@@ -44,3 +44,11 @@ Machine coding se pehle production behavior profile karo.
 11. [React machine coding and identity bugs](11-machine-coding.md)
 
 **Stage checkpoint — khud karke dikhao:** Stale-request protection, keyboard behavior aur ek measured improvement dikhao.
+
+## Stage 5: User journey test karo
+
+Forms, async screens aur accessibility ke observable contracts check karo.
+
+12. [React testing — user behavior aur accessibility verify karo](12-testing-accessibility.md)
+
+**Stage checkpoint — khud karke dikhao:** Accessible queries se form test likho aur browser-only checks separately identify karo.

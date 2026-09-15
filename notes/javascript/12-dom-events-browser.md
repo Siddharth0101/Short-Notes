@@ -4,7 +4,7 @@ title: DOM events and browser interaction
 track: javascript
 order: 12
 level: Foundation
-minutes: 23
+minutes: 26
 summary: Event delegation stable ancestor par events handle karta hai; actual target button ke andar ka icon bhi ho sakta hai.
 tags: dom, events, delegation, browser, accessibility
 ---
@@ -141,18 +141,34 @@ Global controller widget lifetimes jod dega: ek dispose karoge toh doosre ke lis
 
 [Source yahan padho — MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Ek click ka path aur do alag stop controls
+
+Nested button ke icon par click ho toh target icon ho sakta hai, jabki delegated list listener ka currentTarget list hai. `closest('button[data-id]')` se action element identify karo; matched button intended container ke andar hai ya nahi bhi check karo. Sirf target.dataset padhne se icon-click bug aa sakta hai.
+
+Capture outer ancestors se target ki taraf, phir bubbling target se ancestors ki taraf ja sakti hai. `preventDefault()` browser default action, jaise form navigation, rokta hai; propagation automatically nahi. `stopPropagation()` ancestors tak event travel rokta hai; default action automatically nahi. Dono ka purpose alag hai.
+
+Listeners remove karne ke liye same callback identity chahiye. Do syntactically same arrow functions two different objects hain. Mount par stored handler add karke dispose par wahi remove karo; capture option bhi matching honi chahiye. Alternative supported signal lifecycle own kar sakta hai.
+
+**Practice:** List mein new row insert karo bina listener dobara add kiye. Text aur icon dono click correct ID dein. Phir dispose karke ek click par zero action prove karo. Yeh behavior test delegation aur cleanup dono validate karta hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Delete button ke andar icon hai. Sirf `event.target.matches('button')` kyun miss karega? Dynamically added rows bhi handle karo.
+**Apply — khud try karo:** Delete button ke andar icon hai. Sirf `event.target.matches('button')` kyun miss karega? Dynamically added rows bhi handle karo.
 
-> **Hint:** Nearest matching action dhundo aur check karo ki woh intended list ke andar hai.
+> **Hint — chhota ishara:** Nearest matching action dhundo aur check karo ki woh intended list ke andar hai.
 
-**Answer guide — compare after attempting:** Target Element ho toh `event.target.closest('button[data-id]')` use karo; button ki list membership verify karo. Stable item ID se item remove karo. Ek ancestor listener future mein add hui rows ko bhi handle karega.
+**Answer guide — pehle khud karo, phir compare karo:** Target Element ho toh `event.target.closest('button[data-id]')` use karo; button ki list membership verify karo. Stable item ID se item remove karo. Ek ancestor listener future mein add hui rows ko bhi handle karega.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
 [MDN addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) listener options explain karta hai. [MDN Intersection Observer](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) asynchronous observation ka reference hai.
+
+## Related extension — aur samjho
+
+- [Browser persistence aur offline behavior — save ka meaning clear karo](19-browser-persistence.md)

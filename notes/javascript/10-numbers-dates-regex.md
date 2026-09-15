@@ -4,7 +4,7 @@ title: Numbers dates strings and regular expressions
 track: javascript
 order: 10
 level: Intermediate
-minutes: 23
+minutes: 26
 summary: Number/date ko dikhane ka format aur storage mein uska meaning alag decisions hain.
 tags: numbers, dates, intl, regex, strings, timers
 ---
@@ -95,17 +95,29 @@ Study-session timer banao jo pause/resume kare aur reload ke baad saved deadline
 
 **Q. `setInterval(fn, 1000)` accurate clock hai?** Nahi. Scheduling delays possible hain; elapsed time actual timestamps se derive karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Representation choose kiye bina formatting mat start karo
+
+Price 0.1 aur 0.2 binary floating-point mein exactly represent nahi hote; sum ko plain decimal expectation se compare karna surprise de sakta hai. UI formatting display round karti hai, stored arithmetic automatically exact nahi banati. Fixed two-decimal currency teaching model mein integer minor units, jaise 10+20=30 paise, useful hain; currency scale, rounding aur maximum safe integer ka contract phir bhi define karo.
+
+Date-only birthday aur exact event instant different data hain. Birthday ko arbitrary midnight UTC bana kar local display karoge toh date shift ho sakti hai. Meeting instant timezone ke saath display honi chahiye; recurring “har Monday 9 AM” ke liye local zone aur daylight-saving policy bhi chahiye. Format string ko storage model ka substitute mat banao.
+
+Regex ka `g` flag repeated `test` calls mein lastIndex state maintain kar sakta hai. Same string par stateful matcher ko reuse karte waqt reset/contract samjho. Input length bound karo; arbitrary user-supplied pattern run karna separate resource-risk problem hai.
+
+**Practice:** “₹1.00 ka 10% discount” ke liye arithmetic unit, rounding moment aur display step teen alag lines mein likho.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Integer paise mein 1999 aur 2501 add karo; rupees do decimal places mein dikhao. Display string ko parse karke storage banana weak contract kyun hai?
+**Apply — khud try karo:** Integer paise mein 1999 aur 2501 add karo; rupees do decimal places mein dikhao. Display string ko parse karke storage banana weak contract kyun hai?
 
-> **Hint:** Calculation given minor unit, yani paise, mein karo.
+> **Hint — chhota ishara:** Calculation given minor unit, yani paise, mein karo.
 
-**Answer guide — compare after attempting:** Total 4500 paise hai, display `45.00` hoga before currency symbol. Storage mein integer 4500 rakho. Locale separators/symbols add kar sakta hai; formatted text canonical number nahi hai. External decimal price convert karte waqt rounding rule alag define karo.
+**Answer guide — pehle khud karo, phir compare karo:** Total 4500 paise hai, display `45.00` hoga before currency symbol. Storage mein integer 4500 rakho. Locale separators/symbols add kar sakta hai; formatted text canonical number nahi hai. External decimal price convert karte waqt rounding rule alag define karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

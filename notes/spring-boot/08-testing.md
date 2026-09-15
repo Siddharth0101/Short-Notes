@@ -4,7 +4,7 @@ title: Spring Boot unit slice and integration testing
 track: spring-boot
 order: 8
 level: Intermediate
-minutes: 16
+minutes: 19
 summary: Har important boundary ka test utne chhote setup mein karo jo uski real failure pakad sake.
 tags: spring, testing, integration
 ---
@@ -54,17 +54,29 @@ Random-port SpringBootTest real HTTP, serialization aur wiring check kar sakta h
 
 Lesson-create test plan do: domain rule, invalid-request slice, unique-constraint DB aur HTTP success test. Har test ka caught bug batao. Every internal call verify karne ke bajay observable outcomes dekho.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Har test environment kis claim ka evidence deta hai?
+
+Pure service test fast calculation/invariant verify karta hai; Spring context start na hone par bean wiring claim nahi karta. MVC test binding, validation aur response mapping inspect karta hai; mocked service actual persistence invariant prove nahi karti. Real database integration constraint, SQL mapping aur transaction behavior verify kar sakti hai.
+
+Concurrent row-lock race ke liye genuinely overlapping transactions chahiye. Ek test method mein sequential two calls concurrency proof nahi. Synchronization barrier se both contenders ready karo, bounded wait rakho aur final durable state assert karo. Production database dialect se different in-memory engine behavior differ kar sakta hai.
+
+Automatic transaction rollback isolation convenient hai, lekin after-commit listener ya separate-thread work test transaction share na kare. Commit-dependent behavior ko explicitly commit karke observable outcome verify karo.
+
+**Practice:** Blank DTO → web boundary test; tax calculation → pure unit test; unique order ID race → database integration. Har test ke naam ke neeche “yeh kya prove nahi karta” ek line likho. Test count se zyada claim/environment match important hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Can a mocked repository prove a SQL unique constraint exists?
+**Recall — yaad karke bolo:** Mocked repository actual SQL unique constraint exist hone ka proof de sakti hai?
 
-**Apply:** Random-port HTTP test par Transactional lagane ke baad bhi rows bachti hain. Mechanism samjhao aur repeated runs independent banao.
+**Apply — khud try karo:** Random-port HTTP test par Transactional lagane ke baad bhi rows bachti hain. Mechanism samjhao aur repeated runs independent banao.
 
-> **Hint:** Test thread aur server request thread compare karo.
+> **Hint — chhota ishara:** Test thread aur server request thread compare karo.
 
-**Answer guide — compare after attempting:** HTTP handler alag thread par apni transaction commit karta hai. Isolated DB ya explicit cleanup plus unique fixture IDs use karo. Doosra run karke isolation verify karo. Leftover state ke saath passing assertion reliable suite nahi banati.
+**Answer guide — pehle khud karo, phir compare karo:** HTTP handler alag thread par apni transaction commit karta hai. Isolated DB ya explicit cleanup plus unique fixture IDs use karo. Doosra run karke isolation verify karo. Leftover state ke saath passing assertion reliable suite nahi banati.
 
-**Exit check:** Choose the minimum valid test scope for malformed JSON, a business calculation and a row-lock race.
+**Exit check — aage badhne se pehle:** Malformed JSON, business calculation aur row-lock race ke liye minimum meaningful test scope choose karo.
 
 ## Sources — aur padhne ke liye
 

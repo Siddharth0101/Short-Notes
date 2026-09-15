@@ -4,7 +4,7 @@ title: MongoDB query plans and Node streaming lab
 track: mongodb
 order: 6
 level: Advanced
-minutes: 25
+minutes: 28
 summary: Index tab useful hai jab uska order actual filter aur sort pattern ko support kare.
 tags: mongodb, indexes, explain, streams, backpressure
 ---
@@ -63,17 +63,29 @@ One large tenant plus many small tenants ka skewed data banao; dono plans compar
 
 **Backpressure overload eliminate karta hai?** Woh cooperating boundaries mein pacing propagate karta hai. Full service ko admission control, deadlines aur bounded queues bhi chahiye.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Explain report ko ratio aur workload se interpret karo
+
+Query 20 results return karti hai aur 50,000 documents examine karti hai. Ratio inefficient access ka signal hai, lekin exact index choose karne ke liye predicates, sort aur data distribution chahiye. One dominant tenant aur many small tenants same index par different workload pressure de sakte hain.
+
+Descending createdAt, _id ordering mein next page last pair se strictly smaller pair maangti hai: older timestamp, ya same timestamp aur smaller ID. Sirf timestamp condition same-time documents skip kar sakti hai. Cursor BSON types preserve kare, aur tenant scope har request mein server derive/enforce kare.
+
+Keyset pagination stable ordering improve karti hai; concurrent insert/delete ke beech immutable snapshot automatically nahi deti. Product ko live feed chahiye ya fixed export snapshot, decide karo. Offset pagination deep page par skipped work badha sakti hai; workload measurement se justify karo.
+
+**Practice:** Duplicate timestamps wala small fixture banao aur page-size 2 se all rows enumerate karo. Stable fixture mein duplicates/skips na hon. Phir concurrent insert karke documented live-pagination semantics compare karo; unexpected guarantee claim mat karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** User ki published notes newest-first list karni hain. Index candidate do aur representative data par usse judge karo.
+**Apply — khud try karo:** User ki published notes newest-first list karni hain. Index candidate do aur representative data par usse judge karo.
 
-> **Hint:** Equality fields sort field se pehle aa sakti hain.
+> **Hint — chhota ishara:** Equality fields sort field se pehle aa sakti hain.
 
-**Answer guide — compare after attempting:** userId, status, descending createdAt ka compound index try karo; stable pagination ke liye tie-breaker add karo. Explain execution stats, examined documents/keys aur sort behavior compare karo. Selectivity, write aur storage cost dekho; sirf index exist karna success nahi hai.
+**Answer guide — pehle khud karo, phir compare karo:** userId, status, descending createdAt ka compound index try karo; stable pagination ke liye tie-breaker add karo. Explain execution stats, examined documents/keys aur sort behavior compare karo. Selectivity, write aur storage cost dekho; sirf index exist karna success nahi hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

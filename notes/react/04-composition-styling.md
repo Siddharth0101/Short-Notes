@@ -4,7 +4,7 @@ title: Composition reusable patterns and styling
 track: react
 order: 4
 level: Intermediate
-minutes: 25
+minutes: 28
 summary: Composition reusable outer structure ko uske andar ke content se separate rakhti hai.
 tags: composition, patterns, css, accessibility, components
 ---
@@ -149,17 +149,29 @@ Card ke three real uses compare karo aur common shell extract karo. Ek use mein 
 
 **Q. Custom hook component state share karta hai?** Logic share karta hai; individual calls ki state separate hoti hai jab tak shared external source use na ho.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Component API ko actual variation se derive karo
+
+Card ko title/body/footer slots chahiye toh children/props se compose karo. Har visual combination ke liye isBlue/isCompact/isSpecial jaise flags add karte jaoge toh contradictory combinations multiply hongi. Finite variant prop aur clear slots often easier contract hain.
+
+Wrapper button disabled, type, accessible name, onClick aur ref support kare toh forwarding deliberate ho. `type` omit karne par form ke andar button submit ho sakta hai. Custom styling component native semantics retain kare; div ko clickable banakar keyboard behavior dobara implement karna extra responsibility hai.
+
+Prop spread order matters: `<button {...props} type="button" />` caller ka type override karta hai; reverse order caller ko override karne deta hai. Kaunsa field component guarantee karega aur kaunsa caller customize karega, document karo. Arbitrary internal configuration DOM par forward mat karo.
+
+**Practice:** Dialog footer ke Cancel/Save actions compose karo. Cancel form submit na kare, Save pending mein disable ho aur focus indicator visible rahe. Appearance change se action contract break na ho. CSS choice ka success sirf screenshot nahi; responsive layout, focus aur disabled behavior bhi verify karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Profile aur lesson list ke liye ek Panel design karo bina isProfile/isLessons switches ke. Public inputs kya honge?
+**Apply — khud try karo:** Profile aur lesson list ke liye ek Panel design karo bina isProfile/isLessons switches ke. Public inputs kya honge?
 
-> **Hint:** Har domain ka logic Panel mein bharne ke bajay caller ko content dene do.
+> **Hint — chhota ishara:** Har domain ka logic Panel mein bharne ke bajay caller ko content dene do.
 
-**Answer guide — compare after attempting:** Title, children aur optional actions slots shared shell cover karte hain. Profile/lesson components apna content den. Domain fetching aur validation shell ke bahar rakho. Specialized prop tab add karo jab multiple uses mein real shared behavior dikhe.
+**Answer guide — pehle khud karo, phir compare karo:** Title, children aur optional actions slots shared shell cover karte hain. Profile/lesson components apna content den. Domain fetching aur validation shell ke bahar rakho. Specialized prop tab add karo jab multiple uses mein real shared behavior dikhe.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: DSA problem solving interview playbook
 track: interview
 order: 5
 level: Intermediate
-minutes: 31
+minutes: 34
 summary: Algorithm ko fast bolne se pehle prove karo ki woh requested answer sahi nikalta hai.
 tags: dsa, interview, problem-solving, complexity, practice
 visual: dynamic-programming
@@ -72,7 +72,7 @@ Invariant: `[left, right]` mein repeated characters nahi. Previous occurrence cu
 
 ## Self-review rubric
 
-Each 0–2 score: problem contract, correctness argument, implementation, complexity, validation. Wrong approach early catch karke fix karna useful signal hai. Code finish na ho to remaining plan aur current invariant clear rakho; unverified solution ko complete claim mat karo.
+Problem contract, correctness argument, implementation, complexity aur validation ko separately 0–2 score do. Wrong approach early catch karke fix karna useful signal hai. Code finish na ho to remaining plan aur current invariant clear rakho; unverified solution ko complete claim mat karo.
 
 ## Practice and answer
 
@@ -118,17 +118,37 @@ Employer source assessment approach ka reference hai. Yeh exercise original prac
 
 [Source yahan padho — Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Optimization ka proof baseline se derive karo
+
+Brute force repeated work identify karta hai: same frequency counts, repeated range sums ya duplicate subproblems. Pattern tab choose karo jab saved work aur invariant explain kar sako. Sliding window ke liye monotonic shrink, binary search ke liye monotone predicate, greedy ke liye safe-choice proof chahiye.
+
+Complexity input dimensions aur output size include kare. Recursive stack auxiliary memory hai; sorting copy allocation ignore mat karo. Correctness edge cases empty, duplicate, negative, overflow/Unicode requirements ke hisaab se choose karo.
+
+**Mock drill:** Solution likhne ke baad one assumption interviewer change kare. Signed values aane par positive-only window kyun fail, weighted reward par interval greedy kyun fail? Counterexample dena strong reasoning hai. Tiny brute-force oracle optimized implementation validate kar sakta hai; same algorithm expected side par copy mat karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Aath minute mein list ki first repeated value nikalo; complexity aur test cases defend karo. Extra memory forbidden ho toh kya badlega?
+**Apply — khud try karo:** Aath minute mein list ki first repeated value nikalo; complexity aur test cases defend karo. Extra memory forbidden ho toh kya badlega?
 
-> **Hint:** Input modify kar sakte ho ya nahi, aur original scan order important hai ya nahi, pehle clear karo.
+> **Hint — chhota ishara:** Input modify kar sakte ho ya nahi, aur original scan order important hai ya nahi, pehle clear karo.
 
-**Answer guide — compare after attempting:** Set scan expected O(n) time, O(n) space mein first-repeat order bachata hai. Empty, distinct aur multiple-repeat cases test karo. Extra memory aur mutation dono allowed na hon toh repeated scans O(n²) time, O(1) extra space lete hain. Sorting order badal deti hai, isliye first-repeat semantics directly preserve nahi hoti.
+**Answer guide — pehle khud karo, phir compare karo:** Set scan expected O(n) time, O(n) space mein first-repeat order bachata hai. Empty, distinct aur multiple-repeat cases test karo. Extra memory aur mutation dono allowed na hon toh repeated scans O(n²) time, O(1) extra space lete hain. Sorting order badal deti hai, isliye first-repeat semantics directly preserve nahi hoti.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 [Princeton's analysis](https://algs4.cs.princeton.edu/14analysis/) aur [graph traversal reference](https://algs4.cs.princeton.edu/41graph/) complexity and BFS properties support karte hain. The mock process and drills original practice material hain.
+
+## Interview mein correction ko clearly communicate karo
+
+Original prompt: “Tumne earliest-start greedy choose kiya, interviewer counterexample deta hai.” Defensive hone ke bajay apna invalid assumption bolo: earliest start maximum count guarantee nahi karta. Example ko trace karo, earliest finish ka exchange argument do aur objective weighted hai ya unweighted confirm karo.
+
+Bolkar reasoning dene ka matlab har thought narrate karna nahi. Contract, invariant, counterexample aur next decision share karo. Hint mila toh acknowledge karo aur usse independent next step derive karke dikhao. Complexity mein sorting, copying aur output cost include karo.
+
+**Practice:** `[1,4), [4,6), [2,5)` par maximum selected meetings aur rooms mix kar diye. **Answer guide:** Dono answers 2 hain, lekin proofs alag: compatible subset versus overlap peak. Same numeric result reasoning sahi hone ka proof nahi. Aisa second input choose karo jahan objectives ke answers differ karein, jaise three mutually disjoint meetings: selected 3, rooms 1.
+
+[Greedy/interval lab](../dsa/13-greedy-intervals.md) aur [advanced structures](../dsa/14-tries-range-bits.md) se unfamiliar follow-ups attempt karo.

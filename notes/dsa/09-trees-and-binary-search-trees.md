@@ -4,7 +4,7 @@ title: Trees and binary search trees
 track: dsa
 order: 9
 level: Intermediate
-minutes: 34
+minutes: 37
 summary: BST ka rule poore subtree par lagta hai; sirf parent-child pair sahi hona kaafi nahi.
 tags: tree, bst, dfs, traversal, balancing
 ---
@@ -255,17 +255,27 @@ AVL tree subtree heights ka difference bound karta hai. Rotations links badalkar
 
 [Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/83cdd705cd418d10d9769b741e34a2b8_MIT6_006F11_lec06.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Local child check poore BST invariant ko prove nahi karti
+
+Root 10, left child 5, uska right child 12 lo. 12 > 5 local relation correct, lekin 12 root ke left subtree mein hoke 10 se bada hai. Validation ancestor bounds propagate kare: left subtree upper bound 10 retain karti hai. Duplicate-key policy bounds strict/non-strict choice decide kare.
+
+Traversal stack space height h par depend karti hai. Balanced tree h≈log n, skewed tree h≈n. BST search O(h) hai; arbitrary unbalanced BST ko guaranteed O(log n) mat bolo.
+
+**Practice:** Empty, skewed, duplicate aur ancestor-bound violation fixtures banao. Delete two-child node mein successor replacement ke baad successor original location remove hona chahiye; key/value payload consistency preserve karo. Tree shape aur stored count updates dono validate karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Root 10, left child 5, aur 5 ka right child 12 hai. Local edges sahi dikh rahe hain; kya yeh valid BST hai?
+**Apply — khud try karo:** Root 10, left child 5, aur 5 ka right child 12 hai. Local edges sahi dikh rahe hain; kya yeh valid BST hai?
 
-> **Hint:** Root ke left subtree ki har value par upper bound 10 lagta hai.
+> **Hint — chhota ishara:** Root ke left subtree ki har value par upper bound 10 lagta hai.
 
-**Answer guide — compare after attempting:** Invalid hai: 12, root 10 ke left subtree mein hai. Validation mein inherited lower/upper bounds ya equivalent global-order check use karo. Duplicate-key policy clearly define karo. Sirf immediate children check karoge toh yeh violation miss hogi.
+**Answer guide — pehle khud karo, phir compare karo:** Invalid hai: 12, root 10 ke left subtree mein hai. Validation mein inherited lower/upper bounds ya equivalent global-order check use karo. Duplicate-key policy clearly define karo. Sirf immediate children check karoge toh yeh violation miss hogi.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

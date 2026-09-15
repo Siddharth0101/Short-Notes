@@ -4,7 +4,7 @@ title: Lambdas streams and Optional
 track: java
 order: 10
 level: Intermediate
-minutes: 19
+minutes: 22
 summary: Stream pipeline transformation dikhaye; hidden shared mutation se reasoning aur parallel execution dono mushkil hote hain.
 tags: streams, lambdas, optional, collectors
 ---
@@ -136,17 +136,27 @@ Transformations mein shared mutable side effects avoid karo. Parallel processing
 
 [Source yahan padho — Dev.java](https://dev.java/learn/api/streams/). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Pipeline definition aur execution ko alag trace karo
+
+Source list par filter/map chain define karne se terminal result immediately produce nahi hota. Terminal operation traversal trigger karti hai. Short-circuit operation fewer elements consume kar sakti hai; side-effect logging count ko business correctness par depend mat karao.
+
+Reduction parallelizable tab hai jab combining operation required algebraic contract satisfy kare. Subtraction associative nahi: `(10−3)−2` aur `10−(3−2)` different hain. Mutable shared accumulator race create kar sakta hai. Collector supplier/accumulator/combiner ki roles samjho, sirf parallelStream add karke speed assume mat karo.
+
+Stream consumed hone ke baad reuse nahi hoti; same source se fresh traversal banao. Source bhi meanwhile mutate ho toh snapshot semantics assume nahi kar sakte. **Practice:** Empty input, one item, duplicates aur parallel/sequential intended equivalence check karo. Order-sensitive result ke liye encounter order aur terminal operation ka contract state karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** External ArrayList mein append karne wali stream ko active users ke names return karne wali pipeline banao. Original ko parallel karna risky kyun hai?
+**Apply — khud try karo:** External ArrayList mein append karne wali stream ko active users ke names return karne wali pipeline banao. Original ko parallel karna risky kyun hai?
 
-> **Hint:** Result stream ke collection operation se nikalo.
+> **Hint — chhota ishara:** Result stream ke collection operation se nikalo.
 
-**Answer guide — compare after attempting:** Active users filter karo, names map karo aur required list contract ke hisaab se collect karo. Ordinary shared ArrayList mein concurrent writes unsafe hain. Result mutable chahiye ya nahi, clear karo: `Stream.toList()` unmodifiable list deta hai.
+**Answer guide — pehle khud karo, phir compare karo:** Active users filter karo, names map karo aur required list contract ke hisaab se collect karo. Ordinary shared ArrayList mein concurrent writes unsafe hain. Result mutable chahiye ya nahi, clear karo: `Stream.toList()` unmodifiable list deta hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

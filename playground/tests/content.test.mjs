@@ -79,12 +79,14 @@ test('Local Markdown links in the study collection resolve', async () => {
   for (const { file, raw } of [
     ...chapters,
     ...(await Promise.all(
-      ['notes/README.md', ...TRACKS.map((track) => `notes/${track.id}/README.md`)].map(
-        async (relative) => ({
-          file: path.join(repo, relative),
-          raw: await readFile(path.join(repo, relative), 'utf8'),
-        }),
-      ),
+      [
+        'notes/README.md',
+        'notes/COVERAGE_AUDIT.md',
+        ...TRACKS.map((track) => `notes/${track.id}/README.md`),
+      ].map(async (relative) => ({
+        file: path.join(repo, relative),
+        raw: await readFile(path.join(repo, relative), 'utf8'),
+      })),
     )),
     {
       file: path.join(repo, 'notes/COURSE_COVERAGE.md'),

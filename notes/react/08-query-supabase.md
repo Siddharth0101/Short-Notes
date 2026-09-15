@@ -4,7 +4,7 @@ title: Server state caching and Supabase integration
 track: react
 order: 8
 level: Advanced
-minutes: 30
+minutes: 33
 summary: Query key cached result ki identity hai; freshness aur authorization alag concerns hain.
 tags: tanstack-query, server-state, caching, supabase, mutations
 ---
@@ -16,6 +16,9 @@ Server state ka owner remote system hai; client ke paas uski temporary cached co
 > **Core takeaway:** Query key cached result ki identity hai; freshness aur authorization alag concerns hain.
 
 ## Query key defines identity
+
+TanStack Query mein object property order identity nahi badalta: `['topics', {track: 'java', page: 1}]` aur same object reversed properties ke saath equivalent hain. Array order matter karta hai. Custom `JSON.stringify` string keys ka behavior alag ho sakta hai. Query function jin changing inputs par depend karti hai, unhe key mein include karo. [Official query-key rules](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys).
+
 
 ```jsx
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -144,17 +147,29 @@ staleTime:60_000 par sixty seconds baad data stale hokar bhi cache mein reh sakt
 
 [Source yahan padho — TanStack Query](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Cache hit ka matlab authorized ya fresh hona nahi
+
+User A ke notes key `['notes', A]` se cached hain. Logout/login B ke baad generic `['notes']` use karna private data mix kar sakta hai. Key scope accurate rakho, logout cleanup deliberate ho aur server har query authorize kare. Supabase browser client use kare toh RLS/policies server-side data boundary hain; client filter security guarantee nahi.
+
+Freshness clock batati hai data kab stale maana jaayega; retention clock batati hai inactive entry memory mein kitni der rahegi. Stale entry immediately disappear ho, necessary nahi. Refetch failure par old data plus error state possible hai; empty result aur failed request ko same [] mat banao.
+
+Mutation response saved record de toh detail cache update kar sakte ho; related lists invalidate karne ka scope alag hai. Two concurrent edits mein old optimistic rollback entire snapshot restore kare toh newer edit overwrite ho sakti hai. Mutation identity/version ya targeted reconciliation chahiye.
+
+**Practice:** A→logout→B, slow response, failed refetch aur duplicate mutation simulate karo. Har case mein cache key, visible owner, displayed version aur recovery action likho. Fast happy path cache correctness ka complete proof nahi hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Do users apni notes ka page 1 maangte hain. `['notes',1]` key mein kya bug hai? Better key do.
+**Apply — khud try karo:** Do users apni notes ka page 1 maangte hain. `['notes',1]` key mein kya bug hai? Better key do.
 
-> **Hint:** Result badalne wale har input ko include karo, user boundary bhi.
+> **Hint — chhota ishara:** Result badalne wale har input ko include karo, user boundary bhi.
 
-**Answer guide — compare after attempting:** `['notes', userId, {page:1, filter}]` jaisi key use karo. Session change par user data clear/isolate karo. Backend ownership independently enforce kare. Correct key collision rokti hai; woh database read authorize nahi karti.
+**Answer guide — pehle khud karo, phir compare karo:** `['notes', userId, {page:1, filter}]` jaisi key use karo. Session change par user data clear/isolate karo. Backend ownership independently enforce kare. Correct key collision rokti hai; woh database read authorize nahi karti.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

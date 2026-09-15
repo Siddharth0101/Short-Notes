@@ -4,7 +4,7 @@ title: Heaps and priority queues
 track: dsa
 order: 10
 level: Intermediate
-minutes: 33
+minutes: 36
 summary: Size-k min-heap ab tak dekhi gayi k largest values rakh sakta hai; root retained values mein sabse chhota hota hai.
 tags: heap, priority-queue, top-k, heapify
 ---
@@ -241,17 +241,27 @@ Observability mein two-heap median pattern aur top-k heaps roz use hote hain: "t
 
 **Answer:** Kyunki operations alag hain. `push` element ko leaf par daal kar **upar** bubble karta hai, aur root tak ka path har element ke liye O(log n) ho sakta hai — aur zyadatar elements leaves par hain, so zyadatar pushes full-height work karte hain. Bottom-up `heapify` har node ko **neeche** sink karta hai, aur zyadatar nodes leaves ke paas hain jahan bache hue levels bahut kam hain. Sum `Σ n·h/2^(h+1)` converge karke O(n) deta hai. Same structure, ulta direction, alag total — isiliye bulk construction aur incremental insertion ko alag cost karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Heap partial order deti hai, fully sorted array nahi
+
+Min-heap parent children se bada nahi. Root minimum hai, lekin left/right subtrees ke arbitrary elements sorted relative order guarantee nahi karte. Pop root remove karke last element top laata hai, phir sift-down local violations repair karta hai.
+
+Top-k largest ke liye size-k min-heap current selected values ka smallest boundary rakhti hai. New value root se smaller/equal ho toh chosen tie contract ke hisaab se discard kar sakte ho. Har input par heap all n values store kare, necessary nahi.
+
+**Practice:** Duplicate values, k=0, k>n aur empty input define karo. Heapify O(n) reasoning node-height distribution se aati hai; n times O(log n) insertion upper bound tight heapify proof nahi. Priority changed ho toh stale entry/update strategy explicit ho, arbitrary array mutation heap invariant tod sakti hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** `[5,1,9,2,8,7]` se teen largest values rakho. End mein root kya hoga? Kya heap array fully sorted hoga?
+**Apply — khud try karo:** `[5,1,9,2,8,7]` se teen largest values rakho. End mein root kya hoga? Kya heap array fully sorted hoga?
 
-> **Hint:** Size k se zyada hote hi retained candidates ka minimum hata do.
+> **Hint — chhota ishara:** Size k se zyada hote hi retained candidates ka minimum hata do.
 
-**Answer guide — compare after attempting:** 7, 8, 9 bachenge; root 7 yani third-largest value hoga. Heap array fully sorted nahi hota, sirf heap property follow karta hai. Positive bounded k ke liye O(n log k) time aur O(k) space. k=0 ka behavior alag define karo.
+**Answer guide — pehle khud karo, phir compare karo:** 7, 8, 9 bachenge; root 7 yani third-largest value hoga. Heap array fully sorted nahi hota, sirf heap property follow karta hai. Positive bounded k ke liye O(n log k) time aur O(k) space. k=0 ka behavior alag define karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

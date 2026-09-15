@@ -4,7 +4,7 @@ title: Frontend performance accessibility and resilience
 track: system-design
 order: 5
 level: Intermediate
-minutes: 24
+minutes: 27
 summary: Performance aur accessibility user ke observable outcomes hain; unke measurable targets define karo.
 tags: performance, accessibility, web-vitals, react
 visual: react-render
@@ -115,17 +115,27 @@ Slow device emulation pe reader profile karo. Keyboard-only search-to-chapter jo
 
 Phir ek budget table apne project ke liye banao: top 8 dependencies ki compressed sizes list karo aur decide karo kaun sa initial bundle mein rehna deserve karta hai. Uske baad artificial long task inject karo (ek 400 ms synchronous loop ek `setInterval` mein) aur button click karke INP degradation observe karo — phir usse `requestIdleCallback` ya chunked loop mein todh kar difference measure karo. Last mein ek API ko 5 s delay par mock karke verify karo ki page partial content dikhata hai, infinite spinner nahi.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Lab score aur real user distribution same evidence nahi
+
+Fast laptop par one page load record controlled baseline hai. Real mobile users ke slow CPU, network, cache state aur interaction paths different hain. Field distribution affected segment identify kare; lab trace reproduce karke cause isolate kare. One average all slow users hide kar sakti hai.
+
+LCP loading, INP responsiveness aur CLS visual stability ke different symptoms hain. Image dimensions reserve karna layout shift reduce kar sakta hai; JS long task ka separate fix chahiye. Virtualization DOM volume reduce karti hai but focus/reading order aur data transfer cost separately validate ho.
+
+**Practice:** Chosen device/network par same interaction before-after record karo. Visual stability, keyboard operability aur content correctness regress na hon. Performance budget product target hai; arbitrary threshold ko har app par universally sufficient guarantee mat bolo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Grid laptop par fast hai, phone par slow aur hard-to-use. Chhoti validation matrix aur success signal do.
+**Apply — khud try karo:** Grid laptop par fast hai, phone par slow aur hard-to-use. Chhoti validation matrix aur success signal do.
 
-> **Hint:** Device capability, network aur input method change karke dekho.
+> **Hint — chhota ishara:** Device capability, network aur input method change karke dekho.
 
-**Answer guide — compare after attempting:** Realistic rows ke saath narrow viewport, slower CPU/network aur keyboard test karo. Input-to-visible-update timing, loading, focus, labels aur error recovery verify karo. Product requirement se target set karke before/after compare karo.
+**Answer guide — pehle khud karo, phir compare karo:** Realistic rows ke saath narrow viewport, slower CPU/network aur keyboard test karo. Input-to-visible-update timing, loading, focus, labels aur error recovery verify karo. Product requirement se target set karke before/after compare karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

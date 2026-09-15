@@ -4,7 +4,7 @@ title: Decisions with if else and boolean logic
 track: javascript
 order: 3
 level: Foundation
-minutes: 12
+minutes: 15
 summary: Condition rule ko code mein likhti hai; boundary values batati hain ki rule sahi implement hua ya nahi.
 tags: fundamentals, js, conditionals
 ---
@@ -47,17 +47,38 @@ Delivery rule likho: total>=500 par free, otherwise 40. Business rule se pehle n
 
 Exact boundary par kaunsi branch chalegi, explain karo. Next loops se statements repeat karenge.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Branch order ko boundary values se prove karo
+
+Maan lo score 0–100 mein hai: 80 ya zyada distinction, 50 ya zyada pass, warna retry. Pehle `score >= 50` check karke pass return kar diya toh score 90 distinction tak kabhi nahi pahunchega. Narrower/high threshold pehle ya explicitly disjoint ranges chahiye.
+
+```js
+function grade(score) {
+  if (!Number.isFinite(score) || score < 0 || score > 100) return 'invalid';
+  if (score >= 80) return 'distinction';
+  if (score >= 50) return 'pass';
+  return 'retry';
+}
+console.log([49, 50, 79, 80, 101].map(grade));
+// ['retry', 'pass', 'pass', 'distinction', 'invalid']
+```
+
+Function aur array syntax upcoming lessons mein detail se aayegi; abhi har input ke branches trace karo. Guard clause invalid state jaldi nikaalti hai. Baaki conditions ko pata hai ki score valid hai, isliye har line mein validation repeat nahi karni.
+
+`&&` aur `||` short-circuit karte hain: right expression zaroori ho tabhi evaluate hoti hai. Yeh sirf boolean return karne ka rule nahi; operands ki values return ho sakti hain. Side effects condition mein chhupane se trace difficult hota hai. **Practice:** Distinction threshold 85 karo; tests mein 84 aur 85 add karke off-by-one decision explain karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Pass hone ke liye score kam-se-kam 60 aur attendance kam-se-kam 75 chahiye. `(60,75)`, `(59,100)`, `(90,74)` classify karo.
+**Apply — khud try karo:** Pass hone ke liye score kam-se-kam 60 aur attendance kam-se-kam 75 chahiye. `(60,75)`, `(59,100)`, `(90,74)` classify karo.
 
-> **Hint:** Dono requirements true honi chahiye; equality bhi accepted hai.
+> **Hint — chhota ishara:** Dono requirements true honi chahiye; equality bhi accepted hai.
 
-**Answer guide — compare after attempting:** `score >= 60 && attendance >= 75` use karo. Sirf first pair pass hai. Har threshold ke neeche, barabar aur upar test karo. OR lagane se ek requirement poori karne wala bhi galti se pass ho jaega.
+**Answer guide — pehle khud karo, phir compare karo:** `score >= 60 && attendance >= 75` use karo. Sirf first pair pass hai. Har threshold ke neeche, barabar aur upar test karo. OR lagane se ek requirement poori karne wala bhi galti se pass ho jaega.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

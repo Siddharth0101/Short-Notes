@@ -4,7 +4,7 @@ title: Event loop promises and resilient fetching
 track: javascript
 order: 15
 level: Advanced
-minutes: 30
+minutes: 33
 summary: Promise reactions current synchronous work ke baad chalti hain; zero-delay timer bhi scheduled work hai.
 tags: async, promises, event-loop, fetch, cancellation
 visual: event-loop
@@ -131,17 +131,37 @@ Search box banao with debounce, abort aur loading/error/empty states. Slow first
 
 **Q. Await loop ko fast banata hai?** Nahi. Har iteration await kare to work sequential hota hai. Concurrency explicitly design karni padti hai.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Promise creation, settlement aur continuation alag moments hain
+
+```js
+const pending = new Promise(resolve => {
+  console.log('executor');
+  resolve(7);
+});
+pending.then(value => console.log('reaction', value));
+console.log('sync-end');
+// executor → sync-end → reaction 7
+```
+
+Promise executor immediately synchronously call hota hai. Resolve outcome settle karta hai; registered reaction current synchronous work ke beech jump nahi karti. Isliye expensive loop promise constructor mein daalne se woh background thread par nahi chala jaata.
+
+`await` ke baad continuation deferred hoti hai, already fulfilled promise ho tab bhi. Error chain mein catch value return kare toh chain recover ho sakti hai; catch se throw kare toh rejection propagate hoti hai. Missing `return fetch(...)` wrapper ko actual operation se disconnect kar sakta hai, aur caller early complete samajh sakta hai.
+
+**Retry boundary:** Upar ka withRetry mechanics-only example har rejection retry karta hai. Production policy ke bina use mat karo: invalid input, permission failure aur abort normally repeat karne se correct nahi honge. Retryable error classify, attempts positive validate, total deadline aur cancellation define karo. Write ka response lost ho toh same operation identity se reconcile karo; new write blindly mat create karo.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Script A log karti hai, zero-delay timer B schedule karti hai, `Promise.resolve().then(() => console.log('C'))` queue karti hai, phir D log karti hai. Order batao.
+**Apply — khud try karo:** Script A log karti hai, zero-delay timer B schedule karti hai, `Promise.resolve().then(() => console.log('C'))` queue karti hai, phir D log karti hai. Order batao.
 
-> **Hint:** Current script finish karo, phir promise reactions drain karo.
+> **Hint — chhota ishara:** Current script finish karo, phir promise reactions drain karo.
 
-**Answer guide — compare after attempting:** Is ordinary single-script case mein A, D, C, B milega. Timer delay zero hone se synchronous code interrupt nahi hota. Letters ratne ke bajay queue boundary samjhao; nayi async sources add hon toh trace dobara banao.
+**Answer guide — pehle khud karo, phir compare karo:** Is ordinary single-script case mein A, D, C, B milega. Timer delay zero hone se synchronous code interrupt nahi hota. Letters ratne ke bajay queue boundary samjhao; nayi async sources add hon toh trace dobara banao.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

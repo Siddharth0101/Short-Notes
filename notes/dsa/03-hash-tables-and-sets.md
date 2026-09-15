@@ -4,7 +4,7 @@ title: Hash tables maps and sets
 track: dsa
 order: 3
 level: Intermediate
-minutes: 29
+minutes: 32
 summary: Hashing extra storage use karke key lookup fast banati hai; speed hash distribution aur load par depend karti hai.
 tags: hashing, map, set, collisions, two-sum
 ---
@@ -193,17 +193,27 @@ Capacity 1,2,4,8 par eight insertions trace karo aur har resize ki copies gino. 
 
 [Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/160b3b5f9da2e03815ca1e6ee0dba62a_MIT6_006F11_lec09.pdf). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Collision handling correctness ka normal path hai
+
+Two unequal keys same hash/bucket mein aa sakti hain. Separate chaining bucket ke candidates compare karti hai; open addressing probe sequence follow karti hai. Collision ko exceptional impossible event mat samjho. Resize/load factor expected performance control karte hain, equality contract replace nahi.
+
+Map object keys identity se distinguish ho sakti hain. Two `{id:1}` objects ko same logical record treat karna ho toh stable primitive ID key use karo. Serialization key choose karte waqt ordering/canonicalization aur collision contract separately reason karo.
+
+**Practice:** Tiny artificial hash function deliberately all keys collide karaye. Insert, overwrite, lookup aur delete still correct hon; performance degrade expected hai. LRU mein map lookup aur linked-list recency update same logical operation ka part hain. Eviction par map/list dono structures consistent rehne chahiye.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** `[4,2,4,2]` ko left-to-right scan karke pehli repeated value nikalo. Insert karne se pehle membership check kyun karoge?
+**Apply — khud try karo:** `[4,2,4,2]` ko left-to-right scan karke pehli repeated value nikalo. Insert karne se pehle membership check kyun karoge?
 
-> **Hint:** Pehla repeat scan order se decide hota hai, sabse chhoti value se nahi.
+> **Hint — chhota ishara:** Pehla repeat scan order se decide hota hai, sabse chhoti value se nahi.
 
-**Answer guide — compare after attempting:** Set rakho. Har value ko pehle check karo; unseen ho toh add karo. Third item par 4 pehle se milta hai, isliye answer 4. Empty ya all-distinct input par chosen no-duplicate result do. Expected time O(n), extra space O(n). Objects ke liye equality ka meaning bhi define karo.
+**Answer guide — pehle khud karo, phir compare karo:** Set rakho. Har value ko pehle check karo; unseen ho toh add karo. Third item par 4 pehle se milta hai, isliye answer 4. Empty ya all-distinct input par chosen no-duplicate result do. Expected time O(n), extra space O(n). Objects ke liye equality ka meaning bhi define karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Source check
 

@@ -4,7 +4,7 @@ title: Components JSX and the render cycle
 track: react
 order: 3
 level: Foundation
-minutes: 24
+minutes: 27
 summary: State rendered tree mein component ki identity se attached hoti hai.
 tags: components, jsx, props, rendering, keys
 visual: react-render
@@ -117,17 +117,29 @@ Topic cards ko list aur grid views mein show karo. Local favorite toggle add kar
 
 **Q. Props aur state mein difference?** Props parent-controlled input hain; state component ki retained memory hai. Dono ko render ke dauraan immutable snapshots ki tarah treat karo.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Key data ka label hi nahi, state identity ka part hai
+
+Rows A aur B dono apna draft text state rakhti hain. A mein typing ke baad list reverse karo. Index keys mein position 0 ki state position 0 par retain ho sakti hai, jo ab B render kar rahi hai. Stable item IDs key banengi toh state logical item ke saath associate ho sakti hai. Key sibling set mein unique honi chahiye; global database uniqueness har case mein React requirement nahi.
+
+Random key har render par new identity banati hai. Isse input focus/draft reset aur effects cleanup/setup ho sakte hain. Kabhi reset intended hota hai: selected user ke form ko user ID key dena old draft clear kar sakta hai. Pehle UX rule decide karo, phir key.
+
+Component definition parent ke andar create karoge toh each render new function type create ho sakti hai; accidental remount ka source ban sakti hai. Reusable component top-level define karo. Conditional rendering mein `items.length && <List />` zero number render kar sakta hai; explicit boolean comparison clearer hai.
+
+**Practice:** A ka draft edit → sort → filter → restore. Har step par desired draft retention likho. Unmount ke baad state retain chahiye toh state ko surviving owner/store mein lift karna padega; key alone deleted subtree ka data store nahi hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Editable rows index keys use karti hain. Row B mein draft type karke beginning mein row A add karo. Misplaced draft ka reason aur fix batao.
+**Apply — khud try karo:** Editable rows index keys use karti hain. Row B mein draft type karke beginning mein row A add karo. Misplaced draft ka reason aur fix batao.
 
-> **Hint:** Positions badalti hain, lekin data items ki identities wahi rehti hain.
+> **Hint — chhota ishara:** Positions badalti hain, lekin data items ki identities wahi rehti hain.
 
-**Answer guide — compare after attempting:** Index key existing state ko position se jodti hai; prepend ke baad us position par doosra item hota hai. Stable data IDs sibling keys banao. Prepend/reorder/delete check karo. Random key har render par remount karke state lose karwa sakti hai.
+**Answer guide — pehle khud karo, phir compare karo:** Index key existing state ko position se jodti hai; prepend ke baad us position par doosra item hota hai. Stable data IDs sibling keys banao. Prepend/reorder/delete check karo. Random key har render par remount karke state lose karwa sakti hai.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

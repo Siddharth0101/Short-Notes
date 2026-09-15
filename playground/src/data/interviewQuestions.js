@@ -1,3 +1,6 @@
+import { finalInterviewQuestions } from './finalInterviewQuestions.js';
+import { extensionQuestions } from './extensionQuestions.js';
+import { coverageQuestions } from './coverageQuestions.js';
 import { courseQuestions } from './courseQuestions.js';
 import { questionTopic } from './interviewTopics.js';
 import { requestedQuestions, answerAdditions } from './requestedQuestions.js';
@@ -1206,6 +1209,9 @@ export const interviewQuestions = [
     followUp: "More consumers add karna har growing-lag problem ka answer kyun nahi?",
     tags: ['backpressure', 'queues', 'resilience'],
   },
+  ...finalInterviewQuestions,
+  ...extensionQuestions,
+  ...coverageQuestions,
   ...courseQuestions,
   ...advancedQuestions,
   ...scenarioQuestions,

@@ -4,7 +4,7 @@ title: Foundations checkpoint and reliable input handling
 track: javascript
 order: 8
 level: Foundation
-minutes: 22
+minutes: 25
 summary: Validation mein missing input, malformed input aur valid zero ko alag samjho.
 tags: variables, types, coercion, functions, fundamentals
 ---
@@ -94,17 +94,29 @@ Discount calculator likho jo blank input, negative quantity, zero quantity aur i
 
 **Q. `null` aur `undefined` mein difference?** Undefined usually missing/uninitialized value ko represent karta hai; null explicitly absent value communicate karta hai. API contract define karta hai ki kaunsa use hoga.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Expression ka result aur side effect alag trace karo
+
+`let score=2; const before=score++;` ke baad before=2 aur score=3. Postfix expression old value return karti hai aur binding increment bhi karti hai. `const after=++score;` ab score=4 aur after=4 deta hai. Readability ke liye business calculation mein increments separate statements rakhna often clearer hai.
+
+`null` aur `undefined` ko accidental interchangeable mat banao. Patch API mein missing field ka matlab “unchanged” aur explicit null ka matlab “clear” ho sakta hai. Agar destructuring/default logic dono ko collapse kar de toh user ki intent kho sakti hai. Default parameter undefined par apply hota hai, null par nahi.
+
+Optional chaining sirf missing intermediate access ko guard karti hai. `user?.profile?.name` undefined de sakta hai; valid nonblank name ka proof nahi. `?.` har malformed type ko valid nahi banata aur programmer errors chupane ke liye blanket chain add karna debugging weak karta hai.
+
+**Mini drill:** `0 || 10`, `0 ?? 10`, `null ?? 10` ke outputs 10,0,10 explain karo. Operator ka naam bolne se pehle application rule bolo: missing data replace karni hai ya saari falsy values?
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Text field se nonnegative whole-number lesson count validate karo. `''`, `'  '`, `'0'`, `'3.5'`, `'four'` classify karo.
+**Apply — khud try karo:** Text field se nonnegative whole-number lesson count validate karo. `''`, `'  '`, `'0'`, `'3.5'`, `'four'` classify karo.
 
-> **Hint:** Pehle trimmed blank check, phir numeric conversion, integer aur range check karo.
+> **Hint — chhota ishara:** Pehle trimmed blank check, phir numeric conversion, integer aur range check karo.
 
-**Answer guide — compare after attempting:** Blank inputs missing hain; `'0'` valid hai; `'3.5'` aur `'four'` invalid hain. Blanks reject karke Number, Number.isInteger aur >=0 check use karo. App ko maximum chahiye toh woh bhi define karo.
+**Answer guide — pehle khud karo, phir compare karo:** Blank inputs missing hain; `'0'` valid hai; `'3.5'` aur `'four'` invalid hain. Blanks reject karke Number, Number.isInteger aur >=0 check use karo. App ko maximum chahiye toh woh bhi define karo.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

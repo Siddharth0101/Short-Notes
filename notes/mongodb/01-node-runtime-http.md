@@ -4,7 +4,7 @@ title: Node runtime HTTP modules and streams
 track: mongodb
 order: 1
 level: Foundation
-minutes: 27
+minutes: 30
 summary: Event loop multiple waits coordinate kar sakta hai; synchronous CPU calculation phir bhi usse block karti hai.
 tags: node, http, npm, streams, event-loop, modules
 visual: request-flow
@@ -136,17 +136,27 @@ Input file exist honi chahiye; output is exercise ka owned file hai. Earlier sta
 
 [Source yahan padho — Node.js](https://nodejs.org/en/learn/modules/backpressuring-in-streams). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Event loop free hona aur service capacity available hona alag hai
+
+Async filesystem/network API wait host/runtime manage kar sakta hai; callback ka heavy JSON processing phir JavaScript thread block kar sakta hai. Promise wrapper CPU work ko automatically separate thread nahi deti. Large request body unlimited collect karoge toh memory pressure bhi create hogi.
+
+Stream writable false return kare toh producer ko drain tak pacing respect karni chahiye. Ignore karke write continue karoge toh buffering grow ho sakti hai. End, close aur error different lifecycle signals hain; premature disconnect cleanup own karo.
+
+**Practice:** Slow destination ke saath bounded export memory observe karo, phir destination error inject karo. Source/transform/destination cleanup verify karo. Throughput badhana ho toh CPU profiling, I/O latency aur downstream limits distinguish karo; event loop nonblocking label unlimited capacity ka claim nahi.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** Endpoint response se pehle long synchronous calculation karta hai. Unrelated lightweight requests slow kyun hoti hain? Cause isolate karne ka experiment do.
+**Apply — khud try karo:** Endpoint response se pehle long synchronous calculation karta hai. Unrelated lightweight requests slow kyun hoti hain? Cause isolate karne ka experiment do.
 
-> **Hint:** Async networking synchronous calculation ko parallel nahi banati.
+> **Hint — chhota ishara:** Async networking synchronous calculation ko parallel nahi banati.
 
-**Answer guide — compare after attempting:** Calculation ke saath aur bina concurrent lightweight requests compare karo; event-loop delay measure karo. Suitable CPU work bounded worker queue ya separate execution service ko do. Handler ko async likhne se uski synchronous body event loop se bahar nahi jaati.
+**Answer guide — pehle khud karo, phir compare karo:** Calculation ke saath aur bina concurrent lightweight requests compare karo; event-loop delay measure karo. Suitable CPU work bounded worker queue ya separate execution service ko do. Handler ko async likhne se uski synchronous body event loop se bahar nahi jaati.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 

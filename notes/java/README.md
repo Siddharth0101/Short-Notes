@@ -49,3 +49,13 @@ Thread safety, virtual threads aur bounded resources seekho.
 16. [Java concurrency under real resource limits](16-concurrency-production.md)
 
 **Stage checkpoint — khud karke dikhao:** Race-safe operation dikhao aur backpressure ki need explain karo.
+
+## Stage 5: Types, schema aur object design evolve karo
+
+Finite variants, metadata, compatible migrations aur invariant-based low-level design practice karo.
+
+17. [Java type modeling — enums, sealed types aur annotations](17-type-metadata.md)
+18. [SQL schema design aur safe migrations — data ka contract evolve karo](18-schema-migrations.md)
+19. [Low-level design — requirements se classes aur invariants tak](19-low-level-design.md)
+
+**Stage checkpoint — khud karke dikhao:** Immutable model, safe migration aur concurrent loan claim ka contract verify karo.

@@ -1,5 +1,7 @@
 # Course coverage aur padhne ka order
 
+[Latest repo gap audit aur additions](COVERAGE_AUDIT.md)
+
 Padhne ka order [course syllabus](README.md) mein hai. Har course ke numbered stages, prerequisites, lessons aur checkpoints follow karo. Stable chapter IDs bookmarks/links preserve karte hain.
 
 JavaScript mein variables se async/tooling, Java mein first program se concurrency, React mein JSX se production tak seekho. DSA mein basic structures se patterns, recursion, trees, graphs aur DP tak badho. Node/MongoDB mein HTTP se deployment; system design mein requirements, frontend/backend aur integrated cases padho. Har stage previous foundation par build hoti hai.

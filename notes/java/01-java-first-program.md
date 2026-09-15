@@ -4,7 +4,7 @@ title: First Java program variables and primitive types
 track: java
 order: 1
 level: Foundation
-minutes: 12
+minutes: 15
 summary: Java variables ka declared type hota hai; arithmetic ka result operands ke types se decide hota hai.
 tags: fundamentals, java, first, program
 ---
@@ -54,17 +54,29 @@ Learner name badlo aur completed=3 rakho. Do add karke output predict karo. hour
 
 Compilation error aur running program ke wrong numeric result ka difference samjhao. Next lesson mein operators aur conditions se calculations aur branches choose karenge.
 
+## Depth walkthrough — andar kya ho raha hai?
+
+### Source, bytecode aur running process ko alag pehchano
+
+Main.java human-readable source hai. `javac Main.java` compile karke Main.class bytecode banata hai. `java Main` runtime ko class ka entry point execute karne ko kehta hai. File edit karke recompile nahi ki toh old class execute ho sakti hai; output mismatch mein pehle yeh simple cause check karo.
+
+Compile error mein program valid bytecode tak nahi pahunchta: missing semicolon, wrong type ya unresolved name example hain. Runtime exception valid compiled program ke execution mein aa sakti hai, jaise null object par method call. Logic bug dono steps pass karke wrong answer de sakti hai. Error category identify karne se debugging direction clear hoti hai.
+
+`main` ke statements order mein execute hote hain. `System.out.println` observable output deta hai; output correct hona entire application correct hone ka proof nahi. Entry point se called method, uske arguments aur returned result trace karo.
+
+**Practice:** File mein printed text badlo, old class run karke mismatch dekho, phir compile/run karo. JDK executable version aur chosen language release consistent rakho. IDE run configuration kabhi different module/class chala sakti hai; command-line reproduction ambiguity kam karti hai.
+
 ## Revision and practice lab — khud karke samjho
 
-**Recall:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
+**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
 
-**Apply:** `7 / 2`, `7 / 2.0` aur `double x = 7 / 2;` predict karo. Last assignment surprising kyun hai?
+**Apply — khud try karo:** `7 / 2`, `7 / 2.0` aur `double x = 7 / 2;` predict karo. Last assignment surprising kyun hai?
 
-> **Hint:** Division pehle hoti hai, destination variable mein assignment baad mein.
+> **Hint — chhota ishara:** Division pehle hoti hai, destination variable mein assignment baad mein.
 
-**Answer guide — compare after attempting:** Answers 3, 3.5 aur 3.0 hain. Integer operands integer division karte hain, fractional part truncate hota hai. Baad mein double mein store karne se lost fraction wapas nahi aata. Fraction chahiye toh kam-se-kam ek operand floating-point rakho.
+**Answer guide — pehle khud karo, phir compare karo:** Answers 3, 3.5 aur 3.0 hain. Integer operands integer division karte hain, fractional part truncate hota hai. Baad mein double mein store karne se lost fraction wapas nahi aata. Fraction chahiye toh kam-se-kam ek operand floating-point rakho.
 
-**Exit check:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
 
 ## Sources — aur padhne ke liye
 
