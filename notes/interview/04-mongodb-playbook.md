@@ -136,3 +136,7 @@ Handoff mein test command, isolated reproduction, fixture identity, expected/act
 **Practice:** Graceful shutdown ke dauran 500 errors aati hain aur teammate DB pehle close karta hai. **Answer guide:** Existing requests abhi DB use kar rahi hain. New work drain, bounded active-request grace aur uske baad resource close sequence propose karo. Hung dependency ka deadline case bhi test karo. Report mein “server stopped” ke saath accepted operation ka outcome aur remaining recovery work likho.
 
 [Node testing aur shutdown](../mongodb/09-testing-shutdown.md) se real local request evidence banao.
+
+## Machine coding — implementation round bhi karo
+
+[Machine coding practice bank](../MACHINE_CODING_PRACTICE.md) mein apne subject ke do P1 rounds se shuru karo. Prompt ke acceptance checks answer reveal se pehle attempt karo; timebox ke baad demo, scorecard aur interviewer follow-up complete karo. Java backend ke liye Java aur Spring Boot, MongoDB ke liye Node aur MongoDB, frontend ke liye HTML/CSS aur React/Redux ke rounds bhi lo.

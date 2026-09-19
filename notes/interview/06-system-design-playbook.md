@@ -147,3 +147,7 @@ Short decision record mein requirement, options, chosen tradeoff, rejected alter
 **Practice:** Three replicas each 10-token bucket ko global limit 10 bola gaya. **Answer guide:** Initial total credits 30 hain. Shared atomic state ya total-10 quota allocation propose karo. Store outage, hot key aur replica failover ki policy add karo. “Redis use karenge” complete answer nahi; atomic operation aur fallback ka contract chahiye.
 
 [Consistency/rate-limiting chapter](../system-design/13-consistency-limits.md) se failure table aur observable acceptance checks banao.
+
+## Machine coding — implementation round bhi karo
+
+[Machine coding practice bank](../MACHINE_CODING_PRACTICE.md) mein apne subject ke do P1 rounds se shuru karo. Prompt ke acceptance checks answer reveal se pehle attempt karo; timebox ke baad demo, scorecard aur interviewer follow-up complete karo. Java backend ke liye Java aur Spring Boot, MongoDB ke liye Node aur MongoDB, frontend ke liye HTML/CSS aur React/Redux ke rounds bhi lo.

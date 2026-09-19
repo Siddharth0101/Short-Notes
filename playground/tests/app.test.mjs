@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
 import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
+import { questionTopic } from '../src/data/interviewTopics.js';
 
 const dom = new JSDOM('<!doctype html><div id="root"></div>', {
   url: 'http://localhost/',
@@ -241,6 +242,62 @@ test('Interview questions reveal answers, mark confidence, and filter practiced 
     document.querySelectorAll('.question-card').length,
     Math.min(javaTotal - 1, initialLimit),
   );
+});
+
+test('Machine coding drills are searchable in every subject with requirements visible before answers', async () => {
+  localStorage.clear();
+  await mount('/interview');
+  const drills = interviewQuestions.filter((item) => item.tags.includes('machine-coding'));
+  const topics = [...new Set(drills.map(questionTopic))];
+  async function search(value) {
+    const input = document.querySelector('[aria-label="Search interview questions"]');
+    await React.act(async () => {
+      Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype, 'value').set.call(
+        input,
+        value,
+      );
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+  await search('machine-coding');
+  assert.match(
+    document.querySelector('.results-heading').textContent,
+    new RegExp(`\\b${drills.length} questions`),
+  );
+  for (const topic of topics) {
+    await select(document.querySelector('[aria-label="Interview topic"]'), topic);
+    const expected = drills.filter((item) => questionTopic(item) === topic);
+    assert.match(
+      document.querySelector('.results-heading').textContent,
+      new RegExp(`\\b${expected.length} questions`),
+    );
+    const cards = [...document.querySelectorAll('.question-card')];
+    assert.equal(cards.length, Math.min(12, expected.length));
+    assert.deepEqual(
+      cards.map((card) => card.querySelector('h2').textContent),
+      expected.slice(0, 12).map((q) => q.question),
+    );
+    for (const [index, card] of cards.entries()) {
+      // Preserve older machine-coding cards that predate the structured drill format.
+      if (!expected[index].id.startsWith('iq-machine-')) continue;
+      assert.match(card.textContent, /Build contract/);
+      assert.match(card.textContent, /Acceptance checks/);
+      assert.doesNotMatch(card.textContent, /Hint —|Answer guide/);
+    }
+  }
+  await click(button('Answer dekho'));
+  assert.match(document.querySelector('.question-answer').textContent, /Hint —/);
+  assert.match(document.querySelector('.question-answer').textContent, /Answer guide/);
+  await search('practice-first');
+  for (const topic of topics) {
+    await select(document.querySelector('[aria-label="Interview topic"]'), topic);
+    const expected = drills.filter((item) => item.topic === topic && item.priority === 'P1');
+    assert.match(
+      document.querySelector('.results-heading').textContent,
+      new RegExp(`\\b${expected.length} questions`),
+    );
+    assert.equal(document.querySelectorAll('.question-card').length, expected.length);
+  }
 });
 
 test('Visual controls step, reset, seek, and exercise missing binary-search targets', async () => {

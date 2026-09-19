@@ -80,7 +80,7 @@ Har attempt ko 0/1/2 do: concept, implementation/decision, testing/failure, expl
 
 Original sources aur version assumptions related chapters mein hain. Neeche selected answers existing app bank se synchronized hain; bank mein edit hoga toh guide bhi regenerate karni hogi.
 
-Review date: 2026-09-15. Full bank: 323 questions. Priority set: 52.
+Review date: 2026-09-15. Full bank: 444 questions. Priority set: 52.
 
 ## Selected questions — seedha topic par jao
 

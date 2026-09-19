@@ -73,3 +73,7 @@ UI changes par light/dark themes, narrow viewport, keyboard, long code blocks au
 ## Priority interview guide maintain karna
 
 Final revision selection `notes/interview-priorities.json` mein hai. Canonical answers question bank mein edit karo; naya gap-focused set `playground/src/data/finalInterviewQuestions.js` hai. Hinglish introduction `scripts/templates/interview-priority-intro.md` mein rakho. `node scripts/sync-priority-interviews.mjs` se guide regenerate karo; `npm run check` (playground directory) selection, chapter links aur generated content sync verify karta hai.
+
+## Machine coding practice maintain karna
+
+Canonical 121 drills (har subject mein 11, including 4 P1) `playground/src/data/machineCodingQuestions.js` mein hain aur main interview bank mein import hote hain. Har drill ka stable ID, topic, noteId, minutes, priority (P1/P2), build contract, observable acceptance checks, hint, answer guide aur follow-up preserve karo. P1 learning-based practice shortlist hai; employer-frequency claim nahi. `node scripts/sync-machine-coding.mjs` se offline guide regenerate karo; bank total ke liye interview aur priority generators bhi chalao. `npm run check` generated guide sync verify karta hai.

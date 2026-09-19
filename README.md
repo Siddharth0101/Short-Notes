@@ -4,11 +4,13 @@ Yahan concepts **simple Roman Hinglish** mein samjhaye hain. Technical terms aur
 
 [Har chapter ka depth review](notes/DEPTH_REVIEW.md): 108 chapters mein detailed Hinglish walkthroughs, execution traces aur failure-case practice.
 
-**108 chapters · 43 course stages · 142 linked source examples · 323 interview questions · 20 interactive visuals.**
+**108 chapters · 43 course stages · 142 linked source examples · 444 interview questions · 20 interactive visuals.**
 
 Shuru karne ke liye [poora syllabus](notes/README.md) kholo. Padhai ka tareeka [study guide](notes/STUDY_GUIDE.md) mein aur difficult terms ke easy meanings [Hinglish glossary](notes/GLOSSARY_HINGLISH.md) mein milenge.
 
 Interview ke liye [52 priority questions aur preparation plan](notes/INTERVIEW_PRIORITY_GUIDE.md) kholo.
+
+**Machine coding practice:** [121 build rounds aur 44 top-priority questions](notes/MACHINE_CODING_PRACTICE.md) — har subject ke 11 rounds, 121 follow-ups, timeboxes, acceptance checks aur answer guides. App mein `machine-coding` search karo.
 
 Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho.
 

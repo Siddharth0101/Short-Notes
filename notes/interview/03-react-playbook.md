@@ -144,3 +144,7 @@ Apne contribution aur team decisions clearly separate bolo. Snapshot pass ko acc
 **Practice:** Reviewer kehta hai ki test implementation details se coupled hai. **Answer guide:** Hook setter count/class selector assertion dikhao, phir user interaction plus visible status/accessible control ke assertion mein rewrite karo. Refactor ke baad behavior same ho toh test stable rehna chahiye. Actual UX wording intentional contract ho sakti hai; har string change ko meaningless mat bolo.
 
 [React testing lab](../react/12-testing-accessibility.md) se positive, rejected aur retry paths practice karo.
+
+## Machine coding — implementation round bhi karo
+
+[Machine coding practice bank](../MACHINE_CODING_PRACTICE.md) mein apne subject ke do P1 rounds se shuru karo. Prompt ke acceptance checks answer reveal se pehle attempt karo; timebox ke baad demo, scorecard aur interviewer follow-up complete karo. Java backend ke liye Java aur Spring Boot, MongoDB ke liye Node aur MongoDB, frontend ke liye HTML/CSS aur React/Redux ke rounds bhi lo.

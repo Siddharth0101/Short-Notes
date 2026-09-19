@@ -1,3 +1,4 @@
+import { machineCodingQuestions } from './machineCodingQuestions.js';
 import { finalInterviewQuestions } from './finalInterviewQuestions.js';
 import { extensionQuestions } from './extensionQuestions.js';
 import { coverageQuestions } from './coverageQuestions.js';
@@ -1216,6 +1217,7 @@ export const interviewQuestions = [
   ...advancedQuestions,
   ...scenarioQuestions,
   ...requestedQuestions,
+  ...machineCodingQuestions,
 ]
   .map((item) =>
     item.track === 'java' &&

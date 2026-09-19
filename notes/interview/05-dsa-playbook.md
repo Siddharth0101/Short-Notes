@@ -152,3 +152,7 @@ Bolkar reasoning dene ka matlab har thought narrate karna nahi. Contract, invari
 **Practice:** `[1,4), [4,6), [2,5)` par maximum selected meetings aur rooms mix kar diye. **Answer guide:** Dono answers 2 hain, lekin proofs alag: compatible subset versus overlap peak. Same numeric result reasoning sahi hone ka proof nahi. Aisa second input choose karo jahan objectives ke answers differ karein, jaise three mutually disjoint meetings: selected 3, rooms 1.
 
 [Greedy/interval lab](../dsa/13-greedy-intervals.md) aur [advanced structures](../dsa/14-tries-range-bits.md) se unfamiliar follow-ups attempt karo.
+
+## Machine coding — implementation round bhi karo
+
+[Machine coding practice bank](../MACHINE_CODING_PRACTICE.md) mein apne subject ke do P1 rounds se shuru karo. Prompt ke acceptance checks answer reveal se pehle attempt karo; timebox ke baad demo, scorecard aur interviewer follow-up complete karo. Java backend ke liye Java aur Spring Boot, MongoDB ke liye Node aur MongoDB, frontend ke liye HTML/CSS aur React/Redux ke rounds bhi lo.

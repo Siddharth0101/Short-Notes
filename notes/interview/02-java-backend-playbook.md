@@ -145,3 +145,7 @@ Evidence packet mein same learner/course ke two concurrent requests, successful 
 **Practice:** Schema migration ke risk par teammate disagrees. Do-minute response do. **Answer guide:** Unki concern restate karo, mixed-version deployment ki requirement agree karo, direct rename versus expand/backfill/contract compare karo aur smallest staging experiment propose karo. “Meri approach best hai” ke bajay acceptance criteria par agreement banao. Explain karo ki old app rollback aur dropped-data recovery alag problems hain.
 
 [Schema migrations](../java/18-schema-migrations.md) aur [type modeling](../java/17-type-metadata.md) se concrete examples lo.
+
+## Machine coding — implementation round bhi karo
+
+[Machine coding practice bank](../MACHINE_CODING_PRACTICE.md) mein apne subject ke do P1 rounds se shuru karo. Prompt ke acceptance checks answer reveal se pehle attempt karo; timebox ke baad demo, scorecard aur interviewer follow-up complete karo. Java backend ke liye Java aur Spring Boot, MongoDB ke liye Node aur MongoDB, frontend ke liye HTML/CSS aur React/Redux ke rounds bhi lo.

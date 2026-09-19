@@ -151,3 +151,7 @@ Do-minute answer ka order: context → expected contract → first wrong assumpt
 **Practice:** Ek bug handoff likho: steps, expected/actual, minimal input, runtime, failed hypothesis aur next check. **Answer guide:** “Async broken hai” weak handoff hai. “B resolve ke baad A response list overwrite karta hai; controlled promise test reproduces; current request identity guard missing” actionable hai. Reviewer ko exact failed contract aur verification path milna chahiye.
 
 [Testing workflow](../javascript/18-testing-workflow.md) se reproducible regression banane ki practice karo.
+
+## Machine coding — implementation round bhi karo
+
+[Machine coding practice bank](../MACHINE_CODING_PRACTICE.md) mein apne subject ke do P1 rounds se shuru karo. Prompt ke acceptance checks answer reveal se pehle attempt karo; timebox ke baad demo, scorecard aur interviewer follow-up complete karo. Java backend ke liye Java aur Spring Boot, MongoDB ke liye Node aur MongoDB, frontend ke liye HTML/CSS aur React/Redux ke rounds bhi lo.

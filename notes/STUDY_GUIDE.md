@@ -1,5 +1,7 @@
 # Aise padho ki concept khud samjha sako
 
+[Machine coding practice](MACHINE_CODING_PRACTICE.md): har subject ke timeboxed rounds, P1 shortlist aur 20-point scorecard.
+
 [Course syllabus](README.md) se prerequisites aur lesson order follow karo. Har chapter ka **Mental model — simple soch** pehle padho. **Core takeaway** main mechanism ya rule hai. Examples ko dry-run karke **Revision and practice lab — khud karke samjho** attempt karo.
 
 Roman Hindi + English technical terms use hue hain: code mein `return`, `class`, `Promise`, `JOIN` wahi rahenge, explanation conversational Hinglish mein hogi. Kisi term ka meaning unclear ho toh [simple glossary](GLOSSARY_HINGLISH.md) dekho.
