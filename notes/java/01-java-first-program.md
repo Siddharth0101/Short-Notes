@@ -4,80 +4,25 @@ title: First Java program variables and primitive types
 track: java
 order: 1
 level: Foundation
-minutes: 15
-summary: Java variables ka declared type hota hai; arithmetic ka result operands ke types se decide hota hai.
+minutes: 1
+summary: JDK — Java develop karne ke tools; JVM — bytecode chalane ka runtime.
 tags: fundamentals, java, first, program
 ---
 
-## Mental model — simple soch
+## Quick revision
 
-Java source pehle bytecode mein compile hota hai, phir JVM use execute karti hai. JDK mein javac jaise development tools milte hain. Pehle ek program run karo aur ek value change karo. Is first example ke liye Spring, Maven ya collections ki need nahi. Course mein Java 21-compatible syntax use hui hai, jab tak chapter alag version na bataye.
-
-> **Core takeaway:** Java variables ka declared type hota hai; arithmetic ka result operands ke types se decide hota hai.
-
-## Compile and run
-
-Isse Main.java mein save karo. Public class ka naam aur filename same rakho.
-
-```java
-public class Main {
-    public static void main(String[] args) {
-        String learner = "Asha";
-        int completed = 0;
-        boolean enrolled = true;
-        completed = completed + 1;
-        System.out.println(learner);
-        System.out.println(completed);
-        System.out.println(enrolled);
-    }
-}
-```
-
-```text
-javac Main.java
-java Main
-```
-
-Is example ka entry point main hai. Andar statements top-to-bottom padho. String text, int whole numbers aur boolean true/false rakhta hai. Declared type decide karta hai kaunsi assignments/operations valid hain. completed ko text doge toh compile error aaegi; variable ka declared type nahi badlega.
-
-## Assignment and naming
-
-Declaration naam aur type introduce karti hai; initialization first value deti hai; reassignment baad mein value badalti hai. Meaningful names rakho; Java case-sensitive hai. Local variable read karne se pehle assign honi chahiye. final reassignment rokta hai; reference ke through reachable poora object graph freeze nahi karta.
-
-Java ke eight primitives byte, short, int, long, float, double, char aur boolean hain. String primitive nahi hai. Pehle int, double, boolean se practice karo; ranges/conversions later foundations review mein aayengi. Useful calculation likhne se pehle entire JVM ratna zaroori nahi.
-
-## Practice
-
-Learner name badlo aur completed=3 rakho. Do add karke output predict karo. hoursStudied naam ka double print karo. completed ko string assign karke compiler error padho, phir correct type restore karo. Initial value hata kar dekho ki unassigned local read kyun reject hoti hai.
-
-## Aage badhne se pehle check karo
-
-Compilation error aur running program ke wrong numeric result ka difference samjhao. Next lesson mein operators aur conditions se calculations aur branches choose karenge.
-
-## Depth walkthrough — andar kya ho raha hai?
-
-### Source, bytecode aur running process ko alag pehchano
-
-Main.java human-readable source hai. `javac Main.java` compile karke Main.class bytecode banata hai. `java Main` runtime ko class ka entry point execute karne ko kehta hai. File edit karke recompile nahi ki toh old class execute ho sakti hai; output mismatch mein pehle yeh simple cause check karo.
-
-Compile error mein program valid bytecode tak nahi pahunchta: missing semicolon, wrong type ya unresolved name example hain. Runtime exception valid compiled program ke execution mein aa sakti hai, jaise null object par method call. Logic bug dono steps pass karke wrong answer de sakti hai. Error category identify karne se debugging direction clear hoti hai.
-
-`main` ke statements order mein execute hote hain. `System.out.println` observable output deta hai; output correct hona entire application correct hone ka proof nahi. Entry point se called method, uske arguments aur returned result trace karo.
-
-**Practice:** File mein printed text badlo, old class run karke mismatch dekho, phir compile/run karo. JDK executable version aur chosen language release consistent rakho. IDE run configuration kabhi different module/class chala sakti hai; command-line reproduction ambiguity kam karti hai.
-
-## Revision and practice lab — khud karke samjho
-
-**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
-
-**Apply — khud try karo:** `7 / 2`, `7 / 2.0` aur `double x = 7 / 2;` predict karo. Last assignment surprising kyun hai?
-
-> **Hint — chhota ishara:** Division pehle hoti hai, destination variable mein assignment baad mein.
-
-**Answer guide — pehle khud karo, phir compare karo:** Answers 3, 3.5 aur 3.0 hain. Integer operands integer division karte hain, fractional part truncate hota hai. Baad mein double mein store karne se lost fraction wapas nahi aata. Fraction chahiye toh kam-se-kam ek operand floating-point rakho.
-
-**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+- JDK — Java develop karne ke tools; JVM — bytecode chalane ka runtime.
+- Compile/run — `javac Main.java` → `java Main`.
+- `main` — standard entry point `public static void main(String[] args)`.
+- Class/file — public top-level class ka naam filename se match karo.
+- Primitive — direct primitive value; reference — object ka reference ya null.
+- Variable — declared type compatible value hi assign karo.
+- `println` — output ke baad newline; `print` — same line.
 
 ## Sources — aur padhne ke liye
 
-[Dev.java language basics](https://dev.java/learn/language-basics/) mein Java declarations aur syntax aur padho.
+- [Dev.java language basics](https://dev.java/learn/language-basics/)
+
+## Code practice
+
+- [Examples — jab code revise karna ho](../../examples/java/01-java-first-program.md)

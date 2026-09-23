@@ -1,4 +1,4 @@
-# Poora course syllabus — yahan se shuru karo
+# Revision syllabus — subject chuno
 
 Har subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se number order follow karo; stage checkpoint khud complete karke aage badho. App, filenames aur index ka order same hai. Numbered source folders related examples/reference hain.
 
@@ -6,7 +6,7 @@ Har subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se num
 
 Instructor context aur lecture mapping ki limits [course coverage](COURSE_COVERAGE.md) mein padho.
 
-Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](STUDY_GUIDE.md) padho.
 
 ## JavaScript
 

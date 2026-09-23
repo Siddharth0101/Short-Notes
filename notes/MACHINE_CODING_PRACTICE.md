@@ -104,9 +104,18 @@ Browser mein HTML aur vanilla JS use karo. Name, email, password aur consent wal
 - Valid submit ek request bheje; reject par filled values bachein aur retry chale.
 - Sirf keyboard se consent aur submit operate ho; success status readable ho.
 
-**Hint — atakne par padho:** Field validity, request status aur focus destination ko alag socho.
+**Hint:**
+- Field validity, request status aur focus destination ko alag socho.
 
-**Answer guide — attempt ke baad compare karo:** Native labels/input types se shuru karo; submit handler validity check karke invalid field par focus bheje. Error IDs ko field descriptions se connect karo. Idle/pending/success/error status rakho, pending guard aur disabled submit dono lagao. finally mein guard release karo. Password ko logs/storage mein mat rakho. Sirf red border error explain nahi karta; text aur accessible status bhi do.
+**Answer guide:**
+- Native labels/input types se shuru karo
+- submit handler validity check karke invalid field par focus bheje.
+- Error IDs ko field descriptions se connect karo.
+- Idle/pending/success/error status rakho, pending guard aur disabled submit dono lagao.
+- finally mein guard release karo.
+- Password ko logs/storage mein mat rakho.
+- Sirf red border error explain nahi karta
+- text aur accessible status bhi do.
 
 **Interviewer follow-up:** Network timeout ke baad duplicate submission ko server par kaise pehchanoge?
 
@@ -128,9 +137,16 @@ Browser HTML/JS mein delete-confirmation dialog banao. Open, Cancel aur Confirm 
 - Escape/Cancel delete callback na chalayein; Confirm exactly once chalaye.
 - Close par existing trigger ko focus mile; trigger delete ho gaya ho toh list heading ko mile.
 
-**Hint — atakne par padho:** Native modal dialog aur explicit focus-return policy evaluate karo.
+**Hint:**
+- Native modal dialog aur explicit focus-return policy evaluate karo.
 
-**Answer guide — attempt ke baad compare karo:** Dialog ka accessible name do, modal opening use karo aur safe default Cancel par focus set karo. Confirm aur cancel paths separate rakho; close handler mein deletion mat rakho warna Escape bhi delete karega. Closing ke baad trigger connected hai toh restore karo, warna deliberate fallback choose karo. Tab, Shift+Tab aur Escape manually verify karo; visual overlay alone focus management nahi hai.
+**Answer guide:**
+- Dialog ka accessible name do, modal opening use karo aur safe default Cancel par focus set karo.
+- Confirm aur cancel paths separate rakho
+- close handler mein deletion mat rakho warna Escape bhi delete karega.
+- Closing ke baad trigger connected hai toh restore karo, warna deliberate fallback choose karo.
+- Tab, Shift+Tab aur Escape manually verify karo
+- visual overlay alone focus management nahi hai.
 
 **Interviewer follow-up:** Nested dialog request aaye toh scope simplify karoge ya focus stack kaise maintain karoge?
 
@@ -152,9 +168,15 @@ Plain HTML/JS mein 3 tabs/panels banao. Arrow Left/Right wrap, Home/End, manual 
 - Exactly one tab tabIndex0 ho; selected panel hi visible ho.
 - Every tab/panel ID association valid aur hidden panel controls untabbable hon.
 
-**Hint — atakne par padho:** Roving focus index aur active panel index separate rakho.
+**Hint:**
+- Roving focus index aur active panel index separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Tablist/tab/tabpanel semantics aur aria-selected/controls/labelledby IDs connect karo. Arrow event focus index update kare aur correct element focus ho, activation selected index change kare. Hidden attribute inactive content ko remove from interaction kare. Event delegation target actual tab button tak constrain karo. Sirf visual class active badalna complete keyboard widget nahi.
+**Answer guide:**
+- Tablist/tab/tabpanel semantics aur aria-selected/controls/labelledby IDs connect karo.
+- Arrow event focus index update kare aur correct element focus ho, activation selected index change kare.
+- Hidden attribute inactive content ko remove from interaction kare.
+- Event delegation target actual tab button tak constrain karo.
+- Sirf visual class active badalna complete keyboard widget nahi.
 
 **Interviewer follow-up:** Dynamic selected tab delete hone par focus aur selection fallback kya hoga?
 
@@ -176,9 +198,17 @@ HTML/JS FAQ accordion banao; multiple sections open reh sakte hain. Heading butt
 - Direct hash load correct section open kare; duplicate titles IDs collide na karein.
 - Hashchange unknown target crash na kare; focus heading button par aaye.
 
-**Hint — atakne par padho:** URL identifier stable data ID hai, heading text nahi.
+**Hint:**
+- URL identifier stable data ID hai, heading text nahi.
 
-**Answer guide — attempt ke baad compare karo:** Heading ke andar real button aur aria-controls se panel connect karo. Open ID set maintain karo; hidden panel state synchronize karo. Hash ko known ID map se resolve karo, arbitrary selector interpolation avoid karo. Initial browser scroll aur focus handling coordinate karo. Listener cleanup component destroy par do; content re-render unnecessarily focused node replace na kare.
+**Answer guide:**
+- Heading ke andar real button aur aria-controls se panel connect karo.
+- Open ID set maintain karo
+- hidden panel state synchronize karo.
+- Hash ko known ID map se resolve karo, arbitrary selector interpolation avoid karo.
+- Initial browser scroll aur focus handling coordinate karo.
+- Listener cleanup component destroy par do
+- content re-render unnecessarily focused node replace na kare.
 
 **Interviewer follow-up:** Single-open accordion mode add karoge toh deep link aur manual collapse rules kaise differ karenge?
 
@@ -200,9 +230,16 @@ HTML/JS mein {id,parentId,text} records se threaded comments dikhao. Input ek ac
 - Reply sirf selected parent ke andar aaye; blank reply reject ho.
 - User text <img src=x> literal dikhe; keyboard toggle aur reply chale.
 
-**Hint — atakne par padho:** Data identity aur safe text rendering pehle settle karo.
+**Hint:**
+- Data identity aur safe text rendering pehle settle karo.
 
-**Answer guide — attempt ke baad compare karo:** ID map aur parent-to-children map ek pass mein banao, phir nested lists render karo. Text ko textContent se insert karo, HTML string interpolate mat karo. Collapse state IDs se key karo aur buttons par expanded state expose karo. Insertion par stable ID generate karke model update karo; full tree replace karke focused input lose mat karo. Rendering cost visible nodes ke saath discuss karo.
+**Answer guide:**
+- ID map aur parent-to-children map ek pass mein banao, phir nested lists render karo.
+- Text ko textContent se insert karo, HTML string interpolate mat karo.
+- Collapse state IDs se key karo aur buttons par expanded state expose karo.
+- Insertion par stable ID generate karke model update karo
+- full tree replace karke focused input lose mat karo.
+- Rendering cost visible nodes ke saath discuss karo.
 
 **Interviewer follow-up:** Deep tree aur malformed cyclic input ko support karna ho toh kya limits add karoge?
 
@@ -224,9 +261,16 @@ HTML/JS file picker mein max5 JPEG/PNG files, each <=2MiB accept karo. Preview, 
 - Remove/reset/destroy par matching object URLs revoke hon.
 - Same removed file select again possible ho; keyboard controls labeled hon.
 
-**Hint — atakne par padho:** File input value aur accepted file list alag lifecycle rakhte hain.
+**Hint:**
+- File input value aur accepted file list alag lifecycle rakhte hain.
 
-**Answer guide — attempt ke baad compare karo:** Input change par files validate karke stable local IDs aur object URLs create karo; invalid files ke URLs mat banao. Remove par revoke aur focus neighboring remove/add control par move karo. Input reset se same file reselection event allow karo. MIME/extension client checks server security validation replace nahi karti. Preview image decode failure bhi user-visible state ho.
+**Answer guide:**
+- Input change par files validate karke stable local IDs aur object URLs create karo
+- invalid files ke URLs mat banao.
+- Remove par revoke aur focus neighboring remove/add control par move karo.
+- Input reset se same file reselection event allow karo.
+- MIME/extension client checks server security validation replace nahi karti.
+- Preview image decode failure bhi user-visible state ho.
 
 **Interviewer follow-up:** Drag-and-drop add karne par keyboard equivalent aur directory drops ka contract kya hoga?
 
@@ -248,9 +292,17 @@ HTML/vanilla JS mein name,age,joinedDate columns ki 20-row table banao. Header b
 - Null last both directions, active header aria-sort correct ho.
 - Sort ke baad clicked header focus preserve ho; row header relationships valid hon.
 
-**Hint — atakne par padho:** Data comparison aur DOM semantics independent layers hain.
+**Hint:**
+- Data comparison aur DOM semantics independent layers hain.
 
-**Answer guide — attempt ke baad compare karo:** Column-specific comparators use karo; null ordering branch direction multiplier se pehle handle karo. Tie original index se break karo. Only tbody rows reorder karo taaki heading focus stable rahe. Caption, th scopes aur header button names meaningful hon. Sort status concise announce karo; every cell live region banana noise create karega.
+**Answer guide:**
+- Column-specific comparators use karo
+- null ordering branch direction multiplier se pehle handle karo.
+- Tie original index se break karo.
+- Only tbody rows reorder karo taaki heading focus stable rahe.
+- Caption, th scopes aur header button names meaningful hon.
+- Sort status concise announce karo
+- every cell live region banana noise create karega.
 
 **Interviewer follow-up:** Locale date display ko sort value se separate kyun rakhoge?
 
@@ -272,9 +324,16 @@ HTML/JS application form mein name,email,age,city fields banao. Submit par all e
 - Correction/resubmit par resolved errors disappear, remaining links valid rahein.
 - Pending submit repeat na ho; server rejection values preserve kare.
 
-**Hint — atakne par padho:** Error object by field ID se summary aur inline view derive karo.
+**Hint:**
+- Error object by field ID se summary aur inline view derive karo.
 
-**Answer guide — attempt ke baad compare karo:** Pure validation function field-keyed errors return kare. Submit invalid ho toh stable summary container tabindex -1 par focus bhejo; links field IDs target karein. aria-invalid aur describedby messages update karo. Native/custom validation coordination explicit rakho taaki browser popup aur summary conflicting focus na dein. Errors every keystroke announce karna unnecessary distraction hai.
+**Answer guide:**
+- Pure validation function field-keyed errors return kare.
+- Submit invalid ho toh stable summary container tabindex -1 par focus bhejo
+- links field IDs target karein.
+- aria-invalid aur describedby messages update karo.
+- Native/custom validation coordination explicit rakho taaki browser popup aur summary conflicting focus na dein.
+- Errors every keystroke announce karna unnecessary distraction hai.
 
 **Interviewer follow-up:** Server unknown field error ko global summary mein kaise display karoge?
 
@@ -296,9 +355,16 @@ HTML/JS carousel mein 5 slides, Previous/Next aur numbered selectors do. Autopla
 - Keyboard controls operate hon aur focus clicked navigation par rahe.
 - Single-slide fixture controls disable/hide sensibly kare; empty fixture message ho.
 
-**Hint — atakne par padho:** Slide visibility aur focusable descendant lifecycle synchronize karo.
+**Hint:**
+- Slide visibility aur focusable descendant lifecycle synchronize karo.
 
-**Answer guide — attempt ke baad compare karo:** Active index sole navigation state rakho, normalized modulo movement use karo. Hidden slides ko hidden attribute se interaction se remove karo. Live status only change par Slide N of M announce kare. Controls real buttons hon, selector current state accessible ho. Image load failure fallback preserve kare. Visual transform offscreen karna alone tabbability nahi rokta.
+**Answer guide:**
+- Active index sole navigation state rakho, normalized modulo movement use karo.
+- Hidden slides ko hidden attribute se interaction se remove karo.
+- Live status only change par Slide N of M announce kare.
+- Controls real buttons hon, selector current state accessible ho.
+- Image load failure fallback preserve kare.
+- Visual transform offscreen karna alone tabbability nahi rokta.
 
 **Interviewer follow-up:** Optional autoplay add karoge toh pause-on-focus, reduced motion aur explicit stop control kaise doge?
 
@@ -320,9 +386,16 @@ Plain article paragraphs mein case-insensitive literal substring search banao. M
 - Repeated search nested mark elements na banaye; Clear original content restore kare.
 - Matched user text HTML execute na kare; navigation current match announce kare.
 
-**Hint — atakne par padho:** Text-node traversal aur safe node splitting use karo.
+**Hint:**
+- Text-node traversal aur safe node splitting use karo.
 
-**Answer guide — attempt ke baad compare karo:** Original DOM/text-node baseline ya mark-unwrapping plus normalize routine maintain karo. TreeWalker-style traversal scripts/styles/controls exclude kare; match offsets text ke andar compute karo aur text/mark nodes create karo. innerHTML string replacement existing markup tod sakta hai. This drill node-boundary-spanning matches support nahi karta; limitation prompt/demo mein clear karo.
+**Answer guide:**
+- Original DOM/text-node baseline ya mark-unwrapping plus normalize routine maintain karo.
+- TreeWalker-style traversal scripts/styles/controls exclude kare
+- match offsets text ke andar compute karo aur text/mark nodes create karo.
+- innerHTML string replacement existing markup tod sakta hai.
+- This drill node-boundary-spanning matches support nahi karta
+- limitation prompt/demo mein clear karo.
 
 **Interviewer follow-up:** Text spanning emphasized nodes ko match karne ke liye global offset-to-node map kaise banega?
 
@@ -344,9 +417,16 @@ HTML/CSS/JS site nav mein small-screen toggle aur wide-screen always-visible lin
 - Hidden mobile links Tab se reachable na hon; wide layout links visible hon.
 - Small->wide->small resize stale invisible focus trap na banaye.
 
-**Hint — atakne par padho:** Viewport-derived presentation aur user open state separate rakho.
+**Hint:**
+- Viewport-derived presentation aur user open state separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Nav landmark, real anchor links aur toggle button aria-controls use karo. Small layout hidden state apply kare; wide layout visibility force true aur toggle hidden ho. Resize par focus disappearing element mein ho toh sensible target move karo. Escape listener only open small disclosure par act kare. Menu role without arrow-key contract use mat karo.
+**Answer guide:**
+- Nav landmark, real anchor links aur toggle button aria-controls use karo.
+- Small layout hidden state apply kare
+- wide layout visibility force true aur toggle hidden ho.
+- Resize par focus disappearing element mein ho toh sensible target move karo.
+- Escape listener only open small disclosure par act kare.
+- Menu role without arrow-key contract use mat karo.
 
 **Interviewer follow-up:** Current-page indication aur nested disclosure groups ka focus behavior kaise extend karoge?
 
@@ -384,9 +464,17 @@ HTML/CSS mein header, sidebar aur 12 product cards banao. 320px par one column a
 - 200-character title wrap ho; images card bounds mein rahein.
 - Keyboard focus visible ho aur DOM reading order visual order se sensible rahe.
 
-**Hint — atakne par padho:** Grid tracks ki minimum width aur content overflow inspect karo.
+**Hint:**
+- Grid tracks ki minimum width aur content overflow inspect karo.
 
-**Answer guide — attempt ke baad compare karo:** Mobile-first one-column flow rakho; media queries se columns/sidebar add karo. Main content ko min-width:0 aur long strings ko wrapping rule do. Images ko constrained width aur consistent aspect ratio do. CSS order se reading order radically change mat karo. Fixed page widths ki jagah flexible tracks use karo; browser resize aur zoom par layout inspect karo.
+**Answer guide:**
+- Mobile-first one-column flow rakho
+- media queries se columns/sidebar add karo.
+- Main content ko min-width:0 aur long strings ko wrapping rule do.
+- Images ko constrained width aur consistent aspect ratio do.
+- CSS order se reading order radically change mat karo.
+- Fixed page widths ki jagah flexible tracks use karo
+- browser resize aur zoom par layout inspect karo.
 
 **Interviewer follow-up:** Cards mein equal-height action footer kaise rakhoge bina text truncate kiye?
 
@@ -408,9 +496,17 @@ HTML/CSS mein 50-row, 8-column semantic table banao. Ek bounded scroll container
 - Top-left cell overlap mein readable rahe; sticky backgrounds opaque hon.
 - Header-cell associations aur keyboard se scroll region access verify karo.
 
-**Hint — atakne par padho:** Sticky offsets aur stacking order dono define karne padenge.
+**Hint:**
+- Sticky offsets aur stacking order dono define karne padenge.
 
-**Answer guide — attempt ke baad compare karo:** Table structure preserve karo, overflow wrapper ko bounded height do. Header top:0 aur first-column left:0 rakho; intersection ka z-index dono se high ho. Opaque backgrounds aur borders inspect karo taaki underlying text bleed na kare. Wrapper ko accessible name aur keyboard access do jab zaroorat ho. Ancestor overflow sticky behavior badal sakta hai; actual container mein test karo.
+**Answer guide:**
+- Table structure preserve karo, overflow wrapper ko bounded height do.
+- Header top:0 aur first-column left:0 rakho
+- intersection ka z-index dono se high ho.
+- Opaque backgrounds aur borders inspect karo taaki underlying text bleed na kare.
+- Wrapper ko accessible name aur keyboard access do jab zaroorat ho.
+- Ancestor overflow sticky behavior badal sakta hai
+- actual container mein test karo.
 
 **Interviewer follow-up:** Variable-width first column aur RTL layout ke liye offsets kaise adapt karoge?
 
@@ -432,9 +528,16 @@ HTML/CSS app shell mein header/footer, left nav, main aur right context panel ba
 - Tall main content footer ko overlap na kare.
 - Long unbroken link wrap kare aur focus ring clipped na ho.
 
-**Hint — atakne par padho:** Grid areas aur minmax(0,1fr) se flexible middle define karo.
+**Hint:**
+- Grid areas aur minmax(0,1fr) se flexible middle define karo.
 
-**Answer guide — attempt ke baad compare karo:** Min-height viewport shell aur rows auto/1fr/auto use karo, fixed height se content crop mat karo. Media queries areas rewrite karein while DOM reading order coherent rahe. Sidebars large layout mein bounded columns hon; main min-width0 aur wrapping rule le. Footer normal document flow mein rahe. Absolute-position footer long content overlap karega.
+**Answer guide:**
+- Min-height viewport shell aur rows auto/1fr/auto use karo, fixed height se content crop mat karo.
+- Media queries areas rewrite karein while DOM reading order coherent rahe.
+- Sidebars large layout mein bounded columns hon
+- main min-width0 aur wrapping rule le.
+- Footer normal document flow mein rahe.
+- Absolute-position footer long content overlap karega.
 
 **Interviewer follow-up:** Mobile browser dynamic viewport height aur sticky header ke liye shell sizing kaise test karoge?
 
@@ -456,9 +559,16 @@ CSS grid gallery mein 12 images, aspect-ratio 4/3 cards aur captions banao. Smal
 - Different intrinsic image ratios consistent thumbnail box fill karein.
 - Long captions row alignment na tod dein; 200% zoom usable ho.
 
-**Hint — atakne par padho:** Intrinsic media dimensions aur layout box dimensions independently control karo.
+**Hint:**
+- Intrinsic media dimensions aur layout box dimensions independently control karo.
 
-**Answer guide — attempt ke baad compare karo:** Width-constrained wrapper with aspect-ratio reserve karo; img width/height100% aur object-fit policy choose karo. CSS grid gap aur responsive column counts explicit hon. Captions normal flow mein wrapping karein, forced fixed card height content clip na kare. Alt text accessible rahe; decorative placeholder meaning convey karne ka only source na ho.
+**Answer guide:**
+- Width-constrained wrapper with aspect-ratio reserve karo
+- img width/height100% aur object-fit policy choose karo.
+- CSS grid gap aur responsive column counts explicit hon.
+- Captions normal flow mein wrapping karein, forced fixed card height content clip na kare.
+- Alt text accessible rahe
+- decorative placeholder meaning convey karne ka only source na ho.
 
 **Interviewer follow-up:** Art-directed mobile crops aur high-density image selection HTML markup mein kaise support karoge?
 
@@ -480,9 +590,17 @@ Plain HTML/CSS aur tiny JS toggle se three pricing cards banao. Light/dark theme
 - 320px par cards stack hon; long price label overflow na kare.
 - Keyboard focus visible rahe aur reduced-motion setting par decorative animation band ho.
 
-**Hint — atakne par padho:** Colors ko component selectors mein duplicate karne se pehle semantic tokens define karo.
+**Hint:**
+- Colors ko component selectors mein duplicate karne se pehle semantic tokens define karo.
 
-**Answer guide — attempt ke baad compare karo:** Background, foreground, border, accent aur focus ke CSS custom properties banao. Theme attribute par token values replace karo; component layout same rakho. Native disabled buttons aur visible focus outline use karo. Motion preference query se nonessential transition disable karo. Contrast ko actual foreground/background pairs par inspect karo; opacity alone disabled distinction ke liye weak ho sakti hai.
+**Answer guide:**
+- Background, foreground, border, accent aur focus ke CSS custom properties banao.
+- Theme attribute par token values replace karo
+- component layout same rakho.
+- Native disabled buttons aur visible focus outline use karo.
+- Motion preference query se nonessential transition disable karo.
+- Contrast ko actual foreground/background pairs par inspect karo
+- opacity alone disabled distinction ke liye weak ho sakti hai.
 
 **Interviewer follow-up:** System theme aur explicit saved user preference ka precedence kaise define karoge?
 
@@ -504,9 +622,16 @@ HTML/CSS plus tiny Escape handler se icon-button tooltip banao. Hover aur keyboa
 - Pointer tooltip tak move ho toh content instantly disappear na ho.
 - Escape dismiss kare; focus leave/re-enter next time show kare.
 
-**Hint — atakne par padho:** Trigger aur tooltip ka shared hover region aur dismissal state chahiye.
+**Hint:**
+- Trigger aur tooltip ka shared hover region aur dismissal state chahiye.
 
-**Answer guide — attempt ke baad compare karo:** Positioned wrapper mein hover/focus-within visibility rakho, tooltip ID describedby relationship provide kare. Escape dismissed flag selector override kare; re-entry lifecycle reset ho. Trigger accessible name independently define karo. z-index overflow clipping ancestor ko bypass nahi karta; bounded placements ya portal/positioning adapter ki limitation clear rakho.
+**Answer guide:**
+- Positioned wrapper mein hover/focus-within visibility rakho, tooltip ID describedby relationship provide kare.
+- Escape dismissed flag selector override kare
+- re-entry lifecycle reset ho.
+- Trigger accessible name independently define karo.
+- z-index overflow clipping ancestor ko bypass nahi karta
+- bounded placements ya portal/positioning adapter ki limitation clear rakho.
 
 **Interviewer follow-up:** Interactive popover ke liye tooltip se alag focus/role contract kyun chahiye?
 
@@ -528,9 +653,16 @@ Product list ke loading/success/empty/error states CSS se style karo; tiny JS fi
 - Reduced-motion simulation animation stop kare.
 - Empty/error states readable headings aur retry focus visibility dein.
 
-**Hint — atakne par padho:** Shared structural styles aur decorative skeleton markup separate rakho.
+**Hint:**
+- Shared structural styles aur decorative skeleton markup separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Card layout shared dimensions use kare, skeleton content aria-hidden rakho aur one loading status communicate karo. Error state text actual reason category explain kare bina stack trace. Container busy state pending lifecycle se match ho. CSS animation compositor-friendly properties tak rakho where possible; reduced motion query override add karo. Loading indefinite ho toh failure/retry flow demonstrate karo.
+**Answer guide:**
+- Card layout shared dimensions use kare, skeleton content aria-hidden rakho aur one loading status communicate karo.
+- Error state text actual reason category explain kare bina stack trace.
+- Container busy state pending lifecycle se match ho.
+- CSS animation compositor-friendly properties tak rakho where possible
+- reduced motion query override add karo.
+- Loading indefinite ho toh failure/retry flow demonstrate karo.
 
 **Interviewer follow-up:** Slow network par skeleton ke bajay stale data show karna kab better hoga?
 
@@ -552,9 +684,16 @@ HTML invoice screen/print CSS banao. Header, customer details, 60 line items, to
 - Table column headings page breaks par supported browser mein repeat hon.
 - Dark theme screen background print mein ink-heavy black sheet na banaye.
 
-**Hint — atakne par padho:** Print media ka flow screen fixed-height layout se separate rakho.
+**Hint:**
+- Print media ka flow screen fixed-height layout se separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Print media query backgrounds/colors/overflow/fixed positioning reset kare. Semantic table header group preserve karo; row/totals break-inside constraints use karo, overlong content ke liye graceful breaks allow karo. Page margins choose karke actual print preview inspect karo; browser pagination differences acknowledge karo. Price columns right align aur readable units/currency rakho.
+**Answer guide:**
+- Print media query backgrounds/colors/overflow/fixed positioning reset kare.
+- Semantic table header group preserve karo
+- row/totals break-inside constraints use karo, overlong content ke liye graceful breaks allow karo.
+- Page margins choose karke actual print preview inspect karo
+- browser pagination differences acknowledge karo.
+- Price columns right align aur readable units/currency rakho.
 
 **Interviewer follow-up:** PDF pixel-exact output chahiye toh browser print CSS ki limits kya hain?
 
@@ -576,9 +715,17 @@ CSS form mein 8 labeled inputs, helper text, inline errors aur action row style 
 - 320px par inputs/button row overflow na kare.
 - Focus/disabled/invalid states color ke bina bhi distinguishable hon.
 
-**Hint — atakne par padho:** Fixed field heights ki jagah content-driven grid rows use karo.
+**Hint:**
+- Fixed field heights ki jagah content-driven grid rows use karo.
 
-**Answer guide — attempt ke baad compare karo:** Field wrapper label/control/help/error normal flow mein rakho. Form grid minmax0 tracks aur controls max-width100% use kare. Buttons wrap karein; primary action reading order consistent ho. Error icon/text aur border cues add karo, only red color nahi. Placeholder ko label replacement mat banao; zoom/long translated text fixtures inspect karo.
+**Answer guide:**
+- Field wrapper label/control/help/error normal flow mein rakho.
+- Form grid minmax0 tracks aur controls max-width100% use kare.
+- Buttons wrap karein
+- primary action reading order consistent ho.
+- Error icon/text aur border cues add karo, only red color nahi.
+- Placeholder ko label replacement mat banao
+- zoom/long translated text fixtures inspect karo.
 
 **Interviewer follow-up:** Optional field collapse/expand par layout movement aur focus preserve kaise karoge?
 
@@ -600,9 +747,17 @@ CSS determinate progress bar aur indeterminate spinner style karo. Tiny JS progr
 - Reduced-motion mode spinner moving na ho lekin loading text dikhe.
 - Done/error transition background animation/timer continue na kare.
 
-**Hint — atakne par padho:** Status semantics aur decorative movement alag responsibilities hain.
+**Hint:**
+- Status semantics aur decorative movement alag responsibilities hain.
 
-**Answer guide — attempt ke baad compare karo:** Native progress element ya complete progressbar semantics choose karo; determinate current/min/max expose karo. Indeterminate value omit karke status text do. CSS animation reduced-motion query se disable karo; success/error mein active class remove ho. Progress frequency throttle announce karo taaki screen reader har frame na bole. JS demo timer cleanup mandatory hai.
+**Answer guide:**
+- Native progress element ya complete progressbar semantics choose karo
+- determinate current/min/max expose karo.
+- Indeterminate value omit karke status text do.
+- CSS animation reduced-motion query se disable karo
+- success/error mein active class remove ho.
+- Progress frequency throttle announce karo taaki screen reader har frame na bole.
+- JS demo timer cleanup mandatory hai.
 
 **Interviewer follow-up:** Unknown-size upload progress ko fake percentage dene ke bajay kaise communicate karoge?
 
@@ -624,9 +779,15 @@ HTML/CSS user card, horizontal nav aur settings form ko dir=ltr/rtl toggle ke sa
 - Phone/code strings intended LTR order preserve karein without whole page breaking.
 - Long multilingual names wrap hon aur keyboard DOM order sensible ho.
 
-**Hint — atakne par padho:** Inline-start/end ko physical left/right se replace karo jahan semantics directional hain.
+**Hint:**
+- Inline-start/end ko physical left/right se replace karo jahan semantics directional hain.
 
-**Answer guide — attempt ke baad compare karo:** Margin/padding/inset inline logical properties aur text-align start use karo. Flex/grid direction inheritance inspect karo, unnecessary row-reverse plus rtl double reversal avoid karo. Bidi isolation with appropriate markup mixed user strings ke around do; semantic content order CSS visual manipulation se mat badlo. Directional icons deliberate mirror policy lein, universal symbols blindly flip na hon.
+**Answer guide:**
+- Margin/padding/inset inline logical properties aur text-align start use karo.
+- Flex/grid direction inheritance inspect karo, unnecessary row-reverse plus rtl double reversal avoid karo.
+- Bidi isolation with appropriate markup mixed user strings ke around do
+- semantic content order CSS visual manipulation se mat badlo.
+- Directional icons deliberate mirror policy lein, universal symbols blindly flip na hon.
 
 **Interviewer follow-up:** Absolute-position badges aur breadcrumbs ke separators ka RTL testing plan kya hoga?
 
@@ -664,9 +825,17 @@ Plain JS mein debounce(fn, wait) banao. Trailing-only execution, latest argument
 - cancel ke baad timer advance karne par call na ho.
 - flush ek baar chale aur original timer baad mein duplicate execution na kare.
 
-**Hint — atakne par padho:** Timer handle ke saath latest arguments aur receiver retain karne padenge.
+**Hint:**
+- Timer handle ke saath latest arguments aur receiver retain karne padenge.
 
-**Answer guide — attempt ke baad compare karo:** Wrapper normal function ho taaki caller ka this capture ho. Har call par previous timer clear karke latest args/context store karo. Shared invoke helper pehle pending state clear kare, phir captured fn apply kare; reentrant invocation naya timer bana sake. cancel timer aur references clear kare. flush pending snapshot invoke karke uska result return kare. Real sleep ki jagah controlled timers se boundaries test karo.
+**Answer guide:**
+- Wrapper normal function ho taaki caller ka this capture ho.
+- Har call par previous timer clear karke latest args/context store karo.
+- Shared invoke helper pehle pending state clear kare, phir captured fn apply kare
+- reentrant invocation naya timer bana sake.
+- cancel timer aur references clear kare.
+- flush pending snapshot invoke karke uska result return kare.
+- Real sleep ki jagah controlled timers se boundaries test karo.
 
 **Interviewer follow-up:** Leading plus trailing support mein single call ko double execute hone se kaise bachaoge?
 
@@ -688,9 +857,16 @@ runPool(tasks, limit) likho; tasks zero-argument async functions hain. Positive 
 - Out-of-order completion ke baad results input order mein hon.
 - Empty input [], sync throw aur rejected promise handle hon; limit=0 reject ho.
 
-**Hint — atakne par padho:** Promise objects ki jagah task factories se work start time control karo.
+**Hint:**
+- Promise objects ki jagah task factories se work start time control karo.
 
-**Answer guide — attempt ke baad compare karo:** Shared next-index aur fixed worker count rakho. Har worker await se pehle unique index claim kare, task ko try/catch mein invoke kare aur outcome us index par store kare. Worker loop rejection ke baad bhi continue kare. Workers complete hone par results return karo. Sab tasks pehle call karke Promise.all lagana concurrency cap nahi hai; active-count probe se actual work measure karo.
+**Answer guide:**
+- Shared next-index aur fixed worker count rakho.
+- Har worker await se pehle unique index claim kare, task ko try/catch mein invoke kare aur outcome us index par store kare.
+- Worker loop rejection ke baad bhi continue kare.
+- Workers complete hone par results return karo.
+- Sab tasks pehle call karke Promise.all lagana concurrency cap nahi hai
+- active-count probe se actual work measure karo.
 
 **Interviewer follow-up:** Abort signal aaye toh queued aur already-running tasks ka distinct contract kya hoga?
 
@@ -712,9 +888,16 @@ Plain JS throttle(fn,wait) banao. wait positive finite milliseconds hai. First c
 - Only t=0 call par t=100 mein extra execution na ho.
 - cancel at t=90 pending call roke; next call immediate chale.
 
-**Hint — atakne par padho:** Last actual execution aur pending arguments ki ownership alag rakho.
+**Hint:**
+- Last actual execution aur pending arguments ki ownership alag rakho.
 
-**Answer guide — attempt ke baad compare karo:** Injectable clock/timers se next eligible execution track karo. Window ke andar arguments overwrite karo lekin one timer rakho. Timer callback pending snapshot clear karke invoke kare aur execution timestamp update kare. cancel handle, args aur timestamp reset kare. Boundary timing test mein caller/timer ordering explicit rakho; real event loop ko exact wall-clock scheduler mat maano.
+**Answer guide:**
+- Injectable clock/timers se next eligible execution track karo.
+- Window ke andar arguments overwrite karo lekin one timer rakho.
+- Timer callback pending snapshot clear karke invoke kare aur execution timestamp update kare.
+- cancel handle, args aur timestamp reset kare.
+- Boundary timing test mein caller/timer ordering explicit rakho
+- real event loop ko exact wall-clock scheduler mat maano.
 
 **Interviewer follow-up:** Continuous calls mein debounce aur throttle ki output timelines kaise differ karengi?
 
@@ -736,9 +919,17 @@ allValues(iterable) banao; Promise.all call karna allowed nahi. Native Promise a
 - Empty iterable [] resolve ho; throwing iterator rejection de.
 - A rejecting thenable aur two resolving inputs se one final rejection mile.
 
-**Hint — atakne par padho:** Remaining count aur per-position closure rakho.
+**Hint:**
+- Remaining count aur per-position closure rakho.
 
-**Answer guide — attempt ke baad compare karo:** Promise executor ke andar iterable traverse karo aur each input ko Promise.resolve se assimilate karo. Per-index result aur remaining counter use karo; empty input separately settle karo ya initial sentinel count rakho. Synchronous iteration throw reject kare. Har input ko rejection handler attach karo; combined rejection already-started operations abort nahi karti. Thenable double resolution ko native assimilation handle kare.
+**Answer guide:**
+- Promise executor ke andar iterable traverse karo aur each input ko Promise.resolve se assimilate karo.
+- Per-index result aur remaining counter use karo
+- empty input separately settle karo ya initial sentinel count rakho.
+- Synchronous iteration throw reject kare.
+- Har input ko rejection handler attach karo
+- combined rejection already-started operations abort nahi karti.
+- Thenable double resolution ko native assimilation handle kare.
 
 **Interviewer follow-up:** Isi contract ko allSettled aur any mein badalne ke liye completion state kaise badlegi?
 
@@ -760,9 +951,18 @@ on(event, listener), once(event, listener), off(event, listener), emit(event, pa
 - Emit ke beech added listener next emit se chale; removed snapshot listener current emit mein chale.
 - once listener recursively emit kare toh same once registration dobara na chale.
 
-**Hint — atakne par padho:** Snapshot iteration aur once registration ki consumed state alag concerns hain.
+**Hint:**
+- Snapshot iteration aur once registration ki consumed state alag concerns hain.
 
-**Answer guide — attempt ke baad compare karo:** Event se ordered registration records ka map rakho; duplicate function ko reuse/no-op karo. Emit records ka snapshot le. once record ko consumed mark aur live registry se remove callback se pehle karo; nested emit mein woh repeat nahi hoga. Snapshot record already consumed ho toh skip karo. Normal off live registry update kare lekin current snapshot policy preserve ho. Empty event buckets cleanup karo.
+**Answer guide:**
+- Event se ordered registration records ka map rakho
+- duplicate function ko reuse/no-op karo.
+- Emit records ka snapshot le.
+- once record ko consumed mark aur live registry se remove callback se pehle karo
+- nested emit mein woh repeat nahi hoga.
+- Snapshot record already consumed ho toh skip karo.
+- Normal off live registry update kare lekin current snapshot policy preserve ho.
+- Empty event buckets cleanup karo.
 
 **Interviewer follow-up:** Errors isolate karke sab listeners chalane hon toh result/error collection API kaise badlegi?
 
@@ -784,9 +984,17 @@ clone(value) ka supported domain primitives, plain objects, arrays aur Date hai.
 - {a:shared,b:shared} mein cloned a===b, lekin original shared se different ho.
 - Sparse array holes/length aur Date timestamp preserve hon; getter execute na ho.
 
-**Hint — atakne par padho:** Recursion se pehle clone identity memoize karo.
+**Hint:**
+- Recursion se pehle clone identity memoize karo.
 
-**Answer guide — attempt ke baad compare karo:** WeakMap original->clone rakho. Type/descriptor validation karke container allocate, memoize, phir data properties copy karo. Array length preserve karke sirf existing indices/keys define karo. Date timestamp se new instance banao; special types ko silently plain object mat banao. Object.defineProperty se own data keys copy karna __proto__ setter trap se bacha sakta hai. Scope explicitly limited hai, full structured cloning replacement nahi.
+**Answer guide:**
+- WeakMap original->clone rakho.
+- Type/descriptor validation karke container allocate, memoize, phir data properties copy karo.
+- Array length preserve karke sirf existing indices/keys define karo.
+- Date timestamp se new instance banao
+- special types ko silently plain object mat banao.
+- Object.defineProperty se own data keys copy karna __proto__ setter trap se bacha sakta hai.
+- Scope explicitly limited hai, full structured cloning replacement nahi.
 
 **Interviewer follow-up:** Map aur Set add karne par object keys aur shared identity kaise preserve hogi?
 
@@ -808,9 +1016,17 @@ memoAsync(load,ttl,clock) primitive string key accept kare. Same key ke pending 
 - Rejection ke baad get(x) fresh attempt kare.
 - Invalidate, new load resolve, then old load resolve: cache mein new value hi rahe.
 
-**Hint — atakne par padho:** Cached value ke saath entry identity rakho.
+**Hint:**
+- Cached value ke saath entry identity rakho.
 
-**Answer guide — attempt ke baad compare karo:** Map mein pending promise/entry token store karo. Success par entry ab bhi same hai tab expiresAt set karo; failure sirf own current entry remove kare. Pending entry par value TTL apply mat karo. Invalidate entry remove kare; old callers apna result paa sakte hain par shared cache overwrite na ho. Unbounded keys memory retain karengi, is drill ke next step mein capacity policy discuss karo.
+**Answer guide:**
+- Map mein pending promise/entry token store karo.
+- Success par entry ab bhi same hai tab expiresAt set karo
+- failure sirf own current entry remove kare.
+- Pending entry par value TTL apply mat karo.
+- Invalidate entry remove kare
+- old callers apna result paa sakte hain par shared cache overwrite na ho.
+- Unbounded keys memory retain karengi, is drill ke next step mein capacity policy discuss karo.
 
 **Interviewer follow-up:** Per-user authorization-dependent response cache mein key design kya hoga?
 
@@ -832,9 +1048,16 @@ retry(operation,{maxAttempts,baseDelay,signal}) likho. First attempt immediate; 
 - Permanent error par one call; maxAttempts=0 validation error ho.
 - Backoff mein abort par next attempt na chale; timer/listener cleanup ho.
 
-**Hint — atakne par padho:** Attempt counter aur abort reason ko business failure se separate rakho.
+**Hint:**
+- Attempt counter aur abort reason ko business failure se separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Loop mein operation ko signal pass karo, catch par abort/permanent/final-attempt branch pehle handle karo. Retry se pehle abort-aware sleep karo; settled wait listener cleanup kare. Max attempts total calls hain, extra retries nahi. Operation cancellation cooperate na kare toh in-flight effect stop hone ka claim mat karo; idempotent operation ya request key retry contract ka part honi chahiye.
+**Answer guide:**
+- Loop mein operation ko signal pass karo, catch par abort/permanent/final-attempt branch pehle handle karo.
+- Retry se pehle abort-aware sleep karo
+- settled wait listener cleanup kare.
+- Max attempts total calls hain, extra retries nahi.
+- Operation cancellation cooperate na kare toh in-flight effect stop hone ka claim mat karo
+- idempotent operation ya request key retry contract ka part honi chahiye.
 
 **Interviewer follow-up:** Jitter aur Retry-After hint dono milen toh delay policy kaise define karoge?
 
@@ -856,9 +1079,16 @@ groupBy(items,keyFn) Map return kare. stableSortBy(items,comparators) first nonz
 - Same department/score wale items original order preserve karein.
 - Empty input aur object-identity keys work karein; original array unchanged rahe.
 
-**Hint — atakne par padho:** Grouping key ko string coercion se bachao aur tie-break index retain karo.
+**Hint:**
+- Grouping key ko string coercion se bachao aur tie-break index retain karo.
 
-**Answer guide — attempt ke baad compare karo:** One pass Map buckets banao, original item references buckets mein rakho. Sort ke liye {value,index} decorate karo; comparators sequence mein evaluate aur complete tie par original index compare karo. Sorted values project karke return karo. Grouping O(n), comparison sort O(n log n) comparisons use karta hai; keyFn/comparator cost separately count karo.
+**Answer guide:**
+- One pass Map buckets banao, original item references buckets mein rakho.
+- Sort ke liye {value,index} decorate karo
+- comparators sequence mein evaluate aur complete tie par original index compare karo.
+- Sorted values project karke return karo.
+- Grouping O(n), comparison sort O(n log n) comparisons use karta hai
+- keyFn/comparator cost separately count karo.
 
 **Interviewer follow-up:** Locale-aware strings aur missing numeric values ke ordering rules kaise add karoge?
 
@@ -880,9 +1110,17 @@ Plain JSON objects ke string/number/boolean/null leaves ko [pathSegments,value] 
 - Empty object aur null round-trip hon.
 - Conflicting paths [a] aur [a,b], duplicate path aur __proto__ segment reject hon.
 
-**Hint — atakne par padho:** Path string ki jagah segment array ambiguity remove karta hai.
+**Hint:**
+- Path string ki jagah segment array ambiguity remove karta hai.
 
-**Answer guide — attempt ke baad compare karo:** DFS own entries par path copy karke emit karo. Empty container marker leaf scalar se distinguish karo. Reconstruction null-prototype containers/own checks use kare aur conflicting assignments validate kare. Duplicate/prefix paths detect karke partial success expose mat karo. Cycles JSON domain mein nahi; runtime object cyclic ho toh explicit reject karo. Serialization labels ko executable property expressions mat banao.
+**Answer guide:**
+- DFS own entries par path copy karke emit karo.
+- Empty container marker leaf scalar se distinguish karo.
+- Reconstruction null-prototype containers/own checks use kare aur conflicting assignments validate kare.
+- Duplicate/prefix paths detect karke partial success expose mat karo.
+- Cycles JSON domain mein nahi
+- runtime object cyclic ho toh explicit reject karo.
+- Serialization labels ko executable property expressions mat banao.
 
 **Interviewer follow-up:** Arrays, escaped paths aur maximum nesting depth ko schema mein kaise include karoge?
 
@@ -904,9 +1142,17 @@ createStore(initial) se getState, setState(updater), subscribe(listener), batch(
 - Unsubscribe twice safe ho; subscribe during notify current snapshot mein na chale.
 - Batch function throw kare toh already-applied state rahe aur outer cleanup ke baad notify ho.
 
-**Hint — atakne par padho:** Batch depth aur dirty flag se notification lifecycle express karo.
+**Hint:**
+- Batch depth aur dirty flag se notification lifecycle express karo.
 
-**Answer guide — attempt ke baad compare karo:** State reference, ordered listeners aur depth counter rakho. setState updater result compare karke dirty mark kare; depth zero par notify karo. batch try/finally depth decrement kare, outer exit dirty snapshot publish kare. Notification se pehle dirty clear karo taaki nested updates lost na hon; reentrant writes queue karke recursive stack overflow avoid karo. Listener-error policy document karo.
+**Answer guide:**
+- State reference, ordered listeners aur depth counter rakho.
+- setState updater result compare karke dirty mark kare
+- depth zero par notify karo.
+- batch try/finally depth decrement kare, outer exit dirty snapshot publish kare.
+- Notification se pehle dirty clear karo taaki nested updates lost na hon
+- reentrant writes queue karke recursive stack overflow avoid karo.
+- Listener-error policy document karo.
 
 **Interviewer follow-up:** Listener exception baaki subscribers ko starve na kare toh error reporting kaise change hogi?
 
@@ -944,9 +1190,16 @@ React mein local fake search adapter ke saath autocomplete banao. Query length >
 - Arrow keys, Enter, Escape aur pointer selection chale; input labeled ho.
 - Clear/unmount par late response results wapas na laaye; rejected search retry ho.
 
-**Hint — atakne par padho:** Query, selected item aur response ownership ko separate rakho.
+**Hint:**
+- Query, selected item aur response ownership ko separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Controlled input aur stable IDs rakho; effect cleanup request cancel kare aur sequence/query guard current response ko commit kare. Debounce request count reduce karta hai, races solve nahi. Active option index query/result change par reset karo. Complete combobox keyboard/ARIA behavior implement karo, composition ke beech Enter selection avoid karo. Loading/error sirf current request update kare.
+**Answer guide:**
+- Controlled input aur stable IDs rakho
+- effect cleanup request cancel kare aur sequence/query guard current response ko commit kare.
+- Debounce request count reduce karta hai, races solve nahi.
+- Active option index query/result change par reset karo.
+- Complete combobox keyboard/ARIA behavior implement karo, composition ke beech Enter selection avoid karo.
+- Loading/error sirf current request update kare.
 
 **Interviewer follow-up:** Query cache add karne par expired results aur background refresh ko user ko kaise dikhaoge?
 
@@ -968,9 +1221,16 @@ React local-state board mein Todo/Doing/Done columns, add/edit/delete, move cont
 - Delete then undo original task aur column restore kare.
 - Reload state restore kare; corrupt saved data par usable empty board aaye.
 
-**Hint — atakne par padho:** Entity records aur column ordering ko explicit model karo.
+**Hint:**
+- Entity records aur column ordering ko explicit model karo.
 
-**Answer guide — attempt ke baad compare karo:** Tasks by ID aur ordered column IDs rakho; reducer operations se one-column-per-task invariant maintain karo. Undo snapshot mein deleted entity, column aur index store karo; restore par bounded insertion index use karo. Storage parsing ko try/catch aur shape validation do, failed write se in-memory board na todo. Accessible move buttons drag interaction ke equivalent route dein.
+**Answer guide:**
+- Tasks by ID aur ordered column IDs rakho
+- reducer operations se one-column-per-task invariant maintain karo.
+- Undo snapshot mein deleted entity, column aur index store karo
+- restore par bounded insertion index use karo.
+- Storage parsing ko try/catch aur shape validation do, failed write se in-memory board na todo.
+- Accessible move buttons drag interaction ke equivalent route dein.
 
 **Interviewer follow-up:** Undo ke pehle target column delete ho sakta ho toh restoration contract kya hoga?
 
@@ -992,9 +1252,18 @@ React local-state board mein Todo/Doing/Done columns, add/edit/delete, move cont
 - Filtered result shrink ho toh nonexistent page na dikhe.
 - Duplicate names, empty results aur invalid blank Save handle hon; keyboard edit chale.
 
-**Hint — atakne par padho:** Source records, draft map aur derived visible IDs separate rakho.
+**Hint:**
+- Source records, draft map aur derived visible IDs separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Canonical records immutable update karo; draft IDs se store karo aur rows ko ID key do. Pipeline filter->stable sort->paginate ho, original array sort mat karo. Save validate karke only target entity update kare; Cancel sirf us draft ko clear kare. Sort controls aria-sort aur labels expose karein. Page bounds derive/clamp karo; index keys wrong row editor reuse kar sakti hain.
+**Answer guide:**
+- Canonical records immutable update karo
+- draft IDs se store karo aur rows ko ID key do.
+- Pipeline filter->stable sort->paginate ho, original array sort mat karo.
+- Save validate karke only target entity update kare
+- Cancel sirf us draft ko clear kare.
+- Sort controls aria-sort aur labels expose karein.
+- Page bounds derive/clamp karo
+- index keys wrong row editor reuse kar sakti hain.
 
 **Interviewer follow-up:** Server pagination add karne par unsaved off-page drafts aur stale responses kaise handle karoge?
 
@@ -1016,9 +1285,17 @@ In-memory tree nodes {id,parentId,name,type} se explorer banao. Expand/collapse,
 - Move into descendant reject aur original tree unchanged ho.
 - Delete subtree ke baad selection missing ID par na rahe; keyboard buttons work karein.
 
-**Hint — atakne par padho:** Flat node map se ancestry check aur stable identity simplify karo.
+**Hint:**
+- Flat node map se ancestry check aur stable identity simplify karo.
 
-**Answer guide — attempt ke baad compare karo:** Nodes normalized rakho; expanded IDs aur selected ID UI state hon. Move se pehle proposed parent ancestors walk karke cycle check karo aur duplicate sibling name validate karo. Delete descendants collect karke one state transition mein remove karo. Selection fallback parent/root par set karo. Visual tree role tabhi use karo jab full tree keyboard behavior implement ho; simple nested lists/buttons acceptable hain.
+**Answer guide:**
+- Nodes normalized rakho
+- expanded IDs aur selected ID UI state hon.
+- Move se pehle proposed parent ancestors walk karke cycle check karo aur duplicate sibling name validate karo.
+- Delete descendants collect karke one state transition mein remove karo.
+- Selection fallback parent/root par set karo.
+- Visual tree role tabhi use karo jab full tree keyboard behavior implement ho
+- simple nested lists/buttons acceptable hain.
 
 **Interviewer follow-up:** Lazy-loaded folders mein move validation server authority ke saath kaise coordinate hogi?
 
@@ -1040,9 +1317,16 @@ Contact, Address aur Review steps wala React form banao. Each step validation, B
 - Back/Next se draft preserve ho; review latest fields dikhaye.
 - Rejection ke baad retry chale; success confirmation ek baar dikhe.
 
-**Hint — atakne par padho:** Form draft parent/reducer mein rakho, step components ko ownership clear do.
+**Hint:**
+- Form draft parent/reducer mein rakho, step components ko ownership clear do.
 
-**Answer guide — attempt ke baad compare karo:** Single draft plus current step aur submit state rakho. Validation pure functions hon, step transition se pehle current fields check karo aur final submit par poora draft check karo. Derived review ko duplicate state mat banao. First error ko focus do; successful step change par heading focus manage karo. Async submit finally pending guard release kare aur failure values preserve kare.
+**Answer guide:**
+- Single draft plus current step aur submit state rakho.
+- Validation pure functions hon, step transition se pehle current fields check karo aur final submit par poora draft check karo.
+- Derived review ko duplicate state mat banao.
+- First error ko focus do
+- successful step change par heading focus manage karo.
+- Async submit finally pending guard release kare aur failure values preserve kare.
 
 **Interviewer follow-up:** Server field errors ko hidden previous step par map karke navigation kaise karoge?
 
@@ -1064,9 +1348,16 @@ Fake cursor API se React feed banao. Load More required, intersection auto-load 
 - Failed page par existing items bachein aur retry same cursor use kare.
 - Filter switch ke baad old response ignore ho; end cursor null par loading stop ho.
 
-**Hint — atakne par padho:** Pagination cursor ko last response ownership se bind karo.
+**Hint:**
+- Pagination cursor ko last response ownership se bind karo.
 
-**Answer guide — attempt ke baad compare karo:** Current generation, next cursor aur pending state rakho; response matching generation par merge karo. Ordered IDs plus map duplicate records ko defined update policy se reconcile karein. Cursor success ke baad advance ho, failure par same cursor retry ho. Sentinel callback multiple fire ho sakti hai isliye UI disabled state alone enough nahi; request-level guard chahiye.
+**Answer guide:**
+- Current generation, next cursor aur pending state rakho
+- response matching generation par merge karo.
+- Ordered IDs plus map duplicate records ko defined update policy se reconcile karein.
+- Cursor success ke baad advance ho, failure par same cursor retry ho.
+- Sentinel callback multiple fire ho sakti hai isliye UI disabled state alone enough nahi
+- request-level guard chahiye.
 
 **Interviewer follow-up:** Feed ke top par new item insertion aaye toh scroll position kaise preserve karoge?
 
@@ -1088,9 +1379,16 @@ Toast provider mein add/update/dismiss do; max 3 visible, FIFO waiting queue. Au
 - Two-second toast 500ms baad pause/resume ho toh remaining 1500ms rahe.
 - Update/dismiss unknown ID no-op ho; close button labeled ho.
 
-**Hint — atakne par padho:** Expiry deadline aur remaining duration ko elapsed time se derive karo.
+**Hint:**
+- Expiry deadline aur remaining duration ko elapsed time se derive karo.
 
-**Answer guide — attempt ke baad compare karo:** Stable IDs, visible queue aur waiting queue maintain karo. Per-toast active timer ownership track karo; hover/focus ka combined paused flag use karo taaki one leave event doosra pause cancel na kare. Pause deadline se remaining compute kare, resume fresh deadline banaye. Live announcements severity ke hisaab se bounded rakho; har rerender par announcement repeat mat karo.
+**Answer guide:**
+- Stable IDs, visible queue aur waiting queue maintain karo.
+- Per-toast active timer ownership track karo
+- hover/focus ka combined paused flag use karo taaki one leave event doosra pause cancel na kare.
+- Pause deadline se remaining compute kare, resume fresh deadline banaye.
+- Live announcements severity ke hisaab se bounded rakho
+- har rerender par announcement repeat mat karo.
 
 **Interviewer follow-up:** Same operation ke repeated progress updates announcement noise kaise avoid karenge?
 
@@ -1112,9 +1410,17 @@ Fixed supplied month/year ka calendar banao, start/end inclusive date selection 
 - Disabled date ko include karta range reject ho aur prior valid selection preserve ho.
 - Keyboard date selection aur labeled day controls hon; Clear dono endpoints remove kare.
 
-**Hint — atakne par padho:** Calendar arithmetic ko UI transition se separate pure functions banao.
+**Hint:**
+- Calendar arithmetic ko UI transition se separate pure functions banao.
 
-**Answer guide — attempt ke baad compare karo:** Year/month/day components se day cells generate karo; local/UTC conversions mix karke off-by-one mat lao. State empty/start-only/complete rakho. Candidate end par whole inclusive interval validate karo, phir commit karo. Day buttons full date names expose karein; selected/start/end state visible aur announced ho. Full date-picker pattern claim karne se pehle arrow/focus navigation test karo.
+**Answer guide:**
+- Year/month/day components se day cells generate karo
+- local/UTC conversions mix karke off-by-one mat lao.
+- State empty/start-only/complete rakho.
+- Candidate end par whole inclusive interval validate karo, phir commit karo.
+- Day buttons full date names expose karein
+- selected/start/end state visible aur announced ho.
+- Full date-picker pattern claim karne se pehle arrow/focus navigation test karo.
 
 **Interviewer follow-up:** Multiple months aur timezone-aware booking instants add hon toh date-only boundary kahan convert hogi?
 
@@ -1136,9 +1442,16 @@ Two lists of unique-ID users banao. Each side search, row selection aur Move sel
 - Search hide kare selected user ko, Move selected still us user ko move kare.
 - Repeated move duplicate user na banaye; selection moved IDs ke liye clear ho.
 
-**Hint — atakne par padho:** Location aur selection ko labels ki jagah IDs se model karo.
+**Hint:**
+- Location aur selection ko labels ki jagah IDs se model karo.
 
-**Answer guide — attempt ke baad compare karo:** One entity map aur side membership sets rakho. Filter derived ho; selection sets source state hon. Bulk move selected membership intersection compute karke one transition mein source remove/destination add kare. Select-all tri-state visible subset se derive karo. Result count/status announce karo aur move ke baad focus usable control par rahe.
+**Answer guide:**
+- One entity map aur side membership sets rakho.
+- Filter derived ho
+- selection sets source state hon.
+- Bulk move selected membership intersection compute karke one transition mein source remove/destination add kare.
+- Select-all tri-state visible subset se derive karo.
+- Result count/status announce karo aur move ke baad focus usable control par rahe.
 
 **Interviewer follow-up:** Server permission reject kare kuch users ko toh partial move result ka UI kya hoga?
 
@@ -1160,9 +1473,16 @@ React mein 10,000 rows, fixed height 32px, viewport 320px aur overscan 3 rows pe
 - Index 9999 par scroll last row visible kare aur blank gap na aaye.
 - Empty list aur data shrink par scroll/index clamp ho.
 
-**Hint — atakne par padho:** Total spacer height aur visible slice offset separate hain.
+**Hint:**
+- Total spacer height aur visible slice offset separate hain.
 
-**Answer guide — attempt ke baad compare karo:** Start=floor(scrollTop/rowHeight), end viewport se derive karke overscan bounds clamp karo. Full-height spacer ke andar slice ko start*height offset do; stable IDs keys hon. Scroll-to-index ko valid range clamp karo. DOM count aur scroll position test karo; virtualization browser find/accessibility navigation ko affect karti hai, isliye row position metadata aur deliberate focus strategy do.
+**Answer guide:**
+- Start=floor(scrollTop/rowHeight), end viewport se derive karke overscan bounds clamp karo.
+- Full-height spacer ke andar slice ko start*height offset do
+- stable IDs keys hon.
+- Scroll-to-index ko valid range clamp karo.
+- DOM count aur scroll position test karo
+- virtualization browser find/accessibility navigation ko affect karti hai, isliye row position metadata aur deliberate focus strategy do.
 
 **Interviewer follow-up:** Dynamic heights mein measurement cache aur prefix sums kaise help karenge?
 
@@ -1184,9 +1504,17 @@ React mein 10,000 rows, fixed height 32px, viewport 320px aur overscan 3 rows pe
 - Nine-move draw announce ho; restart blank board kare.
 - Move 2 par jump then play se old future history remove ho.
 
-**Hint — atakne par padho:** Board snapshot history rakho, derived winner ko separately synchronize mat karo.
+**Hint:**
+- Board snapshot history rakho, derived winner ko separately synchronize mat karo.
 
-**Answer guide — attempt ke baad compare karo:** Immutable boards ka history array aur selected move index rakho. New move history.slice(0,index+1) se branch banaye. Turn move parity se derive karo; win lines pure helper check kare. Cell buttons coordinate aur current value accessible label dein. Winner/draw status live region mein ho. Mutating existing snapshot time travel ko corrupt karega.
+**Answer guide:**
+- Immutable boards ka history array aur selected move index rakho.
+- New move history.slice(0,index+1) se branch banaye.
+- Turn move parity se derive karo
+- win lines pure helper check kare.
+- Cell buttons coordinate aur current value accessible label dein.
+- Winner/draw status live region mein ho.
+- Mutating existing snapshot time travel ko corrupt karega.
 
 **Interviewer follow-up:** N-by-N board aur K-in-a-row rule par winner detection complexity kaise badlegi?
 
@@ -1224,9 +1552,17 @@ Redux/Redux Toolkit mein local catalog aur cart banao. Prices integer paise mein
 - Stock=2 par third add reject/no-op ho; invalid negative quantity unchanged rahe.
 - 1999 paise x2 + 500 paise x1 ka subtotal 4498 ho.
 
-**Hint — atakne par padho:** Cart identity product ID se banao aur total derive karo.
+**Hint:**
+- Cart identity product ID se banao aur total derive karo.
 
-**Answer guide — attempt ke baad compare karo:** Product IDs se quantities map karo; reducer boundaries par stock/quantity rules enforce karo. Catalog lookup se selector total calculate kare, total field manually synchronize mat karo. UI rejected operation ka feedback de. Reducer tests mein old state unchanged verify karo; Toolkit draft syntax use karo toh plain reducer mutation se distinction samjho. Checkout par server price/stock final authority rahe.
+**Answer guide:**
+- Product IDs se quantities map karo
+- reducer boundaries par stock/quantity rules enforce karo.
+- Catalog lookup se selector total calculate kare, total field manually synchronize mat karo.
+- UI rejected operation ka feedback de.
+- Reducer tests mein old state unchanged verify karo
+- Toolkit draft syntax use karo toh plain reducer mutation se distinction samjho.
+- Checkout par server price/stock final authority rahe.
 
 **Interviewer follow-up:** Cart refresh par price badal jaaye toh user confirmation ka flow kya hoga?
 
@@ -1248,9 +1584,17 @@ Redux app mein fake async adapter se todo status toggle karo. UI immediate updat
 - Row A fail aur row B succeed: B ka success preserve ho.
 - Pending A par second toggle request na bheje; error ke baad retry chale.
 
-**Hint — atakne par padho:** Whole-list backup ki jagah per-entity mutation snapshot rakho.
+**Hint:**
+- Whole-list backup ki jagah per-entity mutation snapshot rakho.
 
-**Answer guide — attempt ke baad compare karo:** Each entity ke pending request ID, prior value aur error store karo. Start par snapshot aur optimistic update ek transition mein karo. Fulfilled/rejected response ko matching request ID se apply karo; row-level pending guard enforce karo. Failure par sirf matching row ki prior value restore karo. Full-state rollback unrelated successful changes erase karega. Server refresh overlapping ho toh ownership policy separately define karo.
+**Answer guide:**
+- Each entity ke pending request ID, prior value aur error store karo.
+- Start par snapshot aur optimistic update ek transition mein karo.
+- Fulfilled/rejected response ko matching request ID se apply karo
+- row-level pending guard enforce karo.
+- Failure par sirf matching row ki prior value restore karo.
+- Full-state rollback unrelated successful changes erase karega.
+- Server refresh overlapping ho toh ownership policy separately define karo.
 
 **Interviewer follow-up:** Same row ke rapid parallel edits allow karne par serialization ya versioning kaise add karoge?
 
@@ -1272,9 +1616,16 @@ Redux app mein plain text editor with setText,undo,redo banao. Each committed ed
 - Undo to B then commit D: redo unavailable ho.
 - No-op same-text commit history add na kare; cap50 oldest snapshots evict kare.
 
-**Hint — atakne par padho:** History ko past/present/future state mein express karo.
+**Hint:**
+- History ko past/present/future state mein express karo.
 
-**Answer guide — attempt ke baad compare karo:** Reducer commit par current present past mein push, cap trim aur future clear kare. Undo latest past ko present aur old present future front mein move kare; redo reverse operation ho. Editor local draft selected present change se reset ho with explicit unsaved discard policy. Selectors availability derive karein, separately flags maintain mat karo. Snapshots immutable hon.
+**Answer guide:**
+- Reducer commit par current present past mein push, cap trim aur future clear kare.
+- Undo latest past ko present aur old present future front mein move kare
+- redo reverse operation ho.
+- Editor local draft selected present change se reset ho with explicit unsaved discard policy.
+- Selectors availability derive karein, separately flags maintain mat karo.
+- Snapshots immutable hon.
 
 **Interviewer follow-up:** Large documents ke liye snapshots se patches par shift mein inverse operations kaise validate karoge?
 
@@ -1296,9 +1647,17 @@ Redux query page fake API se users search kare. Query update request start kare;
 - Old request rejection B success ko error mein convert na kare.
 - Clear query pending generation invalidate kare, late results absent rahein.
 
-**Hint — atakne par padho:** Reducer fulfilled/rejected actions ko owner ID se gate karo.
+**Hint:**
+- Reducer fulfilled/rejected actions ko owner ID se gate karo.
 
-**Answer guide — attempt ke baad compare karo:** Pending action new request ID establish kare; async middleware/thunk adapter load invoke kare. Fulfilled/rejected action matching current ID ho tab state transition kare. Query clear ID reset kare. Cancellation work save kare, identity guard correctness protect kare. Derived UI status use karo; abort ko user-visible server error banana avoid karo.
+**Answer guide:**
+- Pending action new request ID establish kare
+- async middleware/thunk adapter load invoke kare.
+- Fulfilled/rejected action matching current ID ho tab state transition kare.
+- Query clear ID reset kare.
+- Cancellation work save kare, identity guard correctness protect kare.
+- Derived UI status use karo
+- abort ko user-visible server error banana avoid karo.
 
 **Interviewer follow-up:** Cache keyed by query add karoge toh active view ownership aur cache population kaise separate honge?
 
@@ -1320,9 +1679,16 @@ Redux mein users aur issues by ID store karo. Issue {id,assigneeId,status,title}
 - Reassignment ke baad filtered row correctly enter/exit ho.
 - Status filter change source entities mutate na kare; unknown assignee crash na kare.
 
-**Hint — atakne par padho:** Joined display data selectors se derive karo, issue mein user name duplicate mat karo.
+**Hint:**
+- Joined display data selectors se derive karo, issue mein user name duplicate mat karo.
 
-**Answer guide — attempt ke baad compare karo:** Entities normalized rakho aur filters ko UI state mein store karo. Selector IDs filter kare aur user map join karke display banaye. Reference-stable inputs par memoization use karo jab repeated work measurable ho. Mutation/reducer immutable update kare taaki selectors invalidation samjhein. User delete par fallback policy explicit rakho; derived visible arrays ko independent persisted state banana sync bugs deta hai.
+**Answer guide:**
+- Entities normalized rakho aur filters ko UI state mein store karo.
+- Selector IDs filter kare aur user map join karke display banaye.
+- Reference-stable inputs par memoization use karo jab repeated work measurable ho.
+- Mutation/reducer immutable update kare taaki selectors invalidation samjhein.
+- User delete par fallback policy explicit rakho
+- derived visible arrays ko independent persisted state banana sync bugs deta hai.
 
 **Interviewer follow-up:** 10,000 issues ke saath selector recomputation aur render cost kaise separately measure karoge?
 
@@ -1344,9 +1710,17 @@ Redux product view mein category,sort,page URL committed source of truth ho. Sea
 - Apply one history entry create kare; Back prior filters restore kare.
 - URL->store update effect URL rewrite loop na banaye.
 
-**Hint — atakne par padho:** One canonical parser/serializer aur navigation event ownership rakho.
+**Hint:**
+- One canonical parser/serializer aur navigation event ownership rakho.
 
-**Answer guide — attempt ke baad compare karo:** Parse URL to validated filter state on initial load/navigation. User Apply route update kare; route subscription store projection dispatch kare. Same canonical state compare karke duplicate navigation avoid karo. Local search draft navigation par documented reset kare. Server response ownership filters key se guard karo. Store aur URL dono independent authority honge toh synchronization loops aayenge.
+**Answer guide:**
+- Parse URL to validated filter state on initial load/navigation.
+- User Apply route update kare
+- route subscription store projection dispatch kare.
+- Same canonical state compare karke duplicate navigation avoid karo.
+- Local search draft navigation par documented reset kare.
+- Server response ownership filters key se guard karo.
+- Store aur URL dono independent authority honge toh synchronization loops aayenge.
 
 **Interviewer follow-up:** ReplaceState versus pushState typing, pagination aur reset mein kab use karoge?
 
@@ -1368,9 +1742,16 @@ Redux todos mein offline add queue karo. Durable local-storage adapter schema va
 - Lost acknowledgment retry same mutationId bheje aur server duplicate todo na banaye.
 - Invalid persisted JSON app crash na kare; storage failure unsaved status dikhaye.
 
-**Hint — atakne par padho:** Optimistic entity ID aur stable server mutation identity map karo.
+**Hint:**
+- Optimistic entity ID aur stable server mutation identity map karo.
 
-**Answer guide — attempt ke baad compare karo:** Queue records serializable pending/sending/blocked statuses rakhein. Reload sending ko retryable pending normalize kare. Worker one item send kare, success server ID reconcile aur durable queue removal kare. Persistence failure surface karo; in-memory optimistic success ko durable save mat bolo. Reducer network/storage side effects se pure rahe, middleware adapter operations own kare.
+**Answer guide:**
+- Queue records serializable pending/sending/blocked statuses rakhein.
+- Reload sending ko retryable pending normalize kare.
+- Worker one item send kare, success server ID reconcile aur durable queue removal kare.
+- Persistence failure surface karo
+- in-memory optimistic success ko durable save mat bolo.
+- Reducer network/storage side effects se pure rahe, middleware adapter operations own kare.
 
 **Interviewer follow-up:** Offline edit conflicts server version se milen toh overwrite/merge/manual recovery ka UI kya hoga?
 
@@ -1392,9 +1773,16 @@ Redux app fake login/logout adapter use kare. User profile aur private documents
 - A pending fetch completion B session store populate na kare.
 - Persisted nonprivate theme remain ho, private data reload se restore na ho.
 
-**Hint — atakne par padho:** Global session generation every private request ka ownership token hai.
+**Hint:**
+- Global session generation every private request ka ownership token hai.
 
-**Answer guide — attempt ke baad compare karo:** Root reducer session-reset action private slices reset kare aur generation increase kare. Each async private action generation capture karke completion reducer guard lagaye. Abort pending requests optional efficiency hai; generation still needed. Persistence allowlist only safe preferences choose kare. UI route guard data authorization replace nahi karta, backend session authority separately required hai.
+**Answer guide:**
+- Root reducer session-reset action private slices reset kare aur generation increase kare.
+- Each async private action generation capture karke completion reducer guard lagaye.
+- Abort pending requests optional efficiency hai
+- generation still needed.
+- Persistence allowlist only safe preferences choose kare.
+- UI route guard data authorization replace nahi karta, backend session authority separately required hai.
 
 **Interviewer follow-up:** Multiple browser tabs logout synchronize karte waqt stale storage events kaise handle karoge?
 
@@ -1416,9 +1804,17 @@ Redux fake issues API pages queryKey/cursor se store karo. Entities map by ID au
 - Late Page1 old version canonical newer entity overwrite na kare.
 - Invalidating one query other query page membership delete na kare.
 
-**Hint — atakne par padho:** Entity freshness aur query membership freshness independent hain.
+**Hint:**
+- Entity freshness aur query membership freshness independent hain.
 
-**Answer guide — attempt ke baad compare karo:** Normalized entity map merge per-ID version compare kare; page IDs incoming page order preserve karein. Page cache status/error/requestId separate rakho, matching request gate per page ho. Selector page IDs join kare; missing entity fallback loading/error policy explicit ho. Version-free merge last-arrival overwrite races create karega. Eviction referenced entities blindly remove na kare.
+**Answer guide:**
+- Normalized entity map merge per-ID version compare kare
+- page IDs incoming page order preserve karein.
+- Page cache status/error/requestId separate rakho, matching request gate per page ho.
+- Selector page IDs join kare
+- missing entity fallback loading/error policy explicit ho.
+- Version-free merge last-arrival overwrite races create karega.
+- Eviction referenced entities blindly remove na kare.
 
 **Interviewer follow-up:** Delete tombstone newer version ke saath aaye toh stale pages deleted issue resurrect na karein, kaise?
 
@@ -1440,9 +1836,16 @@ Redux middleware action type, timestamp aur changed top-level slice names record
 - Reducer throw par failure audit entry ho, error caller tak propagate ho.
 - Sink throw app dispatch failure mein convert na ho; secrets nested objects mein absent hon.
 
-**Hint — atakne par padho:** Middleware wrapper observation kare, action object mutate na kare.
+**Hint:**
+- Middleware wrapper observation kare, action object mutate na kare.
 
-**Answer guide — attempt ke baad compare karo:** Before/after slice references compare karo; reducer error separately capture/rethrow karo. Redacted payload fresh bounded traversal se banao, WeakSet cycles mark kare. Audit sink guarded try/catch best-effort policy le. Timestamp injected clock se deterministic ho. Large action traversal overhead limit karo aur payload allowlist production alternative explain karo.
+**Answer guide:**
+- Before/after slice references compare karo
+- reducer error separately capture/rethrow karo.
+- Redacted payload fresh bounded traversal se banao, WeakSet cycles mark kare.
+- Audit sink guarded try/catch best-effort policy le.
+- Timestamp injected clock se deterministic ho.
+- Large action traversal overhead limit karo aur payload allowlist production alternative explain karo.
 
 **Interviewer follow-up:** Immutable state requirement violate ho toh reference-based changed-slice audit kya miss karega?
 
@@ -1464,9 +1867,16 @@ Expense request UI mein draft->submitted->approved/rejected transitions Redux re
 - Requester approve action reject ho; reviewer rejection reason mandatory ho.
 - Revise preserves values but clears review result; resubmit new revision increment kare.
 
-**Hint — atakne par padho:** Allowed event table state aur role pair ke against validate karo.
+**Hint:**
+- Allowed event table state aur role pair ke against validate karo.
 
-**Answer guide — attempt ke baad compare karo:** One reducer transitions explicit switch/table se enforce kare, scattered UI flags se nahi. Entity status/revision/review fields consistent one transition mein update hon. Selector allowed actions derive kare; UI hide alone authority nahi. Async approval add karne par expected revision request mein bhejo aur stale response gate karo. Invalid action structured error outcome de without partial mutation.
+**Answer guide:**
+- One reducer transitions explicit switch/table se enforce kare, scattered UI flags se nahi.
+- Entity status/revision/review fields consistent one transition mein update hon.
+- Selector allowed actions derive kare
+- UI hide alone authority nahi.
+- Async approval add karne par expected revision request mein bhejo aur stale response gate karo.
+- Invalid action structured error outcome de without partial mutation.
 
 **Interviewer follow-up:** Two reviewers opposite decisions simultaneously bhejein toh backend version check aur UI reconciliation kaise work karega?
 
@@ -1504,9 +1914,16 @@ Node/Express mein in-memory task API banao: POST /tasks, GET /tasks?limit&after,
 - after cursor ke baad strict greater IDs aayein; invalid cursor 400.
 - Failed patch existing task ko partially mutate na kare; delete ke baad GET list se task hate.
 
-**Hint — atakne par padho:** Validation aur mutation ke beech clear boundary rakho.
+**Hint:**
+- Validation aur mutation ke beech clear boundary rakho.
 
-**Answer guide — attempt ke baad compare karo:** Router parsing/validation kare, service task rules aur repository data access own kare. Patch ke supplied fields allowlist karke full proposed value validate karo, tab commit karo. Cursor ko numeric ID parse karke strict greater filter/sort/limit apply karo. Central error middleware se stable JSON shape do. In-memory IDs restart par reset honge; drill ko durable production API mat bolo.
+**Answer guide:**
+- Router parsing/validation kare, service task rules aur repository data access own kare.
+- Patch ke supplied fields allowlist karke full proposed value validate karo, tab commit karo.
+- Cursor ko numeric ID parse karke strict greater filter/sort/limit apply karo.
+- Central error middleware se stable JSON shape do.
+- In-memory IDs restart par reset honge
+- drill ko durable production API mat bolo.
 
 **Interviewer follow-up:** Multiple processes aur persistent database ke saath IDs/pagination contract kaise migrate karoge?
 
@@ -1528,9 +1945,16 @@ Node HTTP endpoint se async record generator ka CSV stream banao; external DB op
 - Slow writable ke saath producer drain se pehle unbounded next records na pull kare.
 - Disconnect par generator cleanup ho; stream error response headers ke baad second JSON response na bheje.
 
-**Hint — atakne par padho:** Writable capacity aur upstream iterator cleanup ko first-class banao.
+**Hint:**
+- Writable capacity aur upstream iterator cleanup ko first-class banao.
 
-**Answer guide — attempt ke baad compare karo:** CSV encoder quote-containing/comma/newline fields ko quote kare aur embedded quotes double kare. Async iteration ko backpressure-respecting pipeline se jodo ya write false par drain/close/error wait karo. Abort par upstream iterator return/cleanup karo. Headers bhejne se pehle failure ko normal HTTP error banao; later failure stream terminate kare aur log ho. Saare records array mein materialize karna streaming defeat karega.
+**Answer guide:**
+- CSV encoder quote-containing/comma/newline fields ko quote kare aur embedded quotes double kare.
+- Async iteration ko backpressure-respecting pipeline se jodo ya write false par drain/close/error wait karo.
+- Abort par upstream iterator return/cleanup karo.
+- Headers bhejne se pehle failure ko normal HTTP error banao
+- later failure stream terminate kare aur log ho.
+- Saare records array mein materialize karna streaming defeat karega.
 
 **Interviewer follow-up:** Spreadsheet formula injection ke liye raw export aur spreadsheet-safe mode ka contract kya hoga?
 
@@ -1552,9 +1976,16 @@ Plain Node mein compose(middlewares)(context) banao; each middleware async (ctx,
 - Same middleware next twice call kare toh clear rejection ho.
 - Inner rejection upstream try/catch se handle ho; empty pipeline resolves.
 
-**Hint — atakne par padho:** Dispatch index monotonic rakho aur returned promises await karo.
+**Hint:**
+- Dispatch index monotonic rakho aur returned promises await karo.
 
-**Answer guide — attempt ke baad compare karo:** Dispatch(i) next function ko dispatch(i+1) return kare; last dispatched index guard repeated next reject kare. Promise.resolve boundary sync throws ko rejection mein normalize kare. Middleware contract next await/return karne ka ho, warna parent completion prematurely resolve ho sakti hai. Context mutations intentional shared request state hain; across invocations context reuse mat karo.
+**Answer guide:**
+- Dispatch(i) next function ko dispatch(i+1) return kare
+- last dispatched index guard repeated next reject kare.
+- Promise.resolve boundary sync throws ko rejection mein normalize kare.
+- Middleware contract next await/return karne ka ho, warna parent completion prematurely resolve ho sakti hai.
+- Context mutations intentional shared request state hain
+- across invocations context reuse mat karo.
 
 **Interviewer follow-up:** Cancellation aur per-middleware timing add karne par finally blocks kahan lagenge?
 
@@ -1576,9 +2007,16 @@ Node HTTP server mein /ready aur delayed /work endpoints banao. SIGTERM/shutdown
 - New request after shutdown rejected ya connection refused ho.
 - Hung request deadline par terminate ho; repeated shutdown resource close twice na kare.
 
-**Hint — atakne par padho:** Shutdown ko idempotent shared promise aur deadline se model karo.
+**Hint:**
+- Shutdown ko idempotent shared promise aur deadline se model karo.
 
-**Answer guide — attempt ke baad compare karo:** Draining flag pehle set karo, server accepting stop karo aur in-flight counter/connection set track karo. Ready endpoint aur new accepted work flag consult karein. Deadline pending sockets/resources force close kare; DB adapter in-flight work ke drain ke baad close ho. Finally timers/listeners cleanup karo. Only process.exit immediately calling successful writes truncate kar sakta hai.
+**Answer guide:**
+- Draining flag pehle set karo, server accepting stop karo aur in-flight counter/connection set track karo.
+- Ready endpoint aur new accepted work flag consult karein.
+- Deadline pending sockets/resources force close kare
+- DB adapter in-flight work ke drain ke baad close ho.
+- Finally timers/listeners cleanup karo.
+- Only process.exit immediately calling successful writes truncate kar sakta hai.
 
 **Interviewer follow-up:** Keep-alive connections aur background jobs ko same drain budget mein kaise include karoge?
 
@@ -1600,9 +2038,17 @@ Node API aur persistent store se fake payment event intake banao. eventId unique
 - Persist ke baad response se pehle crash simulate karke retry safe ho.
 - Worker failure pending event ko retryable rakhe; replay bad payload 409 de.
 
-**Hint — atakne par padho:** HTTP receipt aur business processing ko durable event identity se connect karo.
+**Hint:**
+- HTTP receipt aur business processing ko durable event identity se connect karo.
 
-**Answer guide — attempt ke baad compare karo:** Unique event ID ke saath canonical payload/fingerprint persist karo aur durable receipt ke baad acknowledge karo. Worker pending event atomically claim kare. Order paid transition aur event processed marker same DB transaction mein commit karo; failure rollback/retry ho. Duplicate insert par stored payload compare karo. In-memory Set restart recovery nahi deta. External side effect ho toh downstream idempotency alag chahiye.
+**Answer guide:**
+- Unique event ID ke saath canonical payload/fingerprint persist karo aur durable receipt ke baad acknowledge karo.
+- Worker pending event atomically claim kare.
+- Order paid transition aur event processed marker same DB transaction mein commit karo
+- failure rollback/retry ho.
+- Duplicate insert par stored payload compare karo.
+- In-memory Set restart recovery nahi deta.
+- External side effect ho toh downstream idempotency alag chahiye.
 
 **Interviewer follow-up:** Worker claim ke baad crash ho toh lease aur duplicate delivery handling kaise recover karegi?
 
@@ -1624,9 +2070,16 @@ Node HTTP mein SSE endpoint aur fake event source banao. Events IDs increasing, 
 - Two concurrent clients independent receive karein; disconnect listener count restore kare.
 - Slow writable per-client buffer bound exceed kare toh connection close ho, memory grow na kare.
 
-**Hint — atakne par padho:** Event framing aur subscriber lifecycle ko one cleanup path do.
+**Hint:**
+- Event framing aur subscriber lifecycle ko one cleanup path do.
 
-**Answer guide — attempt ke baad compare karo:** SSE fields newline framing se encode karo, multiline data each line prefix ho. Connection register aur replay watermark coordination gap avoid kare. Heartbeat timer, listener aur pending buffer cleanup close/error par idempotently karo. write backpressure respect karo; bounded buffer overflow documented reconnect/reset policy trigger kare. In-memory history restart durable replay guarantee nahi deta.
+**Answer guide:**
+- SSE fields newline framing se encode karo, multiline data each line prefix ho.
+- Connection register aur replay watermark coordination gap avoid kare.
+- Heartbeat timer, listener aur pending buffer cleanup close/error par idempotently karo.
+- write backpressure respect karo
+- bounded buffer overflow documented reconnect/reset policy trigger kare.
+- In-memory history restart durable replay guarantee nahi deta.
 
 **Interviewer follow-up:** Multiple Node instances par replay ordering aur fan-out kis shared component ko doge?
 
@@ -1648,9 +2101,17 @@ Node/Express multipart upload parser adapter use karke one file max 2MiB accept 
 - Client disconnect parser/storage resources close kare.
 - ../../name.txt storage path escape na kare; two uploads same name collide na hon.
 
-**Hint — atakne par padho:** Byte limit streaming path mein enforce karo, final file size check alone late hai.
+**Hint:**
+- Byte limit streaming path mein enforce karo, final file size check alone late hai.
 
-**Answer guide — attempt ke baad compare karo:** Multipart parser configured field/file/count/byte limits se use karo; body ko whole buffer mat banao. Server-generated IDs/path aur exclusive temp creation rakho. Parser errors/abort/storage failure one cleanup routine invoke karein. Success only flushed/closed stored object ke baad report ho. Client MIME/name trusted content proof nahi; drill type policy limited hai.
+**Answer guide:**
+- Multipart parser configured field/file/count/byte limits se use karo
+- body ko whole buffer mat banao.
+- Server-generated IDs/path aur exclusive temp creation rakho.
+- Parser errors/abort/storage failure one cleanup routine invoke karein.
+- Success only flushed/closed stored object ke baad report ho.
+- Client MIME/name trusted content proof nahi
+- drill type policy limited hai.
 
 **Interviewer follow-up:** Object storage direct uploads mein finalize validation aur abandoned object cleanup kaise chalega?
 
@@ -1672,9 +2133,17 @@ Node worker_threads pool with 2 workers aur max waiting queue 5 banao. Job is co
 - Eight simultaneous jobs: two active, five waiting, eighth busy ho.
 - Worker termination pending promise settle kare, next job replacement par chale.
 
-**Hint — atakne par padho:** Job ownership worker ID aur request ID se bind karo.
+**Hint:**
+- Job ownership worker ID aur request ID se bind karo.
 
-**Answer guide — attempt ke baad compare karo:** Idle workers queue, waiting jobs aur in-flight ownership map rakho. Dispatch par unique ID bhejo; response only matching job settle kare. Exit/error handler current job reject aur worker replace kare; duplicate error/exit events double settlement/refill na karein. Shutdown new submissions reject kare aur chosen drain/cancel policy follow kare. Unbounded worker per request CPU/memory exhaust karega.
+**Answer guide:**
+- Idle workers queue, waiting jobs aur in-flight ownership map rakho.
+- Dispatch par unique ID bhejo
+- response only matching job settle kare.
+- Exit/error handler current job reject aur worker replace kare
+- duplicate error/exit events double settlement/refill na karein.
+- Shutdown new submissions reject kare aur chosen drain/cancel policy follow kare.
+- Unbounded worker per request CPU/memory exhaust karega.
 
 **Interviewer follow-up:** Timeout par synchronous CPU job ko truly cancel karne ke liye worker lifecycle kaise change hogi?
 
@@ -1696,9 +2165,16 @@ Injected fetch adapter se JSON client banao. 500ms per-attempt timeout, max2 att
 - Headers fast/body hung still timeout ho; oversized body abort ho.
 - Caller abort while waiting future attempt roke; timers/listeners cleanup hon.
 
-**Hint — atakne par padho:** Timeout scope response body read tak cover kare.
+**Hint:**
+- Timeout scope response body read tak cover kare.
 
-**Answer guide — attempt ke baad compare karo:** Per-attempt abort controller ko caller signal se coordinate karo aur timer finally clear karo. Status handling se pehle bounded body consumption/cancellation policy rakho; JSON parse failures retryable network error se separate hon. Retry loop method/status allowlist consult kare. Headers milte hi timer clear karna hung body ko unlimited time dega. Request credentials/error logging redact karo.
+**Answer guide:**
+- Per-attempt abort controller ko caller signal se coordinate karo aur timer finally clear karo.
+- Status handling se pehle bounded body consumption/cancellation policy rakho
+- JSON parse failures retryable network error se separate hon.
+- Retry loop method/status allowlist consult kare.
+- Headers milte hi timer clear karna hung body ko unlimited time dega.
+- Request credentials/error logging redact karo.
 
 **Interviewer follow-up:** Global total deadline aur per-attempt timeout dono hon toh remaining budget kaise propagate karoge?
 
@@ -1720,9 +2196,16 @@ Node service mein coalesce(key,load) sirf in-flight calls share kare; settled re
 - A abort, B alive: B success receive kare.
 - All abort then new caller aaye toh fresh load start ho; old finalizer new entry na remove kare.
 
-**Hint — atakne par padho:** Shared load lifetime aur individual waiter promises separate hain.
+**Hint:**
+- Shared load lifetime aur individual waiter promises separate hain.
 
-**Answer guide — attempt ke baad compare karo:** Entry mein controller, unique token aur active subscribers store karo. Per-waiter abort listener sirf own promise reject/remove kare; last waiter par entry retire karke load abort karo. Completion matching entry token par registry cleanup kare aur active waiters settle kare. Load rejection handled ho even zero subscribers bach gaye hon. Settled cache intentionally absent hai.
+**Answer guide:**
+- Entry mein controller, unique token aur active subscribers store karo.
+- Per-waiter abort listener sirf own promise reject/remove kare
+- last waiter par entry retire karke load abort karo.
+- Completion matching entry token par registry cleanup kare aur active waiters settle kare.
+- Load rejection handled ho even zero subscribers bach gaye hon.
+- Settled cache intentionally absent hai.
 
 **Interviewer follow-up:** Per-tenant keys aur maximum in-flight entries se memory/isolation kaise bound karoge?
 
@@ -1744,9 +2227,17 @@ Node CLI add/list/done/remove commands se JSON file task store banao. Stable IDs
 - Failed write old valid store preserve kare.
 - Unknown command/ID nonzero exit ho, malformed JSON silently reset na ho.
 
-**Hint — atakne par padho:** Parse/validate/compute/save steps separate rakho.
+**Hint:**
+- Parse/validate/compute/save steps separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Arguments explicit parser se read karo; persisted schema/version validate karo. Next state calculate karke same-directory temporary file write/flush/close aur atomic rename adapter use karo. Error par temp cleanup aur old file preserve ho. Parent directory/path config resolve karo; shell command construction ki zaroorat nahi. Concurrent process safety assumption document karo.
+**Answer guide:**
+- Arguments explicit parser se read karo
+- persisted schema/version validate karo.
+- Next state calculate karke same-directory temporary file write/flush/close aur atomic rename adapter use karo.
+- Error par temp cleanup aur old file preserve ho.
+- Parent directory/path config resolve karo
+- shell command construction ki zaroorat nahi.
+- Concurrent process safety assumption document karo.
 
 **Interviewer follow-up:** Two simultaneous CLI processes support karne par lost updates kaise prevent karoge?
 
@@ -1784,9 +2275,17 @@ Java console/library mein single-level parking lot banao: park(vehicleId,type), 
 - Unpark ke baad spot reuse ho; old ticket new occupant ko release na kare.
 - Two concurrent park calls last spot ke liye aayein toh sirf one succeeds.
 
-**Hint — atakne par padho:** Spot identity, vehicle identity aur parking session identity alag hain.
+**Hint:**
+- Spot identity, vehicle identity aur parking session identity alag hain.
 
-**Answer guide — attempt ke baad compare karo:** Immutable vehicle/ticket records aur spot occupancy map rakho; allocation service mein lock ke under availability check, ticket create aur occupancy update karo. Active vehicle index duplicate parking roke. Release exact active ticket match kare; stale ticket ko no-op rakho. Free spots sorted structure mein maintain kar sakte ho. God object se bachne ke liye allocation policy alag rakho, lekin atomic invariant multiple locks mein accidentally split mat karo.
+**Answer guide:**
+- Immutable vehicle/ticket records aur spot occupancy map rakho
+- allocation service mein lock ke under availability check, ticket create aur occupancy update karo.
+- Active vehicle index duplicate parking roke.
+- Release exact active ticket match kare
+- stale ticket ko no-op rakho.
+- Free spots sorted structure mein maintain kar sakte ho.
+- God object se bachne ke liye allocation policy alag rakho, lekin atomic invariant multiple locks mein accidentally split mat karo.
 
 **Interviewer follow-up:** Multiple floors aur fee calculation add karne par kaunsi policies replaceable hongi?
 
@@ -1808,9 +2307,18 @@ Java mein users, expenseId, payer aur participant shares se in-memory ledger ban
 - Exact shares ka sum amount se different ho toh no mutation ho.
 - Duplicate replay balances dobara change na kare; all net balances ka sum zero rahe.
 
-**Hint — atakne par padho:** Expense validate karke hi ledger delta apply karo.
+**Hint:**
+- Expense validate karke hi ledger delta apply karo.
 
-**Answer guide — attempt ke baad compare karo:** Participants unique aur known hon; positive amount aur nonnegative shares validate karo. Canonical expense payload ID ke saath store karo. Payer net mein amount add aur participants se shares subtract karo; all deltas ek atomic operation mein apply karo. Equal split quotient/remainder se exact total preserve kare; floating money rounding avoid karo. Settlement suggestions net balances se derive ho sakti hain, historical debts replace karna alag policy hai.
+**Answer guide:**
+- Participants unique aur known hon
+- positive amount aur nonnegative shares validate karo.
+- Canonical expense payload ID ke saath store karo.
+- Payer net mein amount add aur participants se shares subtract karo
+- all deltas ek atomic operation mein apply karo.
+- Equal split quotient/remainder se exact total preserve kare
+- floating money rounding avoid karo.
+- Settlement suggestions net balances se derive ho sakti hain, historical debts replace karna alag policy hai.
 
 **Interviewer follow-up:** Expense edit/delete aur concurrent duplicate requests ko atomic kaise banaoge?
 
@@ -1832,9 +2340,15 @@ Java in-memory service mein titles, physical copies aur members model karo. borr
 - Last allowed member slot ke liye concurrent calls limit exceed na karein.
 - Old returned loan dobara return karne se new loan release na ho.
 
-**Hint — atakne par padho:** Copy constraint aur member constraint same atomic boundary mein enforce karo.
+**Hint:**
+- Copy constraint aur member constraint same atomic boundary mein enforce karo.
 
-**Answer guide — attempt ke baad compare karo:** Unique loan identity aur active-copy/member indexes rakho. One service lock simple correct starting point hai: validate both invariants, create loan aur indexes update under same lock. Return exact active loan check kare aur idempotent no-op ho. Fine-grained locks choose karo toh global ordering required hai. Book-title identity se lending track karoge toh multiple physical copies incorrectly conflict karengi.
+**Answer guide:**
+- Unique loan identity aur active-copy/member indexes rakho.
+- One service lock simple correct starting point hai: validate both invariants, create loan aur indexes update under same lock.
+- Return exact active loan check kare aur idempotent no-op ho.
+- Fine-grained locks choose karo toh global ordering required hai.
+- Book-title identity se lending track karoge toh multiple physical copies incorrectly conflict karengi.
 
 **Interviewer follow-up:** Database implementation mein copy/member constraints aur lost response retries kaise preserve karoge?
 
@@ -1856,9 +2370,17 @@ Java generic queue mein put,take,close do; capacity positive, null forbidden. Li
 - Close wake kare waiting producers/consumers; queued item lost na ho.
 - Interrupted wait interrupt propagate kare aur queue invariant preserve rahe.
 
-**Hint — atakne par padho:** Condition wakeup ko predicate true hone ki guarantee mat maano.
+**Hint:**
+- Condition wakeup ko predicate true hone ki guarantee mat maano.
 
-**Answer guide — attempt ke baad compare karo:** Ring buffer, count aur closed flag lock ke under rakho. while loops mein full/empty predicate recheck karo; await lock release/reacquire kare. Insert/remove opposite condition signal karein. Close lock ke under flag set aur signalAll kare. take ka terminal result empty-closed ko null data se distinguish kare, isliye null forbidden hai. finally unlock aur interrupt contract explicit rakho.
+**Answer guide:**
+- Ring buffer, count aur closed flag lock ke under rakho.
+- while loops mein full/empty predicate recheck karo
+- await lock release/reacquire kare.
+- Insert/remove opposite condition signal karein.
+- Close lock ke under flag set aur signalAll kare.
+- take ka terminal result empty-closed ko null data se distinguish kare, isliye null forbidden hai.
+- finally unlock aur interrupt contract explicit rakho.
 
 **Interviewer follow-up:** Fairness aur timed offer/poll add karne par remaining timeout kaise calculate karoge?
 
@@ -1880,9 +2402,16 @@ Java in-memory vending machine mein selectItem, insertCoin, cancel aur dispense 
 - Success par stock one decrement aur exact change mile; session reset ho.
 - Cancel full credit refund kare; out-of-stock selection payment se pehle reject ho.
 
-**Hint — atakne par padho:** Allowed transitions aur stock/credit invariant table se start karo.
+**Hint:**
+- Allowed transitions aur stock/credit invariant table se start karo.
 
-**Answer guide — attempt ke baad compare karo:** Idle/selected/funded states aur session credit model karo. Invalid transitions explicit errors dein. Dispense pehle stock aur funds recheck karke one atomic in-memory transition mein stock decrement, change compute aur session reset kare. Cancel reset ke saath current credit return kare. Pricing/change algorithm ko state transitions se separate rakho. Physical dispensing failure include karoge toh refund/compensation state chahiye.
+**Answer guide:**
+- Idle/selected/funded states aur session credit model karo.
+- Invalid transitions explicit errors dein.
+- Dispense pehle stock aur funds recheck karke one atomic in-memory transition mein stock decrement, change compute aur session reset kare.
+- Cancel reset ke saath current credit return kare.
+- Pricing/change algorithm ko state transitions se separate rakho.
+- Physical dispensing failure include karoge toh refund/compensation state chahiye.
 
 **Interviewer follow-up:** Limited coin inventory aaye toh greedy change kab fail hoga aur algorithm kya hoga?
 
@@ -1904,9 +2433,16 @@ Java Reader se line-delimited timestamp|service|level|message parse karo. UTC in
 - Malformed date/oversized line counted ho, next valid line process ho.
 - Empty input zero summary de; file ownership contract Reader caller close kare.
 
-**Hint — atakne par padho:** Streaming lines aur bounded line parser alag resource concerns hain.
+**Hint:**
+- Streaming lines aur bounded line parser alag resource concerns hain.
 
-**Answer guide — attempt ke baad compare karo:** Character buffer se length cap enforce karke oversized line discard-until-newline karo; ordinary readLine already huge string allocate kar sakta hai. Split limit 4 ya explicit separators se parse karo, timestamp validation catch karo. Counts map aur deterministic top-k sort/heap use karo. Distinct message count unbounded ho sakti hai; is exact drill mein fixture bound document karo.
+**Answer guide:**
+- Character buffer se length cap enforce karke oversized line discard-until-newline karo
+- ordinary readLine already huge string allocate kar sakta hai.
+- Split limit 4 ya explicit separators se parse karo, timestamp validation catch karo.
+- Counts map aur deterministic top-k sort/heap use karo.
+- Distinct message count unbounded ho sakti hai
+- is exact drill mein fixture bound document karo.
 
 **Interviewer follow-up:** Unbounded distinct messages par exact top-k aur approximate heavy hitters ka tradeoff kya hai?
 
@@ -1928,9 +2464,17 @@ Java single dispatcher scheduler mein schedule(task,deadlineNanos), cancel(id), 
 - Cancel before dispatch task execute na kare; duplicate cancel safe ho.
 - Shutdown pending tasks cancel kare aur waiting dispatcher wake ho.
 
-**Hint — atakne par padho:** Deadline priority queue ko condition-wait loop se combine karo.
+**Hint:**
+- Deadline priority queue ko condition-wait loop se combine karo.
 
-**Answer guide — attempt ke baad compare karo:** Lock-protected min-heap aur ID->state map rakho. Wait loop nearest deadline aur shutdown recheck kare; new earliest insertion signal de. Due task ko atomic pending->dispatched transition ke baad executor handoff karo. Cancel sirf pending state se win kare; already-running interrupt guarantee mat do. Task exception catch/report karo taaki dispatcher alive rahe.
+**Answer guide:**
+- Lock-protected min-heap aur ID->state map rakho.
+- Wait loop nearest deadline aur shutdown recheck kare
+- new earliest insertion signal de.
+- Due task ko atomic pending->dispatched transition ke baad executor handoff karo.
+- Cancel sirf pending state se win kare
+- already-running interrupt guarantee mat do.
+- Task exception catch/report karo taaki dispatcher alive rahe.
 
 **Interviewer follow-up:** Fixed-rate versus fixed-delay recurring jobs mein overrun behavior kaise define karoge?
 
@@ -1952,9 +2496,16 @@ Java in-memory accounts mein integer paise balances rakho. transfer(from,to,amou
 - Failure par dono balances unchanged aur total sum conserved ho.
 - Near-maximum long balance transfer overflow kare toh mutation na ho.
 
-**Hint — atakne par padho:** Locks stable account ID order mein acquire karo.
+**Hint:**
+- Locks stable account ID order mein acquire karo.
 
-**Answer guide — attempt ke baad compare karo:** Accounts validate karke lower ID lock phir higher ID lock lo. Under locks source funds aur destination exact-add overflow check karo, phir dono updates commit karo. Same-account branch before double lock handling explicit rakho. Reads consistent snapshot chahiye toh same locking discipline follow karein. Money floating point mein model mat karo; distinct invariant tests conservation aur nonnegative balance prove karein.
+**Answer guide:**
+- Accounts validate karke lower ID lock phir higher ID lock lo.
+- Under locks source funds aur destination exact-add overflow check karo, phir dono updates commit karo.
+- Same-account branch before double lock handling explicit rakho.
+- Reads consistent snapshot chahiye toh same locking discipline follow karein.
+- Money floating point mein model mat karo
+- distinct invariant tests conservation aur nonnegative balance prove karein.
 
 **Interviewer follow-up:** Crash-safe durable transfer mein in-memory locks ko kis database transaction boundary se replace karoge?
 
@@ -1976,9 +2527,16 @@ Java pricing library mein item subtotal, one coupon aur tax calculate karo. Mone
 - Oversized fixed coupon total negative na kare.
 - Zero quantity/negative price reject; original cart unchanged rahe.
 
-**Hint — atakne par padho:** Calculation order aur rounding contract strategy interface se pehle fix karo.
+**Hint:**
+- Calculation order aur rounding contract strategy interface se pehle fix karo.
 
-**Answer guide — attempt ke baad compare karo:** Validated immutable cart lines se subtotal exact arithmetic mein derive karo. Coupon strategy discount de, central service cap apply kare; tax policy discounted base par chale. Wider/exact intermediate arithmetic use karo taaki multiply overflow na ho. Result breakdown subtotal/discount/tax/total expose kare. Strategy extension business order ko implicitly change na kare.
+**Answer guide:**
+- Validated immutable cart lines se subtotal exact arithmetic mein derive karo.
+- Coupon strategy discount de, central service cap apply kare
+- tax policy discounted base par chale.
+- Wider/exact intermediate arithmetic use karo taaki multiply overflow na ho.
+- Result breakdown subtotal/discount/tax/total expose kare.
+- Strategy extension business order ko implicitly change na kare.
 
 **Interviewer follow-up:** Multiple stackable coupons aur line-level refunds mein rounding allocation kaise preserve hogi?
 
@@ -2000,9 +2558,16 @@ Java single-process string KV store mein begin,get,put,delete,commit,rollback do
 - Two writers same base version se commit: first success, second conflict.
 - Rollback unchanged global state de; closed transaction operations reject hon.
 
-**Hint — atakne par padho:** Snapshot aur staged writes ko live map se detach karo.
+**Hint:**
+- Snapshot aur staged writes ko live map se detach karo.
 
-**Answer guide — attempt ke baad compare karo:** Begin lock ke under map snapshot/version capture kare. Transaction overlay mein tombstone delete ko missing key se distinguish kare. Commit same lock mein base version compare, complete overlay apply aur version increment kare; read-only commit ko defined no-write path do. Yeh coarse conflict policy independent writes bhi reject karegi, lekin correctness clear hai. Full snapshot copy memory cost explain karo.
+**Answer guide:**
+- Begin lock ke under map snapshot/version capture kare.
+- Transaction overlay mein tombstone delete ko missing key se distinguish kare.
+- Commit same lock mein base version compare, complete overlay apply aur version increment kare
+- read-only commit ko defined no-write path do.
+- Yeh coarse conflict policy independent writes bhi reject karegi, lekin correctness clear hai.
+- Full snapshot copy memory cost explain karo.
 
 **Interviewer follow-up:** Per-key versions se unrelated writes allow karoge toh range-read phantom conflict kaise handle hoga?
 
@@ -2024,9 +2589,16 @@ Java console-independent engine mein 2–4 players, board 1..100, injected dice 
 - Dice landing 5 with 5->20 jump player ko 20 le jaaye.
 - Winner ke baad roll reject; invalid board/dice input state mutate na kare.
 
-**Hint — atakne par padho:** Randomness aur game rules ko presentation se separate karo.
+**Hint:**
+- Randomness aur game rules ko presentation se separate karo.
 
-**Answer guide — attempt ke baad compare karo:** Game state positions/current player/status rakho, dice source dependency inject karo. Proposed move validate aur single configured jump apply karo, phir win check aur otherwise next turn. Mapping chain deliberately apply nahi hoti; board contract UI mein clear ho. Deterministic dice sequence se winner/overshoot/turn tests repeat karo. Domain class ko console scanner se couple mat karo.
+**Answer guide:**
+- Game state positions/current player/status rakho, dice source dependency inject karo.
+- Proposed move validate aur single configured jump apply karo, phir win check aur otherwise next turn.
+- Mapping chain deliberately apply nahi hoti
+- board contract UI mein clear ho.
+- Deterministic dice sequence se winner/overshoot/turn tests repeat karo.
+- Domain class ko console scanner se couple mat karo.
 
 **Interviewer follow-up:** Chained jumps aur configurable win rules introduce karoge toh cycle validation kahan hogi?
 
@@ -2064,9 +2636,16 @@ Spring Boot + SQL database mein POST /reservations banao: productId, positive qu
 - Same request retry stock dobara decrement na kare.
 - Reservation insert fail par decrement rollback ho; invalid quantity 400 ho.
 
-**Hint — atakne par padho:** Check-then-save ke bajay database-enforced atomic condition socho.
+**Hint:**
+- Check-then-save ke bajay database-enforced atomic condition socho.
 
-**Answer guide — attempt ke baad compare karo:** Transaction mein request identity unique constraint aur conditional stock update quantity<=available use karo; affected row count se success decide karo. Reservation aur stock change ek transaction mein commit hon. Duplicate-key exception ke baad failed transaction mein query continue mat karo; rollback ke baad separate read se canonical reservation/payload compare karo. H2-only happy path ki jagah target DB parallel integration test se invariant prove karo.
+**Answer guide:**
+- Transaction mein request identity unique constraint aur conditional stock update quantity<=available use karo
+- affected row count se success decide karo.
+- Reservation aur stock change ek transaction mein commit hon.
+- Duplicate-key exception ke baad failed transaction mein query continue mat karo
+- rollback ke baad separate read se canonical reservation/payload compare karo.
+- H2-only happy path ki jagah target DB parallel integration test se invariant prove karo.
 
 **Interviewer follow-up:** Expired reservation release ko duplicate scheduler runs ke against safe kaise banaoge?
 
@@ -2088,9 +2667,16 @@ Spring Boot + PostgreSQL mein room booking API banao. roomId, start, end UTC ins
 - Same room ke overlapping parallel inserts mein one succeeds, one 409 ho.
 - end<=start invalid ho; cancel ke baad slot dobara book ho.
 
-**Hint — atakne par padho:** Overlap condition aur per-room serialization transaction mein define karo.
+**Hint:**
+- Overlap condition aur per-room serialization transaction mein define karo.
 
-**Answer guide — attempt ke baad compare karo:** ExistingStart < newEnd aur newStart < existingEnd overlap rule hai. Room row lock transaction ke start mein lo, phir active overlap query aur insert karo; sab create/cancel paths same room-lock discipline follow karein. PostgreSQL exclusion constraint alternative database guarantee de sakta hai. Transaction ke bahar overlap check race allow karta hai. Lock wait/timeout ko controlled response do aur UTC parsing clear rakho.
+**Answer guide:**
+- ExistingStart < newEnd aur newStart < existingEnd overlap rule hai.
+- Room row lock transaction ke start mein lo, phir active overlap query aur insert karo
+- sab create/cancel paths same room-lock discipline follow karein.
+- PostgreSQL exclusion constraint alternative database guarantee de sakta hai.
+- Transaction ke bahar overlap check race allow karta hai.
+- Lock wait/timeout ko controlled response do aur UTC parsing clear rakho.
 
 **Interviewer follow-up:** Multi-room booking mein deadlock risk reduce karne ke liye lock order kya hoga?
 
@@ -2112,9 +2698,16 @@ Spring Boot + SQL mein authenticated user-owned notes CRUD banao. Test authentic
 - Request body ownerId spoof field reject ya ignore ho, owner principal se aaye.
 - Blank title 400; successful update unrelated note na change kare.
 
-**Hint — atakne par padho:** Repository query mein ownership predicate include karo.
+**Hint:**
+- Repository query mein ownership predicate include karo.
 
-**Answer guide — attempt ke baad compare karo:** Controller validated DTO le, service trusted principal ID use kare. findByIdAndOwner style lookup ya conditional owner-scoped update/delete enforce karo; frontend hidden buttons authorization nahi hain. List query bhi same predicate use kare. Security integration tests two principals aur anonymous client ke saath chalao. Error response entity existence leak na kare aur internal exception stack hide kare.
+**Answer guide:**
+- Controller validated DTO le, service trusted principal ID use kare.
+- findByIdAndOwner style lookup ya conditional owner-scoped update/delete enforce karo
+- frontend hidden buttons authorization nahi hain.
+- List query bhi same predicate use kare.
+- Security integration tests two principals aur anonymous client ke saath chalao.
+- Error response entity existence leak na kare aur internal exception stack hide kare.
 
 **Interviewer follow-up:** Admin sharing permission add karne par object-level authorization policy kaise evolve hogi?
 
@@ -2136,9 +2729,16 @@ Spring Boot/JPA + SQL mein GET document aur update(id,expectedVersion,text) bana
 - Conflict response current text ko overwrite na kare.
 - Missing ID 404, malformed version 400; persistence integration test race reproduce kare.
 
-**Hint — atakne par padho:** Client precondition aur database version check dono chahiye.
+**Hint:**
+- Client precondition aur database version check dono chahiye.
 
-**Answer guide — attempt ke baad compare karo:** Entity version field aur client expectedVersion compare karo; update transaction ke flush/commit par optimistic failure map karo. Comparison alone race-safe nahi, DB update version predicate required hai. Failure handler transaction ke bahar clean conflict DTO banaye. Client ko reload/merge option explain karo; automatic blind retry user ke newer text overwrite kar sakta hai.
+**Answer guide:**
+- Entity version field aur client expectedVersion compare karo
+- update transaction ke flush/commit par optimistic failure map karo.
+- Comparison alone race-safe nahi, DB update version predicate required hai.
+- Failure handler transaction ke bahar clean conflict DTO banaye.
+- Client ko reload/merge option explain karo
+- automatic blind retry user ke newer text overwrite kar sakta hai.
 
 **Interviewer follow-up:** ETag/If-Match HTTP contract choose karoge toh 409 aur 412 mapping kaise settle karoge?
 
@@ -2160,9 +2760,17 @@ Spring Boot + SQL mein customers(id,name), orders(id,customer_id,status,created_
 - Cancelled order exclude ho; no-order customer total/count 0 ho.
 - Equal totals deterministic ID order mein aayein; invalid range reject ho.
 
-**Hint — atakne par padho:** Item joins se order count multiply hone aur left join filter trap se bacho.
+**Hint:**
+- Item joins se order count multiply hone aur left join filter trap se bacho.
 
-**Answer guide — attempt ke baad compare karo:** Pehle filtered paid orders ke item totals aggregate karo, phir customer totals/order counts derive karke customers se left join karo. COALESCE zero use karo; right-side paid/date predicates outer WHERE mein rakhoge toh zero-order customer drop hoga. Integer money aggregation ke liye sufficiently wide numeric type lo. Repository projection ko DTO map karo. Static fixture par offset pagination enough hai; live report snapshot consistency alag contract hai.
+**Answer guide:**
+- Pehle filtered paid orders ke item totals aggregate karo, phir customer totals/order counts derive karke customers se left join karo.
+- COALESCE zero use karo
+- right-side paid/date predicates outer WHERE mein rakhoge toh zero-order customer drop hoga.
+- Integer money aggregation ke liye sufficiently wide numeric type lo.
+- Repository projection ko DTO map karo.
+- Static fixture par offset pagination enough hai
+- live report snapshot consistency alag contract hai.
 
 **Interviewer follow-up:** Large data par query plan aur order-date/status indexes kaise evaluate karoge?
 
@@ -2184,9 +2792,18 @@ Spring Boot + SQL mein job submit/status API se small CSV product import banao. 
 - Invalid price row error report kare, valid rows continue hon.
 - Job replay same row product update dobara na apply kare; status totals consistent hon.
 
-**Hint — atakne par padho:** Job checkpoint aur batch writes same transaction mein commit karo.
+**Hint:**
+- Job checkpoint aur batch writes same transaction mein commit karo.
 
-**Answer guide — attempt ke baad compare karo:** Job/row outcome records durable rakho; unique(jobId,rowNumber) dedupe kare. Parse/validate bounded stream mein karo, errors capped detail table mein store karo. Each batch product writes aur checkpoint atomically commit kare. Async executor bounded ho; HTTP request thread poora import wait na kare. File adapter lifetime aur crash recovery explicit rakho; singleton boolean running restart safety nahi deta.
+**Answer guide:**
+- Job/row outcome records durable rakho
+- unique(jobId,rowNumber) dedupe kare.
+- Parse/validate bounded stream mein karo, errors capped detail table mein store karo.
+- Each batch product writes aur checkpoint atomically commit kare.
+- Async executor bounded ho
+- HTTP request thread poora import wait na kare.
+- File adapter lifetime aur crash recovery explicit rakho
+- singleton boolean running restart safety nahi deta.
 
 **Interviewer follow-up:** Two workers same job claim karein toh lease/fencing kaise add karoge?
 
@@ -2208,9 +2825,16 @@ Spring Boot + SQL order create operation mein order aur outbox event atomically 
 - Publish success then mark-sent failure simulate karne par retry same event ID bheje.
 - Consumer repeated event se business effect once apply kare.
 
-**Hint — atakne par padho:** Database atomicity broker delivery ke saath same guarantee nahi hai.
+**Hint:**
+- Database atomicity broker delivery ke saath same guarantee nahi hai.
 
-**Answer guide — attempt ke baad compare karo:** Order/outbox inserts same transaction mein rakho. Worker bounded eligible batch claim kare; publish receipt ke baad sent transition kare. Publish/mark gap duplicate allow karta hai, isliye stable event ID aur consumer inbox uniqueness required hai. Concurrent publishers ke liye row claim/lease policy do. Serialization payload version event creation time par persist karo, later entity mutations se event meaning change mat karo.
+**Answer guide:**
+- Order/outbox inserts same transaction mein rakho.
+- Worker bounded eligible batch claim kare
+- publish receipt ke baad sent transition kare.
+- Publish/mark gap duplicate allow karta hai, isliye stable event ID aur consumer inbox uniqueness required hai.
+- Concurrent publishers ke liye row claim/lease policy do.
+- Serialization payload version event creation time par persist karo, later entity mutations se event meaning change mat karo.
 
 **Interviewer follow-up:** Per-order event ordering multiple workers ke saath kaise maintain karoge?
 
@@ -2232,9 +2856,17 @@ Spring Boot service mein get/update product, fake cache adapter aur SQL reposito
 - Delayed old read overlapping update cache ko old product se refill na kare.
 - Cache unavailable par DB fallback ho; DB failure fake success cache na kare.
 
-**Hint — atakne par padho:** Commit ke baad eviction bhi already-running old read ko khud nahi rokta.
+**Hint:**
+- Commit ke baad eviction bhi already-running old read ko khud nahi rokta.
 
-**Answer guide — attempt ke baad compare karo:** Per-key lock ke andar DB load/cache populate aur update-commit/evict serialize karo; transaction commit lock release se pehle ho. Alternative generation token design bhi valid hai. Cache errors fallback/metrics se handle karo, failed reads store mat karo. Local lock multi-instance coherence guarantee nahi deta; explicit drill boundary rakho. Avoid cached mutable entity leaking modifications.
+**Answer guide:**
+- Per-key lock ke andar DB load/cache populate aur update-commit/evict serialize karo
+- transaction commit lock release se pehle ho.
+- Alternative generation token design bhi valid hai.
+- Cache errors fallback/metrics se handle karo, failed reads store mat karo.
+- Local lock multi-instance coherence guarantee nahi deta
+- explicit drill boundary rakho.
+- Avoid cached mutable entity leaking modifications.
 
 **Interviewer follow-up:** Multi-instance deployment mein invalidation delivery aur bounded staleness ka contract kya hoga?
 
@@ -2256,9 +2888,17 @@ Existing notes CRUD API ke liye real HTTP boundary aur target SQL DB par repeata
 - Rollback-only test transaction se HTTP server writes magically rollback assume na ho.
 - A deliberately removed ownership predicate ko cross-user test catch kare.
 
-**Hint — atakne par padho:** Test process transaction aur server request transaction separate hote hain.
+**Hint:**
+- Test process transaction aur server request transaction separate hote hain.
 
-**Answer guide — attempt ke baad compare karo:** Isolated database/schema ya unique namespace setup karo; cleanup explicit tracked IDs se ho. HTTP client response status/body aur subsequent persisted read verify kare. Authentication fixtures deterministic hon. Assertions sirf mocks called nahi, observable outcomes test karein. Test timeouts bounded hon; race tests synchronized start use karein, arbitrary sleep se race proof mat banao.
+**Answer guide:**
+- Isolated database/schema ya unique namespace setup karo
+- cleanup explicit tracked IDs se ho.
+- HTTP client response status/body aur subsequent persisted read verify kare.
+- Authentication fixtures deterministic hon.
+- Assertions sirf mocks called nahi, observable outcomes test karein.
+- Test timeouts bounded hon
+- race tests synchronized start use karein, arbitrary sleep se race proof mat banao.
 
 **Interviewer follow-up:** External email/payment adapter ko replace karte waqt kaunsi boundaries real rakhoge?
 
@@ -2280,9 +2920,17 @@ Spring Boot + PostgreSQL categories API mein create,list,delete,restore do. Name
 - Old category restore while new active exists 409 de.
 - Concurrent creates of Foo/foo one success dein; active listing deleted rows exclude kare.
 
-**Hint — atakne par padho:** Uniqueness rule active predicate ke saath DB mein enforce karo.
+**Hint:**
+- Uniqueness rule active predicate ke saath DB mein enforce karo.
 
-**Answer guide — attempt ke baad compare karo:** Canonical name persist karo aur active rows ke liye partial unique index rakho. Delete/restore transaction state transition hon; restore unique violation controlled conflict bane. Query defaults active filter lagayein lekin admin lookup explicit ho. ORM global filter alone index constraint replace nahi karta. Restore fail par deletedAt unchanged rahe; actual PostgreSQL fixture index behavior test kare.
+**Answer guide:**
+- Canonical name persist karo aur active rows ke liye partial unique index rakho.
+- Delete/restore transaction state transition hon
+- restore unique violation controlled conflict bane.
+- Query defaults active filter lagayein lekin admin lookup explicit ho.
+- ORM global filter alone index constraint replace nahi karta.
+- Restore fail par deletedAt unchanged rahe
+- actual PostgreSQL fixture index behavior test kare.
 
 **Interviewer follow-up:** Foreign-key references to soft-deleted categories ka read/write contract kya hoga?
 
@@ -2304,9 +2952,15 @@ Spring Boot + SQL mein current-user orders createdAt DESC,id DESC order se list 
 - Other-user rows absent, changed filter with old cursor 400 ho.
 - Empty page next cursor null; invalid timestamp cursor reject ho.
 
-**Hint — atakne par padho:** Composite sort ka lexicographic inverse predicate likho.
+**Hint:**
+- Composite sort ka lexicographic inverse predicate likho.
 
-**Answer guide — attempt ke baad compare karo:** Predicate createdAt<last OR (createdAt=last AND id<lastId) plus owner/status filters use karo. limit+1 fetch se hasNext decide karo, returned last visible row se cursor banao. Owner trusted principal se aaye, cursor se nahi. Matching composite index explain karo aur SQL integration fixture equal timestamps include kare. Live status changes snapshot guarantee nahi dete, contract clearly limit karo.
+**Answer guide:**
+- Predicate createdAt<last OR (createdAt=last AND id<lastId) plus owner/status filters use karo.
+- limit+1 fetch se hasNext decide karo, returned last visible row se cursor banao.
+- Owner trusted principal se aaye, cursor se nahi.
+- Matching composite index explain karo aur SQL integration fixture equal timestamps include kare.
+- Live status changes snapshot guarantee nahi dete, contract clearly limit karo.
 
 **Interviewer follow-up:** Export ko consistent snapshot chahiye toh normal cursor pagination se kya extra mechanism chahiye?
 
@@ -2344,9 +2998,17 @@ Node + MongoDB collection products mein {tenantId,name,pricePaise,_id} use karo.
 - Tenant A request kabhi tenant B record return na kare.
 - Malformed/mismatched cursor 400 ho; empty result next cursor na de.
 
-**Hint — atakne par padho:** Compound ordering ke dono values cursor mein chahiye.
+**Hint:**
+- Compound ordering ke dono values cursor mein chahiye.
 
-**Answer guide — attempt ke baad compare karo:** Predicate tenant aur price range ke saath (price>lastPrice OR price=lastPrice AND _id>lastId) use kare. Cursor payload/schema validate karo aur trusted tenant/filter fingerprint match karo; client-provided tenant ko auth authority mat maano. Compound index tenantId,pricePaise,_id evaluate karo. limit+1 fetch se next-page existence derive karo. Live price changes repeat/skip kar sakte hain; snapshot guarantee claim mat karo.
+**Answer guide:**
+- Predicate tenant aur price range ke saath (price>lastPrice OR price=lastPrice AND _id>lastId) use kare.
+- Cursor payload/schema validate karo aur trusted tenant/filter fingerprint match karo
+- client-provided tenant ko auth authority mat maano.
+- Compound index tenantId,pricePaise,_id evaluate karo.
+- limit+1 fetch se next-page existence derive karo.
+- Live price changes repeat/skip kar sakte hain
+- snapshot guarantee claim mat karo.
 
 **Interviewer follow-up:** Pagination ke beech price mutation ho toh stronger consistency ka contract kya hoga?
 
@@ -2368,9 +3030,17 @@ Node + MongoDB replica set par purchase(requestId,productId,qty) banao. Products
 - Same request replay extra stock consume na kare; changed qty conflict ho.
 - Forced purchase insert failure se stock decrement rollback ho.
 
-**Hint — atakne par padho:** Atomic single-document update aur multi-document transaction ki roles separate hain.
+**Hint:**
+- Atomic single-document update aur multi-document transaction ki roles separate hain.
 
-**Answer guide — attempt ke baad compare karo:** Transaction mein unique purchase identity aur stock>=qty conditional decrement combine karo; matched count zero ho toh insufficient stock outcome do. Purchase payload canonical store karo. Duplicate identity par transaction rollback ke baad existing record read/compare karo. Driver transaction retries ke andar external side effects mat karo. Replica set fixture aur synchronized starts se actual race verify karo; in-memory mutex DB guarantee replace nahi karta.
+**Answer guide:**
+- Transaction mein unique purchase identity aur stock>=qty conditional decrement combine karo
+- matched count zero ho toh insufficient stock outcome do.
+- Purchase payload canonical store karo.
+- Duplicate identity par transaction rollback ke baad existing record read/compare karo.
+- Driver transaction retries ke andar external side effects mat karo.
+- Replica set fixture aur synchronized starts se actual race verify karo
+- in-memory mutex DB guarantee replace nahi karta.
 
 **Interviewer follow-up:** Unknown commit outcome ke baad caller retry kare toh request identity recovery kaise help karegi?
 
@@ -2392,9 +3062,17 @@ Node + MongoDB notes {tenantId,ownerId,title} repository banao. Trusted context 
 - Body tenantId/ownerId escalation reject ya ignore ho.
 - Admin A tenant B data list na kare; malformed ObjectId controlled 400 ho.
 
-**Hint — atakne par padho:** Authorization scope repository query construction ka invariant banao.
+**Hint:**
+- Authorization scope repository query construction ka invariant banao.
 
-**Answer guide — attempt ke baad compare karo:** Context se tenant aur role derive karke allowlisted filter build karo; client filter raw spread mat karo. User mode owner predicate include kare; admin mode only owner relax kare. Updates business fields allowlist karein aur matched count missing/forbidden response decide kare. Index tenant/owner access path ke hisaab se do. Route happy-path test alone hidden delete path leak catch nahi karega.
+**Answer guide:**
+- Context se tenant aur role derive karke allowlisted filter build karo
+- client filter raw spread mat karo.
+- User mode owner predicate include kare
+- admin mode only owner relax kare.
+- Updates business fields allowlist karein aur matched count missing/forbidden response decide kare.
+- Index tenant/owner access path ke hisaab se do.
+- Route happy-path test alone hidden delete path leak catch nahi karega.
 
 **Interviewer follow-up:** Background jobs ke trusted tenant context ko accidental global query se kaise protect karoge?
 
@@ -2416,9 +3094,15 @@ Profiles {userId,displayName,version} mein update(userId,expectedVersion,changes
 - Invalid name version increment na kare.
 - Payload $set/version/userId injection original identity na change kare.
 
-**Hint — atakne par padho:** Version compare database update predicate mein hona chahiye.
+**Hint:**
+- Version compare database update predicate mein hona chahiye.
 
-**Answer guide — attempt ke baad compare karo:** Validated DTO se explicit $set aur $inc build karo; client update operators forward mat karo. Matched count zero par scoped existence read se missing versus stale decide karo, response current version optional ho. Atomic findOneAndUpdate return policy explicit rakho. Mongoose validation assumptions ke bajay service boundary rules aur real DB race test do.
+**Answer guide:**
+- Validated DTO se explicit $set aur $inc build karo
+- client update operators forward mat karo.
+- Matched count zero par scoped existence read se missing versus stale decide karo, response current version optional ho.
+- Atomic findOneAndUpdate return policy explicit rakho.
+- Mongoose validation assumptions ke bajay service boundary rules aur real DB race test do.
 
 **Interviewer follow-up:** Nested address partial updates mein omitted field aur explicit null ka contract kya hoga?
 
@@ -2440,9 +3124,16 @@ Orders documents {tenantId,status,createdAt,items:[{sku,qty,pricePaise}]} se dat
 - Cancelled, other tenant aur exact end-time orders exclude hon.
 - Empty items/empty result crash na kare; bad dates 400 hon.
 
-**Hint — atakne par padho:** Match/unwind/group ordering aur money representation settle karo.
+**Hint:**
+- Match/unwind/group ordering aur money representation settle karo.
 
-**Answer guide — attempt ke baad compare karo:** Tenant/status/date match early karo, items unwind karke qty*price revenue aur quantity SKU-wise group karo. Stable sort revenue descending, SKU ascending aur limit apply karo. Integer paise fields validation aur aggregate numeric range check karo. Match index query workload se choose karke explain inspect karo; aggregation result schema ko API DTO banate waqt validate karo. Missing malformed item fields ko silently zero maanna data issue hide karega.
+**Answer guide:**
+- Tenant/status/date match early karo, items unwind karke qty*price revenue aur quantity SKU-wise group karo.
+- Stable sort revenue descending, SKU ascending aur limit apply karo.
+- Integer paise fields validation aur aggregate numeric range check karo.
+- Match index query workload se choose karke explain inspect karo
+- aggregation result schema ko API DTO banate waqt validate karo.
+- Missing malformed item fields ko silently zero maanna data issue hide karega.
 
 **Interviewer follow-up:** Refunds aur daily materialized totals add karoge toh replay/rebuild correctness kaise verify hogi?
 
@@ -2464,9 +3155,16 @@ Orders {tenantId,customerId,totalPaise} aur customers {tenantId,_id,name} se ten
 - Other-tenant customer ID reference uska name expose na kare.
 - Two orders same customer report mein still two rows hon, accidental cartesian multiplication nahi.
 
-**Hint — atakne par padho:** Left-join semantics aur tenant predicate dono lookup mein rakho.
+**Hint:**
+- Left-join semantics aur tenant predicate dono lookup mein rakho.
 
-**Answer guide — attempt ke baad compare karo:** Initial tenant match ke baad correlated lookup customer ID plus tenant equality kare. Result at most one customer expect karo; unwind preserveNullAndEmptyArrays ya first-element fallback use karo. Projection explicit fields choose kare. Reference validation write time useful hai, lekin deleted/corrupt refs read path par still handle karne hain. Explain plan se lookup index use inspect karo.
+**Answer guide:**
+- Initial tenant match ke baad correlated lookup customer ID plus tenant equality kare.
+- Result at most one customer expect karo
+- unwind preserveNullAndEmptyArrays ya first-element fallback use karo.
+- Projection explicit fields choose kare.
+- Reference validation write time useful hai, lekin deleted/corrupt refs read path par still handle karne hain.
+- Explain plan se lookup index use inspect karo.
 
 **Interviewer follow-up:** Customer name historical order-time snapshot chahiye toh lookup model kaise badlega?
 
@@ -2488,9 +3186,16 @@ Node/MongoDB mein tenant catalog import list {sku,name,pricePaise} accept karo. 
 - One injected database row failure remaining valid writes ko process karne de.
 - Duplicate input SKU validation se before-write reject ho; negative price row error de.
 
-**Hint — atakne par padho:** Input duplicate policy aur database partial failure policy alag define karo.
+**Hint:**
+- Input duplicate policy aur database partial failure policy alag define karo.
 
-**Answer guide — attempt ke baad compare karo:** Batch schema/duplicate keys pehle check karo. Per-row business validation aur bounded bulkWrite upsert operations explicit tenant+sku filters se banao. Unique compound index race protection de. Ordered false execution ka partial result original row indexes se map karo. Retry failed subset possible hai; response unknown outcomes ko verified success mat bolo.
+**Answer guide:**
+- Batch schema/duplicate keys pehle check karo.
+- Per-row business validation aur bounded bulkWrite upsert operations explicit tenant+sku filters se banao.
+- Unique compound index race protection de.
+- Ordered false execution ka partial result original row indexes se map karo.
+- Retry failed subset possible hai
+- response unknown outcomes ko verified success mat bolo.
 
 **Interviewer follow-up:** Import old feed newer catalog overwrite na kare isliye sourceVersion condition kaise add karoge?
 
@@ -2512,9 +3217,15 @@ MongoDB session store create/get/revoke banao. Random opaque token caller ko mil
 - Revoke then get fail; raw token DB record/log mein absent ho.
 - Different tokens same user independent revoke hon; invalid token safe miss ho.
 
-**Hint — atakne par padho:** Physical deletion time ko authentication validity boundary mat banao.
+**Hint:**
+- Physical deletion time ko authentication validity boundary mat banao.
 
-**Answer guide — attempt ke baad compare karo:** Cryptographic token adapter se secret generate aur digest store karo, unique digest index ho. Lookup digest ke saath expiresAt>now condition require kare. Revoke matching digest delete kare. TTL deletion eventual cleanup hai, exact expiration guarantee application check own kare. Response mein generic invalid/expired outcome do, token details leak mat karo.
+**Answer guide:**
+- Cryptographic token adapter se secret generate aur digest store karo, unique digest index ho.
+- Lookup digest ke saath expiresAt>now condition require kare.
+- Revoke matching digest delete kare.
+- TTL deletion eventual cleanup hai, exact expiration guarantee application check own kare.
+- Response mein generic invalid/expired outcome do, token details leak mat karo.
 
 **Interviewer follow-up:** Password reset ke baad all sessions revoke karne ke liye user token-version ya bulk revocation ka tradeoff kya hai?
 
@@ -2536,9 +3247,15 @@ MongoDB replica set par paid-event source aur daily summaries {tenantId,day,reve
 - Summary write failure inbox insert bhi rollback kare.
 - Fixture rebuild aur incremental summary same totals dein; tenant/day boundaries correct hon.
 
-**Hint — atakne par padho:** Source events authoritative hain, summary derived projection hai.
+**Hint:**
+- Source events authoritative hain, summary derived projection hai.
 
-**Answer guide — attempt ke baad compare karo:** Unique processed-event identity aur compound summary key indexes banao. One transaction inbox dedupe, summary upsert/$inc aur completion coordinate kare. Rebuild immutable source snapshot/cutoff se aggregate karo; concurrently arriving events ko watermark/replay strategy ke bina new summary swap mat karo. Compare counts/totals fixture oracle se karo, random current date use na karo.
+**Answer guide:**
+- Unique processed-event identity aur compound summary key indexes banao.
+- One transaction inbox dedupe, summary upsert/$inc aur completion coordinate kare.
+- Rebuild immutable source snapshot/cutoff se aggregate karo
+- concurrently arriving events ko watermark/replay strategy ke bina new summary swap mat karo.
+- Compare counts/totals fixture oracle se karo, random current date use na karo.
 
 **Interviewer follow-up:** Refund/correction event late previous day ke liye aaye toh projection aur rebuild semantics kya honge?
 
@@ -2560,9 +3277,16 @@ Old users {fullName} mein displayName/schemaVersion=2 backfill job banao. _id as
 - Parallel user update sets v2 displayName; backfill usko overwrite na kare.
 - Rerun idempotent ho; invalid old records reported hon aur job infinite retry na kare.
 
-**Hint — atakne par padho:** Checkpoint progress aur conditional document update ki roles alag hain.
+**Hint:**
+- Checkpoint progress aur conditional document update ki roles alag hain.
 
-**Answer guide — attempt ke baad compare karo:** Batch scan checkpoint se aage karo; update filter _id plus old schemaVersion condition rakho. Derive value source fullName snapshot se tabhi write karo jab source field still same ho, warna conflict retry/report karo. Each batch outcomes durable karke checkpoint advance karo; crash before checkpoint may repeat conditional no-ops safely. Final residual scan/manual report missed unsupported records expose kare.
+**Answer guide:**
+- Batch scan checkpoint se aage karo
+- update filter _id plus old schemaVersion condition rakho.
+- Derive value source fullName snapshot se tabhi write karo jab source field still same ho, warna conflict retry/report karo.
+- Each batch outcomes durable karke checkpoint advance karo
+- crash before checkpoint may repeat conditional no-ops safely.
+- Final residual scan/manual report missed unsupported records expose kare.
 
 **Interviewer follow-up:** Writers migration ke dauraan old schema bhi create karein toh dual-write aur verification phases kaise add karoge?
 
@@ -2584,9 +3308,16 @@ Replica-set fixture ke orders collection changes consume karke durable audit sin
 - Sink failure checkpoint advance na kare.
 - Shutdown stream cursor/session close kare; invalid token silently from-now start na kare.
 
-**Hint — atakne par padho:** Event effect aur resume progress ek durability boundary mein chahiye.
+**Hint:**
+- Event effect aur resume progress ek durability boundary mein chahiye.
 
-**Answer guide — attempt ke baad compare karo:** Stream event token losslessly serialize/store karo. Transaction mein unique audit record aur checkpoint upsert commit karo; restart persisted token se resume kare. Replay duplicate key ko known completed outcome se reconcile karo. Audit collection watch scope se exclude ho warna feedback loop banega. Event document availability configuration-dependent hai, drill required fields envelope se derive kare.
+**Answer guide:**
+- Stream event token losslessly serialize/store karo.
+- Transaction mein unique audit record aur checkpoint upsert commit karo
+- restart persisted token se resume kare.
+- Replay duplicate key ko known completed outcome se reconcile karo.
+- Audit collection watch scope se exclude ho warna feedback loop banega.
+- Event document availability configuration-dependent hai, drill required fields envelope se derive kare.
 
 **Interviewer follow-up:** Resume history expire ho jaaye toh snapshot plus stream handoff mein gap kaise avoid karoge?
 
@@ -2624,9 +3355,16 @@ JS ya Java mein LRUCache(capacity), get(key), put(key,value) banao. Capacity pos
 - Existing key update size na badhaye aur most recent bane.
 - Capacity 1 aur invalid capacity test karo; head/tail pointers consistent hon.
 
-**Hint — atakne par padho:** Fast lookup aur arbitrary node repositioning ke liye two structures combine karo.
+**Hint:**
+- Fast lookup aur arbitrary node repositioning ke liye two structures combine karo.
 
-**Answer guide — attempt ke baad compare karo:** Hash map key->node aur doubly linked list with sentinels rakho. Hit/update node unlink karke most-recent end par insert karo. New insertion capacity exceed kare toh least-recent node list/map dono se remove karo. Size, map entries aur list membership same invariant follow karein. Complexity expected O(1) hash lookup assume karti hai; array scan/shift requirement violate karega.
+**Answer guide:**
+- Hash map key->node aur doubly linked list with sentinels rakho.
+- Hit/update node unlink karke most-recent end par insert karo.
+- New insertion capacity exceed kare toh least-recent node list/map dono se remove karo.
+- Size, map entries aur list membership same invariant follow karein.
+- Complexity expected O(1) hash lookup assume karti hai
+- array scan/shift requirement violate karega.
 
 **Interviewer follow-up:** TTL add karne par expiration check aur capacity eviction ka interaction kya hoga?
 
@@ -2648,9 +3386,17 @@ Lowercase a-z words ke liye insert, remove aur suggest(prefix,k) implement karo.
 - car remove karne par cart bache; unknown remove no-op ho.
 - Word prefix khud terminal ho toh descendants se pehle aaye.
 
-**Hint — atakne par padho:** Terminal marker ko child existence se separate rakho.
+**Hint:**
+- Terminal marker ko child existence se separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Character children aur terminal flag store karo. Prefix node locate karke lexical child order mein DFS karo, terminal word collect aur k par stop karo. Remove terminal unset kare; bottom-up sirf nonterminal childless nodes prune karo. Prefix traversal O(prefix length), enumeration visited nodes/output size par depend karegi; O(k) ka blanket claim wrong hai. Deep words par recursion depth discuss karo.
+**Answer guide:**
+- Character children aur terminal flag store karo.
+- Prefix node locate karke lexical child order mein DFS karo, terminal word collect aur k par stop karo.
+- Remove terminal unset kare
+- bottom-up sirf nonterminal childless nodes prune karo.
+- Prefix traversal O(prefix length), enumeration visited nodes/output size par depend karegi
+- O(k) ka blanket claim wrong hai.
+- Deep words par recursion depth discuss karo.
 
 **Interviewer follow-up:** Popularity-ranked suggestions ke liye per-node top-k cache update cost kya hogi?
 
@@ -2672,9 +3418,16 @@ JS/Java mein MinStack push/pop/top/getMin aur Queue enqueue/dequeue/peek do. Emp
 - Enqueue A,B; dequeue A; enqueue C: next removals B,C hon.
 - Empty operations stable hon aur interleaved calls structure corrupt na karein.
 
-**Hint — atakne par padho:** Duplicate minima aur lazy stack transfer ke invariants likho.
+**Hint:**
+- Duplicate minima aur lazy stack transfer ke invariants likho.
 
-**Answer guide — attempt ke baad compare karo:** MinStack each entry ke saath minimum-so-far rakhe ya count-aware min stack maintain kare. Queue inbox/outbox stacks use kare; outbox empty ho tab inbox transfer karo. Every enqueue element at most once transfer hota hai, isliye amortized cost constant hai; individual dequeue O(n) ho sakta hai. Array.shift implementation complexity hide mat karo.
+**Answer guide:**
+- MinStack each entry ke saath minimum-so-far rakhe ya count-aware min stack maintain kare.
+- Queue inbox/outbox stacks use kare
+- outbox empty ho tab inbox transfer karo.
+- Every enqueue element at most once transfer hota hai, isliye amortized cost constant hai
+- individual dequeue O(n) ho sakta hai.
+- Array.shift implementation complexity hide mat karo.
 
 **Interviewer follow-up:** Worst-case constant latency queue requirement aaye toh amortized design ka limitation kya hai?
 
@@ -2696,9 +3449,16 @@ Finite integer stream ke liye add(value),median() implement karo. Empty median n
 - Repeated equal values heap balance preserve karein.
 - 1000 deterministic inputs har prefix sorted-array oracle se match hon.
 
-**Hint — atakne par padho:** Lower half max-heap aur upper half min-heap rakho.
+**Hint:**
+- Lower half max-heap aur upper half min-heap rakho.
 
-**Answer guide — attempt ke baad compare karo:** Heap sizes at most one differ hon aur lower max<=upper min invariant preserve karo. Add appropriate side mein karke rebalance karo. Odd median larger heap top, even mean of both tops. O(log n) insertion aur O(1) median explain karo; storage O(n). Library heap allowed hai toh comparator correct sign verify karo.
+**Answer guide:**
+- Heap sizes at most one differ hon aur lower max<=upper min invariant preserve karo.
+- Add appropriate side mein karke rebalance karo.
+- Odd median larger heap top, even mean of both tops.
+- O(log n) insertion aur O(1) median explain karo
+- storage O(n).
+- Library heap allowed hai toh comparator correct sign verify karo.
 
 **Interviewer follow-up:** Sliding-window median ke liye lazy deletion aur stale heap tops kaise manage karoge?
 
@@ -2720,9 +3480,17 @@ Unique tasks {id,deps,run} ka DAG scheduler banao with concurrency limit. Unknow
 - Independent jobs active limit respect karein.
 - Cycle par zero task side effects hon; A failure par B/C skipped hon.
 
-**Hint — atakne par padho:** Validation pass aur execution pass ko separate rakho.
+**Hint:**
+- Validation pass aur execution pass ko separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Graph build karke unknown/duplicate IDs validate karo. Kahn pass copy of indegrees se cycle detect karo bina run call kiye. Execution mein ready queue aur active count rakho; successful prerequisite completion indegrees decrement kare. Failure descendants ko blocked/skipped mark kare, independent ready jobs run hon. Completion condition sab tasks terminal hain, sirf ready queue empty hona enough nahi. Complexity graph bookkeeping O(V+E), work durations separate hain.
+**Answer guide:**
+- Graph build karke unknown/duplicate IDs validate karo.
+- Kahn pass copy of indegrees se cycle detect karo bina run call kiye.
+- Execution mein ready queue aur active count rakho
+- successful prerequisite completion indegrees decrement kare.
+- Failure descendants ko blocked/skipped mark kare, independent ready jobs run hon.
+- Completion condition sab tasks terminal hain, sirf ready queue empty hona enough nahi.
+- Complexity graph bookkeeping O(V+E), work durations separate hain.
 
 **Interviewer follow-up:** Cancelled prerequisite aur retryable failure ko state machine mein kaise represent karoge?
 
@@ -2744,9 +3512,16 @@ book(id,start,end),cancel(id),freeSlots(dayStart,dayEnd) implement karo. Integer
 - Day [0,180) ke free slots [0,60),[150,180) hon.
 - Cancel unknown safe; rejected booking ID later valid request mein reuse ho.
 
-**Hint — atakne par padho:** Sorted intervals mein predecessor/successor overlap checks enough hain.
+**Hint:**
+- Sorted intervals mein predecessor/successor overlap checks enough hain.
 
-**Answer guide — attempt ke baad compare karo:** Start-ordered structure aur ID index rakho. Neighbor end/start compare karke only valid booking insert karo; cancelled entry dono structures se remove ho. Free slots sorted scan with running cursor derive karo. Array representation book O(n) insertion leta hai even binary-search lookup O(log n) ho; total complexity honestly state karo.
+**Answer guide:**
+- Start-ordered structure aur ID index rakho.
+- Neighbor end/start compare karke only valid booking insert karo
+- cancelled entry dono structures se remove ho.
+- Free slots sorted scan with running cursor derive karo.
+- Array representation book O(n) insertion leta hai even binary-search lookup O(log n) ho
+- total complexity honestly state karo.
 
 **Interviewer follow-up:** At most K simultaneous bookings allow karne par sweep-line counter ya segment tree kaise help karega?
 
@@ -2768,9 +3543,16 @@ Integers, whitespace, +,-,*,/, parentheses aur unary minus ka evaluator banao. D
 - 10/(2-2) explicit error de, Infinity success nahi.
 - 1+ aur unmatched brackets reject hon; whitespace result na badle.
 
-**Hint — atakne par padho:** Tokenizer aur operator precedence ko separate karo.
+**Hint:**
+- Tokenizer aur operator precedence ko separate karo.
 
-**Answer guide — attempt ke baad compare karo:** Recursive-descent grammar expression->term->unary->primary use karo ya shunting-yard with unary token distinction. Token positions error reporting mein retain karo; parser final end-of-input require kare. Unary minus primary se pehle recursively parse ho. Number parsing bounds aur intermediate finite results validate karo. Regex replacement plus eval grammar/security requirements violate karega.
+**Answer guide:**
+- Recursive-descent grammar expression->term->unary->primary use karo ya shunting-yard with unary token distinction.
+- Token positions error reporting mein retain karo
+- parser final end-of-input require kare.
+- Unary minus primary se pehle recursively parse ho.
+- Number parsing bounds aur intermediate finite results validate karo.
+- Regex replacement plus eval grammar/security requirements violate karega.
 
 **Interviewer follow-up:** Exponent operator right-associative add karne par -2^2 grammar kaise define karoge?
 
@@ -2792,9 +3574,16 @@ Rectangular grid mein open/blocked cells, start aur target se shortest 4-directi
 - Blocked target/unreachable grid null de; ragged input reject ho.
 - Returned adjacent cells legal hon aur tie choice deterministic ho.
 
-**Hint — atakne par padho:** Visited ko enqueue time mark karo aur predecessor store karo.
+**Hint:**
+- Visited ko enqueue time mark karo aur predecessor store karo.
 
-**Answer guide — attempt ke baad compare karo:** BFS queue with head index use karo taaki dequeue O(1) ho. Each open cell once enqueue karo aur parent record first visit par set karo. Target milne par parent chain reverse karke path banao. O(rows*cols) time/space worst case. DFS valid path de sakta hai lekin shortest guarantee nahi. Coordinate encoding collisions avoid karo.
+**Answer guide:**
+- BFS queue with head index use karo taaki dequeue O(1) ho.
+- Each open cell once enqueue karo aur parent record first visit par set karo.
+- Target milne par parent chain reverse karke path banao.
+- O(rows*cols) time/space worst case.
+- DFS valid path de sakta hai lekin shortest guarantee nahi.
+- Coordinate encoding collisions avoid karo.
 
 **Interviewer follow-up:** Weighted terrain add ho toh BFS ki jagah Dijkstra ya 0-1 BFS kab choose karoge?
 
@@ -2816,9 +3605,16 @@ N users IDs 0..N-1 ke liye connect(a,b),connected(a,b),componentSize(a),componen
 - Repeated connect(0,2) count dobara decrement na kare.
 - Invalid ID reject; self connection no-op ho.
 
-**Hint — atakne par padho:** Component metadata sirf representative root par authoritative hai.
+**Hint:**
+- Component metadata sirf representative root par authoritative hai.
 
-**Answer guide — attempt ke baad compare karo:** Parent array aur root size initialize karo. find compress path, union unequal roots ko size ke hisaab se attach kare; resulting root size add aur global count one decrement ho. Non-root stale size directly return mat karo. Random small graph BFS oracle se connectivity compare karo. Amortized near-constant bound use karo, strict universal O(1) claim nahi.
+**Answer guide:**
+- Parent array aur root size initialize karo.
+- find compress path, union unequal roots ko size ke hisaab se attach kare
+- resulting root size add aur global count one decrement ho.
+- Non-root stale size directly return mat karo.
+- Random small graph BFS oracle se connectivity compare karo.
+- Amortized near-constant bound use karo, strict universal O(1) claim nahi.
 
 **Interviewer follow-up:** Historical snapshots ya rollback queries ke liye path compression policy kaise badlegi?
 
@@ -2840,9 +3636,15 @@ Integer array ke liye add(index,delta),prefixSum(endExclusive),rangeSum(left,rig
 - prefixSum(0)=0 aur full prefix updated total de.
 - Seeded random updates/queries naive array oracle se match hon.
 
-**Hint — atakne par padho:** Inclusive internal prefix ko external half-open API se carefully translate karo.
+**Hint:**
+- Inclusive internal prefix ko external half-open API se carefully translate karo.
 
-**Answer guide — attempt ke baad compare karo:** Update index+1 se start karke i+=i&-i ancestors update karo. Prefix external end index se i-=i&-i accumulate karo; range prefix(right)-prefix(left) hai. Build repeated add O(n log n) acceptable, optimized build explain optional. Zero internal index update infinite loop de sakta hai, boundary validation essential hai.
+**Answer guide:**
+- Update index+1 se start karke i+=i&-i ancestors update karo.
+- Prefix external end index se i-=i&-i accumulate karo
+- range prefix(right)-prefix(left) hai.
+- Build repeated add O(n log n) acceptable, optimized build explain optional.
+- Zero internal index update infinite loop de sakta hai, boundary validation essential hai.
 
 **Interviewer follow-up:** Range add aur point query ya range minimum ke liye same structure kaise change hoga?
 
@@ -2864,9 +3666,16 @@ Positive distinct coin denominations aur nonnegative integer amount se minimum c
 - Coins [4,6], amount5 => null.
 - Reconstructed coins ka sum target aur length minimum count ho.
 
-**Hint — atakne par padho:** DP count ke saath chosen predecessor coin store karo.
+**Hint:**
+- DP count ke saath chosen predecessor coin store karo.
 
-**Answer guide — attempt ke baad compare karo:** dp[0]=0, baaki infinity rakho; each amount par valid coins evaluate karo. Better count ya equal count/smaller final coin par choice update karo. Target reachable ho toh amount se chosen coin repeatedly subtract karke reconstruct karo. O(amount*coins) time aur O(amount) memory explain karo; greedy 4+1+1 counterexample minimum nahi.
+**Answer guide:**
+- dp[0]=0, baaki infinity rakho
+- each amount par valid coins evaluate karo.
+- Better count ya equal count/smaller final coin par choice update karo.
+- Target reachable ho toh amount se chosen coin repeatedly subtract karke reconstruct karo.
+- O(amount*coins) time aur O(amount) memory explain karo
+- greedy 4+1+1 counterexample minimum nahi.
 
 **Interviewer follow-up:** Bounded coin supply aur huge target amounts ke liye recurrence/resource limits kaise badlenge?
 
@@ -2904,9 +3713,18 @@ In-memory single-process allow(clientId,now) implement karo. Capacity 3, refill 
 - t=500 par rejected request ko retryAfterMs=500; t=1000 par one allow.
 - Clients independent hon; long idle ke baad tokens capacity se zyada na hon.
 
-**Hint — atakne par padho:** Elapsed time ko fractional tokens mein convert karo; refill par capacity clamp karo.
+**Hint:**
+- Elapsed time ko fractional tokens mein convert karo
+- refill par capacity clamp karo.
 
-**Answer guide — attempt ke baad compare karo:** Per client tokens aur last timestamp store karo. elapsed=max(0,now-last), tokens=min(capacity,tokens+elapsed*rate) calculate karo; timestamp max(last,now) rakho. Enough tokens par decrement, warna ceil((1-tokens)/rate) wait return karo. Concurrent implementation mein refill/check/decrement atomic rakho. Yeh process-local prototype hai; multiple instances combined limit enforce nahi karte.
+**Answer guide:**
+- Per client tokens aur last timestamp store karo.
+- elapsed=max(0,now-last), tokens=min(capacity,tokens+elapsed*rate) calculate karo
+- timestamp max(last,now) rakho.
+- Enough tokens par decrement, warna ceil((1-tokens)/rate) wait return karo.
+- Concurrent implementation mein refill/check/decrement atomic rakho.
+- Yeh process-local prototype hai
+- multiple instances combined limit enforce nahi karte.
 
 **Interviewer follow-up:** Bounded key memory aur distributed outage policy add karoge toh kya tradeoffs honge?
 
@@ -2928,9 +3746,17 @@ Apne backend stack + persistent store se POST /links aur GET /:code banao. Only 
 - javascript: URL reject ho; expiry boundary now>=expiresAt par 410 ho.
 - Process restart ke baad link resolve ho; cache expired link redirect na kare.
 
-**Hint — atakne par padho:** Unique constraint correctness own kare, random generation sirf candidate provide kare.
+**Hint:**
+- Unique constraint correctness own kare, random generation sirf candidate provide kare.
 
-**Answer guide — attempt ke baad compare karo:** URL parser se scheme/shape validate karo aur persisted record code,target,expiresAt store karo. Unique-key conflict par bounded generation retry karo. Resolve par existence/expiry check karke redirect do; cache ho toh TTL remaining lifetime se bounded rakho aur expiry recheck karo. HTTP redirect target ko fetch karne ki zaroorat nahi. Metrics mein create/conflict/resolve/miss measure karo; one-node prototype ko global-scale solution mat bolo.
+**Answer guide:**
+- URL parser se scheme/shape validate karo aur persisted record code,target,expiresAt store karo.
+- Unique-key conflict par bounded generation retry karo.
+- Resolve par existence/expiry check karke redirect do
+- cache ho toh TTL remaining lifetime se bounded rakho aur expiry recheck karo.
+- HTTP redirect target ko fetch karne ki zaroorat nahi.
+- Metrics mein create/conflict/resolve/miss measure karo
+- one-node prototype ko global-scale solution mat bolo.
 
 **Interviewer follow-up:** Abuse controls aur hot-link traffic ke liye kaunsi next boundary implement karoge?
 
@@ -2952,9 +3778,17 @@ Apne backend stack + durable store mein enqueueNotification(requestId,userId,cha
 - Opted-out user ke liye skipped status ho aur provider call zero ho.
 - Provider success then worker crash retry same key se duplicate effect na banaye.
 
-**Hint — atakne par padho:** Notification identity, delivery attempts aur provider identity separate rakho.
+**Hint:**
+- Notification identity, delivery attempts aur provider identity separate rakho.
 
-**Answer guide — attempt ke baad compare karo:** Unique request row, preference snapshot aur pending status durable save karo. Worker atomic claim/lease se bounded retries kare; every attempt same provider idempotency key use kare. Permanent failure dead-letter ho aur inspection endpoint reason expose kare. Provider key support is drill assumption hai; without it delivery exactly once guarantee nahi. Payload logs mein sensitive details redact karo.
+**Answer guide:**
+- Unique request row, preference snapshot aur pending status durable save karo.
+- Worker atomic claim/lease se bounded retries kare
+- every attempt same provider idempotency key use kare.
+- Permanent failure dead-letter ho aur inspection endpoint reason expose kare.
+- Provider key support is drill assumption hai
+- without it delivery exactly once guarantee nahi.
+- Payload logs mein sensitive details redact karo.
 
 **Interviewer follow-up:** Preference processing se pehle change ho toh enqueue snapshot ya send-time check kaunsa contract choose karoge?
 
@@ -2976,9 +3810,16 @@ Local durable store aur fake connection adapter se room chat banao. send(room,us
 - Disconnect ke dauraan missed 3 messages reconnect par once render hon.
 - Room permission nahi toh send/history denied; empty text rejected ho.
 
-**Hint — atakne par padho:** Durable ordered history source of truth hai, live channel notification path hai.
+**Hint:**
+- Durable ordered history source of truth hai, live channel notification path hai.
 
-**Answer guide — attempt ke baad compare karo:** Message persist/dedupe aur sequence allocation one transaction mein karo; room membership validate karo. Reconnect subscribe buffer start karke history watermark tak fetch karo, then buffered records sequence/ID se merge karo; fetch-then-subscribe gap messages lose karega. Client rendered IDs dedupe kare. One-node adapter se prove ki guarantees multi-region ordering automatically imply nahi karti.
+**Answer guide:**
+- Message persist/dedupe aur sequence allocation one transaction mein karo
+- room membership validate karo.
+- Reconnect subscribe buffer start karke history watermark tak fetch karo, then buffered records sequence/ID se merge karo
+- fetch-then-subscribe gap messages lose karega.
+- Client rendered IDs dedupe kare.
+- One-node adapter se prove ki guarantees multi-region ordering automatically imply nahi karti.
 
 **Interviewer follow-up:** Room sequence bottleneck aur per-room partitioning ke tradeoffs kaise measure karoge?
 
@@ -3000,9 +3841,17 @@ Local persistent store aur two worker loops se queue prototype banao: enqueue(jo
 - Worker crash ke baad lease expiry par job reclaim ho.
 - Stale worker ack new lease ko complete na kare; third failed attempt dead-letter ho.
 
-**Hint — atakne par padho:** Lease identity job identity se alag rakho aur transition compare-and-set karo.
+**Hint:**
+- Lease identity job identity se alag rakho aur transition compare-and-set karo.
 
-**Answer guide — attempt ke baad compare karo:** Durable status, attempts, availableAt, lease expiry aur unique lease token rakho. Claim transaction/conditional update se eligible job transition kare aur attempts increment kare. Ack/fail current unexpired token match karke hi state change kare. Expired lease available ho lekin exhausted attempts dead-letter hon. Backoff next available time set kare. Lease processing duplicate ho sakti hai; side effect idempotency still needed hai, exactly-once execution claim mat karo.
+**Answer guide:**
+- Durable status, attempts, availableAt, lease expiry aur unique lease token rakho.
+- Claim transaction/conditional update se eligible job transition kare aur attempts increment kare.
+- Ack/fail current unexpired token match karke hi state change kare.
+- Expired lease available ho lekin exhausted attempts dead-letter hon.
+- Backoff next available time set kare.
+- Lease processing duplicate ho sakti hai
+- side effect idempotency still needed hai, exactly-once execution claim mat karo.
 
 **Interviewer follow-up:** Worker effect commit ke baad ack se pehle crash ho toh downstream duplicate effect kaise rokoge?
 
@@ -3024,9 +3873,18 @@ Backend library mein closed/open/half-open breaker banao. 3 consecutive eligible
 - Cooldown baad parallel calls mein only one probe run ho.
 - Probe success closes/reset; failure reopens full cooldown; late old completion new state overwrite na kare.
 
-**Hint — atakne par padho:** Breaker generation token old in-flight results ko current transition se separate karega.
+**Hint:**
+- Breaker generation token old in-flight results ko current transition se separate karega.
 
-**Answer guide — attempt ke baad compare karo:** Atomic state snapshot/generation rakho; call admission current generation capture kare. Completion current generation match kare tab counter/transition update ho. Open transition generation increment kare; cooldown par CAS-like probe claim karo. Eligible failure policy business validation errors se separate rakho. Breaker timeout khud work cancel nahi karta; timeout adapter contract separately do.
+**Answer guide:**
+- Atomic state snapshot/generation rakho
+- call admission current generation capture kare.
+- Completion current generation match kare tab counter/transition update ho.
+- Open transition generation increment kare
+- cooldown par CAS-like probe claim karo.
+- Eligible failure policy business validation errors se separate rakho.
+- Breaker timeout khud work cancel nahi karta
+- timeout adapter contract separately do.
 
 **Interviewer follow-up:** Sliding-window failure ratio aur minimum traffic threshold se low-volume behavior kaise change hoga?
 
@@ -3048,9 +3906,17 @@ JS/Java simulator mein stable unsigned 32-bit hash adapter, node virtual tokens 
 - One node remove ho toh only us node ke owned key ranges remap hon.
 - Empty ring explicit error; key beyond last token first token par route ho.
 
-**Hint — atakne par padho:** Sorted ring aur lower-bound search sufficient hai; real network optional hai.
+**Hint:**
+- Sorted ring aur lower-bound search sufficient hai
+- real network optional hai.
 
-**Answer guide — attempt ke baad compare karo:** Each virtual token tuple hash,nodeId,replicaIndex sort karo; lookup lower-bound on hash then deterministic tie rules follow kare. Add/remove node tokens rebuild ya ordered structure update kare. 10,000 deterministic keys par before/after movement aur per-node load report karo. Equal perfect balance assert mat karo; hash skew aur virtual-token count influence karte hain.
+**Answer guide:**
+- Each virtual token tuple hash,nodeId,replicaIndex sort karo
+- lookup lower-bound on hash then deterministic tie rules follow kare.
+- Add/remove node tokens rebuild ya ordered structure update kare.
+- 10,000 deterministic keys par before/after movement aur per-node load report karo.
+- Equal perfect balance assert mat karo
+- hash skew aur virtual-token count influence karte hain.
 
 **Interviewer follow-up:** Replication factor 3 ke liye consecutive virtual nodes same physical owner hon toh selection kaise skip karegi?
 
@@ -3072,9 +3938,15 @@ Durable backend prototype mein applyScore(eventId,userId,delta), top(k), rank(us
 - Duplicate +5 event score twice change na kare.
 - Parallel deltas neither lost hon; restart ke baad ranks same hon.
 
-**Hint — atakne par padho:** Event dedupe aur score update same transaction mein karo.
+**Hint:**
+- Event dedupe aur score update same transaction mein karo.
 
-**Answer guide — attempt ke baad compare karo:** Unique event record aur atomic score increment durable transaction mein rakho. Top/rank query score DESC,userId ASC use kare; ordinal tie rule document karo. Initial implementation sorted SQL query/array acceptable within bounded fixture, cost report karo. Cache add karoge toh DB commit ke baad invalidation aur freshness boundary define karo.
+**Answer guide:**
+- Unique event record aur atomic score increment durable transaction mein rakho.
+- Top/rank query score DESC,userId ASC use kare
+- ordinal tie rule document karo.
+- Initial implementation sorted SQL query/array acceptable within bounded fixture, cost report karo.
+- Cache add karoge toh DB commit ke baad invalidation aur freshness boundary define karo.
 
 **Interviewer follow-up:** Millions of users ke liye fast rank aur event replay rebuild ko kaise separate karoge?
 
@@ -3096,9 +3968,16 @@ Local filesystem/object adapter + durable metadata se startUpload,putChunk(index
 - Interrupted upload restart ke baad existing chunks reuse kare.
 - Wrong checksum/oversized chunk rejected ho; filename path traversal allowed na ho.
 
-**Hint — atakne par padho:** Upload session identity aur chunk manifest durable rakho.
+**Hint:**
+- Upload session identity aur chunk manifest durable rakho.
 
-**Answer guide — attempt ke baad compare karo:** Server-generated storage keys use karo, supplied filename ko filesystem path mat banao. Validate expected chunk lengths/checksums aur atomic temporary-write/rename adapter use karo. Manifest unique(uploadId,index) conflict-safe ho. Complete all manifest entries verify karke staged assembly aur finalized state coordinate kare; crash retry same finalized object return kare. Abandoned sessions TTL cleanup separate task ho.
+**Answer guide:**
+- Server-generated storage keys use karo, supplied filename ko filesystem path mat banao.
+- Validate expected chunk lengths/checksums aur atomic temporary-write/rename adapter use karo.
+- Manifest unique(uploadId,index) conflict-safe ho.
+- Complete all manifest entries verify karke staged assembly aur finalized state coordinate kare
+- crash retry same finalized object return kare.
+- Abandoned sessions TTL cleanup separate task ho.
 
 **Interviewer follow-up:** Parallel completion aur cleanup worker race karein toh ownership/lease kaise prevent karegi?
 
@@ -3120,9 +3999,15 @@ In-memory flag config mein enabled, allowlistedUserIds aur rolloutPercent 0..100
 - Rollout 20->40 badhe toh previously included non-allowlisted users excluded na hon.
 - Disabled flag allowlist ko bhi override kare; invalid percent config reject ho.
 
-**Hint — atakne par padho:** Fixed bucket threshold monotonic rollout preserve karta hai.
+**Hint:**
+- Fixed bucket threshold monotonic rollout preserve karta hai.
 
-**Answer guide — attempt ke baad compare karo:** Hash(flagKey plus unambiguous userId encoding) ko 0..9999 bucket normalize karo, bucket<percent*100 compare karo. Disabled first, then allowlist, then rollout apply karo. Config validation complete hone par whole snapshot atomically swap karo. Hash version change rollout membership reshuffle kar sakti hai, isliye stable version pin karo. Feature flags authorization ka substitute nahi.
+**Answer guide:**
+- Hash(flagKey plus unambiguous userId encoding) ko 0..9999 bucket normalize karo, bucket<percent*100 compare karo.
+- Disabled first, then allowlist, then rollout apply karo.
+- Config validation complete hone par whole snapshot atomically swap karo.
+- Hash version change rollout membership reshuffle kar sakti hai, isliye stable version pin karo.
+- Feature flags authorization ka substitute nahi.
 
 **Interviewer follow-up:** Offline client stale config aur emergency kill switch freshness ke liye kya contract chahiye?
 
@@ -3144,8 +4029,15 @@ Deterministic simulator mein leader log, two lagging replicas aur logical clock 
 - Same replica readAtLeast(v2) v2-or-newer de via fallback.
 - Out-of-order delivery v2 then v1 replica state regress na kare; unreachable leader+lagging replica error de.
 
-**Hint — atakne par padho:** Version requirement ko availability tradeoff se explicitly jodo.
+**Hint:**
+- Version requirement ko availability tradeoff se explicitly jodo.
 
-**Answer guide — attempt ke baad compare karo:** Append-only ordered log aur per-replica applied version maintain karo. Out-of-order records buffer karke contiguous application karo; alternatively full-state snapshots hon toh monotonic replace contract define karo. Read token version compare kare, sufficient replica choose ya leader consult kare. Network failure par promised consistency weaken karke old success return mat karo. Simulated guarantees clock ticks aur protocol tak limited hain.
+**Answer guide:**
+- Append-only ordered log aur per-replica applied version maintain karo.
+- Out-of-order records buffer karke contiguous application karo
+- alternatively full-state snapshots hon toh monotonic replace contract define karo.
+- Read token version compare kare, sufficient replica choose ya leader consult kare.
+- Network failure par promised consistency weaken karke old success return mat karo.
+- Simulated guarantees clock ticks aur protocol tak limited hain.
 
 **Interviewer follow-up:** Concurrent leaders aur conflicting writes allow karne par scalar version token kyun insufficient ho sakta hai?

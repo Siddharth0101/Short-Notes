@@ -1,10 +1,10 @@
-# Node & MongoDB — step-by-step course
+# Node & MongoDB — quick revision
 
 [Saare courses](../README.md)
 
 Shuru karne se pehle: [Objects arrays and modern data transformations](../javascript/07-modern-data-collections.md) · [Event loop promises and resilient fetching](../javascript/15-async-event-loop.md) · [Modules web delivery and debugging](../javascript/17-modules-tooling-debugging.md).
 
-Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Server request samjho
 

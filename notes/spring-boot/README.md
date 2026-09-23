@@ -1,10 +1,10 @@
-# Spring Boot — step-by-step course
+# Spring Boot — quick revision
 
 [Saare courses](../README.md)
 
 Shuru karne se pehle: [Maven builds and useful Java tests](../java/12-maven-testing.md) · [JDBC SQL and transaction boundaries](../java/13-jdbc-sql.md) · [Java concurrency under real resource limits](../java/16-concurrency-production.md).
 
-Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Application start aur configure karo
 

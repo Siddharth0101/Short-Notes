@@ -1,10 +1,10 @@
-# Interview playbooks — step-by-step course
+# Interview playbooks — quick revision
 
 [Saare courses](../README.md)
 
 Apne subject ke liye pehle yeh padho: [Modules web delivery and debugging](../javascript/17-modules-tooling-debugging.md) · [React machine coding and identity bugs](../react/11-machine-coding.md) · [Observability with Actuator, metrics and tracing](../spring-boot/09-observability-actuator.md) · [SSR uploads payments email and deployment](../mongodb/08-production-integrations.md) · [Dynamic programming from state to recurrence](../dsa/12-dynamic-programming.md) · [Case study collaborative notes and real-time chat](../system-design/12-realtime-case-study.md).
 
-Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Language interview practice karo
 

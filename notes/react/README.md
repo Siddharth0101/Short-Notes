@@ -1,10 +1,10 @@
-# React — step-by-step course
+# React — quick revision
 
 [Saare courses](../README.md)
 
 Shuru karne se pehle: [Functions parameters arguments and return values](../javascript/05-js-functions.md) · [Objects arrays and modern data transformations](../javascript/07-modern-data-collections.md) · [DOM events and browser interaction](../javascript/12-dom-events-browser.md) · [Event loop promises and resilient fetching](../javascript/15-async-event-loop.md).
 
-Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Pehle components samjho
 

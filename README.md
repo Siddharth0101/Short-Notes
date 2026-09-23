@@ -1,8 +1,7 @@
-# Shortnotes — poora developer course Hinglish mein
+# Shortnotes — quick Hinglish revision
 
-Yahan concepts **simple Roman Hinglish** mein samjhaye hain. Technical terms aur code identifiers English mein hain, taaki documentation, coding aur interviews mein wahi terms pehchaan sako. Har concept ko meaning → mechanism → example → galti → practice ke order mein padho.
-
-[Har chapter ka depth review](notes/DEPTH_REVIEW.md): 108 chapters mein detailed Hinglish walkthroughs, execution traces aur failure-case practice.
+- Format — `term — short meaning / important catch`.
+- Revision — concept padho, recall karo, weak point repeat karo.
 
 **108 chapters · 43 course stages · 142 linked source examples · 444 interview questions · 20 interactive visuals.**
 
@@ -29,16 +28,12 @@ Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT
 
 Frontend ke liye JavaScript → React → frontend design follow karo. Backend ke liye Java → Spring Boot → backend design, ya JavaScript → Node/MongoDB route lo. DSA ko apne main track ke saath padh sakte ho. Syllabus mein har stage ke prerequisites aur checkpoint diye hain; beginner ho toh unhe skip mat karo.
 
-## Har chapter se kaise seekhna hai?
+## Revision ka format
 
-1. Mental model padho: concept kya hai, kyun chahiye aur andar kaise chalta hai?
-2. Code chalane se pehle output predict karo. Har important step par state likho.
-3. Relevant visual mein next/previous controls se mechanism dekho, phir apne words mein samjhao.
-4. Revision lab ka **Recall** aur **Apply** khud attempt karo. Atko toh hint lo; uske baad answer guide compare karo.
-5. Ek normal case aur ek failure/boundary case check karo. Tab chapter complete mark karo.
-6. Interview answer pehle bolkar do; reveal karke reasoning aur tradeoff compare karo.
-
-Har chapter mein core takeaway aur topic-specific lab hai. Exercises output tracing se shuru hokar implementation, concurrency, recovery aur design defense tak jaati hain. Six technical course capstones mein failure scenarios/acceptance criteria aur six interview playbooks mein assessed mock rounds hain.
+- Notes — `term — short Hinglish meaning / important catch`.
+- Chapters — har subject ke concise concept bullets; long walkthroughs hata diye hain.
+- Code — chapter ka optional examples link kholo jab implementation dekhni ho.
+- Recall — term padhkar meaning bolo; weak topic bookmark karke repeat karo.
 
 ## App chalao
 
@@ -72,9 +67,10 @@ Supplied checklist se 104 questions add hue aur 13 existing answers examples ke 
 ## Repo ka map
 
 ```text
-notes/                     Ordered Hinglish course chapters
+examples/                  Optional chapter code snippets
+notes/                     Short Hinglish revision chapters
   README.md                Poora clickable syllabus
-  STUDY_GUIDE.md            Session plan, rubric aur mistake log
+  STUDY_GUIDE.md            Quick revision routine
   GLOSSARY_HINGLISH.md      Terms ke easy meanings aur examples
   COURSE_COVERAGE.md        Topic mapping aur coverage ki limits
   INTERVIEW_WORKBOOK.md     Questions, answers aur follow-ups

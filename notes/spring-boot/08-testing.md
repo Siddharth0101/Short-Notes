@@ -4,80 +4,25 @@ title: Spring Boot unit slice and integration testing
 track: spring-boot
 order: 8
 level: Intermediate
-minutes: 19
-summary: Har important boundary ka test utne chhote setup mein karo jo uski real failure pakad sake.
+minutes: 1
+summary: Unit test — service rule ko Spring context bina test karo.
 tags: spring, testing, integration
 ---
 
-## Mental model — simple soch
+## Quick revision
 
-Test ka scope us failure ke according choose karo jo detect karna hai. Pure Java unit test business decisions check karta hai. MVC slice request binding aur HTTP responses check karti hai. Integration test wiring aur real infrastructure behavior check karta hai. Har test mein full application load karna coverage ka proof nahi hai.
-
-> **Core takeaway:** Har important boundary ka test utne chhote setup mein karo jo uski real failure pakad sake.
-
-## Start without Spring
-
-JUnit Jupiter example ko Maven/JUnit-supported project, jaise generated Boot setup, ke src/test/java mein rakho. Small complete example ko app context/DB nahi chahiye.
-
-```java
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-class PagePolicyTest {
-    static int boundedSize(int requested) {
-        if (requested < 1) throw new IllegalArgumentException("positive size required");
-        return Math.min(requested, 100);
-    }
-    @Test void capsLargePages() { assertEquals(100, boundedSize(500)); }
-    @Test void preservesSmallPages() { assertEquals(20, boundedSize(20)); }
-    @Test void rejectsZero() {
-        assertThrows(IllegalArgumentException.class, () -> boundedSize(0));
-    }
-}
-```
-
-`./mvnw test` run karo. Assertions three decisions prove karti hain, controller policy call karta hai yeh nahi. Real app mein policy production code mein rakho aur actual implementation test karo; test mein duplicate mat likho.
-
-## Verify the web boundary
-
-WebMvcTest plus MockMvc se controller-focused test aur controlled service collaborators do. Malformed input, validation, JSON/error advice check karo. Security ho toh test identity/rejection configure karo. Unexpected 401 controller se pehle aa sakta hai; status-only assertion wrong layer test kar sakti hai.
-
-Boot 4 ne focused testing modules/packages reorganize kiye hain. Selected version ke imports/dependencies lo; Boot 3 WebMvcTest paths Boot 4 mein mix mat karo. Official test reference ka layout follow karo; conceptually slice relevant web infrastructure hi load kare.
-
-## Test persistence and full requests
-
-Repository slice mapping/query behavior verify karti hai. PostgreSQL-specific SQL/locks/constraints ke liye PostgreSQL test instance, jaise Testcontainers, use karo. In-memory substitute identical behave karega assume mat karo.
-
-Random-port SpringBootTest real HTTP, serialization aur wiring check kar sakta hai. Server request separate thread par hoti hai; test-method transaction usse automatically rollback nahi karti. Explicit cleanup, isolated DB ya unique fixtures lo; execution-order-dependent assertions avoid karo.
-
-## Practice
-
-Lesson-create test plan do: domain rule, invalid-request slice, unique-constraint DB aur HTTP success test. Har test ka caught bug batao. Every internal call verify karne ke bajay observable outcomes dekho.
-
-## Depth walkthrough — andar kya ho raha hai?
-
-### Har test environment kis claim ka evidence deta hai?
-
-Pure service test fast calculation/invariant verify karta hai; Spring context start na hone par bean wiring claim nahi karta. MVC test binding, validation aur response mapping inspect karta hai; mocked service actual persistence invariant prove nahi karti. Real database integration constraint, SQL mapping aur transaction behavior verify kar sakti hai.
-
-Concurrent row-lock race ke liye genuinely overlapping transactions chahiye. Ek test method mein sequential two calls concurrency proof nahi. Synchronization barrier se both contenders ready karo, bounded wait rakho aur final durable state assert karo. Production database dialect se different in-memory engine behavior differ kar sakta hai.
-
-Automatic transaction rollback isolation convenient hai, lekin after-commit listener ya separate-thread work test transaction share na kare. Commit-dependent behavior ko explicitly commit karke observable outcome verify karo.
-
-**Practice:** Blank DTO → web boundary test; tax calculation → pure unit test; unique order ID race → database integration. Har test ke naam ke neeche “yeh kya prove nahi karta” ek line likho. Test count se zyada claim/environment match important hai.
-
-## Revision and practice lab — khud karke samjho
-
-**Recall — yaad karke bolo:** Mocked repository actual SQL unique constraint exist hone ka proof de sakti hai?
-
-**Apply — khud try karo:** Random-port HTTP test par Transactional lagane ke baad bhi rows bachti hain. Mechanism samjhao aur repeated runs independent banao.
-
-> **Hint — chhota ishara:** Test thread aur server request thread compare karo.
-
-**Answer guide — pehle khud karo, phir compare karo:** HTTP handler alag thread par apni transaction commit karta hai. Isolated DB ya explicit cleanup plus unique fixture IDs use karo. Doosra run karke isolation verify karo. Leftover state ke saath passing assertion reliable suite nahi banati.
-
-**Exit check — aage badhne se pehle:** Malformed JSON, business calculation aur row-lock race ke liye minimum meaningful test scope choose karo.
+- Unit test — service rule ko Spring context bina test karo.
+- Slice test — MVC/JPA jaise limited layer ka wiring/behavior.
+- `@SpringBootTest` — broad application integration; cost zyada.
+- Testcontainers — real service/database behavior ke tests.
+- MockMvc — HTTP contract without full external server.
+- Isolation — test data unique/clean rakho; parallel tests ek-doosre ko na tod dein.
+- Rollback caveat — separate HTTP thread ka transaction test rollback se cover na ho.
 
 ## Sources — aur padhne ke liye
 
-[Official reference yahan padho](https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html).
+- [Official reference yahan padho](https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html)
+
+## Code practice
+
+- [Examples — jab code revise karna ho](../../examples/spring-boot/08-testing.md)

@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 
 async function example(relative, binding) {
-  const markdown = await readFile(new URL(`../../notes/${relative}`, import.meta.url), 'utf8');
+  const markdown = await readFile(new URL(`../../examples/${relative}`, import.meta.url), 'utf8');
   const code = markdown.match(/```js\n([\s\S]*?)```/)?.[1];
   assert(code, relative);
   return vm.runInNewContext(`${code}\n${binding}`, { console: { log() {} } });
@@ -161,7 +161,7 @@ test('Source batch loader settles every caller on thrown, rejected and malformed
 });
 
 test('Permutation window matches a Unicode code-point brute-force oracle', async () => {
-  const markdown = await readFile(new URL('../../notes/dsa/04-problem-solving-patterns.md', import.meta.url), 'utf8');
+  const markdown = await readFile(new URL('../../examples/dsa/04-problem-solving-patterns.md', import.meta.url), 'utf8');
   const code = [...markdown.matchAll(/```js\n([\s\S]*?)```/g)].map(x => x[1]).find(x => x.includes('function containsPermutation'));
   const contains = vm.runInNewContext(`${code}\ncontainsPermutation`);
   const words = [''];
@@ -193,7 +193,7 @@ test('New JS walkthroughs produce the documented state and scheduling traces', a
     ['15-async-event-loop.md', [['executor'], ['sync-end'], ['reaction', 7]]],
   ];
   for (const [file, expected] of cases) {
-    const markdown = await readFile(new URL(`../../notes/javascript/${file}`, import.meta.url), 'utf8');
+    const markdown = await readFile(new URL(`../../examples/javascript/${file}`, import.meta.url), 'utf8');
     const section = markdown.split('## Depth walkthrough — andar kya ho raha hai?')[1];
     const code = section.match(/```js\n([\s\S]*?)```/)?.[1];
     assert(code, file);
@@ -205,7 +205,7 @@ test('New JS walkthroughs produce the documented state and scheduling traces', a
 });
 
 test('Actual mapLimit example bounds active jobs and preserves duplicate positions through failures', { timeout: 2000 }, async () => {
-  const markdown = await readFile(new URL('../../notes/javascript/16-async-patterns.md', import.meta.url), 'utf8');
+  const markdown = await readFile(new URL('../../examples/javascript/16-async-patterns.md', import.meta.url), 'utf8');
   const code = markdown.match(/```javascript\n([\s\S]*?)```/)[1];
   const mapLimit = vm.runInNewContext(`${code}\nmapLimit`);
   const deferred = () => {

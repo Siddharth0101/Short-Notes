@@ -5,7 +5,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Network requests chal rahi hain lekin Promise.all reject kyun ho gaya?',
     answer:
-      'Promise.all input outcomes observe karta hai; operations cancel nahi karta. First rejection par returned promise reject hoti hai, already-started requests phir bhi finish/side effects kar sakti hain. Suitable cooperative work ko shared AbortSignal do; partial-success policy clear rakho. Cancel request se server write kabhi hui hi nahi, yeh prove nahi hota.',
+      "- Promise.all input outcomes observe karta hai\n- operations cancel nahi karta.\n- First rejection par returned promise reject hoti hai, already-started requests phir bhi finish/side effects kar sakti hain.\n- Suitable cooperative work ko shared AbortSignal do\n- partial-success policy clear rakho.\n- Cancel request se server write kabhi hui hi nahi, yeh prove nahi hota.",
     followUp: 'allSettled-style batch mein kya badlega?',
     tags: ['promises', 'cancellation'],
     noteId: 'javascript-async-patterns',
@@ -17,7 +17,7 @@ export const advancedQuestions = [
     question:
       'Maximum three active operations wala ordered async map banao. Tests kya prove karein?',
     answer:
-      'Input index ke result slots allocate karo. Maximum three workers await se pehle synchronously next index claim karein; previous mapper settle hone par next item lein. Fail-fast ya settle-all contract pehle decide karo. Reversed completion, rejection, empty input, invalid limit aur peak active calls test karo. Input result order aur completion order alag guarantees hain.',
+      "- Input index ke result slots allocate karo.\n- Maximum three workers await se pehle synchronously next index claim karein\n- previous mapper settle hone par next item lein.\n- Fail-fast ya settle-all contract pehle decide karo.\n- Reversed completion, rejection, empty input, invalid limit aur peak active calls test karo.\n- Input result order aur completion order alag guarantees hain.",
     followUp: 'Abort ke baad new jobs rok kar unstarted slots ka result kaise clear rakhoge?',
     tags: ['concurrency', 'machine-coding'],
     noteId: 'javascript-async-patterns',
@@ -28,7 +28,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Dropdown ka z-index 999999 hai phir bhi peeche hai. Debug kaise?',
     answer:
-      'Pehle ancestor stacking contexts dekho. Dropdown apne context ke andar compete karta hai; sibling ancestor poore subtree se upar ho sakta hai. Positioned z-index, transform, opacity inspect karo. Overlay ko deliberate top-level layer ya suitable platform primitive mein rakho. Sirf number badhane ke bajay clipping, focus aur positioning bhi verify karo.',
+      "- Pehle ancestor stacking contexts dekho.\n- Dropdown apne context ke andar compete karta hai\n- sibling ancestor poore subtree se upar ho sakta hai.\n- Positioned z-index, transform, opacity inspect karo.\n- Overlay ko deliberate top-level layer ya suitable platform primitive mein rakho.\n- Sirf number badhane ke bajay clipping, focus aur positioning bhi verify karo.",
     followUp: 'Stack order change ke baad bhi overflow clipping kyun reh sakti hai?',
     tags: ['css', 'stacking-context'],
     noteId: 'javascript-browser-foundations',
@@ -39,7 +39,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Clickable div mouse se chalta hai; button ke comparison mein kya missing hai?',
     answer:
-      'Native button keyboard activation, focusability aur accessibility semantics deta hai. Action ke liye button, accessible name aur form ke andar intended type do. Role alone keyboard implement nahi karta. Enter, Space, disabled behavior aur visible focus test karo. Navigation location badalti hai toh anchor use karo; extra custom interaction code ki need kam hogi.',
+      "- Native button keyboard activation, focusability aur accessibility semantics deta hai.\n- Action ke liye button, accessible name aur form ke andar intended type do.\n- Role alone keyboard implement nahi karta.\n- Enter, Space, disabled behavior aur visible focus test karo.\n- Navigation location badalti hai toh anchor use karo\n- extra custom interaction code ki need kam hogi.",
     followUp: 'New page navigation ho toh element choice kya hogi?',
     tags: ['html', 'accessibility'],
     noteId: 'javascript-browser-foundations',
@@ -50,7 +50,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'First editable row delete par draft next row par aa gaya. Root cause?',
     answer:
-      'Index key sibling position ki identity preserve karti hai. Delete ke baad same position ka new entity old local state paa sakta hai. Stable entity IDs keys banao; draft row own kare ya ID-keyed editor map, decide karo. Random keys fix nahi: har row remount se drafts/focus lose honge. Active draft ke saath deletion/reorder test karo.',
+      "- Index key sibling position ki identity preserve karti hai.\n- Delete ke baad same position ka new entity old local state paa sakta hai.\n- Stable entity IDs keys banao\n- draft row own kare ya ID-keyed editor map, decide karo.\n- Random keys fix nahi: har row remount se drafts/focus lose honge.\n- Active draft ke saath deletion/reorder test karo.",
     followUp: 'Changed key se state reset kab intentional hona chahiye?',
     tags: ['keys', 'identity'],
     noteId: 'react-machine-coding',
@@ -61,7 +61,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'A phir AB search; A late aakar AB replace karta hai. Debounce kyun fail?',
     answer:
-      'Debounce requests kab start hongi control karta hai, finish order nahi. State ko query identity se jodo; old request cleanup aur obsolete result commit guard rakho. AbortController wasted work kam kar sakta hai; guard ownership guarantee deta hai. Next effect se pehle render mein old-query data bhi mat dikhao. Deterministic reversed delays se test karo.',
+      "- Debounce requests kab start hongi control karta hai, finish order nahi.\n- State ko query identity se jodo\n- old request cleanup aur obsolete result commit guard rakho.\n- AbortController wasted work kam kar sakta hai\n- guard ownership guarantee deta hai.\n- Next effect se pehle render mein old-query data bhi mat dikhao.\n- Deterministic reversed delays se test karo.",
     followUp: 'Stale results intentionally dikhao toh user ko kaise clear karoge?',
     tags: ['requests', 'effects'],
     noteId: 'react-machine-coding',
@@ -72,7 +72,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Discriminated union loading/data/error object se stronger kyun hai?',
     answer:
-      'Independent optional fields impossible combinations allow karti hain: no loading/data/error, ya success plus old failure. Status-discriminated union har branch ko allowed fields se jodta hai. Switch narrowing aur exhaustive never check missing cases pakadta hai. Model mein external response laane se pehle runtime validate karo; static union untrusted JSON khud inspect nahi karti.',
+      "- Independent optional fields impossible combinations allow karti hain: no loading/data/error, ya success plus old failure.\n- Status-discriminated union har branch ko allowed fields se jodta hai.\n- Switch narrowing aur exhaustive never check missing cases pakadta hai.\n- Model mein external response laane se pehle runtime validate karo\n- static union untrusted JSON khud inspect nahi karti.",
     followUp: 'Old data ke saath refreshing valid state kaise represent karoge?',
     tags: ['typescript', 'state'],
     noteId: 'react-typescript-contracts',
@@ -83,7 +83,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'JSON ko Topic[] cast karne se validate hota hai?',
     answer:
-      'Nahi. Type assertion compiler assumption badalti hai aur runtime JS se erase ho jaati hai. External input unknown lo, executable parser se shape validate karo, trusted data ya controlled error return karo. Null, mixed arrays, missing fields test karo. Extra fields allow hain ya nahi aur incompatible API response user ko kaise dikhega, policy define karo.',
+      "- Nahi.\n- Type assertion compiler assumption badalti hai aur runtime JS se erase ho jaati hai.\n- External input unknown lo, executable parser se shape validate karo, trusted data ya controlled error return karo.\n- Null, mixed arrays, missing fields test karo.\n- Extra fields allow hain ya nahi aur incompatible API response user ko kaise dikhega, policy define karo.",
     followUp: 'Wrong type predicate kaunsa bug la sakta hai?',
     tags: ['typescript', 'validation'],
     noteId: 'react-typescript-contracts',
@@ -94,7 +94,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Twenty-connection DB pool blocked hai; virtual threads fix karengi?',
     answer:
-      'Virtual threads waiting cheaper banati hain, database capacity nahi. Thousands waiting requests latency budget/other memory exhaust kar sakti hain. Pool wait, query duration aur active work measure; admission bounds/deadlines lagao. SQL/pool DB capacity ke hisaab se tune karo. JDK version state karo kyunki scheduling details releases mein change hoti hain.',
+      "- Virtual threads waiting cheaper banati hain, database capacity nahi.\n- Thousands waiting requests latency budget/other memory exhaust kar sakti hain.\n- Pool wait, query duration aur active work measure\n- admission bounds/deadlines lagao.\n- SQL/pool DB capacity ke hisaab se tune karo.\n- JDK version state karo kyunki scheduling details releases mein change hoti hain.",
     followUp: 'Pool starvation aur slow query ka difference kaunsi metric degi?',
     tags: ['virtual-threads', 'pools'],
     noteId: 'java-concurrency-production',
@@ -105,7 +105,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Semaphore acquisition timeout ho sakti hai; permit kahan release karoge?',
     answer:
-      'Successful acquire ke baad protected operation ke around finally mein release karo. Timeout/interrupted acquisition ke baad release karoge toh permits galat badhenge aur bound tootega. Admission deadline sirf slot-wait bound karti hai; operation ka apna timeout chahiye. Limit per-instance hai ya globally coordinated, clear karo; five instances se total capacity multiply ho sakti hai.',
+      "- Successful acquire ke baad protected operation ke around finally mein release karo.\n- Timeout/interrupted acquisition ke baad release karoge toh permits galat badhenge aur bound tootega.\n- Admission deadline sirf slot-wait bound karti hai\n- operation ka apna timeout chahiye.\n- Limit per-instance hai ya globally coordinated, clear karo\n- five instances se total capacity multiply ho sakti hai.",
     followUp: 'Five instances deploy par concurrency guarantee kya hogi?',
     tags: ['concurrency', 'semaphore'],
     noteId: 'java-concurrency-production',
@@ -116,7 +116,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Har customer ke two largest orders deterministic tie policy ke saath nikalo.',
     answer:
-      'ROW_NUMBER window customer se partition karo; amount descending plus stable unique tie-breaker order do. Outer query/CTE mein row number<=2 filter karo. Ties same rank share karni hon tab RANK/DENSE_RANK lo; output two se zyada ho sakta hai. Final ORDER BY alag add karo kyunki window ordering final rows sort guarantee nahi karti.',
+      "- ROW_NUMBER window customer se partition karo\n- amount descending plus stable unique tie-breaker order do.\n- Outer query/CTE mein row number<=2 filter karo.\n- Ties same rank share karni hon tab RANK/DENSE_RANK lo\n- output two se zyada ho sakta hai.\n- Final ORDER BY alag add karo kyunki window ordering final rows sort guarantee nahi karti.",
     followUp: 'Saare tied orders include karne hon toh kya badlega?',
     tags: ['sql', 'windows'],
     noteId: 'java-sql-interview-lab',
@@ -127,7 +127,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'ON predicate WHERE mein move karne se LEFT JOIN report kyun toot sakti hai?',
     answer:
-      'ON child matching NULL extension se pehle decide karta hai; WHERE final rows filter karta hai. Unmatched child field par WHERE often NULL row reject karke no-child parents hata deta hai. Aise parents preserve chahiye toh child eligibility ON mein rakho. Zero matches count ke liye non-null child key count karo, COUNT(*) nahi.',
+      "- ON child matching NULL extension se pehle decide karta hai\n- WHERE final rows filter karta hai.\n- Unmatched child field par WHERE often NULL row reject karke no-child parents hata deta hai.\n- Aise parents preserve chahiye toh child eligibility ON mein rakho.\n- Zero matches count ke liye non-null child key count karo, COUNT(*) nahi.",
     followUp: 'Two independent child collections join karne se SUM kaise distort hota hai?',
     tags: ['sql', 'joins'],
     noteId: 'java-sql-interview-lab',
@@ -138,7 +138,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Twenty results ke liye million documents scanned: kya inspect karoge?',
     answer:
-      'Winning plan, selectivity, sort, examined keys/documents aur index prefix inspect karo. Actual equality/order/range pattern se index design karke different tenant sizes/data distribution compare karo. LIMIT small hone se work small guarantee nahi; pehle scan/sort expensive ho sakta hai. Index add karte waqt read benefit ke saath write/storage cost bhi note karo.',
+      "- Winning plan, selectivity, sort, examined keys/documents aur index prefix inspect karo.\n- Actual equality/order/range pattern se index design karke different tenant sizes/data distribution compare karo.\n- LIMIT small hone se work small guarantee nahi\n- pehle scan/sort expensive ho sakta hai.\n- Index add karte waqt read benefit ke saath write/storage cost bhi note karo.",
     followUp: 'Small-tenant plan largest tenant par weak kyun ho sakta hai?',
     tags: ['indexes', 'explain'],
     noteId: 'mongodb-query-production-lab',
@@ -149,7 +149,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Large Mongo result Node se whole-buffer bina export kaise karoge?',
     answer:
-      'DB cursor gradually read karke backpressure-aware pipeline mein write karo. Pehle toArray ya whole CSV string mat banao. Error/disconnect par cursor/streams close, auth/export limits enforce aur partial-download policy define karo. Streaming cooperating stages ki buffering bound karti hai; simultaneous exports ka admission limit alag chahiye. Slow consumer par memory aur cleanup observe karo.',
+      "- DB cursor gradually read karke backpressure-aware pipeline mein write karo.\n- Pehle toArray ya whole CSV string mat banao.\n- Error/disconnect par cursor/streams close, auth/export limits enforce aur partial-download policy define karo.\n- Streaming cooperating stages ki buffering bound karti hai\n- simultaneous exports ka admission limit alag chahiye.\n- Slow consumer par memory aur cleanup observe karo.",
     followUp: 'Slow client par memory bounded hai, kaise verify karoge?',
     tags: ['streams', 'backpressure'],
     noteId: 'mongodb-query-production-lab',
@@ -160,7 +160,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Concurrent find-then-insert unique username enforce karega?',
     answer:
-      'Nahi. DB constraint bina dono requests absence dekhkar insert kar sakti hain. Suitable unique index banao; duplicate-key ko defined app outcome map karo. Username normalization pehle define karo ya appropriate collation lo. Tenant-scoped uniqueness mein tenant+canonical name key ho. Validation nicer errors deti hai, race-safe unique constraint replace nahi karti.',
+      "- Nahi.\n- DB constraint bina dono requests absence dekhkar insert kar sakti hain.\n- Suitable unique index banao\n- duplicate-key ko defined app outcome map karo.\n- Username normalization pehle define karo ya appropriate collation lo.\n- Tenant-scoped uniqueness mein tenant+canonical name key ho.\n- Validation nicer errors deti hai, race-safe unique constraint replace nahi karti.",
     followUp: 'Tenant-scoped username ki uniqueness kaise hogi?',
     tags: ['uniqueness', 'races'],
     noteId: 'mongodb-query-production-lab',
@@ -171,7 +171,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'createdAt alone reliable cursor kyun nahi?',
     answer:
-      'Multiple documents same timestamp share kar sakte hain; createdAt alone boundary rows distinguish nahi karta. createdAt/_id pair aur matching lexicographic continuation lo. BSON types/filter context preserve karo; every request independently authorize karo. Concurrent sort-key edit rows pages ke across move kar sakti hai, isliye consistency contract clear rakho. Signed cursor permission proof nahi.',
+      "- Multiple documents same timestamp share kar sakte hain\n- createdAt alone boundary rows distinguish nahi karta.\n- createdAt/_id pair aur matching lexicographic continuation lo.\n- BSON types/filter context preserve karo\n- every request independently authorize karo.\n- Concurrent sort-key edit rows pages ke across move kar sakti hai, isliye consistency contract clear rakho.\n- Signed cursor permission proof nahi.",
     followUp: 'Signed cursor se tenant authorization ki need khatam hoti hai?',
     tags: ['pagination', 'indexing'],
     noteId: 'mongodb-query-production-lab',
@@ -182,7 +182,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Loop ke andar stack-pop while hone par total linear kaise?',
     answer:
-      'Poore algorithm ki pushes/pops gino. Har index once push aur maximum once pop hai toh at most n+n operations. Ek iteration costly ho sakti hai, aggregate linear hai. Permanent-elimination invariant pehle prove karo. Repeated reinsertion allowed ho toh same bound toot sakta hai. Yeh amortized analysis hai, random-input average-case assumption nahi.',
+      "- Poore algorithm ki pushes/pops gino.\n- Har index once push aur maximum once pop hai toh at most n+n operations.\n- Ek iteration costly ho sakti hai, aggregate linear hai.\n- Permanent-elimination invariant pehle prove karo.\n- Repeated reinsertion allowed ho toh same bound toot sakta hai.\n- Yeh amortized analysis hai, random-input average-case assumption nahi.",
     followUp: 'Algorithm ka kaunsa change is accounting ko tod dega?',
     tags: ['amortized', 'stack'],
     noteId: 'dsa-monotonic-stack-lab',
@@ -193,7 +193,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Daily temperatures strict comparison aur indices kyun use karta hai?',
     answer:
-      'Question first strictly warmer future day maangta hai. Equal temperature waiting day resolve nahi karegi. Indices duplicate days ki identity aur current-minus-old distance preserve karte hain. Stack unresolved days ko non-increasing temperature order mein rakhta hai. Pop day ko first warmer successor resolve karta hai; warmer-or-equal requirement par equality condition deliberately badlegi.',
+      "- Question first strictly warmer future day maangta hai.\n- Equal temperature waiting day resolve nahi karegi.\n- Indices duplicate days ki identity aur current-minus-old distance preserve karte hain.\n- Stack unresolved days ko non-increasing temperature order mein rakhta hai.\n- Pop day ko first warmer successor resolve karta hai\n- warmer-or-equal requirement par equality condition deliberately badlegi.",
     followUp: 'Warmer-or-equal requirement par kya badlega?',
     tags: ['monotonic-stack', 'invariants'],
     noteId: 'dsa-monotonic-stack-lab',
@@ -204,7 +204,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Sliding-window maximum ke liye deque stack se suitable kyun hai?',
     answer:
-      'New value par dominated candidates back se, window slide par expired indices front se nikalte hain. Deque dono ends efficiently handle karta hai. Indices store karke expiry check aur decreasing candidate values maintain karo. Har index once enters/exits, isliye total linear aur candidates window-bounded. Duplicates discard policy mein required equality/tie behavior clear karo.',
+      "- New value par dominated candidates back se, window slide par expired indices front se nikalte hain.\n- Deque dono ends efficiently handle karta hai.\n- Indices store karke expiry check aur decreasing candidate values maintain karo.\n- Har index once enters/exits, isliye total linear aur candidates window-bounded.\n- Duplicates discard policy mein required equality/tie behavior clear karo.",
     followUp: 'Duplicates par less-than versus less-than-or-equal removal ka effect kya hai?',
     tags: ['deque', 'sliding-window'],
     noteId: 'dsa-monotonic-stack-lab',
@@ -215,7 +215,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Invariant correct lag raha hai; optimized algorithm test kaise karoge?',
     answer:
-      'Small inputs ka simple independent reference solver banao. Daily temperatures mein har day se forward first warmer scan karo. Duplicates, monotone arrays, empty aur allowed negatives test karo. Outputs plus mutation contract compare; smallest failing input save karo. Slow reference useful hai kyunki input deliberately small hai; same optimized bug copy nahi honi chahiye.',
+      "- Small inputs ka simple independent reference solver banao.\n- Daily temperatures mein har day se forward first warmer scan karo.\n- Duplicates, monotone arrays, empty aur allowed negatives test karo.\n- Outputs plus mutation contract compare\n- smallest failing input save karo.\n- Slow reference useful hai kyunki input deliberately small hai\n- same optimized bug copy nahi honi chahiye.",
     followUp: 'Reference solver same optimized stack logic kyun na copy kare?',
     tags: ['testing', 'correctness'],
     noteId: 'dsa-monotonic-stack-lab',
@@ -226,7 +226,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'React catalog filters refresh/Back par bachein: state kahan rahegi?',
     answer:
-      'Shareable filters/sort URL params mein, temporary panels/drafts local state mein, remote data all-response-input-keyed server cache mein rakho. Filter change par page reset aur Back/refresh par URL se restore karo. Private cache user/tenant-aware ho. Refetch ke dauran stale data visible allowed hai ya nahi, clear karo; fully offline need persistence/sync decisions badlegi.',
+      "- Shareable filters/sort URL params mein, temporary panels/drafts local state mein, remote data all-response-input-keyed server cache mein rakho.\n- Filter change par page reset aur Back/refresh par URL se restore karo.\n- Private cache user/tenant-aware ho.\n- Refetch ke dauran stale data visible allowed hai ya nahi, clear karo\n- fully offline need persistence/sync decisions badlegi.",
     followUp: 'Fully offline notebook par kya badlega?',
     tags: ['frontend', 'state'],
     noteId: 'system-design-frontend-design-round',
@@ -237,7 +237,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Ten-million-item catalog ka frontend design round kaise structure karoge?',
     answer:
-      'Components se pehle search semantics, freshness, accessibility aur device constraints clear karo. Dataset download ke bajay server search/bounded pages. Cancellation, stable cursors, loading/error, query identity/cache isolation define karo. Delivery aur interaction separately measure. Discoverable content ke SSR aur keyboard-safe result presentation discuss karke virtualization decide karo; prefetch cost bhi bound ho.',
+      "- Components se pehle search semantics, freshness, accessibility aur device constraints clear karo.\n- Dataset download ke bajay server search/bounded pages.\n- Cancellation, stable cursors, loading/error, query identity/cache isolation define karo.\n- Delivery aur interaction separately measure.\n- Discoverable content ke SSR aur keyboard-safe result presentation discuss karke virtualization decide karo\n- prefetch cost bhi bound ho.",
     followUp: 'Prefetch kaunsi requirement justify karegi aur cost kaise bound karoge?',
     tags: ['frontend', 'scale'],
     noteId: 'system-design-frontend-design-round',
@@ -248,7 +248,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Payment success, response lost, reservation expired: Java API kya kare?',
     answer:
-      'Lost response ko unknown outcome samjho jab tak stable provider operation ID/trusted event reconcile na kare. Reservation transitions explicit aur confirmation/expiry atomic arbitration rakho. Late payment par chosen refund/reacquisition policy apply karo. Fresh payment ID se retry double charge risk hai. Reservation/payment linking evidence durable rakho taaki recovery inspect ki ja sake.',
+      "- Lost response ko unknown outcome samjho jab tak stable provider operation ID/trusted event reconcile na kare.\n- Reservation transitions explicit aur confirmation/expiry atomic arbitration rakho.\n- Late payment par chosen refund/reacquisition policy apply karo.\n- Fresh payment ID se retry double charge risk hai.\n- Reservation/payment linking evidence durable rakho taaki recovery inspect ki ja sake.",
     followUp: 'Expiry/confirmation simultaneous hon toh kaunsi transition jeetegi?',
     tags: ['backend', 'payments'],
     noteId: 'system-design-backend-design-round',
@@ -259,7 +259,7 @@ export const advancedQuestions = [
     level: 'Advanced',
     question: 'Two Java instances same last seat sell na karein, kaise?',
     answer:
-      'Shared authoritative DB boundary par conditional update ya enforceable unique constraint/transaction rakho. Local synchronized sirf one process protect karta hai. Successful claim ke saath reservation creation coordinate aur conflicts normal outcome banao. Cached availability hint hai; actual reserve par validate karo. Real DB semantics ke against concurrent writers test karo, sirf sequential happy path nahi.',
+      "- Shared authoritative DB boundary par conditional update ya enforceable unique constraint/transaction rakho.\n- Local synchronized sirf one process protect karta hai.\n- Successful claim ke saath reservation creation coordinate aur conflicts normal outcome banao.\n- Cached availability hint hai\n- actual reserve par validate karo.\n- Real DB semantics ke against concurrent writers test karo, sirf sequential happy path nahi.",
     followUp: 'Temporary expiring hold ho toh design kya badlega?',
     tags: ['backend', 'transactions'],
     noteId: 'system-design-backend-design-round',

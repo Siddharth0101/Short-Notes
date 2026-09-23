@@ -4,148 +4,32 @@ title: TypeScript contracts for React applications
 track: react
 order: 9
 level: Advanced
-minutes: 28
-summary: Static types trusted program values describe karte hain; external data ko runtime par validate karna padta hai.
+minutes: 1
+summary: TypeScript — compile-time checks; runtime input validation alag hai.
 tags: typescript, state, narrowing, api, testing
 ---
 
-## Mental model — simple soch
+## Quick revision
 
-TypeScript compile time par JavaScript contracts check karta hai. Browser ko JavaScript milti hai; type annotation prove nahi karti ki server ne expected shape ka response bheja. Do boundaries socho: runtime parsing external input check karti hai; static types parsed result ko trusted code mein sahi use karne mein help karti hain.
-
-> **Core takeaway:** Static types trusted program values describe karte hain; external data ko runtime par validate karna padta hai.
-
-## Make invalid states harder to represent
-
-Loading/failed/ready ke independent booleans contradictory combinations allow karte hain. Discriminated union har status ko us state ke valid data se jodta hai.
-
-```typescript
-type Topic = { id: string; title: string };
-type Result =
-  | { status: 'idle' }
-  | { status: 'loading'; query: string }
-  | { status: 'success'; items: Topic[] }
-  | { status: 'error'; message: string };
-
-function message(result: Result): string {
-  switch (result.status) {
-    case 'idle': return 'Start searching';
-    case 'loading': return `Searching for ${result.query}`;
-    case 'success': return `${result.items.length} topics`;
-    case 'error': return result.message;
-    default: {
-      const impossible: never = result;
-      return impossible;
-    }
-  }
-}
-```
-
-New union member add karne par switch ko uska case handle karna padega. Offline/refreshing branch bhoolne ka UI bug compiler expose kar sakta hai. Exhaustive error assertion se chupao mat; woh pending design decision dikha raha hai.
-
-## Parse at the boundary
-
-```typescript
-function isTopic(value: unknown): value is Topic {
-  if (typeof value !== 'object' || value === null) return false;
-  return 'id' in value && typeof value.id === 'string'
-    && 'title' in value && typeof value.title === 'string';
-}
-function parseTopics(value: unknown): Topic[] {
-  if (!Array.isArray(value) || !value.every(isTopic)) {
-    throw new Error('Invalid topic response');
-  }
-  return value;
-}
-```
-
-Predicate executable logic hai; usmein bhi bug ho sakta hai. Malformed payloads test karo. Large nested contracts ke liye installed schema validator ki docs follow karo. `response as Topic[]` runtime par kuch check nahi karta.
-
-## Component contract decisions
-
-onSelect(topicId) jaise domain-action props prefer karo; har child ko raw setter dena zaroori nahi. Generic component tab useful hai jab callers real shared structure/behavior use karte hon. Sirf syntax dikhane ke liye har component generic mat banao.
-
-unknown use se pehle narrowing maangta hai; any checking bypass karke silently spread ho sakta hai. Optional prop ka default tab do jab absence ka defined meaning ho. Missing monetary amount API failure ho toh silently zero mat banao.
-
-## Practice
-
-Old items preserve karne wala refreshing aur retry wala offline state add karo. Assertions ke bina all renderers update karo. parseTopics ko null, object, mixed array aur [] do; valid/invalid explain karo. Promise-returning onSave wali typed row mein pending/rejection handle karo.
-
-## Interview questions — bolkar practice karo
-
-**readonly runtime immutable banata hai?** Nahi. TypeScript view ke through assignments restrict hoti hain; aliases/runtime mutation ka design phir bhi chahiye.
-
-**Optional data/error se union better kyun?** Union valid combinations express karta hai; narrowing har branch ko uske valid fields use karne deta hai.
+- TypeScript — compile-time checks; runtime input validation alag hai.
+- Props type — required/optional fields aur callback contract define karo.
+- Union — allowed alternatives; literal `status` se state narrow karo.
+- Discriminated union — impossible loading/success/error combinations rokta hai.
+- `unknown` — pehle validate/narrow; `any` checks bypass karta hai.
+- Generic — type relation preserve; unnecessary flexible API mat banao.
+- Event type — actual element/event ka type use karo.
+- API response — external JSON ko runtime schema se validate karo.
+- Nullability — missing value explicitly handle; `!` se blindly silence mat karo.
 
 ## Research notes: Make omitted states visible to the compiler
 
-Discriminated union state ko valid fields se jodta hai. Exhaustive narrowing missing cases expose karti hai.
-
-```ts
-type Save = { kind: 'idle' } | { kind: 'failed'; message: string };
-function label(state: Save): string {
-  switch (state.kind) {
-    case 'idle': return 'Save';
-    case 'failed': return state.message;
-    default: {
-      const unreachable: never = state;
-      return unreachable;
-    }
-  }
-}
-```
-
-saving member add karo; jab tak uska case handle nahi hota, exhaustive default type-check fail karega.
-
-**Interview check:** External JSON ko Save assert karne se content validate hota hai?
-
-**Answer:** Nahi. Type assertion runtime check nahi karti. Boundary par untrusted data validate karke application ko typed union do.
-
-**Practice:** Saved ID wala success case add karke har decision point update karo.
-
-[Source yahan padho — TypeScript](https://www.typescriptlang.org/docs/handbook/2/narrowing.html). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
-
-## Depth walkthrough — andar kya ho raha hai?
-
-### Union narrowing ko real request state se derive karo
-
-```ts
-type LoadResult =
-  | { status: 'loading' }
-  | { status: 'success'; title: string }
-  | { status: 'error'; message: string };
-
-function describe(result: LoadResult): string {
-  switch (result.status) {
-    case 'loading': return 'Load ho raha hai';
-    case 'success': return result.title;
-    case 'error': return result.message;
-    default: {
-      const unreachable: never = result;
-      return unreachable;
-    }
-  }
-}
-```
-
-TypeScript module excerpt ko strict type-checker se check karo. Status check compiler ko relevant member narrow karne deta hai. Loading branch mein title read nahi kar sakte, kyunki data abhi available hone ka contract nahi. New cancelled variant add karoge toh exhaustive default missing handling highlight karega.
-
-`unknown` external value par use karna inspection force karta hai; `any` checks bypass kar sakta hai. `as LoadResult` runtime parser nahi. Network se `{status:'success',title:12}` aaye toh boundary validation reject kare; interface annotation browser mein guard code nahi banati.
-
-**Practice:** Nullable title aur optional title same contract nahi. Optional absence allow karta hai, null explicit value ho sakti hai. API patch mein omitted=unchanged aur null=clear ho toh types aur parser dono distinction retain karein.
-
-## Revision and practice lab — khud karke samjho
-
-**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
-
-**Apply — khud try karo:** API `{"minutes":"ten"}` bhejti hai, interface minutes:number bolta hai. Assertion kyun nahi bachaegi? Boundary kya return kare?
-
-> **Hint — chhota ishara:** Type assertion response inspect ya convert nahi karti.
-
-**Answer guide — pehle khud karo, phir compare karo:** External JSON unknown lo, object shape aur numeric fields inspect karo. Validated data ya explicit parse failure return karo; given response reject karo. Contract ke hisaab se missing, null, negative aur malformed values test karo.
-
-**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+- Discriminated union state ko valid fields se jodta hai.
 
 ## Sources — aur padhne ke liye
 
-[TypeScript narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) mein control-flow analysis aur discriminated unions padho.
+- [Source yahan padho — TypeScript](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
+- [TypeScript narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
+
+## Code practice
+
+- [Examples — jab code revise karna ho](../../examples/react/09-typescript-contracts.md)

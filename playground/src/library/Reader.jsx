@@ -9,8 +9,7 @@ import { QuestionCard } from './Interviews.jsx';
 import SourceExamples from './SourceExamples.jsx';
 const VisualLab = lazy(() => import('./VisualLab.jsx'));
 
-// Highlights the section you are currently reading. Chapters run 20-35 minutes, so the
-// table of contents is a position indicator, not just a jump list.
+// Reading position ko section list mein highlight karo.
 function useActiveHeading(headings) {
   const [activeId, setActiveId] = useState('');
   useEffect(() => {
@@ -79,7 +78,7 @@ function Chapter({ note }) {
             <span className="level-pill">{note.level}</span>
             {note.minutes > 0 && (
               <span>
-                <Icon name="clock" size={14} /> {note.minutes} min study
+                <Icon name="clock" size={14} /> {note.minutes} min revision
               </span>
             )}
             <span>Hinglish + code</span>

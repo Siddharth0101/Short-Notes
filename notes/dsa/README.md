@@ -1,10 +1,10 @@
-# Data structures & algorithms — step-by-step course
+# Data structures & algorithms — quick revision
 
 [Saare courses](../README.md)
 
 Shuru karne se pehle: [Functions parameters arguments and return values](../javascript/05-js-functions.md) · [Arrays objects and simple data modeling](../javascript/06-js-arrays-objects.md).
 
-Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Cost aur basic structures samjho
 

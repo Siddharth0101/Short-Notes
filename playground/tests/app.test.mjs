@@ -213,7 +213,12 @@ test('Reader saves bookmarks and completion across mounts, renders code and sect
   const note = notes.find((item) => item.track === 'javascript');
   await mount(`/notes/${note.id}`);
   assert.match(text(), new RegExp(note.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-  assert(document.querySelector('.markdown h2#mental-model'));
+  assert(document.querySelector('.markdown h2#quick-revision'));
+  assert.equal(document.querySelector('.code-block pre'), null);
+  await click(button('Examples — jab code revise karna ho'));
+  await React.act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 60));
+  });
   assert(document.querySelector('.code-block pre'));
   await click(button('Note save karo'));
   await click(button('Complete mark karo'));
@@ -282,11 +287,11 @@ test('Machine coding drills are searchable in every subject with requirements vi
       if (!expected[index].id.startsWith('iq-machine-')) continue;
       assert.match(card.textContent, /Build contract/);
       assert.match(card.textContent, /Acceptance checks/);
-      assert.doesNotMatch(card.textContent, /Hint —|Answer guide/);
+      assert.doesNotMatch(card.textContent, /Hint:|Answer guide/);
     }
   }
   await click(button('Answer dekho'));
-  assert.match(document.querySelector('.question-answer').textContent, /Hint —/);
+  assert.match(document.querySelector('.question-answer').textContent, /Hint:/);
   assert.match(document.querySelector('.question-answer').textContent, /Answer guide/);
   await search('practice-first');
   for (const topic of topics) {

@@ -4,165 +4,30 @@ title: Event loop promises and resilient fetching
 track: javascript
 order: 15
 level: Advanced
-minutes: 33
-summary: Promise reactions current synchronous work ke baad chalti hain; zero-delay timer bhi scheduled work hai.
+minutes: 1
+summary: Call stack — synchronous functions yahin execute hote hain.
 tags: async, promises, event-loop, fetch, cancellation
 visual: event-loop
 ---
 
-## Mental model — simple soch
+## Quick revision
 
-Browser mein current JavaScript job run-to-completion hota hai. Async I/O host environment handle karta hai; completion ke baad callback continuation schedule hoti hai. Promise fulfilled hone se `.then` callback current synchronous line ke beech execute nahi hota. `await` surrounding async function ko suspend karta hai, poore browser ko block nahi karta.
-
-> **Core takeaway:** Promise reactions current synchronous work ke baad chalti hain; zero-delay timer bhi scheduled work hai.
-
-## Trace the order
-
-```js
-console.log("A");
-setTimeout(() => console.log("D"), 0);
-Promise.resolve().then(() => console.log("C"));
-console.log("B");
-// Browser output: A, B, C, D
-```
-
-Synchronous stack finish hone ke baad microtask checkpoint promise reaction run karta hai. Timer future task mein eligible hota hai. Zero delay exact zero milliseconds ki guarantee nahi deta. Microtasks jo further microtasks add karte rahein woh rendering aur tasks ko starve kar sakte hain. Browser ordering ko Node ke phase-specific behavior par blindly apply mat karo.
-
-## Fetch with explicit failure handling
-
-```js
-async function getTopic(id, signal) {
-  const response = await fetch(`/api/topics/${encodeURIComponent(id)}`, {
-    signal,
-    headers: { Accept: "application/json" }
-  });
-  if (!response.ok) {
-    throw new Error(`Topic request failed (${response.status})`);
-  }
-  return response.json();
-}
-
-const controller = new AbortController();
-try {
-  const topics = await Promise.all([
-    getTopic("closures", controller.signal),
-    getTopic("promises", controller.signal)
-  ]);
-  console.log(topics);
-} catch (error) {
-  if (error.name !== "AbortError") console.error(error.message);
-}
-// Top-level await requires a module. Call controller.abort() to cancel.
-```
-
-Fetch HTTP 404/500 par normally resolve hota hai; `response.ok` check required hai. Network failure aur HTTP failure alag layers hain. JSON parsing khud fail ho sakti hai. Abort server par already completed side effect undo nahi karta.
-
-## Promise composition
-
-`Promise.all` ordered results deta hai aur first rejection par combined promise reject karta hai; other running work automatically cancel nahi hota. `allSettled` har outcome return karta hai. `race` first settled outcome deta hai. `any` first fulfillment deta hai, aur sab reject ho to AggregateError. Independent requests parallel start karo; dependent request ko previous result ka wait karna hoga. Thousands of requests ke liye unbounded Promise.all ki jagah bounded concurrency use karo.
-
-## Retrying transient failures
-
-```js
-async function withRetry(fn, { attempts = 3, baseDelay = 300 } = {}) {
-  let lastError;
-  for (let attempt = 1; attempt <= attempts; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error;
-      if (attempt === attempts) break;
-      await new Promise(resolve => setTimeout(resolve, baseDelay * 2 ** (attempt - 1)));
-    }
-  }
-  throw lastError;
-}
-
-await withRetry(() => getTopic("closures"));
-```
-
-Exponential backoff har retry ke beech delay badhata hai taaki failing server ko overwhelm na kare. Yeh loop deliberately sequential hai — retry attempts ek dusre ke baad hi chalne chahiye, parallel nahi, warna woh ek saath teen requests fire kar dega.
-
-`.then` chaining aur `async`/`await` equivalent hain, sirf readability alag hai:
-
-```js
-// Same logic, two styles
-function loadProfileThen(id) {
-  return getTopic(id)
-    .then(topic => enrich(topic))
-    .catch(error => {
-      console.error(error.message);
-      throw error;
-    });
-}
-
-async function loadProfileAsync(id) {
-  try {
-    const topic = await getTopic(id);
-    return await enrich(topic);
-  } catch (error) {
-    console.error(error.message);
-    throw error;
-  }
-}
-```
-
-Async/await sequential logic ko synchronous jaisa readable banata hai, especially jab multiple dependent steps ho; deeply nested `.then` chains ("callback pyramid" ka promise version) yahan avoid ho jaati hain.
-
-## Gotchas
-
-Promise constructor ka executor synchronous run hota hai. Async executor Promise constructor mein mat use karo; errors ka propagation confusing hota hai. `forEach(async ...)` completion wait nahi karta. Sequential work ke liye `for...of` plus await, independent work ke liye map plus Promise.all use karo. Search UI mein old request late finish karke new result overwrite kar sakti hai; abort ya request-generation guard lagao.
-
-## Common mistakes — in galtiyon se bacho
-
-- **Wrong assumption:** `async` function hamesha kaam parallel/background mein karti hai. **Why it breaks:** `async` sirf return-value-ko-Promise-mein-wrap-karna aur `await` par suspend hone ki guarantee deta hai; pehle `await` tak function body poori tarah synchronous chalti hai, current call stack ko block karte hue. **Fix:** Samjho ki `async`/`await` concurrency create nahi karta, sirf asynchronous continuation ko sequential-jaisa likhne deta hai.
-- **Wrong assumption:** `try/catch` ek async function ke andar har error catch kar lega, including unrelated timer callback ka error. **Why it breaks:** `setTimeout` callback apne aap mein ek separate call stack/task hai; uske andar thrown error us try/catch ke bahar hai aur uncaught exception ban jaata hai. **Fix:** Timer-based operation ko khud Promise mein wrap karo (jaisa `fetch` karta hai) taaki reject sahi jagah propagate ho.
-- **Wrong assumption:** `Promise.race` losing operations ko automatically cancel kar deta hai. **Why it breaks:** `race` sirf pehla settled result return karta hai; baaki promises background mein chalte reh sakte hain aur unke side effects (duplicate write, duplicate network call) ho sakte hain. **Fix:** Race ka winner decide hote hi baaki operations ko `AbortController` se explicitly cancel karo.
-
-Real app mein retry-with-backoff pattern payment APIs aur flaky third-party integrations mein common hai; race-without-cancel wahi stale-search-result bug create karta hai jo isi chapter mein pehle discuss hua.
-
-## Practice
-
-Search box banao with debounce, abort aur loading/error/empty states. Slow first request aur fast second request simulate karo. Verify karo ki latest query ka result hi visible rahe.
-
-## Interview questions — bolkar practice karo
-
-**Q. Promise parallel thread hai?** Nahi. Promise future outcome ka object hai; underlying operation execution model decide karta hai.
-
-**Q. Await loop ko fast banata hai?** Nahi. Har iteration await kare to work sequential hota hai. Concurrency explicitly design karni padti hai.
-
-## Depth walkthrough — andar kya ho raha hai?
-
-### Promise creation, settlement aur continuation alag moments hain
-
-```js
-const pending = new Promise(resolve => {
-  console.log('executor');
-  resolve(7);
-});
-pending.then(value => console.log('reaction', value));
-console.log('sync-end');
-// executor → sync-end → reaction 7
-```
-
-Promise executor immediately synchronously call hota hai. Resolve outcome settle karta hai; registered reaction current synchronous work ke beech jump nahi karti. Isliye expensive loop promise constructor mein daalne se woh background thread par nahi chala jaata.
-
-`await` ke baad continuation deferred hoti hai, already fulfilled promise ho tab bhi. Error chain mein catch value return kare toh chain recover ho sakti hai; catch se throw kare toh rejection propagate hoti hai. Missing `return fetch(...)` wrapper ko actual operation se disconnect kar sakta hai, aur caller early complete samajh sakta hai.
-
-**Retry boundary:** Upar ka withRetry mechanics-only example har rejection retry karta hai. Production policy ke bina use mat karo: invalid input, permission failure aur abort normally repeat karne se correct nahi honge. Retryable error classify, attempts positive validate, total deadline aur cancellation define karo. Write ka response lost ho toh same operation identity se reconcile karo; new write blindly mat create karo.
-
-## Revision and practice lab — khud karke samjho
-
-**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
-
-**Apply — khud try karo:** Script A log karti hai, zero-delay timer B schedule karti hai, `Promise.resolve().then(() => console.log('C'))` queue karti hai, phir D log karti hai. Order batao.
-
-> **Hint — chhota ishara:** Current script finish karo, phir promise reactions drain karo.
-
-**Answer guide — pehle khud karo, phir compare karo:** Is ordinary single-script case mein A, D, C, B milega. Timer delay zero hone se synchronous code interrupt nahi hota. Letters ratne ke bajay queue boundary samjhao; nayi async sources add hon toh trace dobara banao.
-
-**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+- Call stack — synchronous functions yahin execute hote hain.
+- Event loop — stack khali hone par queued work ko chance deta hai.
+- Microtasks — Promise callbacks/`queueMicrotask`; checkpoint par queue drain hoti hai.
+- Timers — timer task se pehle queued microtasks chal sakti hain.
+- Promise — pending se fulfilled ya rejected; settle hone ke baad state fixed.
+- `.then` — nayi Promise deta hai; callback ka return chain ko feed karta hai.
+- `async` — hamesha Promise return; `await` sirf current async flow suspend karta hai.
+- `fetch` — HTTP 404/500 par usually resolve; `response.ok` check karo.
+- Abort — `AbortController` se supported operation cancel; late result bhi guard karo.
+- Starvation — endless microtasks rendering aur tasks delay kar sakti hain.
 
 ## Sources — aur padhne ke liye
 
-[MDN using promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) composition explain karta hai. [MDN using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) HTTP errors aur cancellation explain karta hai.
+- [MDN using promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+- [MDN using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+
+## Code practice
+
+- [Examples — jab code revise karna ho](../../examples/javascript/15-async-event-loop.md)

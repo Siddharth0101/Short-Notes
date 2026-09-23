@@ -17,7 +17,7 @@ npm run preview   # Production build locally dekho
 npm run format    # App modules aur tests format karo
 ```
 
-Lockfile reproducible install ke liye hai. Build parent `notes/` aur source directories bhi use karta hai; sirf app folder copy karna enough nahi.
+Lockfile reproducible install ke liye hai. Build parent `notes/`, `examples/` aur source directories bhi use karta hai; sirf app folder copy karna enough nahi.
 
 ## Kaunsa code kahan hai?
 
@@ -55,7 +55,7 @@ Lockfile reproducible install ke liye hai. Build parent `notes/` aur source dire
 
 `notes/curriculum.json` ordered stages define karta hai. `node ../scripts/sync-curriculum.mjs` main syllabus, course indexes aur coverage guide regenerate karta hai. `node ../scripts/sync-interviews.mjs` interview workbook banata hai. `--check` se pata chalta hai ki generated docs current data se match karte hain ya nahi.
 
-Chapter IDs permanent hain: URLs, bookmarks aur progress unhe use karte hain. Title rename kar sakte ho, lekin ID badalne se old links toot sakte hain. Standard bilingual headings ke old section anchors `headingId` mein preserve kiye hain. New chapters `notes/*/*.md` se discover hote hain. Duration suggested study block hai, measured reading time nahi.
+Chapter IDs permanent hain: URLs, bookmarks aur progress unhe use karte hain. Title rename kar sakte ho, lekin ID badalne se old links toot sakte hain. Standard bilingual headings ke old section anchors `headingId` mein preserve kiye hain. New chapters `notes/*/*.md` se discover hote hain. Duration short revision ka approximate reading time hai.
 
 Bookmarks, completed chapters, confident answers aur recent reads `shortnotes.progress.v1` local storage mein rehte hain. Import versioned JSON ko current progress se merge karta hai. Invalid import state badalne se pehle reject hota hai. Storage unavailable ho toh session memory mein app chal sakta hai; backup export karo.
 

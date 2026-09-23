@@ -54,11 +54,12 @@ test('Every study chapter has valid metadata, unique identity, readable content,
     assert(!orderKeys.has(orderKey), `Duplicate track order ${orderKey}`);
     orderKeys.add(orderKey);
     assert(note.minutes > 0 && note.minutes < 120, `${file}: read time`);
-    assert.match(note.body, /^## Mental model\b/, file);
-    assert(note.body.split(/\s+/).length >= 250, `${file}: insufficient content`);
+    assert.match(note.body, /^## Quick revision\b/, file);
+    const points = note.body.split('\n## ')[0].split('\n').filter((line) => line.startsWith('- '));
+    assert(points.length >= 5, `${file}: missing revision concepts`);
+    assert(points.every((line) => line.includes(' — ') && line.split(/\s+/).length <= 40), `${file}: keep each concept a short one-liner`);
     assert.equal((note.body.match(/^```/gm) || []).length % 2, 0, `${file}: unclosed code fence`);
     assert.match(note.body, /https:\/\//, `${file}: missing source`);
-    assert.match(note.body, /## .*Practice/, `${file}: missing practice`);
     if (note.visual)
       assert(VISUAL_IDS.includes(note.visual), `${file}: unknown visual ${note.visual}`);
     const headings = extractHeadings(note.body);

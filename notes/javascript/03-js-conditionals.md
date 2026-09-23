@@ -4,82 +4,26 @@ title: Decisions with if else and boolean logic
 track: javascript
 order: 3
 level: Foundation
-minutes: 15
-summary: Condition rule ko code mein likhti hai; boundary values batati hain ki rule sahi implement hua ya nahi.
+minutes: 1
+summary: `if` — condition truthy ho toh block chalta hai.
 tags: fundamentals, js, conditionals
 ---
 
-## Mental model — simple soch
+## Quick revision
 
-Condition ek sawal hai jiska answer code ka path choose karta hai. Pehle plain words mein likho: learner start karne ke liye eligible hai? Phir comparisons banao. if condition truthy ho toh branch chalegi; warna else. Else-if chain first matching branch choose karti hai. Jaise marks se grade decide karte waqt exact threshold aur checking order matter karte hain.
-
-> **Core takeaway:** Condition rule ko code mein likhti hai; boundary values batati hain ki rule sahi implement hua ya nahi.
-
-## Trace one decision
-
-```javascript
-const score = 72;
-const submitted = true;
-if (!submitted) {
-  console.log('Submit your work first');
-} else if (score >= 80) {
-  console.log('Ready for advanced practice');
-} else if (score >= 50) {
-  console.log('Revise and try again');
-} else {
-  console.log('Repeat the fundamentals');
-}
-```
-
-Output `Revise and try again` hai. Branch match hone ke baad later branches skip hoti hain. score>=50 pehle likhoge toh 80 se upar scores bhi usi mein aa jayenge. Short examples mein bhi braces rakho, taaki added statement accidentally branch ke bahar na ho.
-
-## Combine conditions
-
-&& ko dono conditions true chahiye; || ko koi ek; ! boolean reverse karta hai. Short-circuit ke kaaran later operand evaluate na ho sakta hai. `age>=18 && hasTicket` jaise explicit comparisons se start karo. Empty string aur zero falsy hain; nonempty 'false' string truthy hai. submitted ka intended contract boolean hai toh real boolean store karo.
-
-Ternary value choose karta hai: `const label = passed ? 'Pass' : 'Retry'`. Long branching readable statements mein rakho. switch ek expression multiple cases se match karta hai; if/else seekhne ke baad padho, mandatory replacement mat samjho.
-
-## Practice
-
-Delivery rule likho: total>=500 par free, otherwise 40. Business rule se pehle negative-total invalid branch add karo. -1,0,499,500 test aur explain karo. Phir premiumMember=true par bhi free delivery add karo.
-
-## Aage badhne se pehle check karo
-
-Exact boundary par kaunsi branch chalegi, explain karo. Next loops se statements repeat karenge.
-
-## Depth walkthrough — andar kya ho raha hai?
-
-### Branch order ko boundary values se prove karo
-
-Maan lo score 0–100 mein hai: 80 ya zyada distinction, 50 ya zyada pass, warna retry. Pehle `score >= 50` check karke pass return kar diya toh score 90 distinction tak kabhi nahi pahunchega. Narrower/high threshold pehle ya explicitly disjoint ranges chahiye.
-
-```js
-function grade(score) {
-  if (!Number.isFinite(score) || score < 0 || score > 100) return 'invalid';
-  if (score >= 80) return 'distinction';
-  if (score >= 50) return 'pass';
-  return 'retry';
-}
-console.log([49, 50, 79, 80, 101].map(grade));
-// ['retry', 'pass', 'pass', 'distinction', 'invalid']
-```
-
-Function aur array syntax upcoming lessons mein detail se aayegi; abhi har input ke branches trace karo. Guard clause invalid state jaldi nikaalti hai. Baaki conditions ko pata hai ki score valid hai, isliye har line mein validation repeat nahi karni.
-
-`&&` aur `||` short-circuit karte hain: right expression zaroori ho tabhi evaluate hoti hai. Yeh sirf boolean return karne ka rule nahi; operands ki values return ho sakti hain. Side effects condition mein chhupane se trace difficult hota hai. **Practice:** Distinction threshold 85 karo; tests mein 84 aur 85 add karke off-by-one decision explain karo.
-
-## Revision and practice lab — khud karke samjho
-
-**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
-
-**Apply — khud try karo:** Pass hone ke liye score kam-se-kam 60 aur attendance kam-se-kam 75 chahiye. `(60,75)`, `(59,100)`, `(90,74)` classify karo.
-
-> **Hint — chhota ishara:** Dono requirements true honi chahiye; equality bhi accepted hai.
-
-**Answer guide — pehle khud karo, phir compare karo:** `score >= 60 && attendance >= 75` use karo. Sirf first pair pass hai. Har threshold ke neeche, barabar aur upar test karo. OR lagane se ek requirement poori karne wala bhi galti se pass ho jaega.
-
-**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+- `if` — condition truthy ho toh block chalta hai.
+- `else if` — pehli matching branch chalti hai; baaki skip.
+- `else` — koi condition match na ho toh fallback.
+- `&&` — pehla falsy ya last operand return; `||` — pehla truthy ya last operand.
+- `!` — truthiness ko ulta boolean banata hai.
+- Ternary — `condition ? yes : no`; chhoti value selection ke liye.
+- `switch` — cases strict equality se match; fall-through rokne ko `break`.
+- Boundary — `age >= 18` mein 18 included hai; 17, 18, 19 se check karo.
 
 ## Sources — aur padhne ke liye
 
-[MDN control flow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling) se conditional execution padho.
+- [MDN control flow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
+
+## Code practice
+
+- [Examples — jab code revise karna ho](../../examples/javascript/03-js-conditionals.md)

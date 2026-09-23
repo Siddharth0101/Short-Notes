@@ -159,9 +159,14 @@ Review date: 2026-09-15. Full bank: 444 questions. Priority set: 52.
 
 **Answer — reasoning samjho:**
 
-Closure function ko uske lexical environment ke bindings access karne deta hai, even jab outer function return ho chuka ho. Private counters, callbacks aur function factories mein useful hai; captured bindings live hote hain, automatically frozen copies nahi.
+- Closure function ko uske lexical environment ke bindings access karne deta hai, even jab outer function return ho chuka ho.
+- Private counters, callbacks aur function factories mein useful hai
+- captured bindings live hote hain, automatically frozen copies nahi.
 
-Har factory call ki apni binding hai. Pehla closure updated total yaad rakhta hai; zero ki frozen copy nahi. Isliye a ki do calls ek total badhati hain, jabki b ka counter alag shuru hota hai.
+- Har factory call ki apni binding hai.
+- Pehla closure updated total yaad rakhta hai
+- zero ki frozen copy nahi.
+- Isliye a ki do calls ek total badhati hain, jabki b ka counter alag shuru hota hai.
 
 ```js
 function makeTracker() {
@@ -182,9 +187,13 @@ console.log(a(5), a(3), b(2)); // 5, 8, 2
 
 **Answer — reasoning samjho:**
 
-Regular function ka this call-site se decide hota hai: object method call, explicit call/apply/bind, constructor call, ya plain call. Arrow function apna this create nahi karta; surrounding lexical scope ka this use karta hai, isliye bind se uska this replace nahi hota.
+- Regular function ka this call-site se decide hota hai: object method call, explicit call/apply/bind, constructor call, ya plain call.
+- Arrow function apna this create nahi karta
+- surrounding lexical scope ka this use karta hai, isliye bind se uska this replace nahi hota.
 
-Arrow ka apna arguments binding nahi hota aur use new ke saath call nahi kar sakte. Jab this invocation ke receiver se aana chahiye, regular function use karo. Example mein call normal ka this badalta hai, arrow ka lexical this nahi.
+- Arrow ka apna arguments binding nahi hota aur use new ke saath call nahi kar sakte.
+- Jab this invocation ke receiver se aana chahiye, regular function use karo.
+- Example mein call normal ka this badalta hai, arrow ka lexical this nahi.
 
 ```js
 const lesson = {
@@ -208,7 +217,9 @@ console.log(callbacks.arrow.call({minutes:99})); // 12
 
 **Answer — reasoning samjho:**
 
-Current synchronous execution pehle complete hota hai. Browser event loop phir microtask checkpoint par queued promise reactions drain karta hai; eligible timer callback aage kisi task mein run hota hai, aur zero delay exact execution time guarantee nahi karta.
+- Current synchronous execution pehle complete hota hai.
+- Browser event loop phir microtask checkpoint par queued promise reactions drain karta hai
+- eligible timer callback aage kisi task mein run hota hai, aur zero delay exact execution time guarantee nahi karta.
 
 **Follow-up — khud explain karo:** Repeated microtasks rendering delay kar sakti hain?
 
@@ -220,7 +231,9 @@ Current synchronous execution pehle complete hota hai. Browser event loop phir m
 
 **Answer — reasoning samjho:**
 
-Promise.all tab useful hai jab sab results successful chahiye; koi input reject hote hi combined promise reject hota hai. allSettled har input ka final outcome deta hai, aur dono mein remaining operations automatically cancel nahi hote.
+- Promise.all tab useful hai jab sab results successful chahiye
+- koi input reject hote hi combined promise reject hota hai.
+- allSettled har input ka final outcome deta hai, aur dono mein remaining operations automatically cancel nahi hote.
 
 **Follow-up — khud explain karo:** 1000 requests process karte waqt concurrency limit kaise rakhoge?
 
@@ -232,7 +245,8 @@ Promise.all tab useful hai jab sab results successful chahiye; koi input reject 
 
 **Answer — reasoning samjho:**
 
-Har request ke saath sequence ID ya cleanup-owned active flag rakho aur sirf latest request ka result apply karo. AbortController unnecessary fetch ko cancel karne mein help karta hai, lekin stale-result guard phir bhi useful hai jab cancellation late ho ya downstream work cancelable na ho.
+- Har request ke saath sequence ID ya cleanup-owned active flag rakho aur sirf latest request ka result apply karo.
+- AbortController unnecessary fetch ko cancel karne mein help karta hai, lekin stale-result guard phir bhi useful hai jab cancellation late ho ya downstream work cancelable na ho.
 
 **Follow-up — khud explain karo:** Request replace ho toh loading/error state kya kare?
 
@@ -244,7 +258,12 @@ Har request ke saath sequence ID ya cleanup-owned active flag rakho aur sirf lat
 
 **Answer — reasoning samjho:**
 
-Input index ke result slots allocate karo. Maximum three workers await se pehle synchronously next index claim karein; previous mapper settle hone par next item lein. Fail-fast ya settle-all contract pehle decide karo. Reversed completion, rejection, empty input, invalid limit aur peak active calls test karo. Input result order aur completion order alag guarantees hain.
+- Input index ke result slots allocate karo.
+- Maximum three workers await se pehle synchronously next index claim karein
+- previous mapper settle hone par next item lein.
+- Fail-fast ya settle-all contract pehle decide karo.
+- Reversed completion, rejection, empty input, invalid limit aur peak active calls test karo.
+- Input result order aur completion order alag guarantees hain.
 
 **Follow-up — khud explain karo:** Abort ke baad new jobs rok kar unstarted slots ka result kaise clear rakhoge?
 
@@ -256,9 +275,18 @@ Input index ke result slots allocate karo. Maximum three workers await se pehle 
 
 **Answer — reasoning samjho:**
 
-Pehle ancestor stacking contexts dekho. Dropdown apne context ke andar compete karta hai; sibling ancestor poore subtree se upar ho sakta hai. Positioned z-index, transform, opacity inspect karo. Overlay ko deliberate top-level layer ya suitable platform primitive mein rakho. Sirf number badhane ke bajay clipping, focus aur positioning bhi verify karo.
+- Pehle ancestor stacking contexts dekho.
+- Dropdown apne context ke andar compete karta hai
+- sibling ancestor poore subtree se upar ho sakta hai.
+- Positioned z-index, transform, opacity inspect karo.
+- Overlay ko deliberate top-level layer ya suitable platform primitive mein rakho.
+- Sirf number badhane ke bajay clipping, focus aur positioning bhi verify karo.
 
-z-index apne stacking context ke andar stack level control karta hai: menus, overlays aur sticky headers mein kaam aata hai. Positioned element ka non-auto z-index, opacity below 1 ya transform naya context bana sakta hai. Flex/grid items bina position ke bhi z-index use kar sakte hain. Neeche panel ka context neighbor se neeche hai, isliye andar menu ka 100 neighbor ke 2 ko globally beat nahi karta. Ancestors inspect karo, consistent layer scale rakho aur zaroorat par suitable portal ya top-layer primitive chuno.
+- z-index apne stacking context ke andar stack level control karta hai: menus, overlays aur sticky headers mein kaam aata hai.
+- Positioned element ka non-auto z-index, opacity below 1 ya transform naya context bana sakta hai.
+- Flex/grid items bina position ke bhi z-index use kar sakte hain.
+- Neeche panel ka context neighbor se neeche hai, isliye andar menu ka 100 neighbor ke 2 ko globally beat nahi karta.
+- Ancestors inspect karo, consistent layer scale rakho aur zaroorat par suitable portal ya top-layer primitive chuno.
 
 ```css
 .panel { position: relative; z-index: 1; }
@@ -276,7 +304,12 @@ z-index apne stacking context ke andar stack level control karta hai: menus, ove
 
 **Answer — reasoning samjho:**
 
-Native button keyboard activation, focusability aur accessibility semantics deta hai. Action ke liye button, accessible name aur form ke andar intended type do. Role alone keyboard implement nahi karta. Enter, Space, disabled behavior aur visible focus test karo. Navigation location badalti hai toh anchor use karo; extra custom interaction code ki need kam hogi.
+- Native button keyboard activation, focusability aur accessibility semantics deta hai.
+- Action ke liye button, accessible name aur form ke andar intended type do.
+- Role alone keyboard implement nahi karta.
+- Enter, Space, disabled behavior aur visible focus test karo.
+- Navigation location badalti hai toh anchor use karo
+- extra custom interaction code ki need kam hogi.
 
 **Follow-up — khud explain karo:** New page navigation ho toh element choice kya hogi?
 
@@ -288,7 +321,9 @@ Native button keyboard activation, focusability aur accessibility semantics deta
 
 **Answer — reasoning samjho:**
 
-Keys React ko siblings ke beech identity track karne mein help karte hain, taaki reorder ke baad correct state preserve ho. Array index dynamic insert/delete/reorder mein wrong identity map kar sakta hai; render ke waqt random key banana har baar remount kara sakta hai.
+- Keys React ko siblings ke beech identity track karne mein help karte hain, taaki reorder ke baad correct state preserve ho.
+- Array index dynamic insert/delete/reorder mein wrong identity map kar sakta hai
+- render ke waqt random key banana har baar remount kara sakta hai.
 
 **Follow-up — khud explain karo:** Key intentionally badalkar form reset kab karoge?
 
@@ -300,7 +335,9 @@ Keys React ko siblings ke beech identity track karne mein help karte hain, taaki
 
 **Answer — reasoning samjho:**
 
-Effect component ko external systems, jaise subscription, browser API ya network synchronization, se sync karta hai. Render se calculate hone wali value ko usually directly derive karo; effect dependencies mein reactive inputs include karo aur setup ka matching cleanup do.
+- Effect component ko external systems, jaise subscription, browser API ya network synchronization, se sync karta hai.
+- Render se calculate hone wali value ko usually directly derive karo
+- effect dependencies mein reactive inputs include karo aur setup ka matching cleanup do.
 
 **Follow-up — khud explain karo:** Sirf props state mein copy karne wali effect kaise hataoge?
 
@@ -312,9 +349,16 @@ Effect component ko external systems, jaise subscription, browser API ya network
 
 **Answer — reasoning samjho:**
 
-memo unchanged props par component rendering skip karne ka optimization deta hai; useMemo calculation result aur useCallback function identity cache karta hai. Ye correctness tools nahi hain: actual rendering cost profile karo, aur unstable object props ya context updates se cache benefit disappear ho sakta hai.
+- memo unchanged props par component rendering skip karne ka optimization deta hai
+- useMemo calculation result aur useCallback function identity cache karta hai.
+- Ye correctness tools nahi hain: actual rendering cost profile karo, aur unstable object props ya context updates se cache benefit disappear ho sakta hai.
 
-useMemo calculated result cache karta hai; useCallback function identity cache karta hai; memo equal props par parent ki wajah se hone wala render skip kar sakta hai. Stable identity correctness ka substitute nahi. Relevant workload measure karo: state/context updates aur unstable inputs ab bhi kaam karwa sakte hain. Compiler-enabled build mein manual memoization ki zaroorat kam ho sakti hai.
+- useMemo calculated result cache karta hai
+- useCallback function identity cache karta hai
+- memo equal props par parent ki wajah se hone wala render skip kar sakta hai.
+- Stable identity correctness ka substitute nahi.
+- Relevant workload measure karo: state/context updates aur unstable inputs ab bhi kaam karwa sakte hain.
+- Compiler-enabled build mein manual memoization ki zaroorat kam ho sakti hai.
 
 ```jsx
 import {memo, useCallback, useMemo, useState} from 'react';
@@ -339,7 +383,9 @@ function Search({items, query}) {
 
 **Answer — reasoning samjho:**
 
-Pehle pending local change show karo, request identity aur previous server state track karo, phir success par authoritative response reconcile karo. Failure par rollback ya explicit retry state do; overlapping mutations mein purani failure se newer success overwrite nahi honi chahiye.
+- Pehle pending local change show karo, request identity aur previous server state track karo, phir success par authoritative response reconcile karo.
+- Failure par rollback ya explicit retry state do
+- overlapping mutations mein purani failure se newer success overwrite nahi honi chahiye.
 
 **Follow-up — khud explain karo:** Server idempotency optimistic retries easy kaise karti hai?
 
@@ -351,7 +397,9 @@ Pehle pending local change show karo, request identity aur previous server state
 
 **Answer — reasoning samjho:**
 
-Pehle measure karo ki bottleneck network, computation, DOM size ya rerenders hai. Server pagination/filtering, row virtualization, stable row identity aur expensive work ka caching/worker execution combine kar sakte ho; keyboard navigation, focus aur screen-reader behavior ko virtualized design mein verify karo.
+- Pehle measure karo ki bottleneck network, computation, DOM size ya rerenders hai.
+- Server pagination/filtering, row virtualization, stable row identity aur expensive work ka caching/worker execution combine kar sakte ho
+- keyboard navigation, focus aur screen-reader behavior ko virtualized design mein verify karo.
 
 **Follow-up — khud explain karo:** Variable row heights virtualization ko kaise badalti hain?
 
@@ -363,7 +411,9 @@ Pehle measure karo ki bottleneck network, computation, DOM size ya rerenders hai
 
 **Answer — reasoning samjho:**
 
-Test user-visible behavior assert kare — screen par kya text/role dikhta hai, click ke baad kya change hota hai — internal state variable names ya component implementation details par nahi. Testing Library queries (role/text-based) is discipline ko encourage karte hain; brittle snapshot-only tests refactors ko unnecessarily break kar dete hain.
+- Test user-visible behavior assert kare — screen par kya text/role dikhta hai, click ke baad kya change hota hai — internal state variable names ya component implementation details par nahi.
+- Testing Library queries (role/text-based) is discipline ko encourage karte hain
+- brittle snapshot-only tests refactors ko unnecessarily break kar dete hain.
 
 **Follow-up — khud explain karo:** Passing snapshot test accessibility regression kaise miss kar sakta hai?
 
@@ -375,7 +425,10 @@ Test user-visible behavior assert kare — screen par kya text/role dikhta hai, 
 
 **Answer — reasoning samjho:**
 
-References ke liye == identity compare karta hai; equals logical equality define kar sakta hai. Equal objects ka hashCode same hona zaroori hai, lekin same hash code se equality prove nahi hoti; hash collections ke keys mein mutable equality fields avoid karo.
+- References ke liye == identity compare karta hai
+- equals logical equality define kar sakta hai.
+- Equal objects ka hashCode same hona zaroori hai, lekin same hash code se equality prove nahi hoti
+- hash collections ke keys mein mutable equality fields avoid karo.
 
 **Follow-up — khud explain karo:** Compatible hashCode bina equals override karne se kya tootega?
 
@@ -387,7 +440,9 @@ References ke liye == identity compare karta hai; equals logical equality define
 
 **Answer — reasoning samjho:**
 
-volatile reads/writes visibility aur ordering guarantees dete hain, lekin count++ jaise read-modify-write ko atomic nahi banate. synchronized mutual exclusion aur happens-before relationship deta hai; atomic classes simple atomic updates ke liye alternative hain.
+- volatile reads/writes visibility aur ordering guarantees dete hain, lekin count++ jaise read-modify-write ko atomic nahi banate.
+- synchronized mutual exclusion aur happens-before relationship deta hai
+- atomic classes simple atomic updates ke liye alternative hain.
 
 **Follow-up — khud explain karo:** Volatile counter increments lose kyun kar sakta hai?
 
@@ -399,7 +454,9 @@ volatile reads/writes visibility aur ordering guarantees dete hain, lekin count+
 
 **Answer — reasoning samjho:**
 
-Virtual threads many concurrent tasks jo mostly blocking I/O wait karte hain unko simpler thread-per-task style mein scale karne mein help karte hain. Ye CPU cores increase nahi karte aur downstream connection pools ki limits remove nahi karte; resource limits, runtime version behavior aur measurement important hain.
+- Virtual threads many concurrent tasks jo mostly blocking I/O wait karte hain unko simpler thread-per-task style mein scale karne mein help karte hain.
+- Ye CPU cores increase nahi karte aur downstream connection pools ki limits remove nahi karte
+- resource limits, runtime version behavior aur measurement important hain.
 
 **Follow-up — khud explain karo:** Limited dependency ke around semaphore phir bhi kyun chahiye?
 
@@ -411,7 +468,12 @@ Virtual threads many concurrent tasks jo mostly blocking I/O wait karte hain unk
 
 **Answer — reasoning samjho:**
 
-ROW_NUMBER window customer se partition karo; amount descending plus stable unique tie-breaker order do. Outer query/CTE mein row number<=2 filter karo. Ties same rank share karni hon tab RANK/DENSE_RANK lo; output two se zyada ho sakta hai. Final ORDER BY alag add karo kyunki window ordering final rows sort guarantee nahi karti.
+- ROW_NUMBER window customer se partition karo
+- amount descending plus stable unique tie-breaker order do.
+- Outer query/CTE mein row number<=2 filter karo.
+- Ties same rank share karni hon tab RANK/DENSE_RANK lo
+- output two se zyada ho sakta hai.
+- Final ORDER BY alag add karo kyunki window ordering final rows sort guarantee nahi karti.
 
 **Follow-up — khud explain karo:** Saare tied orders include karne hon toh kya badlega?
 
@@ -423,7 +485,11 @@ ROW_NUMBER window customer se partition karo; amount descending plus stable uniq
 
 **Answer — reasoning samjho:**
 
-New column add, compatible writer deploy, resumable backfill, data verify aur reads switch karo. Old binaries retire hone ke baad old column remove karo. Backfill concurrent writes overwrite na kare. App rollback aur data restoration alag plans hain; destructive step ko ordinary binary rollback reversible nahi banata.
+- New column add, compatible writer deploy, resumable backfill, data verify aur reads switch karo.
+- Old binaries retire hone ke baad old column remove karo.
+- Backfill concurrent writes overwrite na kare.
+- App rollback aur data restoration alag plans hain
+- destructive step ko ordinary binary rollback reversible nahi banata.
 
 **Follow-up — khud explain karo:** Fresh-schema migration test ke alawa kaunsa upgrade fixture test chahiye?
 
@@ -435,7 +501,9 @@ New column add, compatible writer deploy, resumable backfill, data verify aur re
 
 **Answer — reasoning samjho:**
 
-Spring transaction advice configured transaction manager ke through participating resource operations ko transaction boundary deta hai. Default proxy mode mein self-invocation advice bypass kar sakti hai, aur ordinary defaults RuntimeException/Error par rollback karte hain; external HTTP calls same database transaction ka atomic part nahi ban jaate.
+- Spring transaction advice configured transaction manager ke through participating resource operations ko transaction boundary deta hai.
+- Default proxy mode mein self-invocation advice bypass kar sakti hai, aur ordinary defaults RuntimeException/Error par rollback karte hain
+- external HTTP calls same database transaction ka atomic part nahi ban jaate.
 
 **Follow-up — khud explain karo:** DB change ke baad event reliably kaise publish karoge?
 
@@ -447,7 +515,12 @@ Spring transaction advice configured transaction manager ke through participatin
 
 **Answer — reasoning samjho:**
 
-N parents load karke lazy relations touch karne par 1+N queries aa sakti hain. Actual SQL/count inspect karo. Access pattern se projection, entity graph, fetch join ya batching choose karo. To-many fetch join rows multiply karke pagination complicate karti hai; IDs page then controlled fetch useful ho sakta hai. Every relation eager blanket fix overfetch/inefficient plans la sakta hai.
+- N parents load karke lazy relations touch karne par 1+N queries aa sakti hain.
+- Actual SQL/count inspect karo.
+- Access pattern se projection, entity graph, fetch join ya batching choose karo.
+- To-many fetch join rows multiply karke pagination complicate karti hai
+- IDs page then controlled fetch useful ho sakta hai.
+- Every relation eager blanket fix overfetch/inefficient plans la sakta hai.
 
 **Follow-up — khud explain karo:** Correct page size aur bounded query count ka test kya hoga?
 
@@ -461,7 +534,12 @@ N parents load karke lazy relations touch karne par 1+N queries aa sakti hain. A
 
 **Answer — reasoning samjho:**
 
-Optimistic version check stale write ko conflict deta hai, silent lost update nahi. Pessimistic DB locks earlier serialize karte hain, wait/deadlock cost ke saath. Contention/invariant se choose karo. Conflict retry safe ho tab fresh read/business reevaluation ke baad karo. Version field external payment effects ya every DB constraint protect nahi karta. Payment method blind retry duplicate charge la sakti hai.
+- Optimistic version check stale write ko conflict deta hai, silent lost update nahi.
+- Pessimistic DB locks earlier serialize karte hain, wait/deadlock cost ke saath.
+- Contention/invariant se choose karo.
+- Conflict retry safe ho tab fresh read/business reevaluation ke baad karo.
+- Version field external payment effects ya every DB constraint protect nahi karta.
+- Payment method blind retry duplicate charge la sakti hai.
 
 ```java
 // JPA entity field excerpt
@@ -481,7 +559,11 @@ private long version;
 
 **Answer — reasoning samjho:**
 
-Real HTTP request separate server thread/transaction mein chalti hai. Test thread rollback server commit undo nahi karta. Isolated fixtures, test DB ya explicit cleanup use karo; suite order par depend mat karo. PostgreSQL locks/constraints prove karne ke liye PostgreSQL-backed test lo, in-memory substitute identical semantics guarantee nahi karti.
+- Real HTTP request separate server thread/transaction mein chalti hai.
+- Test thread rollback server commit undo nahi karta.
+- Isolated fixtures, test DB ya explicit cleanup use karo
+- suite order par depend mat karo.
+- PostgreSQL locks/constraints prove karne ke liye PostgreSQL-backed test lo, in-memory substitute identical semantics guarantee nahi karti.
 
 **Follow-up — khud explain karo:** In-memory DB PostgreSQL locking prove kar sakti hai?
 
@@ -493,7 +575,9 @@ Real HTTP request separate server thread/transaction mein chalti hai. Test threa
 
 **Answer — reasoning samjho:**
 
-Jo data saath read/update hota hai aur bounded size rakhta hai usko embed karna useful ho sakta hai. Independent lifecycle, shared entities ya unbounded growth ho to references better ho sakte hain; access patterns, document-size limits aur update frequency se decision justify karo.
+- Jo data saath read/update hota hai aur bounded size rakhta hai usko embed karna useful ho sakta hai.
+- Independent lifecycle, shared entities ya unbounded growth ho to references better ho sakte hain
+- access patterns, document-size limits aur update frequency se decision justify karo.
 
 **Follow-up — khud explain karo:** Customer mein har order embed karoge?
 
@@ -505,7 +589,9 @@ Jo data saath read/update hota hai aur bounded size rakhta hai usko embed karna 
 
 **Answer — reasoning samjho:**
 
-Compound index fields specified order mein sort hote hain, isliye leading prefixes aur sort/range needs query usefulness affect karte hain. Equality, sort, range guideline starting point hai; actual predicate selectivity aur explain plan se validate karo.
+- Compound index fields specified order mein sort hote hain, isliye leading prefixes aur sort/range needs query usefulness affect karte hain.
+- Equality, sort, range guideline starting point hai
+- actual predicate selectivity aur explain plan se validate karo.
 
 **Follow-up — khud explain karo:** {team:1,createdAt:-1} team-specific newest-first queries support karega?
 
@@ -517,7 +603,10 @@ Compound index fields specified order mein sort hote hain, isliye leading prefix
 
 **Answer — reasoning samjho:**
 
-Write concern acknowledgement aur requested durability conditions control karta hai; read concern read data ki consistency/isolation properties affect karta hai. Read preference decide karta hai reads kaunse replica-set members ko target karein; secondary routing automatically fresh reads guarantee nahi karta.
+- Write concern acknowledgement aur requested durability conditions control karta hai
+- read concern read data ki consistency/isolation properties affect karta hai.
+- Read preference decide karta hai reads kaunse replica-set members ko target karein
+- secondary routing automatically fresh reads guarantee nahi karta.
 
 **Follow-up — khud explain karo:** Read-after-write workflow mein kya change karoge?
 
@@ -529,7 +618,11 @@ Write concern acknowledgement aur requested durability conditions control karta 
 
 **Answer — reasoning samjho:**
 
-Unique provider event ID durably store aur business transition dedup record ke saath atomic rakho. Webhook authenticate, order association validate aur durable handling ke baad ack karo. In-memory Set instances/restarts mein fail hai. Replay-safe effects aur reconciliation evidence rakho. Commit ke baad response lost ho toh repeated event existing outcome pehchaan kar no-op kare.
+- Unique provider event ID durably store aur business transition dedup record ke saath atomic rakho.
+- Webhook authenticate, order association validate aur durable handling ke baad ack karo.
+- In-memory Set instances/restarts mein fail hai.
+- Replay-safe effects aur reconciliation evidence rakho.
+- Commit ke baad response lost ho toh repeated event existing outcome pehchaan kar no-op kare.
 
 **Follow-up — khud explain karo:** Commit ke baad HTTP success se pehle crash ho toh?
 
@@ -543,7 +636,13 @@ Unique provider event ID durably store aur business transition dedup record ke s
 
 **Answer — reasoning samjho:**
 
-Authentication caller identify karti hai; object-level authorization is order ka access decide karti hai. Verified user/tenant se query/policy scope karo; privileged role exceptions explicit hon. Body userId ownership ka proof nahi. Cross-user read/write, privileged allowed case aur revoked membership test karo; ID badalne par private data/mutation leak nahi honi chahiye.
+- Authentication caller identify karti hai
+- object-level authorization is order ka access decide karti hai.
+- Verified user/tenant se query/policy scope karo
+- privileged role exceptions explicit hon.
+- Body userId ownership ka proof nahi.
+- Cross-user read/write, privileged allowed case aur revoked membership test karo
+- ID badalne par private data/mutation leak nahi honi chahiye.
 
 **Follow-up — khud explain karo:** Cross-user, privileged aur revoked-membership integration cases kya honge?
 
@@ -555,7 +654,9 @@ Authentication caller identify karti hai; object-level authorization is order ka
 
 **Answer — reasoning samjho:**
 
-Pehle invariant define karo, jaise answer current half-open interval mein hai aur outside boundaries resolved hain. Har update interval strictly shrink kare aur invariant preserve kare; termination par empty unknown interval desired boundary identify karta hai.
+- Pehle invariant define karo, jaise answer current half-open interval mein hai aur outside boundaries resolved hain.
+- Har update interval strictly shrink kare aur invariant preserve kare
+- termination par empty unknown interval desired boundary identify karta hai.
 
 **Follow-up — khud explain karo:** Duplicates ka first occurrence return kaise karoge?
 
@@ -567,7 +668,9 @@ Pehle invariant define karo, jaise answer current half-open interval mein hai au
 
 **Answer — reasoning samjho:**
 
-Unweighted ya equal-weight graph mein BFS increasing edge-count layers explore karta hai, isliye first discovery minimum edges deta hai. Unequal nonnegative weights ke liye standard BFS minimum total weight guarantee nahi karta; Dijkstra appropriate ho sakta hai.
+- Unweighted ya equal-weight graph mein BFS increasing edge-count layers explore karta hai, isliye first discovery minimum edges deta hai.
+- Unequal nonnegative weights ke liye standard BFS minimum total weight guarantee nahi karta
+- Dijkstra appropriate ho sakta hai.
 
 **Follow-up — khud explain karo:** Visited enqueue par kyun mark karein, dequeue par kyun nahi?
 
@@ -579,7 +682,10 @@ Unweighted ya equal-weight graph mein BFS increasing edge-count layers explore k
 
 **Answer — reasoning samjho:**
 
-previous, current aur saved next pointers maintain karo; next ko overwrite karne se pehle save karke current link reverse karo. Har node ek baar process hota hai, so O(n) time aur O(1) auxiliary space; list wrapper ka tail bhi update karna pad sakta hai.
+- previous, current aur saved next pointers maintain karo
+- next ko overwrite karne se pehle save karke current link reverse karo.
+- Har node ek baar process hota hai, so O(n) time aur O(1) auxiliary space
+- list wrapper ka tail bhi update karna pad sakta hai.
 
 **Follow-up — khud explain karo:** Input mein cycle possible ho toh kya badlega?
 
@@ -591,7 +697,8 @@ previous, current aur saved next pointers maintain karo; next ko overwrite karne
 
 **Answer — reasoning samjho:**
 
-Ek element stack mein once push aur at most once pop hota hai. Inner while ke operations poore algorithm mein total O(n) hain, isliye har outer iteration ko n cost assign karna loose aur misleading hoga.
+- Ek element stack mein once push aur at most once pop hota hai.
+- Inner while ke operations poore algorithm mein total O(n) hain, isliye har outer iteration ko n cost assign karna loose aur misleading hoga.
 
 **Follow-up — khud explain karo:** Next greater versus greater-or-equal mein pop condition kya hogi?
 
@@ -603,7 +710,11 @@ Ek element stack mein once push aur at most once pop hota hai. Inner while ke op
 
 **Answer — reasoning samjho:**
 
-Kahn’s algorithm har node ka in-degree count karke zero-in-degree nodes ko queue karta hai; jab queue khaali ho jaaye lekin processed node count total nodes se kam ho, toh remaining subgraph contains a cycle; some remaining nodes may only be downstream of that cycle. DFS-based variant recursion stack mein "currently visiting" node dobara mile to back edge detect karta hai. Yeh exact mechanism build systems (Maven/Gradle dependency graph), task schedulers, aur module bundlers mein circular-dependency errors raise karta hai.
+- Kahn’s algorithm har node ka in-degree count karke zero-in-degree nodes ko queue karta hai
+- jab queue khaali ho jaaye lekin processed node count total nodes se kam ho, toh remaining subgraph contains a cycle
+- some remaining nodes may only be downstream of that cycle.
+- DFS-based variant recursion stack mein "currently visiting" node dobara mile to back edge detect karta hai.
+- Yeh exact mechanism build systems (Maven/Gradle dependency graph), task schedulers, aur module bundlers mein circular-dependency errors raise karta hai.
 
 **Follow-up — khud explain karo:** Visited aur current recursion stack mein hone ka difference kya hai?
 
@@ -615,7 +726,12 @@ Kahn’s algorithm har node ka in-degree count karke zero-in-degree nodes ko que
 
 **Answer — reasoning samjho:**
 
-Current prefix s aur earlier prefix s-target ka difference target subarray deta hai. Same prefix multiple baar ho sakta hai, frequencies rakho. Initial zero frequency one empty-prefix start represent karti hai. Matches current prefix insert se pehle count karo, warna zero-target empty subarray count ho sakta hai. Normal hashing par expected O(n) time/space; Number exact-range limits respect karo.
+- Current prefix s aur earlier prefix s-target ka difference target subarray deta hai.
+- Same prefix multiple baar ho sakta hai, frequencies rakho.
+- Initial zero frequency one empty-prefix start represent karti hai.
+- Matches current prefix insert se pehle count karo, warna zero-target empty subarray count ho sakta hai.
+- Normal hashing par expected O(n) time/space
+- Number exact-range limits respect karo.
 
 ```js
 function countTarget(nums, target) {
@@ -643,7 +759,14 @@ console.log(countTarget([1,-1,1], 1)); // 3
 
 **Answer — reasoning samjho:**
 
-Map key→node aur doubly linked list MRU→LRU order combine karo. Get hit front move; put existing update/move ya new insert; overflow tail dono structures se remove. Every map entry exactly one live node, map/list sizes equal. Sentinels empty/single cases simplify. O(capacity) space; zero capacity, update-without-growth, repeated hit aur read-after-eviction order test karo.
+- Map key→node aur doubly linked list MRU→LRU order combine karo.
+- Get hit front move
+- put existing update/move ya new insert
+- overflow tail dono structures se remove.
+- Every map entry exactly one live node, map/list sizes equal.
+- Sentinels empty/single cases simplify.
+- O(capacity) space
+- zero capacity, update-without-growth, repeated hit aur read-after-eviction order test karo.
 
 **Follow-up — khud explain karo:** Singly linked list mein arbitrary hit promote karna harder kyun?
 
@@ -657,7 +780,9 @@ Map key→node aur doubly linked list MRU→LRU order combine karo. Get hit fron
 
 **Answer — reasoning samjho:**
 
-Core user flows, scope, scale, latency/freshness targets aur failure expectations clarify karke measurable assumptions likho. Phir API/data model aur simple end-to-end path banao; components tab add karo jab specific requirement unko justify kare.
+- Core user flows, scope, scale, latency/freshness targets aur failure expectations clarify karke measurable assumptions likho.
+- Phir API/data model aur simple end-to-end path banao
+- components tab add karo jab specific requirement unko justify kare.
 
 **Follow-up — khud explain karo:** Notification service se pehle kaunse three questions puchoge?
 
@@ -669,7 +794,9 @@ Core user flows, scope, scale, latency/freshness targets aur failure expectation
 
 **Answer — reasoning samjho:**
 
-Database update aur message publish separate systems mein ho to ek succeed aur doosra fail ho sakta hai. Same database transaction mein business row aur outbox row likho, phir relay publish kare; duplicates possible rehte hain, isliye consumers idempotent banao.
+- Database update aur message publish separate systems mein ho to ek succeed aur doosra fail ho sakta hai.
+- Same database transaction mein business row aur outbox row likho, phir relay publish kare
+- duplicates possible rehte hain, isliye consumers idempotent banao.
 
 **Follow-up — khud explain karo:** Per-entity event order preserve kaise karoge?
 
@@ -681,7 +808,10 @@ Database update aur message publish separate systems mein ho to ek succeed aur d
 
 **Answer — reasoning samjho:**
 
-Timeout caller ka waiting budget bound karta hai; retry transient failure se recover kar sakta hai; circuit breaker repeatedly failing dependency ko calls temporarily limit karta hai. Retry budget, jitter, backoff aur idempotency zaroori hain taaki outage mein amplified traffic na bane.
+- Timeout caller ka waiting budget bound karta hai
+- retry transient failure se recover kar sakta hai
+- circuit breaker repeatedly failing dependency ko calls temporarily limit karta hai.
+- Retry budget, jitter, backoff aur idempotency zaroori hain taaki outage mein amplified traffic na bane.
 
 **Follow-up — khud explain karo:** End-to-end deadline downstream calls mein kaise baantoge?
 
@@ -693,7 +823,12 @@ Timeout caller ka waiting budget bound karta hai; retry transient failure se rec
 
 **Answer — reasoning samjho:**
 
-Stable message IDs aur conversation sequence/cursor durably store karo. Last acknowledged position se retained events replay, IDs se dedup karo. Cursor retention se bahar ho toh resync path do. Replay/live handoff mein overlap dedup aur gap prevent karo. Ordering scope explicit ho; global total order separate aur often expensive requirement hai.
+- Stable message IDs aur conversation sequence/cursor durably store karo.
+- Last acknowledged position se retained events replay, IDs se dedup karo.
+- Cursor retention se bahar ho toh resync path do.
+- Replay/live handoff mein overlap dedup aur gap prevent karo.
+- Ordering scope explicit ho
+- global total order separate aur often expensive requirement hai.
 
 **Follow-up — khud explain karo:** Replay aur live stream overlap kaise handle karoge?
 
@@ -705,7 +840,13 @@ Stable message IDs aur conversation sequence/cursor durably store karo. Last ack
 
 **Answer — reasoning samjho:**
 
-RPO tolerable data loss time mein, RTO service restore target duration hai. Backup frequency/replication/isolation/procedure failure scenarios ke according choose. Replica backup substitute nahi: corruption/delete replicate ho sakta hai. Restore drills, data/app compatibility aur actual recovery time measure karo; successful backup log enough nahi. Credentials, dependencies, DNS/client reconnect include karo. Partition tradeoff target ke saath explicit ho.
+- RPO tolerable data loss time mein, RTO service restore target duration hai.
+- Backup frequency/replication/isolation/procedure failure scenarios ke according choose.
+- Replica backup substitute nahi: corruption/delete replicate ho sakta hai.
+- Restore drills, data/app compatibility aur actual recovery time measure karo
+- successful backup log enough nahi.
+- Credentials, dependencies, DNS/client reconnect include karo.
+- Partition tradeoff target ke saath explicit ho.
 
 **Follow-up — khud explain karo:** Partition mein continuing writes aur zero-data-loss goal conflict kyun kar sakte hain?
 
@@ -719,7 +860,11 @@ RPO tolerable data loss time mein, RTO service restore target duration hai. Back
 
 **Answer — reasoning samjho:**
 
-Title catalog concept hai; physical copy actual borrowable unit. Three copies of same title parallel borrow ho sakti hain, same copy ka one active loan invariant hai. Wrong identity choose karoge toh ya unnecessary rejection hogi ya duplicate lending. Pehle operations/state/ownership likho, phir classes choose karo.
+- Title catalog concept hai
+- physical copy actual borrowable unit.
+- Three copies of same title parallel borrow ho sakti hain, same copy ka one active loan invariant hai.
+- Wrong identity choose karoge toh ya unnecessary rejection hogi ya duplicate lending.
+- Pehle operations/state/ownership likho, phir classes choose karo.
 
 **Follow-up — khud explain karo:** Parking-space type aur individual parking spot mein same identity distinction kaise apply hogi?
 
@@ -731,7 +876,10 @@ Title catalog concept hai; physical copy actual borrowable unit. Three copies of
 
 **Answer — reasoning samjho:**
 
-Interface ka contract atomic claim aur expected-loan release hai. Non-atomic find-then-save same signatures ke saath concurrent duplicate loans allow kare toh behavioral substitution fail hai. DB implementation ko constraints/atomic operations chahiye; type compatibility alone invariant preserve nahi karti.
+- Interface ka contract atomic claim aur expected-loan release hai.
+- Non-atomic find-then-save same signatures ke saath concurrent duplicate loans allow kare toh behavioral substitution fail hai.
+- DB implementation ko constraints/atomic operations chahiye
+- type compatibility alone invariant preserve nahi karti.
 
 **Follow-up — khud explain karo:** In-memory fake pass hone ke baad real DB mein kaunsa concurrency test run karoge?
 
@@ -743,7 +891,12 @@ Interface ka contract atomic claim aur expected-loan release hai. Non-atomic fin
 
 **Answer — reasoning samjho:**
 
-Copy ID alone enough nahi. Each loan ki unique identity rakho; release current loan ko expected loan ID/version se atomically match kare. Return A success, borrow B, phir duplicate return A aaye toh B bache. API layer member authorization separately enforce kare; opaque ID alone permission proof nahi.
+- Copy ID alone enough nahi.
+- Each loan ki unique identity rakho
+- release current loan ko expected loan ID/version se atomically match kare.
+- Return A success, borrow B, phir duplicate return A aaye toh B bache.
+- API layer member authorization separately enforce kare
+- opaque ID alone permission proof nahi.
 
 **Follow-up — khud explain karo:** Distributed store mein conditional delete/update ka success outcome kaise map karoge?
 
@@ -755,7 +908,11 @@ Copy ID alone enough nahi. Each loan ki unique identity rakho; release current l
 
 **Answer — reasoning samjho:**
 
-Business operation ka time source explicit dependency banta hai. Fixed clock se timestamps/boundaries repeatably verify hote hain; real sleeps avoid hote hain. Service system clock construction se coupled nahi rehti. Production mein business instant aur duration measurement clock ki distinct needs bhi samjho.
+- Business operation ka time source explicit dependency banta hai.
+- Fixed clock se timestamps/boundaries repeatably verify hote hain
+- real sleeps avoid hote hain.
+- Service system clock construction se coupled nahi rehti.
+- Production mein business instant aur duration measurement clock ki distinct needs bhi samjho.
 
 **Follow-up — khud explain karo:** System wall clock backward move ho toh elapsed-time deadline ke liye kya choose karoge?
 
@@ -767,7 +924,10 @@ Business operation ka time source explicit dependency banta hai. Fixed clock se 
 
 **Answer — reasoning samjho:**
 
-Connection acquire wait, application queue, external calls, serialization aur response transfer separately time karo. SQL timer connection milne ke baad start hota ho toh pool wait hide ho sakti hai. Per-instance p95/p99 aur wait stacks compare karo; aggregate average hot instance mask kar sakti hai.
+- Connection acquire wait, application queue, external calls, serialization aur response transfer separately time karo.
+- SQL timer connection milne ke baad start hota ho toh pool wait hide ho sakti hai.
+- Per-instance p95/p99 aur wait stacks compare karo
+- aggregate average hot instance mask kar sakti hai.
 
 **Follow-up — khud explain karo:** Pool size badhane se throughput improve hone ke bajay contention kab badhegi?
 
@@ -779,7 +939,10 @@ Connection acquire wait, application queue, external calls, serialization aur re
 
 **Answer — reasoning samjho:**
 
-TCP ordered reliable byte stream hai, application message framing protocol nahi. Reads partial message ya multiple messages combine kar sakti hain. Length-prefix/delimiter parser incomplete buffer preserve kare aur bounded size validate kare. Transport ACK business transaction commit ka acknowledgment nahi.
+- TCP ordered reliable byte stream hai, application message framing protocol nahi.
+- Reads partial message ya multiple messages combine kar sakti hain.
+- Length-prefix/delimiter parser incomplete buffer preserve kare aur bounded size validate kare.
+- Transport ACK business transaction commit ka acknowledgment nahi.
 
 **Follow-up — khud explain karo:** Length prefix huge ya truncated ho toh parser ka resource/error contract kya hoga?
 
@@ -791,7 +954,10 @@ TCP ordered reliable byte stream hai, application message framing protocol nahi.
 
 **Answer — reasoning samjho:**
 
-Name resolution sirf address discovery ka hissa prove karti hai. Correct address/port, connection reachability, TLS hostname/trust chain, proxy route aur application authorization separately inspect karo. Certificate validation bypass ko fix mat bolo; exact failed stage/error aur configuration verify karo.
+- Name resolution sirf address discovery ka hissa prove karti hai.
+- Correct address/port, connection reachability, TLS hostname/trust chain, proxy route aur application authorization separately inspect karo.
+- Certificate validation bypass ko fix mat bolo
+- exact failed stage/error aur configuration verify karo.
 
 **Follow-up — khud explain karo:** Reused keep-alive connection par har request fresh DNS/TLS timings kyun nahi hongi?
 
@@ -803,7 +969,11 @@ Name resolution sirf address discovery ka hissa prove karti hai. Correct address
 
 **Answer — reasoning samjho:**
 
-Native/direct buffers, thread stacks, memory-mapped pages aur runtime allocations inspect karo. Heap graph total process memory nahi. Resident pages aur virtual address reservations alag metrics hain; container limit total relevant memory par apply ho sakti hai. Allocation/thread trends aur payload concurrency correlate karo.
+- Native/direct buffers, thread stacks, memory-mapped pages aur runtime allocations inspect karo.
+- Heap graph total process memory nahi.
+- Resident pages aur virtual address reservations alag metrics hain
+- container limit total relevant memory par apply ho sakti hai.
+- Allocation/thread trends aur payload concurrency correlate karo.
 
 **Follow-up — khud explain karo:** Har memory increase ko garbage-collector leak bolna incomplete kyun hai?
 
@@ -815,7 +985,10 @@ Native/direct buffers, thread stacks, memory-mapped pages aur runtime allocation
 
 **Answer — reasoning samjho:**
 
-Requests I/O, locks, connection-pool slots ya downstream service ka wait kar rahi ho sakti hain. Low average CPU free useful capacity ka proof nahi. Queue age, blocked stacks, pool wait aur per-instance load dekho. Work conservation aur limits samajhkar bounded admission/timeout policy choose karo.
+- Requests I/O, locks, connection-pool slots ya downstream service ka wait kar rahi ho sakti hain.
+- Low average CPU free useful capacity ka proof nahi.
+- Queue age, blocked stacks, pool wait aur per-instance load dekho.
+- Work conservation aur limits samajhkar bounded admission/timeout policy choose karo.
 
 **Follow-up — khud explain karo:** More app replicas single hot database row ka bottleneck kyun necessarily solve nahi karti?
 
@@ -827,7 +1000,11 @@ Requests I/O, locks, connection-pool slots ya downstream service ka wait kar rah
 
 **Answer — reasoning samjho:**
 
-Stable-system Little's Law assumptions mein average in-flight L=lambda×W=200×0.25=50. RPS arrival rate hai, concurrent requests count nahi. Average law p99 guarantee nahi; unstable growing queues mein same steady-state inference blindly mat lagao. Latency double aur arrivals same ho toh average concurrency roughly double ho sakti hai.
+- Stable-system Little's Law assumptions mein average in-flight L=lambda×W=200×0.25=50.
+- RPS arrival rate hai, concurrent requests count nahi.
+- Average law p99 guarantee nahi
+- unstable growing queues mein same steady-state inference blindly mat lagao.
+- Latency double aur arrivals same ho toh average concurrency roughly double ho sakti hai.
 
 **Follow-up — khud explain karo:** Same arrival rate par pool wait badhne se memory aur timeout pressure kaise badhega?
 
@@ -839,7 +1016,11 @@ Stable-system Little's Law assumptions mein average in-flight L=lambda×W=200×0
 
 **Answer — reasoning samjho:**
 
-for...of Unicode code points iterate karta hai; ordinary string indexing UTF-16 code units deta hai. Emoji do units ho sakti hai, isliye pattern counts aur window symbols disagree karte hain. Dono ko Array.from se code-point arrays banao, ya clearly code-unit contract choose karo. Conversion ki O(n+m) memory bhi count karo.
+- for...of Unicode code points iterate karta hai
+- ordinary string indexing UTF-16 code units deta hai.
+- Emoji do units ho sakti hai, isliye pattern counts aur window symbols disagree karte hain.
+- Dono ko Array.from se code-point arrays banao, ya clearly code-unit contract choose karo.
+- Conversion ki O(n+m) memory bhi count karo.
 
 **Follow-up — khud explain karo:** Combining marks aur user-perceived grapheme clusters ko code points normalize automatically karte hain?
 
@@ -851,6 +1032,11 @@ for...of Unicode code points iterate karta hai; ordinary string indexing UTF-16 
 
 **Answer — reasoning samjho:**
 
-TanStack Query serializable object keys ko deterministic hash karti hai; same object properties ka insertion order identity change nahi karta. Array element order matter karta hai. Custom cache mein JSON.stringify ko raw key banana object ordering issue laa sakta hai. Library contract padho, irrelevant canonicalization mat add karo; actual query parameters/tenant identity include karo.
+- TanStack Query serializable object keys ko deterministic hash karti hai
+- same object properties ka insertion order identity change nahi karta.
+- Array element order matter karta hai.
+- Custom cache mein JSON.stringify ko raw key banana object ordering issue laa sakta hai.
+- Library contract padho, irrelevant canonicalization mat add karo
+- actual query parameters/tenant identity include karo.
 
 **Follow-up — khud explain karo:** Raw search lowercase normalize karna case-sensitive backend par correctness kyun badal sakta hai?

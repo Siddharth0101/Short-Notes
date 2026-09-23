@@ -20,14 +20,14 @@ for (const track of TRACKS) {
 }
 const assigned = new Set();
 const outputs = new Map();
-const studyRoutine = "Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](STUDY_GUIDE.md) padho.\n\n";
+const studyRoutine = "Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](STUDY_GUIDE.md) padho.\n\n";
 let index =
-  "# Poora course syllabus — yahan se shuru karo\n\nHar subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se number order follow karo; stage checkpoint khud complete karke aage badho. App, filenames aur index ka order same hai. Numbered source folders related examples/reference hain.\n\n**Apna route chuno:** JavaScript → React → frontend system design; Java → Spring → backend system design. JS functions/arrays ke baad DSA start karo. Async/modules ke baad Node/MongoDB. Related subject padhkar interview playbook karo.\n\nInstructor context aur lecture mapping ki limits [course coverage](COURSE_COVERAGE.md) mein padho.\n\n";
+  "# Revision syllabus — subject chuno\n\nHar subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se number order follow karo; stage checkpoint khud complete karke aage badho. App, filenames aur index ka order same hai. Numbered source folders related examples/reference hain.\n\n**Apna route chuno:** JavaScript → React → frontend system design; Java → Spring → backend system design. JS functions/arrays ke baad DSA start karo. Async/modules ke baad Node/MongoDB. Related subject padhkar interview playbook karo.\n\nInstructor context aur lecture mapping ki limits [course coverage](COURSE_COVERAGE.md) mein padho.\n\n";
 index += studyRoutine;
 for (const track of TRACKS) {
   const course = curriculum[track.id];
   if (!course) throw new Error(`Missing course ${track.id}`);
-  let courseText = `# ${track.name} — step-by-step course\n\n[Saare courses](../README.md)\n\n`;
+  let courseText = `# ${track.name} — quick revision\n\n[Saare courses](../README.md)\n\n`;
   let section = `## ${track.name}\n\n[Is course ka syllabus kholo](${track.id}/README.md)\n\n`;
   const prerequisiteText = course.prerequisites.length
     ? `${track.id === "interview" ? "Apne subject ke liye pehle yeh padho" : "Shuru karne se pehle"}: ${course.prerequisites

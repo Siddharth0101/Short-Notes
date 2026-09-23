@@ -1,10 +1,10 @@
-# JavaScript — step-by-step course
+# JavaScript — quick revision
 
 [Saare courses](../README.md)
 
 Pehle programming course ki zaroorat nahi. Lesson 01 se start karo.
 
-Har chapter mein main concept, practice challenge, hint, reasoned answer aur self-check hai. Session plan aur revision ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Language ki shuruaat
 

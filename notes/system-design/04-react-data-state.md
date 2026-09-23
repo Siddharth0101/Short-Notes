@@ -4,186 +4,35 @@ title: React state server data and cache consistency
 track: system-design
 order: 4
 level: Intermediate
-minutes: 28
-summary: State ownership aur response identity se ek request/user ka result doosre view ko overwrite nahi karta.
+minutes: 1
+summary: State owner — local UI, URL, shared client aur server data alag pehchano.
 tags: react, state, caching, optimistic-ui
 visual: caching
 ---
 
-## Mental model — simple soch
+## Quick revision
 
-Har state same lifecycle follow nahi karti. Modal open flag ephemeral UI state hai. Search query shareable URL state ho sakti hai. Server note list remote data ka cached snapshot hai. Form draft unsaved local intent hai. In sabko one giant global object mein mix karne se reset, invalidation and synchronization bugs badhte hain.
-
-> **Core takeaway:** State ownership aur response identity se ek request/user ka result doosre view ko overwrite nahi karta.
-
-## State ownership map
-
-| State | Owner | Persistence decision |
-| --- | --- | --- |
-| Active dialog | Feature component | Usually none |
-| Search filters | URL | Back/forward and sharing |
-| Note list | Server-data cache | Freshness and invalidation |
-| Draft body | Editor state | Optional local recovery |
-| Signed-in identity | Auth/session boundary | Server remains authority |
-
-Derived values directly compute karo when cheap. Effect mein filtered list set karna extra render and synchronization surface introduce karta hai. Effects external system synchronization ke liye hain, every calculation ke liye nahi. [When Effects are unnecessary](https://react.dev/learn/you-might-not-need-an-effect)
-
-## Query identity and freshness
-
-Cache key request identity fully represent kare: resource, user/tenant scope, filters, sort and page cursor. `['notes', ownerId, normalizedFilters]` aur `['notes']` equivalent nahi jab users/data differ karte hain. Logout par private cache clear karo, and server authorization always enforce karo. Freshness duration product decision hai: chapter content minutes stale tolerate kare, checkout price revalidate karna padega.
-
-```text
-mutation starts
-  -> mark specific item pending
-  -> optionally apply optimistic patch
-  -> server validates and commits
-  -> replace with authoritative result
-  -> invalidate affected aggregate queries
-```
-
-Optimistic UX reversible low-risk changes ke liye useful hai, like bookmark toggles. Payment success ko optimistic show karna misleading ho sakta hai. Rollback entire old snapshot se concurrent newer change overwrite ho sakti hai; mutation version or targeted patch reconciliation use karo.
-
-### Staleness budget per data type
-
-"Stale data acceptable hai ya nahi" ek blanket answer nahi hai — har field ka apna budget hota hai, aur wo budget product consequence se derive hota hai, engineering convenience se nahi:
-
-| Data | Acceptable staleness | Kyun | Mechanism |
-| --- | --- | --- | --- |
-| Chapter body text | 5-60 minutes | Content rarely badalta, stale copy harmless | Long `staleTime`, CDN cache |
-| Search result list | 30-60 seconds | Thoda purana result acceptable, refetch cheap | `staleTime` 30s + refetch on focus |
-| Unread/notification count | 10-30 seconds | Galat count annoying hai, dangerous nahi | Poll ya push, background refetch |
-| User's own progress after save | 0 (read-your-writes) | Apna save turant dikhna chahiye | Mutation response se cache seed karo |
-| Checkout total / payable amount | 0 | Stale price = wrong charge = dispute | Server par recompute, cache mat karo |
-| Permission/role | 0 for the write path | Stale permission = authorization bug | Server har request par check kare, UI hint hi hai |
-
-Yeh table interview mein bahut kaam aati hai kyunki "consistency chahiye ya nahi" jaise vague sawaal ko per-field decision bana deti hai. Aur last row important hai: frontend cache kabhi authorization decision ka basis nahi hai — wo sirf UI affordance hide/show karta hai.
-
-### Read-after-write path ko explicitly design karo
-
-Sabse zyada report hone wala "bug" yehi hota hai: user ne save kiya, success toast aaya, list par wapas gaya, aur purana data dikha. Iske teen alag causes hote hain aur teeno ka fix alag hai:
-
-```text
-cause 1: list query cache invalidate nahi hui
-         -> UI purana cached snapshot dikha raha hai
-
-cause 2: invalidate hui, refetch gaya, lekin backend read replica
-         se serve hua jisme write abhi replicate nahi hua
-
-cause 3: invalidate hui, refetch gaya, lekin response purani
-         in-flight request ki thi (race), jo baad mein resolve hui
-```
-
-Cause 1 ka fix mutation success par targeted invalidation hai. Cause 2 pure frontend se solve nahi hota — backend ko read-your-writes support dena padta hai: same user ke recent writes ke baad primary se read karo, ya write response mein ek version/LSN token do jo client next read mein bhejta hai aur server usse satisfy hone tak wait/route karta hai. Cause 3 ka fix request identity check hai (neeche race conditions section).
-
-Sabse sasta aur underused fix: mutation ke response mein pura updated resource return karo aur usse cache seed kar do, phir background mein hi list invalidate karo. Isse detail view turant correct hota hai chahe replica lag ho:
-
-```js
-// Mutation response ko authoritative maan kar cache seed karo
-onSuccess: (savedNote) => {
-  queryClient.setQueryData(["note", savedNote.id], savedNote);   // instant, correct
-  queryClient.invalidateQueries({ queryKey: ["notes", ownerId] }); // list background refresh
-}
-```
-
-Agar mutation sirf `{ ok: true }` return karti hai, toh client ke paas refetch ke alawa koi option nahi bachta — aur wahi refetch replica lag ka shikaar hota hai. API contract ka yeh chhota sa decision frontend ki poori consistency story decide kar deta hai.
-
-## Race conditions and cancellation
-
-Search term "rea" request slower aur "react" faster ho sakti hai. Older response latest results overwrite nahi karni chahiye. Request identity check, framework query cache or cleanup guard use karo. AbortController unnecessary network/response work cancel kar sakta hai, lekin server-side mutation rollback guarantee nahi deta.
-
-```js
-const controller = new AbortController();
-fetch(`/api/notes?q=${encodeURIComponent(query)}`, {
-  signal: controller.signal,
-});
-// In the owning lifecycle cleanup:
-controller.abort();
-```
-
-Sketch intentionally error handling omit karta hai; real caller abort error and actual network failure distinguish kare. Request initiation user input se debounce ho sakti hai, while keyboard feedback immediate remain kare.
-
-## Offline and multi-tab choices
-
-Local storage small synchronous key/value persistence deta hai. Larger structured offline data ke liye IndexedDB more appropriate ho sakta hai. Offline write queue mein operation ID, base version and replay policy chahiye. Multi-tab updates events/channel se coordinate karo where needed. Last-write-wins simple hai, but conflicting user edits silently lose kar sakta hai.
-
-Offline queue ka sabse underestimated failure mode replay storm hai. User 2 ghante offline raha, 40 operations queue hui, phir network wapas aaya — ab client 40 requests ek saath fire karta hai. Agar 10,000 users ek hi network outage se recover kar rahe hain, toh server ko ek instant mein 400,000 queued writes milti hain, jo normal write load se kai guna zyada hai. Fixes: dependent operations serially drain karo (parallelism 1); independent operations ke liye measured bounded concurrency, jaise 2-4, use karo, har operation par stable ID rakho taaki duplicate replay safe ho, aur client-side jitter add karo taaki sab clients same millisecond par reconnect na karein.
-
-### Cache memory aur cardinality
-
-Client-side cache unbounded nahi ho sakti, aur cache key design hi uska size decide karta hai. Maan lo search query cache key mein raw text hai:
-
-```text
-key: ["notes", ownerId, { q: "reac", topic: "java", sort: "recent", page: 1 }]
-```
-
-Har fetched search prefix alag cache entry bana sakta hai. Example estimate: 100 entries × 20 items × 2 KB roughly 4 MB payload hai; actual memory object overhead aur library behavior par depend karegi. Debounce requests reduce karta hai; unused entries ke liye suitable `gcTime` choose karo. Trim/lowercase/space normalization sirf tab karo jab backend search semantics bhi equivalent hon, warna valid query ka meaning badal sakta hai.
-
-TanStack Query object keys ko deterministically hash karti hai: `['notes', {a:1,b:2}]` aur `['notes', {b:2,a:1}]` same identity hain. Array element order matter karta hai. Custom `JSON.stringify` string key mein object insertion order different strings de sakta hai; us case ko TanStack ke behavior se mix mat karo. [Official query-key rules](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys).
-
-## Common mistakes — in galtiyon se bacho
-
-- **Wrong assumption:** Optimistic update ka rollback ka matlab hai purana snapshot wapas set kar dena. **Why it breaks:** Optimistic write aur failure ke beech mein agar koi aur mutation ya background refetch cache update kar chuki hai, toh purana snapshot restore karne se wo naya (correct) data mit jaata hai — user ko ek change dikhta hai jo usne undo nahi kiya. **Fix:** Rollback ko targeted rakho (sirf us item ka wo field revert karo), ya rollback ke turant baad affected query invalidate karke server se authoritative state lao.
-- **Wrong assumption:** Cache key mein user ID daalne ki zaroorat nahi kyunki logout par page reload ho jaata hai. **Why it breaks:** SPA mein logout aksar client-side navigation hota hai, page reload nahi — agla user (shared device, ya account switch) usi in-memory cache ko hit karta hai aur pichle user ka data dekh sakta hai. Server authorization isse nahi rokta kyunki request jaati hi nahi, cache hit ho jaati hai. **Fix:** Har private query key mein owner/tenant scope include karo, aur logout par cache explicitly clear karo (`queryClient.clear()`), sirf token delete mat karo.
-- **Wrong assumption:** Debounce lagane se search race condition solve ho jaati hai. **Why it breaks:** Debounce request *count* kam karta hai, ordering guarantee nahi deta. 300 ms debounce ke baad bhi "rea" ki request slow server path par 800 ms le sakti hai aur "react" ki 200 ms — slow response baad mein aakar correct results overwrite kar dega. **Fix:** Har response ko uske request identity se validate karo (query key match, ya request sequence number), aur stale response ko silently discard karo. AbortController network work bachata hai lekin already-returned stale response ko bhi handle karna padta hai.
-- **Wrong assumption:** Server data ko Redux/Context mein rakhna simpler hai kyunki "sab state ek jagah" hoti hai. **Why it breaks:** Server data ko manually manage karne ka matlab hai ki deduplication, retry, staleness tracking, refetch-on-focus, pagination merging aur cache eviction — sab khud likhna padega. Yeh hazaar lines ka accidental library ban jaata hai, aur usme sabse zyada bugs staleness/invalidation mein aate hain. **Fix:** Server cache ko dedicated tool se manage karo; Redux/Context ko genuine client state (wizard step, selection, draft, feature flags) ke liye rakho.
-- **Wrong assumption:** `localStorage` mein auth token ya user data rakhna convenient aur safe enough hai. **Why it breaks:** `localStorage` har JavaScript ko readable hai — ek XSS ya ek compromised npm dependency token exfiltrate kar sakti hai, aur wo token expiry tak valid rehta hai. Multi-tab sync bhi manual banti hai. **Fix:** Session credentials ke liye httpOnly, Secure, SameSite cookies prefer karo; `localStorage` ko non-sensitive UI preferences tak limit rakho.
-
-## Interview questions — bolkar practice karo
-
-**Context versus a server-data cache?** Context value distribution mechanism hai. Remote cache additionally deduplication, retries, staleness and mutation reconciliation manage kar sakti hai; Context alone yeh policies provide nahi karta.
-
-**Should every API response go into global state?** Nahi. Ownership and lifecycle ke according store karo. Duplicate server snapshots independently update karoge toh contradictory UI possible hai.
-
-**User save karke list par gaya aur purana data dikha — debug kaise karoge?** Teen possibilities alag karunga. Pehle check karunga ki refetch actually gayi ya nahi (network tab) — nahi gayi toh invalidation key mismatch hai. Gayi hai aur response mein purana data hai toh backend side issue hai, aksar read replica lag — us case mein mutation response se cache seed karna ya primary-read routing chahiye. Aur agar response correct tha lekin UI purana raha toh ek stale in-flight response ne baad mein resolve hokar overwrite kiya — request identity check chahiye.
-
-**Optimistic update kab nahi karoge?** Jab operation irreversible ho ya uska failure user ke liye costly ho — payment, order placement, message send-to-external-party, destructive delete. In cases mein optimistic success dikhana user ko galat mental model deta hai aur rollback confusing hota hai ("paisa kat gaya tha ya nahi?"). Yahan explicit pending state better hai: action disable karo, progress dikhao, aur server confirmation ke baad hi success show karo.
-
-**Multi-tab mein ek tab logout kare toh dusre tabs ka kya?** Server-side session invalidation authority hai, lekin dusre tabs ko turant pata nahi chalega aur wo apni stale cache se UI dikhate rahenge jab tak koi request 401 na de. Practical design: logout par `BroadcastChannel` ya a storage event fire karo jisse sab tabs apni private cache clear karke login screen par jaayein, aur uske saath har API client mein global 401 handler rakho jo same cleanup kare. Dono chahiye — broadcast fast path hai, 401 handler correctness backstop.
-
-## Practice
-
-Bookmark toggle implement karo with delayed success and failure. Two quick toggles, user switch and stale search response simulate karo. Har case mein final UI state explain karo before running it.
-
-Uske baad read-after-write bug deliberately banao: mutation ko sirf `{ ok: true }` return karwao aur list refetch par artificial 500 ms delayed stale response do; observe karo ki UI purana dikhata hai. Phir mutation se full resource return karke cache seed karo aur difference dekho. Last mein offline replay test karo: network offline karke 10 edits karo, online aao, aur count karo ki kitni requests ek saath jaati hain — phir serial drain plus jitter add karke behavior compare karo.
+- State owner — local UI, URL, shared client aur server data alag pehchano.
+- URL — filters/sort/page ko shareable banao.
+- Query cache — key mein resource, filters aur auth scope.
+- Freshness — staleTime aur invalidation product requirement se decide.
+- Optimistic update — provisional UI; rollback/conflict path rakho.
+- Race — old request/result ko new selection overwrite na karne do.
+- Logout — private cache clear ya user scope se isolate.
+- Offline — queued writes ki identity aur conflict resolution define karo.
 
 ## Research notes: Client caches do not enforce database access
 
-RLS React UI bypass karne par bhi access constrain karti hai. UPDATE mein USING existing rows, WITH CHECK resulting rows validate karta hai; relevant SELECT policy bhi chahiye.
-
-Test: user apna draft title edit kar sakta hai lekin owner doosre account mein badalne ki koshish karta hai. Existing scope aur resulting ownership dono constrain karo. RLS/required operation policies enable karo; bypass credentials browser se bahar rakho.
-
-**Interview check:** Original row ke saath resulting owner kyun validate karein?
-
-**Answer:** Authorized edit record ko unauthorized scope transfer nahi karni chahiye. Existing/resulting row predicates transition ke alag parts protect karte hain.
-
-**Practice:** Anonymous, other owner aur owner-reassignment attempts test karo.
-
-[Source yahan padho — Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security). 13 September 2026 ko review kiya gaya; yahan ke examples aur exercises is repo ke liye likhe gaye hain.
-
-## Depth walkthrough — andar kya ho raha hai?
-
-### Optimistic rollback ko concurrent edits ke saath prove karo
-
-Value 0 se mutation A optimistic 1 karti hai. Mutation B newer edit 2 karti hai. A fail hone par whole old snapshot 0 restore karoge toh successful/newer B intent lose ho sakti hai. Rollback operation-specific patch, mutation version ya refetch/reconciliation policy se latest ownership respect kare.
-
-Server response authoritative ho tab bhi old request response current selected resource ki identity match kare. “Latest response” arrival-time latest hai, business version latest necessarily nahi. Version tokens aur server ordering contract distinct evidence hain.
-
-**Practice:** A fail/B succeed, B fail/A succeed, both pending/logout aur offline replay timelines likho. Har cell mein displayed value, durable value aur next action specify karo. Cache library use karna these domain decisions remove nahi karta; framework mechanics ke upar application consistency policy clear chahiye.
-
-## Revision and practice lab — khud karke samjho
-
-**Recall — yaad karke bolo:** Notes band karke main concept apne words mein samjhao. Aage padhne se pehle apna ek example do.
-
-**Apply — khud try karo:** Old request pending hai aur user notes filter badal deta hai. Query identity aur old response ka behavior define karo.
-
-> **Hint — chhota ishara:** Visible result current selected filter se match hona chahiye.
-
-**Answer guide — pehle khud karo, phir compare karo:** Request/cache identity mein user aur filter inputs include karo. Old result apni identity ke cache mein rakho ya active view ke liye ignore karo. Loading/error bhi current request se attach ho. Reverse completion aur account switching test karo.
-
-**Exit check — aage badhne se pehle:** Samjhao ki tumhara answer kyun kaam karta hai. Guide dekhe bina result ya decision dobara nikalo. Ek aisi condition batao jiske badalne par answer badlega. Hint lena pada ho toh agle study session mein yeh lab phir attempt karo.
+- RLS React UI bypass karne par bhi access constrain karti hai.
 
 ## Sources — aur padhne ke liye
 
 - [When Effects are unnecessary](https://react.dev/learn/you-might-not-need-an-effect)
+- [Official query-key rules](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys)
+- [Source yahan padho — Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security)
 - [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)
 - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+
+## Code practice
+
+- [Examples — jab code revise karna ho](../../examples/system-design/04-react-data-state.md)

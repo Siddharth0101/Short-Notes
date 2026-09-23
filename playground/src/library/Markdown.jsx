@@ -3,6 +3,41 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { headingId } from '../lib/content.js';
 import Icon from './Icons.jsx';
+const exampleFiles = import.meta.glob('../../../examples/*/*.md', {
+  query: '?raw',
+  import: 'default',
+});
+
+function ExampleLink({ href, children }) {
+  const [content, setContent] = useState('');
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const load = exampleFiles[`../../../${href.replace(/^\.\.\/\.\.\//, '')}`];
+  if (!load) return <a href={href}>{children}</a>;
+  async function toggle() {
+    if (content) { setOpen(!open); return; }
+    setLoading(true);
+    setError(false);
+    try {
+      setContent(await load());
+      setOpen(true);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+  return (
+    <>
+      <button type="button" onClick={toggle} disabled={loading} aria-expanded={open}>
+        {children}
+      </button>
+      {error && <span role="status"> Load nahi hua; dobara try karo.</span>}
+      {open && <Markdown idPrefix="code-example">{content}</Markdown>}
+    </>
+  );
+}
 function textContent(children) {
   return Children.toArray(children)
     .map((child) =>
@@ -51,7 +86,9 @@ const components = {
       <table>{children}</table>
     </div>
   ),
-  a: ({ href, children }) => (
+  a: ({ href, children }) => href?.startsWith('../../examples/') ? (
+    <ExampleLink href={href}>{children}</ExampleLink>
+  ) : (
     <a href={href} target={href?.startsWith('https://') ? '_blank' : undefined} rel="noreferrer">
       {children}
     </a>
