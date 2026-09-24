@@ -19,6 +19,9 @@ visual: mongo-index
 - Express — middleware order aur async error ownership explain karo.
 - Security — object/tenant authorization har request par.
 - Debug handoff — query, plan, timings aur smallest reproducible case do.
+- Query answer — filter, projection, sort, index aur expected cardinality saath bolo.
+- Webhook scenario — signature, durable receipt, dedupe aur repeated delivery trace.
+- Failure scope — client retry, app rollback aur provider side effect alag identify.
 
 ## Research notes: Justify the query from its workload
 

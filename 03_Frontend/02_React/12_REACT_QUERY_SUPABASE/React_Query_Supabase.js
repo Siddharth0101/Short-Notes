@@ -1,34 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - Server state — remote data; loading, freshness, retry aur invalidation sambhalni padti hai.
+ * - Query key — resource + filters + tenant/user scope se cache identity banao.
+ * - Stale time — kitni der fresh maano; cache retention alag setting hai.
+ * - Mutation — server write; success par related queries update/invalidate karo.
+ * - Optimistic update — pehle UI badlo; failure par rollback aur reconcile.
+ * - Race — old response ko newer query/result overwrite na karne do.
+ * - Supabase — client convenience ke saath database RLS policies bhi enforce karo.
+ * - Auth change — old user ka private cache clear/isolate karo.
+ * - Pagination — cursor/page ko query key mein include karo.
+ * - Dependent query — required ID/auth ready ho tab fetch; undefined identity par accidental call avoid.
+ * - Background refresh — cached data dikhate hue refresh status separately handle karo.
+ * - Mutation ordering — rapid writes out-of-order aa sakti hain; version/reconciliation rule chahiye.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * TANSTACK REACT QUERY & SUPABASE - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Jonas ka "The Wild Oasis" project section.
- * - TanStack React Query (v5): Server state management (fetching, caching, invalidation).
- * - Supabase: Backend-as-a-Service (PostgreSQL database, Auth, Storage).
- *
- * REACT QUERY ARCHITECTURE:
- * ┌─────────────────────────────────────────────────────────────┐
- * │  UI Component                                               │
- * │  const { data, isLoading, error } = useQuery(...)           │
- * │                       │                                     │
- * │                       ▼                                     │
- * │               QUERY CLIENT CACHE                            │
- * │      (Stale time, automatic background refetching)          │
- * │                       │                                     │
- * │                       ▼ (Async queryFn)                     │
- * │             SUPABASE / REST BACKEND                         │
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. SETUP REACT QUERY
- * ========================================================================
- */
 
 // import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -51,15 +39,6 @@
 // }
 
 
-/**
- * ========================================================================
- * 2. FETCHING DATA (useQuery)
- * ========================================================================
- * NOTES:
- * - queryKey: array identifying data uniquely in cache.
- * - queryFn: async function returning data.
- */
-
 // import { useQuery } from '@tanstack/react-query';
 // import { getCabins } from '../services/apiCabins';
 //
@@ -71,15 +50,6 @@
 //     return { isLoading, cabins, error };
 // }
 
-
-/**
- * ========================================================================
- * 3. MUTATIONS & INVALIDATION (useMutation & useQueryClient)
- * ========================================================================
- * NOTES:
- * - useMutation: Create, Update, Delete operations.
- * - queryClient.invalidateQueries({ queryKey: ['...'] }): Refetch automatically on success.
- */
 
 // import { useMutation, useQueryClient } from '@tanstack/react-query';
 // import { deleteCabin as deleteCabinApi } from '../services/apiCabins';
@@ -100,14 +70,6 @@
 //     return { isDeleting, deleteCabin };
 // }
 
-
-/**
- * ========================================================================
- * 4. SUPABASE CLIENT & QUERIES
- * ========================================================================
- * NOTES:
- * - Supabase exposes JavaScript client to query Postgres directly with RLS (Row Level Security).
- */
 
 // import { createClient } from '@supabase/supabase-js';
 

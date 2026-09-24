@@ -1,28 +1,17 @@
 /**
- * ========================================================================
- * 01. JDBC (JAVA DATABASE CONNECTIVITY)
- * ========================================================================
- * NOTES:
- * - JDBC ek Java API hai jo Java application ko directly relational database (MySQL, PostgreSQL, Oracle) se connect karti hai.
- * - Ye low-level API hai, matlab aapko Connection open karna, raw SQL likhna, aur result ko manually objects me map karna padta hai.
- * - Aaj kal production me directly JDBC kam use hota hai (Spring Data JPA / Hibernate zyada use hota hai), par internal working samajhne ke liye JDBC aana zaroori hai.
- * 
- * JDBC ARCHITECTURE (7 STEPS):
- * 1. Import Packages: `import java.sql.*`
- * 2. Load & Register Driver: Pehle `Class.forName()` use hota tha, naye JDBC me auto-load hota hai agar dependency pom.xml me ho.
- * 3. Establish Connection: `DriverManager.getConnection(url, username, password)` call karna.
- * 4. Create Statement: 
- *    - `Statement`: Static SQL queries ke liye. (Not secure against SQL Injection)
- *    - `PreparedStatement`: Dynamic/Parameterized queries ke liye (Use this! It's pre-compiled and safe from SQL Injection).
- * 5. Execute Query:
- *    - `executeQuery()`: `SELECT` ke liye (Returns ResultSet).
- *    - `executeUpdate()`: `INSERT`, `UPDATE`, `DELETE` ke liye (Returns integer rows affected).
- * 6. Process Result: `ResultSet` pointer ko loop lagakar data nikalna (`rs.next()`, `rs.getString(1)`).
- * 7. Close Connection: Resources free karne ke liye hamesha connection close karo (in `finally` block or use Try-With-Resources).
- * 
- * WHY PREPARED STATEMENT?
- * - SQL Injection Attack: Agar login form me user `admin' OR '1'='1` likhe, toh simple `Statement` poori DB delete ya hack kar sakta hai.
- * - `PreparedStatement` user input ko query ka hissa banne se pehle as "literal value" treat karta hai, query structure change nahi hone deta.
+ * ## Quick revision
+ *
+ * - JDBC — Java se database connection, statement aur result handling.
+ * - PreparedStatement — values bind karo; SQL string concatenation se injection risk.
+ * - Connection pool — connections reuse; pool size database capacity se align karo.
+ * - Transaction — related writes atomic commit/rollback unit mein rakho.
+ * - Auto-commit — har statement separately commit ho sakta hai.
+ * - JOIN — related rows jodo; one-to-many se result rows multiply ho sakti hain.
+ * - Index — reads fast kar sakta hai; writes/storage ka cost badhta hai.
+ * - Resources — connection, statement aur result set close karo.
+ * - Batch update — repeated statements group; batch size aur partial failure handle karo.
+ * - Generated keys — inserted ID driver/database supported API se lo; SELECT MAX(id) concurrency-safe nahi.
+ * - Connection lifetime — transaction ke statements same connection par; finally mein pool ko release.
  */
 
 import java.sql.Connection;

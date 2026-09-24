@@ -18,6 +18,9 @@ tags: packages, interfaces, encapsulation
 - Abstract class — shared state/implementation plus abstract methods.
 - Dependency inversion — concrete implementation ki jagah contract par depend karo.
 - Default method — interface implementation de sakta hai; conflicts resolve karne padte hain.
+- Interface static method — interface name se call; instance inheritance jaisa behavior nahi.
+- Import — short name resolve karta hai; runtime object creation nahi.
+- Package-private API — implementation ko package ke andar rakhkar public surface chhoti karo.
 
 ## Sources — aur padhne ke liye
 

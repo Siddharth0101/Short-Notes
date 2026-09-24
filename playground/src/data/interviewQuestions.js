@@ -206,7 +206,7 @@ export const interviewQuestions = [
     level: 'Intermediate',
     question: "CommonJS aur ES Modules loading mein kaise alag hain?",
     answer:
-      "- CommonJS (require) synchronous aur runtime-evaluated hai\n- exports ek mutable object hota hai.\n- ES Modules (import/export) static structure hai — bindings compile time par resolve hote hain aur live bindings hoti hain (exporting module value update kare to importer bhi updated value dekhta hai), aur top-level await jaisi features sirf ESM mein available hain.",
+      "- CommonJS (require) synchronous aur runtime-evaluated hai\n- exports ek mutable object hota hai.\n- ESM — static imports aur live bindings; exporter ka binding update importer ko dikhta hai.\n- Top-level await — ES modules mein allowed.",
     followUp: "require/import mix karne par interop issues kyun aa sakte hain?",
     tags: ['modules', 'tooling'],
   },
@@ -606,7 +606,7 @@ export const interviewQuestions = [
     level: 'Intermediate',
     question: "Sealed class plain interface hierarchy se extra kya deti hai?",
     answer:
-      "- sealed class/interface explicitly declare karta hai ki kaunse classes usko implement/extend kar sakte hain (`permits` clause).\n- Isse switch pattern matching exhaustive ho sakta hai bina default branch ke, kyunki compiler ko saare possible subtypes pata hote hain — ek open interface ke saath yeh guarantee nahi milta, kyunki koi bhi unrelated class future mein implement kar sakti hai.",
+      "- sealed class/interface explicitly declare karta hai ki kaunse classes usko implement/extend kar sakte hain (`permits` clause).\n- Sealed types — known permitted subtypes compiler ko exhaustive pattern switch check karne dete hain.",
     followUp: "Sealed hierarchy refactor ke waqt switch safer kaise banati hai?",
     tags: ['sealed-classes', 'pattern-matching'],
   },
@@ -936,7 +936,7 @@ export const interviewQuestions = [
     level: 'Advanced',
     question: "Floyd tortoise-and-hare cycle detection work kyun karta hai?",
     answer:
-      "- Slow pointer ek step aur fast pointer do step move karta hai, so cycle ke andar unke beech ka gap har iteration exactly ek se badhta hai — modulo cycle length yeh gap eventually zero hota hai, isliye meeting guaranteed hai agar cycle exist kare.\n- Cycle ka start find karne ke liye meeting point se ek pointer head par reset karo aur dono ko one-step speed par chalao\n- woh entry node par milte hain, kyunki head-to-entry distance aur meeting-point-to-entry distance modulo cycle length equal hoti hain.\n- O(n) time, O(1) space — Set-based detection O(n) space leta hai.",
+      "- Cycle detection — slow 1, fast 2 steps; cycle mein relative gap modulo length eventually zero, isliye pointers milte hain.\n- Cycle ka start find karne ke liye meeting point se ek pointer head par reset karo aur dono ko one-step speed par chalao\n- woh entry node par milte hain, kyunki head-to-entry distance aur meeting-point-to-entry distance modulo cycle length equal hoti hain.\n- O(n) time, O(1) space — Set-based detection O(n) space leta hai.",
     followUp: "Real code mein Set-based detection kab preferable hai?",
     tags: ['linked-list', 'two-pointers', 'cycle-detection'],
   },
@@ -956,7 +956,7 @@ export const interviewQuestions = [
     level: 'Advanced',
     question: "O(n log n) practically O(n) se better kab ho sakta hai?",
     answer:
-      "- Big-O constant factors aur memory access patterns hide karta hai.\n- Ek O(n) algorithm jo random hash lookups karta hai woh cache misses ki wajah se slow ho sakta hai, jabki O(n log n) sort jo contiguous memory par sequential passes karta hai CPU cache aur prefetcher ko fully exploit karta hai.\n- Choti n (jaise n < 10,000) par yeh constant-factor difference asymptotic advantage ko completely overwhelm kar sakta hai — isliye claim ko realistic data size par measure karo, sirf exponent compare mat karo.",
+      "- Big-O constant factors aur memory access patterns hide karta hai.\n- Practical speed — Big-O ke saath memory locality/cache misses bhi matter; O(n log n) kabhi O(n) se faster ho sakta hai.\n- Choti n (jaise n < 10,000) par yeh constant-factor difference asymptotic advantage ko completely overwhelm kar sakta hai — isliye claim ko realistic data size par measure karo, sirf exponent compare mat karo.",
     followUp: "Crossover input size experiment se kaise dhundoge?",
     tags: ['complexity', 'performance', 'cache'],
   },
@@ -996,7 +996,7 @@ export const interviewQuestions = [
     level: 'Intermediate',
     question: "Recursive tree traversal risky kab hai; iterative kya badalta hai?",
     answer:
-      "- Recursion depth tree ki height ke barabar hoti hai — ek balanced tree mein 1M nodes par height ~20 hai (bilkul safe), lekin ek fully skewed tree (jaise sorted data se bana BST) mein height n ho sakti hai, jo bade inputs par stack overflow karega.\n- Iterative traversal explicit stack use karke isse heap memory mein move kar deta hai, jahan limit engine ke stack se kaafi badi hoti hai.\n- Interview mein input ke shape par assumption clarify karna hi high-signal answer hai.",
+      "- Recursion space — tree height O(h); balanced tree mein O(log n), skewed mein O(n), jahan stack overflow ho sakta hai.\n- Iterative traversal explicit stack use karke isse heap memory mein move kar deta hai, jahan limit engine ke stack se kaafi badi hoti hai.\n- Interview mein input ke shape par assumption clarify karna hi high-signal answer hai.",
     followUp: "Morris O(1) space ke badle temporarily kya modify karta hai?",
     tags: ['trees', 'recursion', 'traversal'],
   },
@@ -1006,7 +1006,7 @@ export const interviewQuestions = [
     level: 'Advanced',
     question: "Code run bina wrong DP state kaise pakadoge?",
     answer:
-      "- State ko ek English sentence mein exactly define karo (\"dp[i][w] = max value using first i items with capacity exactly w\"), phir check karo ki us sentence se recurrence ka har term derive ho sakta hai aur koi bhi future decision uss state ke bahar ki information par depend na kare.\n- Agar transition ke liye tumhe koi extra fact chahiye jo state capture nahi karti (jaise \"kitni baar consecutive skip hua\"), toh state under-specified hai aur answer silently wrong hoga — yeh memoization add karne se theek nahi hota.\n- Base cases ko manually smallest inputs par verify karo, aur ek chhote example par hand-trace karke expected value se match karo.",
+      "- DP state — exact meaning likho; transition ke liye required saari information state mein honi chahiye.\n- Agar transition ke liye tumhe koi extra fact chahiye jo state capture nahi karti (jaise \"kitni baar consecutive skip hua\"), toh state under-specified hai aur answer silently wrong hoga — yeh memoization add karne se theek nahi hota.\n- Base cases ko manually smallest inputs par verify karo, aur ek chhote example par hand-trace karke expected value se match karo.",
     followUp: "Dimension correctness fix karke memory kyun badhata hai; compress kaise karoge?",
     tags: ['dynamic-programming', 'state-design', 'correctness'],
   },
@@ -1156,7 +1156,7 @@ export const interviewQuestions = [
     level: 'Advanced',
     question: "Replica ke saath user ko own-write turant kaise dikhaoge?",
     answer:
-      "- Replication lag ki wajah se write primary par jaata hai lekin turant baad ka read replica se stale data de sakta hai — user ko lagta hai uska edit \"save nahi hua\".\n- Read-your-own-writes ke liye teen common options hain: us user ke reads ko write ke baad ek short window tak primary par route karo, ya write ka returned version/timestamp client mein rakh kar replica se at-least-that-version read maango, ya UI mein successful mutation response se local cache ko optimistically update kar do.\n- Poore system ko strongly consistent banane ki zaroorat nahi — sirf us ek user ke apne data ka read path guarantee chahiye.",
+      "- Replication lag ki wajah se write primary par jaata hai lekin turant baad ka read replica se stale data de sakta hai — user ko lagta hai uska edit \"save nahi hua\".\n- Read-your-writes — primary routing ya minimum-version read se ensure karo.\n- UI cache — successful response local view update karta hai; replica freshness ki guarantee nahi.\n- Poore system ko strongly consistent banane ki zaroorat nahi — sirf us ek user ke apne data ka read path guarantee chahiye.",
     followUp: "Globally always-primary reads blanket fix kyun nahi honi chahiye?",
     tags: ['consistency', 'replication', 'read-your-writes'],
   },
@@ -1166,7 +1166,7 @@ export const interviewQuestions = [
     level: 'Advanced',
     question: "Overload mein pehle kya degrade karoge aur kyun?",
     answer:
-      "- Features ko criticality tiers mein rank karo aur load shedding ko us order mein apply karo: pehle non-essential enrichments band karo (recommendations, \"people also viewed\", analytics beacons), phir expensive personalization ko cached/generic version se replace karo, aur core transaction path (checkout, login) ko last tak protect karo.\n- Implementation mein yeh per-endpoint concurrency limits, priority queues, aur feature flags se hota hai — taaki degradation ek deliberate product decision ho, na ki random timeouts ka side effect.\n- Partial response tab useful hai jab it stays within the deadline and preserves critical correctness\n- otherwise fail clearly.",
+      "- Degrade — optional recommendations band, personalization cached/generic; core checkout/login capacity protect karo.\n- Implementation mein yeh per-endpoint concurrency limits, priority queues, aur feature flags se hota hai — taaki degradation ek deliberate product decision ho, na ki random timeouts ka side effect.\n- Partial response tab useful hai jab it stays within the deadline and preserves critical correctness\n- otherwise fail clearly.",
     followUp: "Degraded path failing dependency se independent hai, kaise verify karoge?",
     tags: ['resilience', 'load-shedding', 'degradation'],
   },
@@ -1196,7 +1196,7 @@ export const interviewQuestions = [
     level: 'Intermediate',
     question: "Deep pagination slow kyun aur alternative kya hai?",
     answer:
-      "- OFFSET-based pagination mein database ko skip kiye gaye saare rows actually scan karke discard karne padte hain — `OFFSET 100000` par har request 100k rows traverse karti hai, isliye page number badhne ke saath latency linearly degrade hoti hai.\n- Concurrent inserts/deletes se rows duplicate ya skip bhi ho sakte hain kyunki offset ek stable anchor nahi hai.\n- Cursor (keyset) pagination last row ke sort values ko WHERE clause mein use karti hai (`WHERE (created_at, id) < (?, ?)`), jo indexed seek banti hai — work can depend mainly on page size rather than offset depth when the index and filters support the seek, aur shifting data ke against stable.\n- Trade-off: arbitrary page numbers par jump nahi kar sakte, sirf next/previous.",
+      "- OFFSET-based pagination mein database ko skip kiye gaye saare rows actually scan karke discard karne padte hain — `OFFSET 100000` par har request 100k rows traverse karti hai, isliye page number badhne ke saath latency linearly degrade hoti hai.\n- Concurrent inserts/deletes se rows duplicate ya skip bhi ho sakte hain kyunki offset ek stable anchor nahi hai.\n- Keyset — last sort values se next page seek karo; supporting index/filter ho toh deep OFFSET ka scan bachta hai.\n- Trade-off: arbitrary page numbers par jump nahi kar sakte, sirf next/previous.",
     followUp: "Cursor API par jump-to-last-page kaise doge?",
     tags: ['pagination', 'databases', 'performance'],
   },
@@ -1206,7 +1206,7 @@ export const interviewQuestions = [
     level: 'Advanced',
     question: "Producer fast, consumer slow ho toh backpressure kaise?",
     answer:
-      "- Unbounded queue yahan sabse khatarnak default hai — woh problem ko visible failure ke bajaye ek dheere-dheere badhta memory/latency problem bana deta hai, jab tak system OOM ya multi-hour lag tak na pahunche.\n- Bounded buffer use karo aur full hone par explicit policy choose karo: producer ko block karo (natural backpressure, upstream tak propagate hoti hai), naye items drop karo (metrics ke liye acceptable), ya purane items drop karo (real-time dashboards ke liye), ya caller ko 429 return karo.\n- policy deliberate ho aur queue depth/consumer lag par alerting ho, taaki saturation queue overflow hone se pehle dikhe.",
+      "- Unbounded queue yahan sabse khatarnak default hai — woh problem ko visible failure ke bajaye ek dheere-dheere badhta memory/latency problem bana deta hai, jab tak system OOM ya multi-hour lag tak na pahunche.\n- Backpressure — bounded buffer full ho toh block, reject ya permitted data drop karo; policy business requirement se choose.\n- policy deliberate ho aur queue depth/consumer lag par alerting ho, taaki saturation queue overflow hone se pehle dikhe.",
     followUp: "More consumers add karna har growing-lag problem ka answer kyun nahi?",
     tags: ['backpressure', 'queues', 'resilience'],
   },

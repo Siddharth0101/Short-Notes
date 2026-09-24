@@ -19,6 +19,9 @@ tags: composition, patterns, css, accessibility, components
 - Tailwind — utility classes se style; repeated pattern ko readable rakho.
 - Styled components — component ke saath styles; runtime/build tradeoff dekho.
 - Accessibility — reusable component mein label, keyboard aur focus contract rakho.
+- Render prop — function prop se caller ko rendering customize karne do.
+- Prop spreading — internal/private props blindly DOM par forward mat karo.
+- Component boundary — reusable API small rakho; har styling detail ko configuration prop mat banao.
 
 ## Sources — aur padhne ke liye
 

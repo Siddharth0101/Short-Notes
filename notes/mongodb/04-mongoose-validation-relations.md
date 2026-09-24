@@ -20,6 +20,9 @@ tags: mongoose, schemas, validation, populate, middleware, lean
 - Populate — references resolve; joins jaisa cost/query volume evaluate karo.
 - `lean()` — plain objects; document methods/change tracking nahi.
 - Hook — save aur query middleware ka behavior same assume mat karo.
+- Document/query hooks — save aur updateOne ke hooks/context ko interchangeable mat samjho.
+- Virtual field — computed representation; persisted field/index automatic nahi banta.
+- Version check — stale read se overwrite avoid karne ke liye optimistic concurrency ka explicit contract.
 
 ## Sources — aur padhne ke liye
 

@@ -1,305 +1,37 @@
 /**
- * ========================================================================
- * 02d. CORE JAVA - METHODS, CONSTRUCTORS, OOPs & MORE [⚡ VISUAL]
- * ========================================================================
- * Source: Telusko — Master Java, Spring and Spring Boot, Spring Security,
- *         Spring AI, Docker and Microservices
- * 
- * ========================================================================
- * 1. METHODS (Functions)
- * ========================================================================
- * - Method = ek block of code jo specific task perform karta hai. Reusability ka base.
- * - DRY Principle: Don't Repeat Yourself. Same code baar baar likhne ki jagah method bana lo.
- * 
- * SYNTAX:
- *   accessModifier returnType methodName(parameters) {
- *       // method body
- *       return value; // (if returnType is not void)
- *   }
- * 
- * TYPES OF METHODS:
- * a) Instance Method: Object ke through call hota hai. Object-level data access karta hai.
- * b) Static Method: Class ke through call hota hai (ClassName.method()). No object needed.
- *    - Static method sirf static variables access kar sakta hai (non-static nahi).
- * c) Void Method: Kuch return nahi karta.
- * d) Return Method: Ek value return karta hai (int, String, etc.).
- * 
- * METHOD OVERLOADING (Compile-time Polymorphism):
- * - Same class me SAME NAME ke multiple methods with DIFFERENT parameters.
- * - Different kya ho sakta hai: Number of params, type of params, order of params.
- * - Return type se overloading nahi hoti (sirf parameters matter karte hain).
- * 
- * VARIABLE ARGUMENTS (Varargs) - Java 5+:
- * - Jab pata nahi kitne arguments aayenge: method(int... nums)
- * - Internally array ki tarah kaam karta hai.
- * - Rule: Varargs LAST parameter hona chahiye, aur sirf EK varargs per method.
- * 
- * ========================================================================
- * 2. CONSTRUCTORS
- * ========================================================================
- * - Constructor = special method jo object create hote waqt AUTOMATICALLY call hota hai.
- * - Purpose: Object ki initial state set karna (instance variables ko values dena).
- * 
- * RULES:
- * - Constructor ka naam CLASS ke naam ke EXACTLY SAME hona chahiye.
- * - Koi return type nahi hota (void bhi nahi!).
- * - Agar koi constructor nahi likho toh Java ek DEFAULT constructor deta hai (no-arg, empty body).
- *   BUT agar ek bhi constructor likh diya, toh default constructor AUTOMATICALLY nahi milta!
- * 
- * TYPES:
- * a) Default Constructor: No parameters. Java auto-generate karta hai agar koi nahi likha.
- * b) Parameterized Constructor: Parameters lete hai for initialization.
- * c) Constructor Overloading: Ek class me multiple constructors with different parameters.
- * 
- * CONSTRUCTOR CHAINING:
- * - this(): Same class ka dusra constructor call karta hai. MUST be the FIRST statement.
- * - super(): Parent class ka constructor call karta hai. MUST be the FIRST statement.
- * - Java by default super() call karta hai agar tum explicitly na likho.
- * 
- * ========================================================================
- * 3. WRAPPER CLASSES & AUTOBOXING
- * ========================================================================
- * - Primitive types ko Object ki tarah treat karne ke liye Wrapper classes hain.
- * - Collections (ArrayList, HashMap etc.) sirf OBJECTS store kar sakti hain, primitives nahi.
- *   Isliye Wrapper classes zaroori hain.
- * 
- * PRIMITIVE -> WRAPPER MAPPING:
- * ┌───────────┬──────────────┐
- * │ Primitive │   Wrapper    │
- * ├───────────┼──────────────┤
- * │ byte      │ Byte         │
- * │ short     │ Short        │
- * │ int       │ Integer      │
- * │ long      │ Long         │
- * │ float     │ Float        │
- * │ double    │ Double       │
- * │ char      │ Character    │
- * │ boolean   │ Boolean      │
- * └───────────┴──────────────┘
- * 
- * AUTOBOXING: Primitive -> Wrapper AUTOMATICALLY (Java 5+)
- *   int x = 5; Integer obj = x;  // auto-boxed
- * 
- * UNBOXING: Wrapper -> Primitive AUTOMATICALLY
- *   Integer obj = 10; int x = obj;  // auto-unboxed
- * 
- * USEFUL WRAPPER METHODS:
- * - Integer.parseInt("123")    -> String to int
- * - Integer.valueOf("123")     -> String to Integer object
- * - Integer.toString(123)      -> int to String
- * - Integer.MAX_VALUE          -> Max value of int
- * - Integer.MIN_VALUE          -> Min value of int
- * - Double.parseDouble("3.14") -> String to double
- * 
- * ========================================================================
- * 4. ENUMS
- * ========================================================================
- * - Enum = ek special class jo FIXED SET of CONSTANTS define karti hai.
- * - Use case: Jab values predefined aur limited ho (e.g., days, directions, status codes).
- * - Enums type-safe hain (String ya int se better, galat value pass nahi ho sakti).
- * - Enums me constructors, fields, aur methods bhi ho sakte hain!
- * - Internally final aur static hote hain.
- * - values() method se saare constants ka array milta hai.
- * - valueOf("NAME") se String to enum conversion hoti hai.
- * 
- * ========================================================================
- * 5. OOPs — CLASSES & OBJECTS (Detailed — Telusko)
- * ========================================================================
- * - Java ek Object-Oriented Language hai. Har cheez class aur object ke around revolve karti hai.
- * - CLASS = Blueprint / Template. Ye define karta hai ki object ka structure kya hoga
- *   (kya variables honge, kya methods honge).
- * - OBJECT = Class ka real instance. Memory me actual entity jo Stack (reference) 
- *   aur Heap (data) me banti hai using `new` keyword.
- * 
- * NAMING CONVENTION (Industry Standard — Telusko emphasizes):
- * ┌──────────────┬──────────────────────────────────────────────────────┐
- * │  Element     │  Convention                                         │
- * ├──────────────┼──────────────────────────────────────────────────────┤
- * │ Class        │ PascalCase   (e.g., StudentRecord, PaymentService)  │
- * │ Method       │ camelCase    (e.g., calculateTotal, getBalance)     │
- * │ Variable     │ camelCase    (e.g., studentName, maxSpeed)          │
- * │ Constant     │ ALL_CAPS     (e.g., MAX_VALUE, PI)                 │
- * │ Package      │ lowercase    (e.g., com.telusko.app)               │
- * └──────────────┴──────────────────────────────────────────────────────┘
- * 
- * ANONYMOUS OBJECT:
- * - Object bina reference variable ke create hota hai.
- * - One-time use ke liye. Reuse nahi kar sakte.
- * - Syntax: new ClassName().methodName();
- * - Example: new Calculator().add(5, 3);  // No variable, used once and garbage collected.
- * 
- * ========================================================================
- * 6. `this` KEYWORD (Detailed — Telusko)
- * ========================================================================
- * - `this` = current object ka reference. Jis object pe method call ho raha hai, usko point karta hai.
- * 
- * USE CASES:
- * a) Distinguish instance variable from parameter (jab naam same ho):
- *    this.name = name;  // this.name = instance var, name = param
- * 
- * b) Call another constructor from same class (Constructor Chaining):
- *    this();           // calls no-arg constructor
- *    this(value);      // calls parameterized constructor
- *    Rule: MUST be the FIRST statement in constructor.
- * 
- * c) Pass current object as argument to another method:
- *    someMethod(this);
- * 
- * d) Return current object from a method (for method chaining / fluent API):
- *    return this;
- * 
- * ========================================================================
- * 7. `static` KEYWORD (Detailed — Telusko)
- * ========================================================================
- * - `static` = class-level. Object nahi, CLASS se belong karta hai.
- * - Ek hi copy sabke liye shared hoti hai (har object ke liye alag nahi banti).
- * - Memory: Static members Method Area / MetaSpace me store hote hain (JDK 8+).
- * 
- * STATIC VARIABLE:
- * - Sab objects ke liye COMMON value. Ek baar change ki toh sabke liye change.
- * - Example: Student.schoolName = "Telusko Academy"; // shared across all Student objects.
- * - Access: ClassName.variableName (object se bhi ho sakta hai but not recommended).
- * 
- * STATIC METHOD:
- * - Bina object banaye call hota hai: ClassName.methodName()
- * - CANNOT access instance variables directly (kyunki kisi specific object ka reference nahi hai).
- * - CANNOT use `this` or `super` inside static method.
- * - CAN access other static members.
- * - Example: Math.sqrt(25), Integer.parseInt("123") — ye sab static methods hain.
- * 
- * STATIC BLOCK:
- * - Class load hone pe AUTOMATICALLY execute hota hai (sirf EK baar, objects banne se PEHLE).
- * - Complex initialization of static variables ke liye use hota hai.
- * - Multiple static blocks ho sakte hain — order me execute hote hain.
- * - Syntax: static { // initialization code }
- * 
- * ========================================================================
- * 8. ENCAPSULATION (Detailed — Telusko)
- * ========================================================================
- * - OOPs ka 1st pillar. DATA HIDING ka concept.
- * - Variables ko `private` rakho → direct access band.
- * - Public getters/setters methods se CONTROLLED access do.
- * - WHY? Taaki koi invalid data set na kar sake.
- *   Example: age = -5 nahi hona chahiye → setter me validation lagao.
- * 
- * REAL-WORLD ANALOGY (Telusko style):
- * - Bank account ka balance PRIVATE hai. Aap directly balance change nahi kar sakte.
- * - Deposit/withdraw methods (public) ke through hi kaam hota hai, with validation.
- * 
- * BENEFITS:
- * - Data security (invalid values se protect)
- * - Loose coupling (internal implementation change karo, external code nahi toota)
- * - Maintainability (ek jagah validation, har jagah apply)
- * 
- * ========================================================================
- * 9. INHERITANCE (Detailed — Telusko)
- * ========================================================================
- * - OOPs ka 2nd pillar. Code REUSABILITY ka concept.
- * - Child class (subclass) Parent class (superclass) ki properties aur methods inherit karti hai.
- * - `extends` keyword se implement hota hai.
- * - Java me SINGLE inheritance (class level pe) — ek class sirf EK class extend kar sakti hai.
- * - Multiple inheritance INTERFACES se achieve hoti hai (Diamond Problem avoid karne ke liye).
- * 
- * TYPES OF INHERITANCE (Telusko covers):
- * ┌────────────────────┬───────────────────────────────────────────────┐
- * │ Type               │ Description                                   │
- * ├────────────────────┼───────────────────────────────────────────────┤
- * │ Single             │ A → B (one parent, one child)                 │
- * │ Multilevel         │ A → B → C (chain of inheritance)              │
- * │ Hierarchical       │ A → B, A → C (one parent, multiple children)  │
- * │ Multiple (❌ class)│ NOT allowed with classes (Diamond Problem)     │
- * │ Multiple (✅ intf) │ Allowed with interfaces                        │
- * └────────────────────┴───────────────────────────────────────────────┘
- * 
- * IS-A vs HAS-A RELATIONSHIP:
- * - IS-A → Inheritance: Dog IS-A Animal (Dog extends Animal)
- * - HAS-A → Composition: Car HAS-A Engine (Car contains Engine object as field)
- * - Telusko tip: Prefer composition over inheritance when possible (more flexible).
- * 
- * `super` KEYWORD:
- * - Parent class ko refer karta hai. 
- * - super.variableName → parent ki variable access karo (jab child me same naam ho).
- * - super.methodName() → parent ka method call karo (overridden method ke case me).
- * - super() → parent ka constructor call karo. MUST be FIRST statement.
- * - Java by default super() add karta hai har constructor me (agar explicitly nahi likha).
- * 
- * METHOD OVERRIDING:
- * - Child class me parent ke method ko REDEFINE karna (same signature: name + params).
- * - @Override annotation lagana best practice hai (compile-time check).
- * - Return type same ya COVARIANT (child type) hona chahiye.
- * - Access modifier same ya WIDER hona chahiye (private → protected OK, protected → private ❌).
- * - static, final, private methods OVERRIDE nahi ho sakte.
- * 
- * ========================================================================
- * 10. POLYMORPHISM (Detailed — Telusko)
- * ========================================================================
- * - OOPs ka 3rd pillar. "MANY FORMS" — same cheez alag alag form me behave kare.
- * 
- * TWO TYPES:
- * 
- * a) COMPILE-TIME POLYMORPHISM (Static Binding / Early Binding):
- *    = METHOD OVERLOADING
- *    - Same class, same method name, DIFFERENT parameters.
- *    - Compiler decide karta hai kaunsa method call hoga (at compile time).
- *    - Example: add(int, int), add(double, double), add(int, int, int)
- * 
- * b) RUN-TIME POLYMORPHISM (Dynamic Binding / Late Binding):
- *    = METHOD OVERRIDING + UPCASTING
- *    - Parent reference, child object → JVM decide karta hai kaunsa method chalega (at runtime).
- *    - This is called DYNAMIC METHOD DISPATCH.
- *    - Example: Animal a = new Dog(); a.sound(); 
- *      → Dog ka sound() chalega, Animal ka nahi! Kyunki actual object Dog hai.
- *    - ⭐ This is the HEART of polymorphism in Java.
- * 
- * DYNAMIC METHOD DISPATCH (⭐ INTERVIEW IMPORTANT):
- * - Jab parent type ki reference variable child object ko hold karti hai.
- * - Method call hone pe JVM runtime pe dekhta hai ki actual object kaunsa hai.
- * - Overridden method hi call hota hai (child ka), parent ka nahi.
- * - Ye flexibility deta hai — same code different behaviors show karta hai.
- * 
- * ========================================================================
- * 11. `final` KEYWORD (Detailed — Telusko)
- * ========================================================================
- * - `final` = RESTRICT karta hai. Modification band.
- * 
- * USAGE:
- * a) final VARIABLE → Constant ban jata hai. Value ek baar set, phir change nahi hogi.
- *    final int MAX = 100; MAX = 200; // ❌ COMPILE ERROR
- *    Convention: final variables ALL_CAPS me likhte hain.
- * 
- * b) final METHOD → OVERRIDE nahi ho sakta child class me.
- *    Parent me: final void show() {...}
- *    Child me: void show() {...} // ❌ COMPILE ERROR
- * 
- * c) final CLASS → INHERIT nahi ho sakti. Koi class extend nahi kar sakti.
- *    final class Utility {...}
- *    class SubUtility extends Utility {...} // ❌ COMPILE ERROR
- *    Example: String class Java me final hai — koi extend nahi kar sakta.
- * 
- * ========================================================================
- * 12. Object CLASS METHODS — toString(), equals(), hashCode() (Telusko)
- * ========================================================================
- * - Har class Java me secretly `Object` class ko extend karti hai (root of all classes).
- * - Object class me kuch important methods hain jo override karna best practice hai:
- * 
- * a) toString():
- *    - Default: ClassName@HexHashCode (e.g., Student@1b6d3586) — useless output!
- *    - Override karke meaningful info return karo (e.g., "Student{name='Navin', age=35}").
- *    - System.out.println(obj) internally obj.toString() call karta hai.
- * 
- * b) equals():
- *    - Default: Reference comparison (== same hai). Checks ki SAME OBJECT hai ya nahi.
- *    - Override karke CONTENT comparison karo (e.g., do students same hain agar naam aur age same ho).
- *    - String class me already overridden hai — isliye "abc".equals("abc") = true.
- * 
- * c) hashCode():
- *    - Returns integer representing object's identity. Used in HashMap, HashSet etc.
- *    - CONTRACT: Agar equals() override karo toh hashCode() BHI override karo.
- *    - Rule: Equal objects MUST have equal hashCodes.
- *    - Unequal objects CAN have same hashCode (collision), but shouldn't ideally.
+ * ## Quick revision
+ *
+ * - Method — typed parameters lo, declared type ka result return karo.
+ * - `void` — return value nahi; early `return` allowed.
+ * - Overloading — same naam, different parameter list; return type alone enough nahi.
+ * - Pass-by-value — reference ki copy pass hoti hai; object mutate ho sakta hai.
+ * - Array — fixed length; index `0` se `length - 1`.
+ * - 2D array — arrays ka array; rows ki lengths alag ho sakti hain.
+ * - Varargs — multiple arguments array ki tarah milte hain; last parameter hota hai.
+ * - Class — object ka type/behavior; object — actual instance.
+ * - Constructor — object initialize; return type nahi hota.
+ * - `this` — current object; `this(...)` — same class ka constructor call.
+ * - Instance field — har object ka data; static field — class-level shared data.
+ * - Encapsulation — fields private rakho, methods se valid changes karao.
+ * - Constructor rule — invalid input par invalid object banne se pehle fail karo.
+ * - Default constructor — khud constructor likhne par auto no-arg constructor nahi milta.
+ * - Inheritance — subclass superclass ka behavior extend karti hai.
+ * - Overriding — compatible method redefine; runtime object se dispatch.
+ * - Overloading — argument types/list se compile-time selection.
+ * - Composition — has-a relation; behavior delegate karo.
+ * - `equals`/`hashCode` — equal objects ke hash codes equal hone chahiye.
+ * - Mutable map key — hash-relevant field badla toh lookup toot sakta hai.
+ * - Record — data carrier; referenced mutable objects deep-immutable nahi hote.
+ * - Defensive copy — mutable input/output share na karo jab immutability chahiye.
+ * - `super` — superclass member/constructor access; overridden method ko explicit call.
+ * - Static method — class-level behavior; runtime overriding jaisa dispatch nahi.
+ * - Initializer — field/block initialization constructor lifecycle ka part.
+ * - Varargs overload — ambiguity avoid; explicit method contracts rakho.
+ * - Array length — fixed property; String length() method hai.
+ * - Bounds — invalid index par ArrayIndexOutOfBoundsException; negative/empty cases check karo.
+ * - Return contract — non-void method ke har normally completing path ko value chahiye.
  */
 
-// ========== ENUM EXAMPLES ==========
 // Simple Enum
 enum Direction {
     NORTH, SOUTH, EAST, WEST
@@ -323,8 +55,6 @@ enum HttpStatus {
     public int getCode() { return code; }
     public String getMessage() { return message; }
 }
-
-// ========== CONSTRUCTOR EXAMPLES ==========
 class Student {
     String name;
     int age;
@@ -354,8 +84,6 @@ class Student {
         System.out.println(name + " | Age: " + age + " | Course: " + course);
     }
 }
-
-// ========== OOPs: CLASS & OBJECT + `this` KEYWORD ==========
 class Laptop {
     private String brand;
     private int price;
@@ -377,8 +105,6 @@ class Laptop {
         return this; // return current object for chaining
     }
 }
-
-// ========== OOPs: STATIC KEYWORD (Variable, Method, Block) ==========
 class Counter {
     // Static variable — shared across ALL objects
     static int totalCount = 0;
@@ -407,8 +133,6 @@ class Counter {
         // System.out.println(instanceId); // ❌ ERROR! Static method can't access instance var
     }
 }
-
-// ========== OOPs: ENCAPSULATION (Data Hiding with Getters/Setters) ==========
 class Employee {
     // Private fields — HIDDEN from outside (data hiding)
     private String name;
@@ -453,8 +177,6 @@ class Employee {
         return "Employee{name='" + name + "', age=" + age + ", salary=₹" + salary + "}";
     }
 }
-
-// ========== OOPs: INHERITANCE + super + METHOD OVERRIDING ==========
 
 // Parent (Superclass)
 class Vehicle {
@@ -533,8 +255,6 @@ class Bike extends Vehicle {
     }
 }
 
-// ========== OOPs: POLYMORPHISM + DYNAMIC METHOD DISPATCH ==========
-
 // Base class for polymorphism demo
 class Instrument {
     void play() {
@@ -562,8 +282,6 @@ class Drums extends Instrument {
         System.out.println("Beating the Drums! 🥁");
     }
 }
-
-// ========== OOPs: `final` KEYWORD EXAMPLES ==========
 // final class — cannot be inherited
 final class MathUtils {
     static final double PI = 3.14159265358979; // final variable — constant
@@ -575,8 +293,6 @@ final class MathUtils {
 }
 
 // class ExtendedMath extends MathUtils {} // ❌ COMPILE ERROR! MathUtils is final.
-
-// ========== OOPs: Object Class Methods — toString, equals, hashCode ==========
 class Book {
     String title;
     String author;
@@ -614,8 +330,6 @@ class Book {
         return result;
     }
 }
-
-// ========== HAS-A Relationship (Composition) ==========
 class Engine {
     String type;
     int horsepower;
@@ -644,8 +358,6 @@ class SportsCar {
         engine.start(); // Delegating to composed object
     }
 }
-
-// ========== METHOD EXAMPLES ==========
 public class Core_Java_Methods_Constructors {
 
     // --- Instance Method ---
@@ -691,8 +403,6 @@ public class Core_Java_Methods_Constructors {
     }
 
     public static void main(String[] args) {
-
-        // ===== 1. METHODS =====
         System.out.println("===== 1. Methods =====");
 
         // Static method — no object needed
@@ -718,8 +428,6 @@ public class Core_Java_Methods_Constructors {
         int[] data = {34, 12, 78, 5, 91};
         int[] minMax = getMinMax(data);
         System.out.println("\nMin: " + minMax[0] + ", Max: " + minMax[1]);
-
-        // ===== 2. CONSTRUCTORS =====
         System.out.println("\n===== 2. Constructors =====");
 
         System.out.println("--- Default Constructor ---");
@@ -733,8 +441,6 @@ public class Core_Java_Methods_Constructors {
         System.out.println("\n--- 3-Param Constructor ---");
         Student s3 = new Student("Siddharth", 22, "Computer Science");
         s3.display();
-
-        // ===== 3. WRAPPER CLASSES & AUTOBOXING =====
         System.out.println("\n===== 3. Wrapper Classes =====");
 
         // Autoboxing: primitive -> Wrapper (automatic)
@@ -767,8 +473,6 @@ public class Core_Java_Methods_Constructors {
         System.out.println("128 == 128 (NOT cached): " + (c == d)); // false (different objects!)
         System.out.println("128.equals(128): " + c.equals(d));      // true (content comparison)
         System.out.println("⚠ LESSON: Always use .equals() for Wrapper comparison!");
-
-        // ===== 4. ENUMS =====
         System.out.println("\n===== 4. Enums =====");
 
         // Simple enum usage
@@ -805,8 +509,6 @@ public class Core_Java_Methods_Constructors {
         for (HttpStatus s : HttpStatus.values()) {
             System.out.println("  " + s.getCode() + " - " + s.getMessage());
         }
-
-        // ===== 5. CLASSES & OBJECTS + `this` KEYWORD =====
         System.out.println("\n===== 5. Classes, Objects & `this` Keyword =====");
 
         // Normal object creation
@@ -823,8 +525,6 @@ public class Core_Java_Methods_Constructors {
         // Anonymous Object — one-time use, no variable
         System.out.println("\n--- Anonymous Object ---");
         new Laptop("HP", 55000).showInfo(); // Created, used, garbage collected. No reference.
-
-        // ===== 6. STATIC KEYWORD =====
         System.out.println("\n===== 6. Static Keyword =====");
 
         // Static block already executed when Counter class was loaded (see output above)
@@ -843,8 +543,6 @@ public class Core_Java_Methods_Constructors {
         System.out.println("\nBefore reset: " + Counter.totalCount);
         Counter.totalCount = 0; // Reset shared counter
         System.out.println("After reset: " + Counter.totalCount);
-
-        // ===== 7. ENCAPSULATION =====
         System.out.println("\n===== 7. Encapsulation =====");
 
         Employee emp = new Employee("Navin Reddy", 35, 120000);
@@ -862,8 +560,6 @@ public class Core_Java_Methods_Constructors {
 
         // Direct access blocked:
         // emp.salary = 999999; // ❌ COMPILE ERROR! salary is private
-
-        // ===== 8. INHERITANCE + super + OVERRIDING =====
         System.out.println("\n===== 8. Inheritance =====");
 
         // Single Inheritance
@@ -888,8 +584,6 @@ public class Core_Java_Methods_Constructors {
         Bike myBike = new Bike("Royal Enfield", 120, true);
         myBike.drive();   // Vehicle's method
         myBike.honk();    // Bike's overridden honk
-
-        // ===== 9. POLYMORPHISM + DYNAMIC METHOD DISPATCH =====
         System.out.println("\n===== 9. Polymorphism =====");
 
         // --- Compile-Time Polymorphism (Method Overloading) ---
@@ -930,8 +624,6 @@ public class Core_Java_Methods_Constructors {
         v3.honk(); // Bike's honk
         v1.drive(); // Vehicle's drive (Car didn't override)
         v2.drive(); // ElectricCar's drive (overridden)
-
-        // ===== 10. `final` KEYWORD =====
         System.out.println("\n===== 10. final Keyword =====");
 
         // final variable (constant)
@@ -943,8 +635,6 @@ public class Core_Java_Methods_Constructors {
         System.out.println("Circle area (r=5): " + MathUtils.circleArea(5));
         System.out.println("PI = " + MathUtils.PI);
         // MathUtils.PI = 3.0; // ❌ COMPILE ERROR: PI is final
-
-        // ===== 11. Object CLASS METHODS =====
         System.out.println("\n===== 11. Object Class Methods (toString, equals, hashCode) =====");
 
         Book book1 = new Book("Java Complete Reference", "Herbert Schildt", 1200);
@@ -967,8 +657,6 @@ public class Core_Java_Methods_Constructors {
         System.out.println("book2.hashCode(): " + book2.hashCode()); // same as book1 (equal objects)
         System.out.println("book3.hashCode(): " + book3.hashCode()); // different
         System.out.println("book1 & book2 hash equal? " + (book1.hashCode() == book2.hashCode())); // true
-
-        // ===== 12. HAS-A RELATIONSHIP (Composition) =====
         System.out.println("\n===== 12. HAS-A Relationship (Composition) =====");
 
         Engine v8 = new Engine("V8 Twin-Turbo", 650);

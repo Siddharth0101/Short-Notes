@@ -20,6 +20,9 @@ visual: react-render
 - CDN — assets/content user ke paas; cache key aur invalidation sahi rakho.
 - Architecture — routes/features boundaries; shared components ka clear contract.
 - BFF — frontend ke needs ke hisaab se backend aggregation.
+- Edge HTML — personalized response shared-cache mein user scope bina store mat karo.
+- Route split — critical route code pehle; prefetch useful links without flooding network.
+- Server/client boundary — secrets aur trusted validation server par; interactive state client par.
 
 ## Sources — aur padhne ke liye
 

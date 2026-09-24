@@ -1,9 +1,11 @@
 # Node.js and Databases
 
-This section contains backend notes related to the Node ecosystem and related databases.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-## Padhne ka suggested order
+## Topics
 
-1. `01_Node_Notes/README.md` (Main Node.js course notes)
-2. `02_SQL/README.md` (PostgreSQL course notes)
-3. `03_NO_SQL/README.md` (MongoDB course notes)
+- [Node Notes](01_Node_Notes/README.md) — topic files kholo.
+- [Sql](02_SQL/README.md) — topic files kholo.
+- [No Sql](03_NO_SQL/README.md) — topic files kholo.

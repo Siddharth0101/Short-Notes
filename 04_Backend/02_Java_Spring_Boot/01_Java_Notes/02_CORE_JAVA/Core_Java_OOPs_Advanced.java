@@ -1,230 +1,38 @@
 /**
- * ========================================================================
- * 02e. CORE JAVA - ADVANCED OOPs CONCEPTS [⚡ VISUAL]
- * ========================================================================
- * 
- * ========================================================================
- * 1. ACCESS MODIFIERS (Visibility Control)
- * ========================================================================
- * - Access modifiers decide karte hain ki koi class/method/variable kaun-kaun access kar sakta hai.
- * 
- * ┌──────────────┬───────────┬─────────────┬──────────────┬──────────────┐
- * │   Modifier   │ Same Class│ Same Package│  Subclass    │  Everywhere  │
- * │              │           │             │ (other pkg)  │ (other pkg)  │
- * ├──────────────┼───────────┼─────────────┼──────────────┼──────────────┤
- * │ private      │    ✅     │     ❌      │      ❌      │      ❌      │
- * │ default      │    ✅     │     ✅      │      ❌      │      ❌      │
- * │ (no keyword) │           │             │              │              │
- * │ protected    │    ✅     │     ✅      │      ✅      │      ❌      │
- * │ public       │    ✅     │     ✅      │      ✅      │      ✅      │
- * └──────────────┴───────────┴─────────────┴──────────────┴──────────────┘
- * 
- * RULES:
- * - private: Sirf SAME CLASS me accessible. Best for data hiding (Encapsulation).
- * - default (package-private): Koi keyword nahi likhte. Same PACKAGE me accessible.
- * - protected: Same package + child classes (even in different packages).
- * - public: Har jagah accessible. APIs aur entry points ke liye.
- * 
- * ========================================================================
- * 2. ABSTRACT CLASSES
- * ========================================================================
- * - Abstract class = ek aisi class jiska object NAHI bana sakte.
- * - `abstract` keyword use hota hai.
- * - Isme abstract methods (without body) AUR concrete methods (with body) dono ho sakte hain.
- * - Abstract method ka body child class me COMPULSORILY dena padta hai (override).
- * - Agar ek bhi method abstract hai toh class ko bhi abstract banana padega.
- * - Constructor ho sakta hai (child class super() se call karti hai).
- * - Instance variables (state) rakh sakta hai.
- * 
- * WHEN TO USE?
- * - Jab related classes me kuch common code share karna ho (concrete methods)
- *   aur kuch child-specific implementation force karna ho (abstract methods).
- * 
- * ========================================================================
- * 3. INTERFACES
- * ========================================================================
- * - Interface = ek 100% abstract contract. Ye batata hai "KYA karna hai", "KAISE karna hai" nahi.
- * - `implements` keyword se class interface ko implement karti hai.
- * - Ek class MULTIPLE interfaces implement kar sakti hai (Multiple inheritance of type!).
- * - Interface ke variables by default: public + static + final (constants).
- * - Interface ke methods by default: public + abstract.
- * 
- * JAVA 8+ ADDITIONS:
- * - default methods: Interface me method body likh sakte ho. Implementing class ko override optional.
- *   Purpose: Purane interfaces me naye methods add karna bina existing code tode.
- * - static methods: Interface name se call hota hai. Object se nahi.
- * 
- * JAVA 9+ ADDITIONS:
- * - private methods: Interface me helper methods jo dusre default methods internally use karte hain.
- * 
- * FUNCTIONAL INTERFACE (Java 8):
- * - Jis interface me sirf EK abstract method ho = Functional Interface.
- * - @FunctionalInterface annotation lagana best practice hai.
- * - Lambda expressions ke sath use hota hai.
- * - Examples: Runnable, Comparator, Callable, Predicate, Function, Consumer, Supplier.
- * 
- * ========================================================================
- * 4. ABSTRACT CLASS vs INTERFACE (⭐ INTERVIEW FAVOURITE)
- * ========================================================================
- * ┌──────────────────────┬──────────────────────┬──────────────────────┐
- * │      Feature         │   Abstract Class     │      Interface       │
- * ├──────────────────────┼──────────────────────┼──────────────────────┤
- * │ Keyword              │ abstract class       │ interface            │
- * │ Object creation      │ ❌ Cannot            │ ❌ Cannot            │
- * │ Methods              │ Abstract + Concrete  │ Abstract + default   │
- * │ Variables            │ Any type             │ public static final  │
- * │ Constructor          │ ✅ Yes               │ ❌ No                │
- * │ Multiple Inheritance │ ❌ No (single only)  │ ✅ Yes (multiple)    │
- * │ extends/implements   │ extends              │ implements           │
- * │ Access Modifiers     │ All allowed          │ public only (methods)│
- * │ Use case             │ "IS-A" with shared   │ "CAN-DO" capability  │
- * │                      │ state/code           │ contract             │
- * └──────────────────────┴──────────────────────┴──────────────────────┘
- * 
- * SIMPLE RULE:
- * - Abstract class: Jab classes me COMMON CODE + STATE share karna ho.
- * - Interface: Jab sirf CONTRACT define karna ho (unrelated classes implement kar sakein).
- * 
- * ========================================================================
- * 5. UPCASTING & DOWNCASTING (Object Type Casting)
- * ========================================================================
- * 
- * UPCASTING (Child -> Parent reference):
- * - Implicit (automatic). Safe hai.
- * - Parent ref = new Child(); // Child object ko Parent type me refer karna.
- * - Sirf parent ke methods accessible hain (compile-time check).
- * - But child ke OVERRIDDEN methods ACTUALLY chalte hain (run-time polymorphism!).
- * 
- * DOWNCASTING (Parent reference -> Child type):
- * - Explicit (manual). RISKY hai — ClassCastException aa sakta hai!
- * - Child ref = (Child) parentRef; // Parent reference ko wapas Child me cast karna.
- * - Tab hi safe hai jab original object ACTUALLY child ka ho.
- * - Hamesha `instanceof` check karo pehle!
- * 
- * instanceof OPERATOR:
- * - Check karta hai ki koi object kisi class/interface ka instance hai ya nahi.
- * - Syntax: object instanceof ClassName -> boolean
- * - JAVA 16+ Pattern Matching: if (obj instanceof String s) { // use s directly }
- * 
- * ========================================================================
- * 6. ANONYMOUS INNER CLASSES & LAMBDA (Preview)
- * ========================================================================
- * - Anonymous class = bina naam ki class. Interface/abstract class ko on-the-spot implement karna.
- * - Lambda = anonymous class ka shortcut (sirf Functional Interfaces ke liye, Java 8+).
- * 
- * ========================================================================
- * 7. PACKAGES (Telusko)
- * ========================================================================
- * - Package = folder structure jo related classes ko GROUP karti hai.
- * - Purpose: Name conflicts avoid karna (two classes same name, different packages),
- *   access control, aur code organization.
- * 
- * CREATING A PACKAGE:
- * - Syntax: package com.telusko.app;  // FIRST statement of the file (before imports)
- * - Convention: Reversed domain name → com.telusko.app, com.telusko.service
- * - Directory structure MUST match package name:
- *   com/telusko/app/MyClass.java
- * 
- * IMPORTING:
- * - import com.telusko.app.MyClass;     // Import specific class
- * - import com.telusko.app.*;           // Import ALL classes from package (not sub-packages!)
- * - java.lang.* is AUTOMATICALLY imported (String, System, Math etc.)
- * 
- * ACCESS ACROSS PACKAGES:
- * ┌──────────────┬───────────────────────────────────────────────────────┐
- * │  Modifier    │ Accessible from other package?                        │
- * ├──────────────┼───────────────────────────────────────────────────────┤
- * │ public       │ ✅ Yes — fully accessible                            │
- * │ protected    │ ✅ Only in child class (via inheritance)              │
- * │ default      │ ❌ No — only within same package                     │
- * │ private      │ ❌ No — only within same class                       │
- * └──────────────┴───────────────────────────────────────────────────────┘
- * 
- * BUILT-IN PACKAGES:
- * - java.lang  → String, Math, System, Object, Thread (auto-imported)
- * - java.util  → Collections, ArrayList, HashMap, Scanner, Date
- * - java.io    → File, InputStream, OutputStream, Reader, Writer
- * - java.sql   → Connection, Statement, ResultSet (JDBC)
- * - java.time  → LocalDate, LocalTime, LocalDateTime (Java 8+)
- * 
- * ========================================================================
- * 8. INNER CLASSES (Detailed — Telusko)
- * ========================================================================
- * - Inner class = class ke andar class. Logical grouping ke liye.
- * - Outer class ke private members ko bhi access kar sakti hai.
- * 
- * 4 TYPES:
- * 
- * a) MEMBER INNER CLASS (Non-static nested class):
- *    - Outer class ke instance ke sath tied hai.
- *    - Create karne ke liye outer object chahiye: Outer.Inner obj = outer.new Inner();
- *    - Outer class ke ALL members (including private) access kar sakti hai.
- * 
- * b) STATIC INNER CLASS (Static nested class):
- *    - `static` keyword lagta hai. Outer class ka object NAHI chahiye.
- *    - Create: Outer.StaticInner obj = new Outer.StaticInner();
- *    - Sirf outer class ke STATIC members access kar sakti hai.
- * 
- * c) LOCAL INNER CLASS:
- *    - Method ke ANDAR defined hoti hai.
- *    - Sirf usi method ke scope me accessible hai (bahar se nahi).
- *    - Method ke local variables jo effectively final hain, unhe access kar sakti hai.
- * 
- * d) ANONYMOUS INNER CLASS:
- *    - Bina naam ki class. On-the-spot interface/abstract class implement karna.
- *    - Lambda expressions ka predecessor (Java 8 se pehle yahi use hota tha).
- *    - Syntax: new InterfaceName() { @Override ... };
- * 
- * ========================================================================
- * 9. RECORD CLASSES (Java 16+ — Telusko)
- * ========================================================================
- * - Record = immutable data carrier class ka SHORTCUT.
- * - Problem: Simple data hold karne ke liye class banao toh boilerplate bohot hota hai
- *   (constructor, getters, toString, equals, hashCode — sab manually likhna padta hai).
- * - Solution: `record` keyword se sab AUTOMATICALLY generate hota hai!
- * 
- * SYNTAX:
- *   record Point(int x, int y) {}
- *   // Ye AUTOMATICALLY generate karta hai:
- *   // - private final fields (x, y)
- *   // - Constructor: Point(int x, int y)
- *   // - Getters: x(), y() (NOT getX()!)
- *   // - toString(): Point[x=5, y=10]
- *   // - equals() and hashCode() based on all fields
- * 
- * RULES:
- * - Fields are FINAL (immutable — set once in constructor, no setters).
- * - Cannot extend another class (implicitly extends java.lang.Record).
- * - CAN implement interfaces.
- * - CAN have static fields/methods, instance methods, and custom constructors.
- * - CANNOT have instance fields beyond the record components.
- * 
- * ========================================================================
- * 10. SEALED CLASSES (Java 17+ — Telusko)
- * ========================================================================
- * - Sealed class = inheritance RESTRICT karti hai. Sirf SPECIFIED classes extend kar sakti hain.
- * - Problem: Abstract class / interface ko koi bhi extend/implement kar sakta hai.
- *   Kabhi kabhi control chahiye ki KON extend kare.
- * - Solution: `sealed` keyword + `permits` clause.
- * 
- * SYNTAX:
- *   sealed class Shape permits Circle, Rectangle, Triangle {}
- *   // Ab SIRF Circle, Rectangle, Triangle hi Shape extend kar sakti hain.
- *   // Koi bhi nayi class Shape extend nahi kar sakti!
- * 
- * PERMITTED SUBCLASS RULES:
- * - Subclass MUST be one of: final, sealed, or non-sealed.
- *   - final: Aur koi extend nahi kar sakta (chain ends).
- *   - sealed: Aur restrict karta hai (chain continues).
- *   - non-sealed: Koi bhi extend kar sakta hai (chain opens up).
- * - Permitted classes MUST be in the same package (or module).
- * 
- * USE CASE:
- * - Pattern matching (Java 17+): switch expressions me sealed hierarchy use karna
- *   taaki compiler guarantee de sake ki saare cases covered hain.
+ * ## Quick revision
+ *
+ * - Package — related classes ka namespace.
+ * - Access — private: class; package-private: package; public: visible API.
+ * - Protected — package access plus inheritance rules; blanket public access nahi.
+ * - Interface — behavior contract; multiple interfaces implement kar sakte ho.
+ * - Abstract class — shared state/implementation plus abstract methods.
+ * - Dependency inversion — concrete implementation ki jagah contract par depend karo.
+ * - Default method — interface implementation de sakta hai; conflicts resolve karne padte hain.
+ * - Inheritance — subclass superclass ka behavior extend karti hai.
+ * - Overriding — compatible method redefine; runtime object se dispatch.
+ * - Overloading — argument types/list se compile-time selection.
+ * - Composition — has-a relation; behavior delegate karo.
+ * - `equals`/`hashCode` — equal objects ke hash codes equal hone chahiye.
+ * - Mutable map key — hash-relevant field badla toh lookup toot sakta hai.
+ * - Record — data carrier; referenced mutable objects deep-immutable nahi hote.
+ * - Defensive copy — mutable input/output share na karo jab immutability chahiye.
+ * - Enum — fixed named values aur associated behavior.
+ * - Annotation — metadata; behavior framework/tool interpret karta hai.
+ * - Retention — SOURCE, CLASS, RUNTIME se metadata availability decide hoti hai.
+ * - Reflection — runtime types/members inspect; access aur maintenance cost socho.
+ * - Type erasure — most generic type arguments runtime objects par directly available nahi.
+ * - Sealed type — permitted subtypes restrict karta hai.
+ * - Pattern matching — type test aur extraction ko readable banata hai.
+ * - Upcast — child ko parent reference; overridden method runtime type se.
+ * - Downcast — actual compatible subtype chahiye; warna ClassCastException.
+ * - Anonymous class — inline unnamed implementation; lambda sirf functional interface ke liye.
+ * - Sealed hierarchy — allowed subtypes list; child final/sealed/non-sealed policy.
+ * - Nested class — static nested ko outer instance nahi; inner class outer instance se linked.
+ * - Interface static method — interface name se call; instance inheritance jaisa behavior nahi.
+ * - Import — short name resolve karta hai; runtime object creation nahi.
+ * - Package-private API — implementation ko package ke andar rakhkar public surface chhoti karo.
  */
 
-// ========== ABSTRACT CLASS EXAMPLE ==========
 abstract class Shape {
     String color;
 
@@ -270,8 +78,6 @@ class Rectangle extends Shape {
         return width * height;
     }
 }
-
-// ========== INTERFACE EXAMPLES ==========
 interface Drawable {
     void draw(); // public abstract by default
 
@@ -313,14 +119,10 @@ class Canvas implements Drawable, Resizable {
         System.out.println("Rendering " + name + " with custom GPU engine! 🚀");
     }
 }
-
-// ========== FUNCTIONAL INTERFACE EXAMPLE ==========
 @FunctionalInterface
 interface MathOperation {
     int operate(int a, int b); // Single abstract method -> Functional Interface
 }
-
-// ========== UPCASTING/DOWNCASTING EXAMPLE ==========
 class Animal {
     void eat() { System.out.println("Animal is eating"); }
 }
@@ -338,8 +140,6 @@ class Cat extends Animal {
     @Override
     void eat() { System.out.println("Cat is eating fish 🐟"); }
 }
-
-// ========== INNER CLASSES EXAMPLES ==========
 class OuterClass {
     private String outerSecret = "Outer's private secret 🔐";
     static String outerStatic = "Outer's static data";
@@ -377,8 +177,6 @@ class OuterClass {
         // LocalInner is NOT accessible outside this method
     }
 }
-
-// ========== RECORD CLASS EXAMPLE (Java 16+) ==========
 // Instead of writing a full class with constructor, getters, toString, equals, hashCode:
 record StudentRecord(String name, int age, String course) {
     // Custom compact constructor (validation)
@@ -397,8 +195,6 @@ record StudentRecord(String name, int age, String course) {
         return new StudentRecord("Unknown", 0, "Undeclared");
     }
 }
-
-// ========== SEALED CLASS EXAMPLE (Java 17+) ==========
 // Only Circle2D, Rectangle2D, Triangle2D can extend Shape2D. Nobody else!
 sealed class Shape2D permits Circle2D, Rectangle2D, Triangle2D {
     String name;
@@ -445,12 +241,8 @@ class EquilateralTriangle extends Triangle2D {
 }
 
 // class Hexagon extends Shape2D {} // ❌ COMPILE ERROR! Not in permits list.
-
-// ========== MAIN CLASS ==========
 public class Core_Java_OOPs_Advanced {
     public static void main(String[] args) {
-
-        // ===== 1. ABSTRACT CLASS =====
         System.out.println("===== Abstract Class =====");
 
         // Shape shape = new Shape("Red"); // ERROR! Cannot instantiate abstract class!
@@ -467,8 +259,6 @@ public class Core_Java_OOPs_Advanced {
         for (Shape s : shapes) {
             s.displayInfo(); // Correct area() called for each (runtime polymorphism)
         }
-
-        // ===== 2. INTERFACES =====
         System.out.println("\n===== Interfaces =====");
 
         Canvas canvas = new Canvas("My Artwork");
@@ -482,8 +272,6 @@ public class Core_Java_OOPs_Advanced {
         // Interface reference (polymorphism)
         Drawable d = canvas; // Upcasting to interface type
         d.draw(); // Only Drawable methods accessible via this reference
-
-        // ===== 3. FUNCTIONAL INTERFACE & LAMBDA =====
         System.out.println("\n===== Functional Interface & Lambda =====");
 
         // --- Anonymous Inner Class (old way) ---
@@ -503,8 +291,6 @@ public class Core_Java_OOPs_Advanced {
         System.out.println("Lambda add: 5 + 3 = " + addLambda.operate(5, 3));
         System.out.println("Lambda sub: 5 - 3 = " + subLambda.operate(5, 3));
         System.out.println("Lambda mul: 5 * 3 = " + mulLambda.operate(5, 3));
-
-        // ===== 4. UPCASTING & DOWNCASTING =====
         System.out.println("\n===== Upcasting & Downcasting =====");
 
         // --- UPCASTING (Child -> Parent ref) — Implicit, Safe ---
@@ -547,8 +333,6 @@ public class Core_Java_OOPs_Advanced {
         } else {
             System.out.println("Not a Dog! instanceof saved us from ClassCastException ✅");
         }
-
-        // ===== 5. ACCESS MODIFIERS DEMO =====
         System.out.println("\n===== Access Modifiers =====");
         System.out.println("private   -> Same class only (strongest restriction)");
         System.out.println("default   -> Same package (no keyword needed)");
@@ -556,8 +340,6 @@ public class Core_Java_OOPs_Advanced {
         System.out.println("public    -> Everywhere (no restriction)");
         System.out.println("Rule: Always use the MOST RESTRICTIVE modifier possible.");
         System.out.println("Encapsulation = fields private + public getters/setters.");
-
-        // ===== 6. PACKAGES DEMO =====
         System.out.println("\n===== Packages =====");
         System.out.println("Package = folder structure to organize related classes.");
         System.out.println("Convention: reversed domain → com.telusko.app");
@@ -572,8 +354,6 @@ public class Core_Java_OOPs_Advanced {
         System.out.println("  java.io    → File, InputStream, BufferedReader");
         System.out.println("  java.sql   → Connection, PreparedStatement (JDBC)");
         System.out.println("  java.time  → LocalDate, LocalDateTime (Java 8+)");
-
-        // ===== 7. INNER CLASSES =====
         System.out.println("\n===== Inner Classes =====");
 
         // a) MEMBER INNER CLASS — needs outer object
@@ -601,8 +381,6 @@ public class Core_Java_OOPs_Advanced {
         };
         anonymousDrawable.draw();
         anonymousDrawable.render(); // default method still works
-
-        // ===== 8. RECORD CLASSES (Java 16+) =====
         System.out.println("\n===== Record Classes (Java 16+) =====");
 
         StudentRecord s1 = new StudentRecord("Navin", 35, "Java");
@@ -631,8 +409,6 @@ public class Core_Java_OOPs_Advanced {
 
         // Immutable — NO setters!
         // s1.name = "Changed"; // ❌ COMPILE ERROR! Fields are final.
-
-        // ===== 9. SEALED CLASSES (Java 17+) =====
         System.out.println("\n===== Sealed Classes (Java 17+) =====");
 
         Circle2D circle = new Circle2D(5);

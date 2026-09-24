@@ -19,6 +19,9 @@ tags: testing, assertions, debugging, async
 - Fake timer — clock control karo; cleanup aur pending work check karo.
 - Mock — controlled dependency; implementation details ko test mat banao.
 - Regression — bug reproduce karne wala test fix ko protect karta hai.
+- Test isolation — shared state/timers restore; order change se test result nahi badalna chahiye.
+- Property check — individual examples ke saath invariant verify, jaise sorted output aur preserved items.
+- Flaky test — uncontrolled clock/network/randomness identify; blind retry se root cause nahi mit-ta.
 
 ## Sources — aur padhne ke liye
 

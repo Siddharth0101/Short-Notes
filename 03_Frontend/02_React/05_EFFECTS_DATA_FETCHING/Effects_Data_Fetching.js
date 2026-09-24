@@ -1,58 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - `useEffect` — external system ke saath sync; render calculation ke liye nahi.
+ * - Dependencies — effect mein used reactive values list karo; linter ko ignore mat karo.
+ * - Cleanup — next setup se pehle aur unmount par old listener/timer/connection hatao.
+ * - `[]` — changing reactive dependency nahi; development checks setup repeat kar sakte hain.
+ * - `useRef` — renders ke beech mutable value; update se rerender nahi hota.
+ * - Stale closure — old render ki values capture; dependencies/updater se solve karo.
+ * - Fetch race — abort + latest-result guard se old response ignore karo.
+ * - Custom Hook — stateful logic reuse; har call ka state separate hota hai.
+ * - `useLayoutEffect` — paint se pehle layout work; blocking ka cost dhyaan rakho.
+ * - Effect callback — async function directly mat do; andar async work start karke cleanup return karo.
+ * - Ref DOM access — node commit ke baad available; unmount par null handle karo.
+ * - Dependency identity — fresh object/function reference effect repeat kara sakti hai.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * EFFECTS & DATA FETCHING - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - useEffect handles side effects outside React render logic.
- *
- * EFFECT LIFECYCLE & CLEANUP FLOW:
- * ┌─────────────────────────────────────────────────────────────┐
- * │                                                             │
- * │  Component Mounts ──→ Render UI ──→ Run Effect (after paint)│
- * │                                            │                │
- * │  Props/State Changes                       ▼                │
- * │  Render New UI ──→ Run Cleanup ──→ Run New Effect           │
- * │                       │                                     │
- * │  Component Unmounts ──┴──→ Run Final Cleanup                │
- * │                                                             │
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. WHAT IS A SIDE EFFECT?
- * ========================================================================
- * NOTES:
- * - Render logic me side effects NAHI hone chahiye:
- *   - No API calls.
- *   - No timers.
- *   - No DOM manipulation.
- *   - No state updates of other components.
- *
- * - Side effects 2 jagah ho sakte hain:
- *   1. Event handlers (onClick, onSubmit) — preferred for user-triggered actions.
- *   2. useEffect — for effects that should run on mount/update/unmount.
- *
- * RULE: Event handler me ho sakta hai toh wahi karo. useEffect last resort.
- */
-
-
-/**
- * ========================================================================
- * 2. useEffect DEPENDENCY ARRAY MATRIX
- * ========================================================================
- * NOTES:
- * ┌───────────────────────────┬─────────────────────────────────┐
- * │ Dependency Array          │ When Effect Runs?               │
- * ├───────────────────────────┼─────────────────────────────────┤
- * │ useEffect(fn, [a, b])     │ On mount + when a or b changes  │
- * │ useEffect(fn, [])         │ ONLY on mount (first render)    │
- * │ useEffect(fn)             │ On EVERY render (avoid!)        │
- * └───────────────────────────┴─────────────────────────────────┘
- */
 
 // import { useState, useEffect } from 'react';
 
@@ -107,28 +71,6 @@ function MovieApp() {
 }
 
 
-/**
- * ========================================================================
- * 3. CLEANUP FUNCTION
- * ========================================================================
- * NOTES:
- * - useEffect ka return function = CLEANUP function.
- * - Cleanup tab run hota hai:
- *   1. Component UNMOUNT hone se pehle.
- *   2. NEXT effect run hone se PEHLE (previous effect clean up).
- *
- * WHEN TO CLEANUP:
- * - HTTP request cancel (AbortController).
- * - Timer clear (clearTimeout, clearInterval).
- * - Event listener remove.
- * - Subscription unsubscribe.
- *
- * WHY?
- * - Memory leaks prevent karna.
- * - Race conditions avoid karna (purana slow request naye se pehle resolve ho jaye).
- * - Stale data prevent karna.
- */
-
 function MovieDetails({ selectedId }) {
     const [movie, setMovie] = useState({});
 
@@ -165,26 +107,6 @@ function MovieDetails({ selectedId }) {
 }
 
 
-/**
- * ========================================================================
- * 4. useEffect DEPENDENCY ARRAY RULES
- * ========================================================================
- * NOTES:
- * - EVERY state variable and prop jo effect ke andar use ho -> dependency me daalo.
- * - Function bhi dependency hai agar effect ke andar call ho rahi hai
- *   (unless function component ke bahar defined hai ya useCallback se wrapped hai).
- *
- * COMMON MISTAKES:
- * - Dependency bhoolna -> stale closures (purani values use hoti rehti hain).
- * - Object/array as dependency -> har render pe naya reference -> infinite loop!
- *   Solution: primitive values destructure karo, ya useMemo use karo.
- * - setState ko dependency me daalna zaruri NAHI hai (React guarantees stable reference).
- *
- * LINTING:
- * - eslint-plugin-react-hooks: exhaustive-deps rule enable karo.
- * - KABHI suppress mat karo bina samjhe.
- */
-
 // ❌ BAD: missing dependency
 // useEffect(() => {
 //     document.title = `${movieTitle}`; // movieTitle used but not in deps!
@@ -195,24 +117,6 @@ function MovieDetails({ selectedId }) {
 //     document.title = `${movieTitle}`;
 // }, [movieTitle]); // updates when movieTitle changes
 
-
-/**
- * ========================================================================
- * 5. DATA FETCHING PATTERNS
- * ========================================================================
- * NOTES:
- * - LOADING STATE: fetch shuru hone pe true, end pe false.
- * - ERROR STATE: catch me error set karo.
- * - CONDITIONAL RENDERING: loading, error, data — teeno states handle karo.
- * - RACE CONDITION: AbortController ya cleanup flag use karo.
- *
- * FETCH PATTERN (Jonas style):
- * 1. Set loading = true, error = ''.
- * 2. try: fetch, check res.ok, parse JSON, setData.
- * 3. catch: setError.
- * 4. finally: setLoading = false.
- * 5. cleanup: abort controller.
- */
 
 // Alternative: boolean flag cleanup (simpler but less robust):
 // useEffect(() => {
@@ -228,23 +132,6 @@ function MovieDetails({ selectedId }) {
 //     return () => { ignore = true; }; // cleanup: mark as stale
 // }, [url]);
 
-
-/**
- * ========================================================================
- * 6. CUSTOM HOOKS
- * ========================================================================
- * NOTES:
- * - Custom hook = function jo "use" se start hoti hai aur React hooks use karti hai.
- * - Reusable STATEFUL LOGIC extract karne ka tarika.
- * - UI nahi return karti (component nahi hai), state/data return karti hai.
- * - Har call ka apna independent state hota hai (shared nahi).
- *
- * NAMING: useMovies, useLocalStorageState, useGeoLocation, useKey.
- *
- * WHEN TO CREATE:
- * - Jab same hook logic 2+ components me repeat ho rahi hai.
- * - Jab component me bahut zyada hooks hain -> logic extract karo.
- */
 
 function useMovies(query) {
     const [movies, setMovies] = useState([]);
@@ -297,16 +184,6 @@ function useMovies(query) {
 // }
 
 
-/**
- * ========================================================================
- * 7. useLocalStorageState (Custom Hook Example)
- * ========================================================================
- * NOTES:
- * - localStorage ke saath useState sync karna — common pattern.
- * - Initial value localStorage se read karo.
- * - State change hone par localStorage me save karo.
- */
-
 function useLocalStorageState(initialState, key) {
     const [value, setValue] = useState(function () {
         const storedValue = localStorage.getItem(key);
@@ -327,15 +204,6 @@ function useLocalStorageState(initialState, key) {
 // const [watched, setWatched] = useLocalStorageState([], 'watched');
 // Ab watched list page refresh ke baad bhi persist karega.
 
-
-/**
- * ========================================================================
- * 8. useKey (Custom Hook Example — Keyboard Shortcuts)
- * ========================================================================
- * NOTES:
- * - Keypress events ke liye reusable hook.
- * - Event listener add on mount, remove on unmount (cleanup).
- */
 
 function useKey(key, action) {
     useEffect(

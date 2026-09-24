@@ -1,86 +1,20 @@
 /**
- * ========================================================================
- * 02b. CORE JAVA - CONTROL FLOW (CONDITIONALS & LOOPS) [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Control flow = program me decision making aur repetition.
- * - Ye batata hai ki kaunsa code kab execute hoga.
- * 
- * ========================================================================
- * 1. CONDITIONAL STATEMENTS (Decision Making)
- * ========================================================================
- * 
- * a) if STATEMENT:
- *    - Agar condition true hai toh block execute hoga.
- *    - Syntax: if (condition) { // code }
- * 
- * b) if-else STATEMENT:
- *    - True hoga toh if block, false hoga toh else block.
- *    - Syntax: if (condition) { // if-code } else { // else-code }
- * 
- * c) else-if LADDER:
- *    - Jab multiple conditions check karni ho.
- *    - Syntax: if (c1) { } else if (c2) { } else if (c3) { } else { }
- *    - Pehli true condition ka block run hota hai, baaki skip.
- * 
- * d) NESTED if:
- *    - if ke andar if. Tab use karo jab ek condition dusri pe depend kare.
- * 
- * e) switch-case STATEMENT:
- *    - Jab ek variable ke multiple possible values pe different actions lene ho.
- *    - if-else ladder ka clean alternative jab equality check karna ho.
- *    - RULE: break dalna zaroori hai, warna FALL-THROUGH hoga (neeche ke saare cases execute honge).
- *    - default: Jab koi case match na kare (optional but recommended).
- *    - Supported types: byte, short, int, char, String (Java 7+), enum.
- * 
- * f) ENHANCED SWITCH (Java 14+):
- *    - Arrow syntax (->) use karta hai, break ki zaroorat nahi.
- *    - Expression ke roop me use ho sakta hai (value return karta hai).
- * 
- * g) TERNARY OPERATOR:
- *    - One-line if-else. Syntax: result = (condition) ? trueValue : falseValue;
- * 
- * ========================================================================
- * 2. LOOPS (Repetition / Iteration)
- * ========================================================================
- * 
- * a) while LOOP:
- *    - Jab tak condition true hai, tab tak execute karo.
- *    - PEHLE condition check karta hai, PHIR body run karta hai.
- *    - Use case: Jab pata nahi kitni baar loop chalega (unknown iterations).
- *    - Syntax: while (condition) { // code }
- *    - WARNING: Infinite loop ban sakta hai agar condition kabhi false na ho!
- * 
- * b) do-while LOOP:
- *    - PEHLE body execute karta hai, PHIR condition check karta hai.
- *    - Guarantee: Body kam se kam EK BAAR zaroor chalega (even if condition false ho tab bhi).
- *    - Use case: Menu-driven programs, input validation.
- *    - Syntax: do { // code } while (condition);
- * 
- * c) for LOOP:
- *    - Jab pata ho ki kitni baar loop chalana hai (known iterations).
- *    - Syntax: for (initialization; condition; update) { // code }
- *    - Execution order: init -> check -> body -> update -> check -> body -> update -> ...
- * 
- * d) ENHANCED for-each LOOP (Java 5+):
- *    - Arrays aur Collections ke elements pe iterate karne ka sabse clean tarika.
- *    - Syntax: for (type element : collection) { // use element }
- *    - LIMITATION: Index available nahi hota. Modify nahi kar sakte original collection.
- * 
- * ========================================================================
- * 3. LOOP CONTROL STATEMENTS
- * ========================================================================
- * 
- * a) break: Loop ko IMMEDIATELY tood deta hai. Baaki iterations skip.
- * b) continue: Current iteration ko SKIP karta hai, next iteration pe jump.
- * c) LABELED break/continue: Nested loops me outer loop ko break/continue karne ke liye.
- *    - Syntax: outerLabel: for (...) { for (...) { break outerLabel; } }
+ * ## Quick revision
+ *
+ * - `if/else` — condition ke hisaab se branch choose.
+ * - `switch` — value ke cases; arrow cases fall-through nahi karte.
+ * - `for` — counted repetition; `while` — condition-based repetition.
+ * - Enhanced for — array/Iterable ki values traverse karo.
+ * - `break` — loop/switch se exit; `continue` — next iteration.
+ * - Integer division — `5 / 2` → `2`; decimal chahiye toh floating operand.
+ * - Boundary — zero, exact limit aur limit ke aas-paas inputs check karo.
+ * - Short-circuit — &&/|| right expression tabhi evaluate jab result decide karna baaki ho.
+ * - Switch expression — value produce karti hai; block branch mein yield use hota hai.
+ * - Loop mutation — enhanced-for ke andar collection structural change unsafe ho sakta hai; proper iterator/API choose.
  */
 
 public class Core_Java_ControlFlow {
     public static void main(String[] args) {
-
-        // ===== 1. CONDITIONAL STATEMENTS =====
         System.out.println("===== Conditional Statements =====");
 
         // --- if-else ---
@@ -143,8 +77,6 @@ public class Core_Java_ControlFlow {
         int age = 17;
         String canVote = (age >= 18) ? "Yes, can vote ✅" : "No, too young ❌";
         System.out.println("Age " + age + ": " + canVote);
-
-        // ===== 2. LOOPS =====
         System.out.println("\n===== Loops =====");
 
         // --- while loop ---
@@ -195,8 +127,6 @@ public class Core_Java_ControlFlow {
         for (String lang : languages) {
             System.out.println("Language: " + lang);
         }
-
-        // ===== 3. LOOP CONTROL =====
         System.out.println("\n===== Loop Control =====");
 
         // --- break ---

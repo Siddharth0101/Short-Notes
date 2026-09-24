@@ -20,6 +20,9 @@ visual: thread-sync
 - JPA — N+1, lazy loading aur optimistic-lock conflicts recognize karo.
 - Incident — symptom, evidence, cause, fix aur verification batao.
 - Design — interface se responsibilities split; failure path bhi explain karo.
+- Transaction scenario — exactly kaunse writes ek saath commit/rollback honge, list karo.
+- Concurrency trace — do callers ke interleaving se race demonstrate karo.
+- Pool debugging — active, idle, waiting aur query timings se bottleneck separate.
 
 ## Research notes: Defend a failure boundary
 

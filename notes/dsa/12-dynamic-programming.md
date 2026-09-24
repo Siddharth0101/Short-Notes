@@ -23,6 +23,9 @@ visual: dynamic-programming
 - Unbounded choice — reuse allowed; loop order contract ke hisaab se.
 - Reconstruction — choices/parents store karo jab actual solution chahiye.
 - Optimization — sirf required prior states rakho; dependency overwrite mat karo.
+- Counting order — coin loop aur amount loop ka order combinations vs permutations change kar sakta hai.
+- Impossible state — infinity/negative sentinel safely choose; overflow aur invalid transitions avoid.
+- DAG view — DP states dependencies ka graph; valid evaluation order pehle dependencies solve kare.
 
 ## Research notes: Numeric magnitude can dominate DP
 

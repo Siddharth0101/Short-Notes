@@ -1,36 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Hash table — key ko bucket mein map; collision handling zaroori.
+ * - Lookup — expected O(1); worst-case guarantee blindly mat bolo.
+ * - Collision — chaining ya probing se multiple keys handle karo.
+ * - Load factor — entries/capacity; zyada ho toh resize/probe cost badhta hai.
+ * - Map — key/value lookup; Set — membership/uniqueness.
+ * - Object key — JS Map mein identity se compare; equal-looking objects alag keys.
+ * - Canonical key — composite identity encode karte waqt collisions avoid karo.
+ * - LRU — hash map + doubly linked list se lookup/recency updates O(1).
+ * - Resize — rehash ek operation expensive; growing table ka amortized insertion cost alag.
+ * - Frequency map — presence se zyada multiplicity chahiye, toh boolean Set enough nahi.
+ * - Hash/equality — equal keys ko compatible hashes; collision ko unequal key ka proof mat samjho.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * HASH TABLES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Hash table key-value pairs store karta hai.
- * - Key ko hash function se array index me convert kiya jaata hai.
- * - JavaScript Object and Map internally hash-table-like behavior dete hain.
- *
- * WHY IMPORTANT?
- * - Fast lookup, insert, delete.
- * - Frequency counter, caching, graph adjacency lists, two-sum style problems.
- */
-
-
-/**
- * ========================================================================
- * 1. HASH FUNCTION
- * ========================================================================
- * GOOD HASH FUNCTION:
- * - Fast ho.
- * - Deterministic ho: same input -> same output.
- * - Values evenly distribute kare.
- *
- * BAD HASH:
- * - Sab keys same index par bhej de -> collisions high.
- *
- * EXAMPLE - simpleHash:
- * Input:  key = 'pink', arrayLength = 10
- * Output: some fixed index between 0-9 (always same for 'pink')
- */
 
 function simpleHash(key, arrayLength) {
     let total = 0;
@@ -54,42 +39,6 @@ console.log(simpleHash('cyan', 10));   // e.g. 3
 // Same input always gives same output:
 console.log(simpleHash('pink', 10) === simpleHash('pink', 10)); // true
 
-
-/**
- * ========================================================================
- * 2. COLLISIONS
- * ========================================================================
- * NOTES:
- * - Collision = two keys same index par aa gayi.
- *
- * COMMON SOLUTIONS:
- * 1. Separate chaining:
- *    - Har index par array/list store karo.
- *
- * 2. Linear probing:
- *    - Agar index occupied hai, next empty slot dhoondo.
- */
-
-
-/**
- * ========================================================================
- * 3. HASH TABLE IMPLEMENTATION - SEPARATE CHAINING
- * ========================================================================
- * AVERAGE BIG O:
- * - set: O(1)
- * - get: O(1)
- * - delete: O(1)
- *
- * WORST CASE:
- * - O(n), if many collisions.
- *
- * EXAMPLE:
- * set('white', '#fff') -> set('black', '#000') -> set('red', '#f00')
- * get('black') -> '#000'
- * get('purple') -> undefined
- * keys() -> ['white', 'black', 'red']  (order may vary)
- * values() -> ['#fff', '#000', '#f00']  (order may vary)
- */
 
 class HashTable {
     constructor(size = 53) {
@@ -204,29 +153,6 @@ ht.set('white', '#ffffff');
 console.log(ht.get('white')); // '#ffffff'
 
 
-/**
- * ========================================================================
- * 4. MAP VS OBJECT
- * ========================================================================
- *
- * Object:
- * - Keys usually string/symbol.
- * - Simple and common.
- * - Good for plain frequency counters.
- *
- * Map:
- * - Keys any type: object, array, number, string.
- * - Has size property.
- * - Better for frequent add/delete and arbitrary keys.
- *
- * EXAMPLE - twoSum:
- * Input:  nums = [2, 7, 11, 15], target = 9
- * Output: [0, 1]  (nums[0] + nums[1] = 2 + 7 = 9)
- *
- * Input:  nums = [3, 2, 4], target = 6
- * Output: [1, 2]  (nums[1] + nums[2] = 2 + 4 = 6)
- */
-
 function twoSum(nums, target) {
     const seen = new Map();
 
@@ -260,22 +186,6 @@ console.log(twoSum([3, 3], 6)); // [0, 1]
 console.log(twoSum([1, 2, 3], 100)); // []
 
 
-/**
- * ========================================================================
- * 5. SET PATTERN
- * ========================================================================
- * NOTES:
- * - Set membership check average O(1).
- * - Duplicate, visited, intersection problems me useful.
- *
- * EXAMPLE - intersection:
- * Input:  arr1 = [1, 2, 3, 4], arr2 = [3, 4, 5, 6]
- * Output: [3, 4]  (common elements)
- *
- * Input:  arr1 = [1, 2], arr2 = [3, 4]
- * Output: []  (no common elements)
- */
-
 function intersection(arr1, arr2) {
     const set1 = new Set(arr1);
     const result = [];
@@ -301,18 +211,3 @@ console.log(intersection([1, 2, 3], [4, 5, 6])); // []
 // Sample Input:  [1, 1, 2, 3], [1, 2]  (duplicates in arr1)
 // Expected Output: [1, 2]  (each intersection element once)
 console.log(intersection([1, 1, 2, 3], [1, 2])); // [1, 2]
-
-
-/**
- * ========================================================================
- * 6. HASH TABLE USE CASES
- * ========================================================================
- *
- * - Frequency counters
- * - Caching / memoization
- * - De-duplication
- * - Fast lookup by ID
- * - Grouping data
- * - Graph adjacency list
- * - Detect cycles/visited states
- */

@@ -1,92 +1,42 @@
+/**
+ * ## Quick revision
+ *
+ * - Expression — value banata hai; statement — instruction chalata hai.
+ * - Strict mode — silent mistakes ke kuch cases errors ban jaate hain.
+ * - Primitive — immutable value; variable ko nayi value assign ho sakti hai.
+ * - Object — properties mutate ho sakti hain; assignment reference value copy karta hai.
+ * - Pass-by-value — JS arguments values hain; object argument ki value reference hoti hai.
+ * - Coercion — implicit type conversion; boundary par explicit conversion clearer hai.
+ * - Short-circuit — `&&`, `||`, `??` zaroorat padne par hi right side evaluate karte hain.
+ * - Destructuring default — sirf `undefined` par lagta hai, `null` par nahi.
+ * - Equality — `Object.is(NaN, NaN)` true; `Object.is(0, -0)` false.
+ * - Scope — variable kahan accessible hai; lexical scope code ki location se decide hota hai.
+ * - Block scope — `let`/`const` `{}` tak; `var` nearest function tak.
+ * - Scope chain — naam local se outer scopes mein search hota hai.
+ * - Closure — function outer bindings yaad rakhta hai, outer call khatam hone ke baad bhi.
+ * - Live binding — closure latest binding padhta hai; automatic snapshot nahi.
+ * - Loop trap — `var` callbacks same binding share; `let` har iteration ki binding deta hai.
+ * - Hoisting — declarations pehle register; initialization ka timing alag hai.
+ * - TDZ — lexical binding initialize hone tak access error deta hai.
+ * - Memory — reachable closure captured objects ko alive rakh sakta hai.
+ * - Use — private counters, callbacks aur function factories.
+ * - Call stack — synchronous functions yahin execute hote hain.
+ * - Event loop — stack khali hone par queued work ko chance deta hai.
+ * - Microtasks — Promise callbacks/`queueMicrotask`; checkpoint par queue drain hoti hai.
+ * - Timers — timer task se pehle queued microtasks chal sakti hain.
+ * - Promise — pending se fulfilled ya rejected; settle hone ke baad state fixed.
+ * - `.then` — nayi Promise deta hai; callback ka return chain ko feed karta hai.
+ * - `async` — hamesha Promise return; `await` sirf current async flow suspend karta hai.
+ * - `fetch` — HTTP 404/500 par usually resolve; `response.ok` check karo.
+ * - Abort — `AbortController` se supported operation cancel; late result bhi guard karo.
+ * - Starvation — endless microtasks rendering aur tasks delay kar sakti hain.
+ * - `in` operator — own aur inherited properties dono check karta hai.
+ * - Automatic semicolon — `return` ke turant baad newline unexpected undefined de sakti hai.
+ * - `delete` — object property hataata hai; array slot delete karne se length shrink nahi hoti.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * JS ENGINE & BEHIND THE SCENES - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Jonas ka "Behind the Scenes" section JS ka engine, execution context,
- *   scope chain, hoisting, TDZ explain karta hai.
- * - Ye advanced concepts hain but interview aur debugging ke liye crucial.
- */
-
-
-/**
- * ========================================================================
- * 1. JAVASCRIPT ENGINE
- * ========================================================================
- * NOTES:
- * - JS Engine = program jo JavaScript code execute karta hai.
- * - Har browser ka apna engine hai:
- *   V8        -> Chrome, Node.js
- *   SpiderMonkey -> Firefox
- *   JavaScriptCore -> Safari
- *
- * ENGINE ARCHITECTURE:
- * ┌──────────────────────────────────────────────────────┐
- * │              JS ENGINE (V8)                          │
- * │  ┌─────────────────────┐   ┌──────────────────────┐ │
- * │  │    CALL STACK        │   │    HEAP (Memory)       │ │
- * │  │                     │   │                        │ │
- * │  │  Code execute hota   │   │  Objects store hote    │ │
- * │  │  hai yahan.          │   │  hain yahan.           │ │
- * │  │  (Execution contexts │   │  (Unstructured memory  │ │
- * │  │   stack hote hain)   │   │   pool)                │ │
- * │  └─────────────────────┘   └──────────────────────┘ │
- * └──────────────────────────────────────────────────────┘
- *
- * JIT COMPILATION FLOW:
- * Source Code → Parsing (AST) → Compilation → Execution → Optimization
- *                                   │             ↑
- *                                   └─────────────┘
- *                            (optimize + re-compile in background)
- *
- * COMPILATION VS INTERPRETATION:
- * - Compiled (C++): pura code machine code me convert hota hai, phir run.
- * - Interpreted (old JS): line by line translate + execute. Slow.
- * - JIT Compilation (modern JS): pura code compile hota hai, IMMEDIATELY execute.
- *   No intermediate file. Super fast.
- */
-
-
-/**
- * ========================================================================
- * 2. EXECUTION CONTEXT
- * ========================================================================
- * NOTES:
- * - Execution Context = environment jisme code execute hota hai.
- *
- * ┌──────────────────────────────────────────────────────┐
- * │         EXECUTION CONTEXT COMPONENTS                  │
- * ├──────────────────┬─────────────────┬─────────────────┤
- * │  1. Variable       │ 2. Scope Chain  │ 3. `this`        │
- * │     Environment    │                 │    keyword       │
- * │  ───────────────  │  ─────────────  │  ─────────────  │
- * │  let, const, var   │ Outer variables │ Depends on      │
- * │  functions         │ access chain    │ how function    │
- * │  arguments object  │                 │ is called       │
- * └──────────────────┴─────────────────┴─────────────────┘
- *
- * TYPES:
- * - Global Execution Context: file load hone par banta hai. Sirf 1 hota hai.
- * - Function Execution Context: har function call pe naya banta hai.
- *
- * ARROW FUNCTIONS:
- * - Arrow functions ko apna arguments object NAHI milta.
- * - Arrow functions ko apna `this` NAHI milta (parent se inherit karta hai).
- */
-
-
-/**
- * ========================================================================
- * 3. CALL STACK
- * ========================================================================
- * NOTES:
- * - Call Stack = stack of execution contexts. LIFO (Last In First Out).
- * - Jab function call hota hai -> naya context stack pe push.
- * - Jab function return karta hai -> context stack se pop.
- * - Stack overflow: bohot zyada recursive calls -> stack full -> crash.
- */
 
 function first() {
     console.log('first');
@@ -115,45 +65,6 @@ function third() {
 // 7. first() finishes -> popped
 
 
-/**
- * ========================================================================
- * 4. SCOPE AND SCOPE CHAIN
- * ========================================================================
- * NOTES:
- * - Scope = where variables are accessible.
- *
- * ┌────────────────────────────────────────────────────────────┐
- * │                    SCOPE TYPES                              │
- * ├────────────────────┬───────────────────┬───────────────────┤
- * │ 1. Global Scope    │ 2. Function Scope │ 3. Block Scope   │
- * │ ────────────────  │ ─────────────── │ ─────────────── │
- * │ File level         │ Inside function  │ Inside { }      │
- * │ Har jagah access   │ Sirf function me │ let/const only  │
- * │                    │                  │ var LEAKS! ⚠️    │
- * └────────────────────┴───────────────────┴───────────────────┘
- *
- * SCOPE CHAIN (ONE WAY → outward):
- * ┌────────────────────────────────────────────────────────────┐
- * │  GLOBAL SCOPE                                              │
- * │  const globalVar = 'global';                                │
- * │  ┌────────────────────────────────────────────────────┐   │
- * │  │  OUTER FUNCTION SCOPE                                │   │
- * │  │  const outerVar = 'outer';                            │   │
- * │  │  ┌────────────────────────────────────────────┐   │   │
- * │  │  │  INNER FUNCTION SCOPE                          │   │   │
- * │  │  │  const innerVar = 'inner';                      │   │   │
- * │  │  │  Can access: innerVar ✅ outerVar ✅ globalVar ✅ │   │   │
- * │  │  └────────────────────────────────────────────┘   │   │
- * │  │  Can access: outerVar ✅ globalVar ✅ innerVar ❌       │   │
- * │  └────────────────────────────────────────────────────┘   │
- * └────────────────────────────────────────────────────────────┘
- *
- * SCOPE ≠ EXECUTION CONTEXT:
- * - Scope chain variable ka SOURCE decide karta hai.
- * - Call stack function ka ORDER decide karta hai.
- * - Scope chain NESTING pe depend karta hai, CALL order pe nahi.
- */
-
 const globalVar = 'global';
 
 function outer() {
@@ -181,28 +92,6 @@ if (true) {
 console.log(blockVar);      // ✅ 'I LEAK...' — var is NOT block-scoped!
 
 
-/**
- * ========================================================================
- * 5. HOISTING
- * ========================================================================
- * NOTES:
- * - Hoisting = kuch declarations code execute hone se PEHLE available ho jaati hain.
- * - Behind the scenes: creation phase me declarations scan hoti hain.
- *
- * WHAT GETS HOISTED:
- * ┌──────────────────────┬──────────┬───────────────────┬──────────┐
- * │ Declaration          │ Hoisted? │ Initial Value     │ Scope    │
- * ├──────────────────────┼──────────┼───────────────────┼──────────┤
- * │ function declaration │ ✅ Yes   │ actual function   │ Block*   │
- * │ var                  │ ✅ Yes   │ undefined         │ Function │
- * │ let / const          │ ❌ No** │ <uninitialized>   │ Block    │
- * │ function expression  │ depends │ depends on var/let│          │
- * │ arrow function       │ depends │ depends on var/let│          │
- * └──────────────────────┴──────────┴───────────────────┴──────────┘
- *
- * ** Technically let/const bhi hoist hote hain, but TDZ me rehte hain.
- */
-
 // Function declaration: hoisted, call before define works.
 console.log(addDecl(2, 3)); // 5
 function addDecl(a, b) {
@@ -218,20 +107,6 @@ var myVar = 23;
 // let myLet = 23;
 
 
-/**
- * ========================================================================
- * 6. TEMPORAL DEAD ZONE (TDZ)
- * ========================================================================
- * NOTES:
- * - TDZ = scope ki start se lekar variable ki declaration line tak ka area.
- * - TDZ me variable access karne par ReferenceError aata hai.
- * - TDZ sirf let aur const ke liye hai, var ke liye nahi.
- *
- * WHY TDZ?
- * - Bugs catch karne ke liye: variable use before define = almost always a bug.
- * - const ko meaningful value assign karna zaroori hai; TDZ ensures that.
- */
-
 // const myName = 'Jonas';
 //
 // if (true) {
@@ -242,31 +117,6 @@ var myVar = 23;
 //     console.log(job);    // ✅ 'teacher'
 // }
 
-
-/**
- * ========================================================================
- * 7. THE `this` KEYWORD (OVERVIEW)
- * ========================================================================
- * NOTES:
- * - this = special variable, har execution context me automatically create hota hai.
- * - this ki value CALL TIME pe decide hoti hai, DEFINE time pe nahi.
- *
- * RULES:
- * ┌─────────────────────────┬─────────────────────────────────┐
- * │ Context                 │ `this` value                    │
- * ├─────────────────────────┼─────────────────────────────────┤
- * │ Global (non-strict)     │ window / global                 │
- * │ Global (strict mode)    │ undefined                       │
- * │ Method call (obj.fn())  │ calling object (obj)            │
- * │ Regular function call   │ undefined (strict) / window     │
- * │ Arrow function          │ parent scope's this (lexical)   │
- * │ Event listener          │ DOM element attached to         │
- * │ new keyword             │ new empty object                │
- * │ call/apply/bind         │ manually set                    │
- * └─────────────────────────┴─────────────────────────────────┘
- *
- * DETAILED notes already in: 02_OOPS/This_Keyword.js
- */
 
 const person = {
     name: 'Jonas',
@@ -282,37 +132,6 @@ const person = {
 person.greet();      // 'Hi, I'm Jonas' — this = person
 // person.greetArrow(); // 'Hi, I'm undefined' — arrow has no own this
 
-
-/**
- * ========================================================================
- * 8. PRIMITIVES VS OBJECTS (REFERENCE TYPES)
- * ========================================================================
- * NOTES:
- *
- * MEMORY MODEL:
- * ┌────────────────────────────────────────────────────────────┐
- * │  STACK (Primitives)      │  HEAP (Objects)                  │
- * │  ─────────────────────  │  ─────────────────────────────  │
- * │  age = 30                │  D30F → { name: 'Jonas' }       │
- * │  oldAge = 30 (copy)      │                                  │
- * │  me = D30F (address)    ────┾  Points to SAME object      │
- * │  friend = D30F (copy!)  ────┾  in heap                    │
- * └─────────────────────────┴──────────────────────────────────┘
- *
- * - Primitives: number, string, boolean, undefined, null, symbol, bigint.
- *   -> Stack me store hote hain.
- *   -> Copy karne par new independent value banti hai.
- *
- * - Objects (Reference Types): object, array, function.
- *   -> Heap me store hote hain.
- *   -> Variable sirf REFERENCE (address) hold karta hai.
- *   -> Copy karne par reference copy hota hai, object nahi!
- *
- * DANGER:
- * - Object copy = same memory. Ek me change karo, dono me dikhega.
- * - Shallow copy: Object.assign({}, obj) ya {...obj}.
- * - Deep copy: structuredClone(obj) ya JSON.parse(JSON.stringify(obj)).
- */
 
 // PRIMITIVES: independent copies.
 let agePrim = 30;

@@ -19,6 +19,9 @@ tags: spring, scheduling, caching, async, idempotency
 - Cache key — all relevant args, tenant aur permission scope include karo.
 - Eviction — write ke baad stale entries invalidate/update karo.
 - Transaction/cache — database commit aur cache update atomic automatically nahi.
+- Cache stampede — same miss par concurrent loaders; single-flight/locking/jitter strategy choose.
+- Job lease — expiry ke baad old worker ab bhi chal sakta hai; stale writes reject karne ka guard chahiye.
+- Scheduler overlap — previous run complete hone se pehle next run allowed hai ya nahi, define karo.
 
 ## Sources — aur padhne ke liye
 

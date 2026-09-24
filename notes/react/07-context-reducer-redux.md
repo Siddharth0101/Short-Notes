@@ -20,6 +20,9 @@ visual: context-flow
 - Redux Toolkit — reducers mein draft mutation syntax Immer handle karta hai.
 - Selector — needed slice padho; unstable return references extra renders kara sakte hain.
 - Server state — fetching/cache tool ko do; store mein duplicate copy se bacho.
+- Reducer action — event ka meaning express karo, jaise itemAdded; reducer ke andar network call nahi.
+- Normalized store — entities ID se rakho; repeated nested copies ka update cost kam.
+- Dispatch/context — value objects ki identity stable rakhna unnecessary notifications kam kar sakta hai.
 
 ## Sources — aur padhne ke liye
 

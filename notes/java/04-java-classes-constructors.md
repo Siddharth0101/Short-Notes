@@ -18,6 +18,9 @@ tags: fundamentals, java, classes, constructors
 - Encapsulation — fields private rakho, methods se valid changes karao.
 - Constructor rule — invalid input par invalid object banne se pehle fail karo.
 - Default constructor — khud constructor likhne par auto no-arg constructor nahi milta.
+- Constructor chaining — this(...) se shared initialization; constructor cycle allowed nahi.
+- Object alias — same reference share ho toh mutation dono callers ko dikh sakti hai.
+- Static counter — all instances share karte hain; concurrent updates coordinate karo.
 
 ## Sources — aur padhne ke liye
 

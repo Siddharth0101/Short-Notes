@@ -56,9 +56,7 @@ function Chapter({ note }) {
   const headings = useMemo(
     () => [
       ...extractHeadings(body),
-      ...(note.references?.length
-        ? [{ id: 'source-examples', title: 'Source examples — step-by-step samjho' }]
-        : []),
+      ...(note.references?.length ? [{ id: 'source-examples', title: 'Source examples' }] : []),
       ...(note.questions?.length ? [{ id: 'chapter-practice', title: 'Interview practice' }] : []),
     ],
     [body, note],
@@ -95,28 +93,27 @@ function Chapter({ note }) {
           {progress.saved.includes(note.id) ? 'Saved' : 'Note save karo'}
         </button>
       </div>
-      {note.stage && (
-        <div className="reader-course-context">
-          <Link to={`/paths?track=${note.track}`}>
-            Poora course syllabus <Icon name="arrow" size={14} />
-          </Link>
-          <strong>
-            Stage {note.stageNumber}: {note.stage.title}
-          </strong>
-          <span>
-            Lesson {note.order} of {sequence.length}
-            {previous ? ` · Previous: ${previous.title}` : ' · Start here'}
-          </span>
-          <p>{note.stage.goal}</p>
-        </div>
-      )}
+      <div className="reader-quick-actions">
+        <Link className="text-button" to={`/paths?track=${note.track}`}>
+          <Icon name="path" size={16} /> {note.stage && `Stage ${note.stageNumber} · `}Lesson{' '}
+          {note.order} / {sequence.length} · Learning path
+        </Link>
+        <button
+          className={complete ? 'subtle-button' : 'primary-button'}
+          aria-pressed={complete}
+          onClick={() => toggle('completed', note.id)}
+        >
+          <Icon name={complete ? 'check' : 'circle'} size={16} />{' '}
+          {complete ? 'Completed' : 'Complete mark karo'}
+        </button>
+      </div>
       <div className="tab-bar">
         <button
           className={tab === 'notes' ? 'active' : ''}
           aria-pressed={tab === 'notes'}
           onClick={() => setParams({})}
         >
-          <Icon name="book" size={16} /> Padho aur samjho
+          <Icon name="book" size={16} /> Quick notes
         </button>
         {note.visual && (
           <button
@@ -124,7 +121,7 @@ function Chapter({ note }) {
             aria-pressed={tab === 'visual'}
             onClick={() => setParams({ tab: 'visual' })}
           >
-            <Icon name="play" size={16} /> Visual se samjho
+            <Icon name="play" size={16} /> Visual example
           </button>
         )}
       </div>
@@ -140,10 +137,7 @@ function Chapter({ note }) {
             {!!note.questions?.length && (
               <section className="chapter-practice" aria-labelledby="chapter-practice">
                 <h2 id="chapter-practice">Interview practice</h2>
-                <p>
-                  Pehle bolkar answer do. Example, failure case aur tradeoff samjhao. Phir answer
-                  dekhkar apni reasoning compare karo.
-                </p>
+                <p>Pehle khud answer do, phir check karo.</p>
                 {note.questions.map((item, index) => (
                   <QuestionCard key={item.id} item={item} number={index + 1} />
                 ))}

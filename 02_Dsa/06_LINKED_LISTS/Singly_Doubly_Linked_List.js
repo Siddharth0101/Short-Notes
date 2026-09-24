@@ -1,45 +1,24 @@
+/**
+ * ## Quick revision
+ *
+ * - Linked list — nodes references se linked; random access O(n).
+ * - Singly list — next pointer; doubly list — next + previous.
+ * - Insert/delete — node/predecessor milne par O(1); dhoondhne ka cost alag.
+ * - Stack — LIFO; push/pop top se.
+ * - Queue — FIFO; enqueue end, dequeue front.
+ * - JS queue — head index/ring buffer use karo; repeated `shift()` shifting kar sakta hai.
+ * - Reverse list — previous/current/next pointers se links palto.
+ * - Cycle detection — slow/fast pointers; meet karein toh cycle.
+ * - Edge cases — empty, one node, head/tail update.
+ * - Middle node — slow pointer one step, fast two steps.
+ * - Doubly linked delete — dono neighbors ke links aur head/tail update karo.
+ * - Sentinel node — dummy head se insert/delete ke special cases kam hote hain.
+ * - Deque — dono ends par add/remove; BFS aur sliding-window patterns mein useful.
+ * - Fast/slow gap — kth-from-end ke liye fixed pointer gap; invalid k define karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * LINKED LISTS - SINGLY AND DOUBLY [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Linked list nodes ka chain hota hai.
- * - Har node value store karta hai plus next node ka reference.
- * - Array me indexes hote hain; linked list me direct index access nahi hota.
- *
- * WHEN USEFUL?
- * - Frequent insert/delete at beginning/end.
- * - Jab re-indexing avoid karni ho.
- */
-
-
-/**
- * ========================================================================
- * 1. SINGLY LINKED LIST
- * ========================================================================
- * NODE:
- * - value
- * - next
- *
- * BIG O:
- * - push: O(1)
- * - pop: O(n)
- * - shift: O(1)
- * - unshift: O(1)
- * - get: O(n)
- * - set: O(n)
- * - insert: O(n)
- * - remove: O(n)
- *
- * EXAMPLE:
- * Operations: push(10) -> push(20) -> push(30) -> pop() -> shift() -> unshift(5)
- * After push 10,20,30:  10 -> 20 -> 30  (length=3)
- * After pop():          10 -> 20         (length=2, returns node with value 30)
- * After shift():        20               (length=1, returns node with value 10)
- * After unshift(5):     5 -> 20          (length=2)
- */
 
 class SLLNode {
     constructor(value) {
@@ -243,31 +222,6 @@ console.log(sll2.head.value); // 5
 console.log(sll2.tail.value); // 1
 
 
-/**
- * ========================================================================
- * 2. DOUBLY LINKED LIST
- * ========================================================================
- * NODE:
- * - value
- * - next
- * - prev
- *
- * BIG IDEA:
- * - Prev pointer ke wajah se backward movement possible hai.
- * - More memory lagti hai, but pop and reverse direction operations better hain.
- *
- * BIG O:
- * - push/pop: O(1)
- * - shift/unshift: O(1)
- * - get: O(n), but half traversal optimization possible
- * - insert/remove: O(n)
- *
- * EXAMPLE:
- * Operations: push(1) -> push(2) -> push(3) -> pop()
- * After push 1,2,3: 1 <-> 2 <-> 3  (length=3)
- * After pop():      1 <-> 2          (length=2, returns node with value 3)
- */
-
 class DLLNode {
     constructor(value) {
         this.value = value;
@@ -392,37 +346,6 @@ console.log(dll.length);       // 2
 console.log(dll.shift().value); // 10
 console.log(dll.length);        // 1
 
-
-/**
- * ========================================================================
- * 3. LINKED LIST INTERVIEW PATTERNS
- * ========================================================================
- *
- * Fast and slow pointers:
- * - Middle of linked list
- * - Cycle detection
- *
- * Reverse pointers:
- * - Reverse linked list
- * - Reverse between positions
- *
- * Dummy node:
- * - Simplifies remove/merge problems.
- *
- * EXAMPLE - hasCycle:
- * Input:  1 -> 2 -> 3 -> 4 -> (back to 2) [has cycle]
- * Output: true
- *
- * Input:  1 -> 2 -> 3 -> null  [no cycle]
- * Output: false
- *
- * EXAMPLE - findMiddle:
- * Input:  1 -> 2 -> 3 -> 4 -> 5
- * Output: node with value 3  (middle node)
- *
- * Input:  1 -> 2 -> 3 -> 4
- * Output: node with value 3  (second middle for even length)
- */
 
 function hasCycle(head) {
     let slow = head;

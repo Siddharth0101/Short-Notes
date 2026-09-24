@@ -4,7 +4,7 @@ title: Effects refs and reusable synchronization
 track: react
 order: 5
 level: Intermediate
-minutes: 1
+minutes: 2
 summary: `useEffect` — external system ke saath sync; render calculation ke liye nahi.
 tags: effects, useEffect, useRef, custom-hooks, races
 ---
@@ -20,6 +20,9 @@ tags: effects, useEffect, useRef, custom-hooks, races
 - Fetch race — abort + latest-result guard se old response ignore karo.
 - Custom Hook — stateful logic reuse; har call ka state separate hota hai.
 - `useLayoutEffect` — paint se pehle layout work; blocking ka cost dhyaan rakho.
+- Effect callback — async function directly mat do; andar async work start karke cleanup return karo.
+- Ref DOM access — node commit ke baad available; unmount par null handle karo.
+- Dependency identity — fresh object/function reference effect repeat kara sakti hai.
 
 ## Research notes: Effect timing depends on the trigger
 

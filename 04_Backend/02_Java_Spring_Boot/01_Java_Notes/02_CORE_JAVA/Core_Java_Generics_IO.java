@@ -1,3 +1,28 @@
+/**
+ * ## Quick revision
+ *
+ * - List — ordered, duplicates allowed; Set — unique; Map — key/value pairs.
+ * - ArrayList — indexed access fast; middle insert/delete shifting maangta hai.
+ * - LinkedList — node operations useful; random access O(n).
+ * - HashMap — expected O(1) lookup; thread-safe nahi.
+ * - TreeMap — sorted keys; operations O(log n).
+ * - Generics — compile-time type safety; raw types se bacho.
+ * - PECS — producer `extends`, consumer `super`.
+ * - Comparator — consistent ordering define; subtraction overflow se bacho.
+ * - Concurrent collection — thread-safe operations; multi-step invariants phir bhi design karo.
+ * - Checked exception — catch ya declare; unchecked — runtime contract failure ho sakti hai.
+ * - `throw` — exception bhejo; `throws` — method contract mein declare karo.
+ * - Try-with-resources — AutoCloseable resources reliably close karo.
+ * - `finally` — cleanup; return/throw se original result mask mat karo.
+ * - I/O — bytes ke liye streams; text ke liye charset-aware reader/writer.
+ * - Path/Files — filesystem operations; missing file aur permission errors handle karo.
+ * - `Instant` — timestamp; `LocalDate` — date; `ZonedDateTime` — timezone ke saath date/time.
+ * - Exception handling — useful context do, secrets log mat karo, failure silently swallow mat karo.
+ * - Iterator remove — supported iterator ka remove safe traversal deletion ke liye use karo.
+ * - Unmodifiable view — writes block, underlying collection ke external changes phir bhi dikh sakte hain.
+ * - Generic invariance — List<Integer> ko List<Number> assign nahi kar sakte.
+ */
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,144 +40,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-/**
- * ========================================================================
- * 02f. CORE JAVA - GENERICS, DATE/TIME API & JAVA I/O [⚡ VISUAL]
- * ========================================================================
- * Source: Telusko — Master Java, Spring and Spring Boot, Spring Security,
- *         Spring AI, Docker and Microservices
- * 
- * ========================================================================
- * 1. GENERICS (Java 5+)
- * ========================================================================
- * - Generics = TYPE SAFETY at compile time. Collections ko type-specific bana deta hai.
- * - Without Generics: List list = new ArrayList(); → list me kuch bhi daal sakte ho (String, int, Object)
- *   → Runtime pe ClassCastException aa sakta hai!
- * - With Generics: List<String> list = new ArrayList<>(); → sirf String allowed.
- *   → Compile-time pe hi error aa jayega agar galat type daala.
- * 
- * GENERIC CLASS:
- * - Syntax: class Box<T> { T value; }  → T = Type Parameter (placeholder)
- * - T ko kuch bhi naam de sakte ho, but conventions:
- *   T = Type, E = Element, K = Key, V = Value, N = Number
- * - Usage: Box<String> box = new Box<>(); → T ko String se replace kar diya
- * 
- * GENERIC METHOD:
- * - Method level pe generic define karna (class generic na bhi ho tab bhi):
- *   public <T> void printArray(T[] arr) { ... }
- * - Type inference: Compiler automatically detect karta hai T kya hai
- * 
- * BOUNDED TYPE PARAMETERS:
- * - <T extends Number>    → T sirf Number ya uske subclass ho sakta hai (upper bound)
- * - <T extends Comparable<T>> → T comparable hona chahiye
- * - Multiple bounds: <T extends Number & Comparable<T>>
- * 
- * WILDCARDS (?):
- * - Jab exact type pata nahi ho ya flexibility chahiye:
- * 
- * a) UNBOUNDED WILDCARD: List<?>
- *    - Kisi bhi type ki list accept karta hai.
- *    - Read-only (add nahi kar sakte, except null).
- * 
- * b) UPPER BOUNDED WILDCARD: List<? extends Number>
- *    - Number ya uske subclass (Integer, Double, etc.) ki list accept karta hai.
- *    - Read-only (producer — sirf data nikaal sakte ho, daal nahi sakte).
- *    - PECS: Producer Extends
- * 
- * c) LOWER BOUNDED WILDCARD: List<? super Integer>
- *    - Integer ya uske superclass (Number, Object) ki list accept karta hai.
- *    - Write-friendly (consumer — data daal sakte ho).
- *    - PECS: Consumer Super
- * 
- * TYPE ERASURE:
- * - Compile hone ke baad generic type info HAT jati hai (backward compatibility ke liye).
- * - Runtime pe List<String> aur List<Integer> dono bas List hain.
- * - Isliye: new T() ya new T[] nahi kar sakte. instanceof T bhi nahi.
- * 
- * ========================================================================
- * 2. DATE/TIME API (Java 8+ — java.time package)
- * ========================================================================
- * - Purane Date aur Calendar classes PROBLEMATIC thi (mutable, confusing API, thread-unsafe).
- * - Java 8 ne naya java.time package diya — IMMUTABLE, THREAD-SAFE, aur CLEAN.
- * 
- * MAIN CLASSES:
- * ┌──────────────────────┬──────────────────────────────────────────┐
- * │ Class                │ What it represents                        │
- * ├──────────────────────┼──────────────────────────────────────────┤
- * │ LocalDate            │ Date only (2024-12-25) — no time, no zone│
- * │ LocalTime            │ Time only (14:30:00) — no date, no zone  │
- * │ LocalDateTime        │ Date + Time (2024-12-25T14:30:00)        │
- * │ ZonedDateTime        │ Date + Time + Timezone                    │
- * │ Instant              │ Machine timestamp (epoch seconds)         │
- * │ Period               │ Date-based amount (years, months, days)   │
- * │ Duration             │ Time-based amount (hours, minutes, seconds)│
- * │ DateTimeFormatter    │ Formatting/parsing dates to/from strings  │
- * └──────────────────────┴──────────────────────────────────────────┘
- * 
- * KEY POINTS:
- * - All classes are IMMUTABLE. Methods return NEW objects (original unchanged).
- * - Factory methods: LocalDate.now(), LocalDate.of(2024, 12, 25)
- * - Chaining: date.plusDays(5).minusMonths(1)
- * - Thread-safe (no synchronization needed).
- * 
- * FORMATTING:
- * - DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
- * - date.format(formatter) → String
- * - LocalDate.parse("25-12-2024", formatter) → LocalDate
- * 
- * PERIOD vs DURATION:
- * - Period: Between two DATES (years, months, days).
- *   Period p = Period.between(date1, date2);
- * - Duration: Between two TIMES (hours, minutes, seconds, nanos).
- *   Duration d = Duration.between(time1, time2);
- * 
- * ========================================================================
- * 3. JAVA I/O (Input/Output — java.io package)
- * ========================================================================
- * - Java I/O = Reading from and Writing to files, console, streams.
- * - Two main hierarchies:
- *   a) BYTE STREAMS: InputStream / OutputStream (raw bytes — images, binary files)
- *   b) CHARACTER STREAMS: Reader / Writer (text files — char by char)
- * 
- * COMMON CLASSES:
- * ┌──────────────────────┬────────────────────────────────────────────┐
- * │ Class                │ Purpose                                     │
- * ├──────────────────────┼────────────────────────────────────────────┤
- * │ FileReader           │ Read text files (char by char)              │
- * │ FileWriter           │ Write text files                            │
- * │ BufferedReader       │ Efficient text reading (line by line)       │
- * │ BufferedWriter       │ Efficient text writing (buffered)           │
- * │ Scanner              │ Read user input / parse files               │
- * │ PrintWriter          │ Write formatted text to file                │
- * │ File                 │ Represent file/directory path (not content) │
- * │ FileInputStream      │ Read binary files (byte by byte)            │
- * │ FileOutputStream     │ Write binary files                          │
- * └──────────────────────┴────────────────────────────────────────────┘
- * 
- * BUFFERED vs UNBUFFERED:
- * - FileReader/FileWriter → read/write one char at a time (slow for large files)
- * - BufferedReader/BufferedWriter → read/write in CHUNKS (buffer) → MUCH FASTER
- * - Always prefer Buffered versions for performance.
- * 
- * try-with-resources (Java 7+):
- * - I/O resources (streams, readers) MUST be closed after use → otherwise RESOURCE LEAK!
- * - Old way: try { ... } finally { reader.close(); } → ugly and error-prone
- * - New way: try (BufferedReader br = new BufferedReader(...)) { ... }
- *   → Java AUTOMATICALLY closes the resource (must implement AutoCloseable).
- * 
- * File CLASS:
- * - File f = new File("path/to/file.txt");
- * - f.exists()       → true/false
- * - f.getName()      → filename
- * - f.length()       → file size in bytes
- * - f.isDirectory()  → is it a directory?
- * - f.createNewFile() → create new file
- * - f.delete()       → delete file
- * - f.listFiles()    → list all files in directory
- */
-
-// ========== GENERIC CLASS EXAMPLES ==========
 
 // Simple Generic Class — type-safe container
 class Box<T> {
@@ -206,8 +93,6 @@ class MathBox<T extends Number> {
         return this.getDoubleValue() > other.getDoubleValue();
     }
 }
-
-// ========== MAIN CLASS ==========
 public class Core_Java_Generics_IO {
 
     // --- Generic Method (works with any type) ---
@@ -246,8 +131,6 @@ public class Core_Java_Generics_IO {
     }
 
     public static void main(String[] args) {
-
-        // ===== 1. GENERICS =====
         System.out.println("===== 1. Generics =====");
 
         // --- Generic Class ---
@@ -311,8 +194,6 @@ public class Core_Java_Generics_IO {
         System.out.println("\n⭐ PECS Rule: Producer Extends, Consumer Super");
         System.out.println("  ? extends T → READ from it (producer)");
         System.out.println("  ? super T   → WRITE to it (consumer)");
-
-        // ===== 2. DATE/TIME API =====
         System.out.println("\n===== 2. Date/Time API (Java 8+) =====");
 
         // --- LocalDate (Date only — no time) ---
@@ -399,8 +280,6 @@ public class Core_Java_Generics_IO {
         Duration workHours = Duration.between(start, end);
         System.out.println("Work hours: " + workHours.toHours() + "h " + (workHours.toMinutes() % 60) + "m");
         System.out.println("In seconds: " + workHours.getSeconds());
-
-        // ===== 3. JAVA I/O =====
         System.out.println("\n===== 3. Java I/O =====");
 
         String filePath = "telusko_test.txt";

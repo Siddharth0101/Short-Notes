@@ -1,59 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - Heap — complete binary tree with parent-child priority rule.
+ * - Min-heap — smallest root; max-heap — largest root.
+ * - Peek — O(1); insert/extract — O(log n).
+ * - Heapify — bottom-up heap build O(n).
+ * - Array layout — zero-based children `2i + 1`, `2i + 2`; parent `floor((i - 1) / 2)`.
+ * - Top-k largest — size-k min-heap; O(n log k).
+ * - Priority queue — priority ke hisaab se next item; full sorting guaranteed nahi.
+ * - Stale entry — priority update ka old queue entry pop par skip karo.
+ * - Tie-breaker — equal priorities ka deterministic order define karo.
+ * - K-way merge — har sorted source ka next candidate heap mein; O(total items × log k).
+ * - Streaming median — lower half max-heap, upper half min-heap; sizes/order balanced rakho.
+ * - Arbitrary delete — item locate karne ke liye index map ya lazy deletion chahiye.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * BINARY HEAPS AND PRIORITY QUEUE [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Heap ek tree-like structure hai jo usually array me store hota hai.
- * - Binary heap complete binary tree hota hai.
- * - Complete means left to right fill hota hai.
- *
- * TYPES:
- * - Max heap: parent >= children
- * - Min heap: parent <= children
- */
-
-
-/**
- * ========================================================================
- * 1. HEAP ARRAY INDEX MATH
- * ========================================================================
- * For index i:
- * - Left child: 2i + 1
- * - Right child: 2i + 2
- * - Parent: Math.floor((i - 1) / 2)
- *
- * EXAMPLE:
- * Array: [100, 19, 36, 17, 12, 25, 5]
- * Index:   0    1   2   3   4   5  6
- * - Node at index 0 (100): left = index 1 (19), right = index 2 (36)
- * - Node at index 1 (19):  parent = index 0 (100)
- * - Node at index 2 (36):  left = index 5 (25), right = index 6 (5)
- */
-
-
-/**
- * ========================================================================
- * 2. MAX BINARY HEAP
- * ========================================================================
- * BIG O:
- * - Insert: O(log n)
- * - Extract max: O(log n)
- * - Search: O(n)
- *
- * EXAMPLE - insert:
- * Insert 41 -> 39 -> 33 -> 18 -> 27 -> 12
- * Heap array after all inserts: [41, 39, 33, 18, 27, 12]
- *
- * Insert 55 -> bubbles up past 12, 33, 41
- * Heap array: [55, 39, 41, 18, 27, 12, 33]
- *
- * EXAMPLE - extractMax:
- * Extract from [55, 39, 41, 18, 27, 12, 33]
- * Returns 55, then sinks 33 down
- * Result: [41, 39, 33, 18, 27, 12]
- */
 
 class MaxBinaryHeap {
     constructor() {
@@ -163,24 +126,6 @@ console.log(singleHeap.extractMax()); // 10
 console.log(singleHeap.values);       // []
 
 
-/**
- * ========================================================================
- * 3. PRIORITY QUEUE
- * ========================================================================
- * NOTES:
- * - Queue jisme lower/higher priority item pehle nikalta hai.
- * - Hospital ER, scheduler, Dijkstra algorithm me useful.
- * - Here: lower priority number = more important.
- *
- * EXAMPLE:
- * Enqueue: ('flu shot', 3) -> ('critical patient', 1) -> ('regular checkup', 5) -> ('surgery', 2)
- * Dequeue order (lowest priority number first):
- *   1st: 'critical patient' (priority 1)
- *   2nd: 'surgery' (priority 2)
- *   3rd: 'flu shot' (priority 3)
- *   4th: 'regular checkup' (priority 5)
- */
-
 class PriorityNode {
     constructor(value, priority) {
         this.value = value;
@@ -289,34 +234,3 @@ console.log(pq.dequeue().value); // 'flu shot'
 // Sample Input:  dequeue()
 // Expected Output: 'regular checkup' (priority 5)
 console.log(pq.dequeue().value); // 'regular checkup'
-
-
-/**
- * ========================================================================
- * 4. HEAP USE CASES
- * ========================================================================
- *
- * - Priority queue
- * - Dijkstra shortest path
- * - Heap sort
- * - Find top K largest/smallest
- * - Median from data stream with two heaps
- * - Scheduling problems
- */
-
-
-/**
- * ========================================================================
- * 5. HEAP VS BST
- * ========================================================================
- *
- * Heap:
- * - Parent-child relation only.
- * - Fast min/max.
- * - Not good for full sorted search.
- *
- * BST:
- * - Left smaller, right larger.
- * - Good for search if balanced.
- * - Can return sorted order via inorder traversal.
- */

@@ -1,34 +1,27 @@
+/**
+ * ## Quick revision
+ *
+ * - DP — overlapping subproblems ke results reuse karo.
+ * - State — subproblem ko uniquely define karne wali minimum information.
+ * - Transition — smaller states se current answer ka relation.
+ * - Base case — smallest states ke known answers.
+ * - Memoization — top-down recursion + cache.
+ * - Tabulation — bottom-up dependency order mein fill karo.
+ * - Complexity — states × transition cost; storage alag count.
+ * - 0/1 knapsack — one-array optimization mein capacity reverse scan.
+ * - Unbounded choice — reuse allowed; loop order contract ke hisaab se.
+ * - Reconstruction — choices/parents store karo jab actual solution chahiye.
+ * - Optimization — sirf required prior states rakho; dependency overwrite mat karo.
+ * - Grid traveler — state row/column; blocked/boundary cells ke base cases clear karo.
+ * - Coin change — minimum coins aur combination count alag transitions maangte hain.
+ * - LCS — two-prefix state; matching chars par diagonal + 1, warna neighboring maximum.
+ * - Counting order — coin loop aur amount loop ka order combinations vs permutations change kar sakta hai.
+ * - Impossible state — infinity/negative sentinel safely choose; overflow aur invalid transitions avoid.
+ * - DAG view — DP states dependencies ka graph; valid evaluation order pehle dependencies solve kare.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * DYNAMIC PROGRAMMING [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Dynamic Programming = complex problem ko smaller overlapping subproblems me todna.
- * - Same subproblem baar baar solve ho raha hai to result cache karo.
- *
- * DP TABHI USE KARO JAB:
- * 1. Overlapping subproblems ho.
- * 2. Optimal substructure ho.
- */
-
-
-/**
- * ========================================================================
- * 1. OVERLAPPING SUBPROBLEMS
- * ========================================================================
- * NOTES:
- * - Same chhote problem repeated solve ho rahe hain.
- * - Fibonacci classic example.
- *
- * EXAMPLE - fibSlow:
- * Input:  n = 6
- * Output: 8  (1, 1, 2, 3, 5, 8)
- *
- * fibSlow(6) calls fibSlow(5) and fibSlow(4)
- * fibSlow(5) calls fibSlow(4) and fibSlow(3)  <- fibSlow(4) called TWICE = overlapping!
- */
 
 function fibSlow(n) {
     if (n <= 2) return 1;
@@ -44,31 +37,6 @@ console.log(fibSlow(6)); // 8
 console.log(fibSlow(10)); // 55
 // fibSlow(50) is very slow - same calls repeat hoti hain
 
-
-/**
- * ========================================================================
- * 2. OPTIMAL SUBSTRUCTURE
- * ========================================================================
- * NOTES:
- * - Big problem ka optimal answer smaller problems ke optimal answer se ban sakta hai.
- * - Shortest path, coin change, knapsack, LCS examples.
- */
-
-
-/**
- * ========================================================================
- * 3. MEMOIZATION - TOP DOWN
- * ========================================================================
- * NOTES:
- * - Recursion + cache.
- * - Pehle solve karo, result memo me store karo.
- *
- * EXAMPLE - fibMemo:
- * Input:  n = 50
- * Output: 12586269025  (fast! each fib computed only once)
- *
- * fibSlow(50) is impractical, fibMemo(50) is instant.
- */
 
 function fibMemo(n, memo = {}) {
     if (n in memo) return memo[n];
@@ -90,23 +58,6 @@ console.log(fibMemo(10)); // 55
 // Expected Output: 12586269025
 console.log(fibMemo(50)); // 12586269025
 
-
-/**
- * ========================================================================
- * 4. TABULATION - BOTTOM UP
- * ========================================================================
- * NOTES:
- * - Iterative approach.
- * - Smallest answers se table fill karo.
- * - Usually recursion stack avoid hota hai.
- *
- * EXAMPLE - fibTab:
- * Input:  n = 7
- * Output: 13  (fib: 1,1,2,3,5,8,13)
- *
- * EXAMPLE - fibTabSpaceOptimized:
- * Same output but only 2 variables instead of full array.
- */
 
 function fibTab(n) {
     if (n <= 2) return 1;
@@ -152,28 +103,6 @@ console.log(fibTabSpaceOptimized(7)); // 13
 console.log(fibTabSpaceOptimized(50)); // 12586269025
 
 
-/**
- * ========================================================================
- * 5. GRID TRAVELER
- * ========================================================================
- * PROBLEM:
- * - m x n grid me top-left se bottom-right tak kitne ways?
- * - Sirf right/down move allowed.
- *
- * EXAMPLE:
- * Input:  m=2, n=3  (2 rows, 3 cols)
- * Output: 3  (three paths: RRD, RDR, DRR)
- *
- * Input:  m=3, n=3
- * Output: 6
- *
- * Input:  m=1, n=1
- * Output: 1  (already at destination)
- *
- * Input:  m=0, n=5  (no rows)
- * Output: 0  (impossible)
- */
-
 function gridTraveler(m, n, memo = {}) {
     const key = `${m},${n}`;
     const reverseKey = `${n},${m}`;
@@ -207,28 +136,6 @@ console.log(gridTraveler(1, 1)); // 1
 // Expected Output: 0
 console.log(gridTraveler(0, 5)); // 0
 
-
-/**
- * ========================================================================
- * 6. CAN SUM / HOW SUM / BEST SUM PATTERN
- * ========================================================================
- * NOTES:
- * - Target sum problems DP practice ke liye great hain.
- *
- * EXAMPLE - canSum:
- * Input:  targetSum=7, numbers=[2,3]
- * Output: true  (3+2+2=7)
- *
- * Input:  targetSum=7, numbers=[2,4]
- * Output: false  (can't make 7 with only 2s and 4s)
- *
- * EXAMPLE - bestSum:
- * Input:  targetSum=7, numbers=[5,3,4,7]
- * Output: [7]  (shortest combination, 1 number)
- *
- * Input:  targetSum=8, numbers=[2,3,5]
- * Output: [3,5]  (shorter than [2,2,2,2] or [3,3,2])
- */
 
 function canSum(targetSum, numbers, memo = {}) {
     if (targetSum in memo) return memo[targetSum];
@@ -304,21 +211,6 @@ console.log(bestSum(8, [2, 3, 5]));       // [3, 5]
 console.log(bestSum(7, [2, 4]));           // null
 
 
-/**
- * ========================================================================
- * 7. COIN CHANGE - TABULATION
- * ========================================================================
- * PROBLEM:
- * - Amount banane ke minimum coins count.
- *
- * EXAMPLE:
- * Input:  coins=[1,5,6,9], amount=11
- * Output: 2  (two coins: 5+6=11)
- *
- * Input:  coins=[2], amount=3
- * Output: -1  (impossible)
- */
-
 function minCoins(coins, amount) {
     const dp = new Array(amount + 1).fill(Infinity);
     dp[0] = 0;
@@ -354,25 +246,6 @@ console.log(minCoins([2], 3));           // -1
 console.log(minCoins([1], 0));           // 0
 
 
-/**
- * ========================================================================
- * 8. LONGEST COMMON SUBSEQUENCE
- * ========================================================================
- * NOTES:
- * - Subsequence contiguous hona zaroori nahi.
- * - DP table use hoti hai.
- *
- * EXAMPLE:
- * Input:  text1='abcde', text2='ace'
- * Output: 3  (LCS = 'ace')
- *
- * Input:  text1='abc', text2='abc'
- * Output: 3  (LCS = 'abc', same strings)
- *
- * Input:  text1='abc', text2='def'
- * Output: 0  (no common subsequence)
- */
-
 function longestCommonSubsequence(text1, text2) {
     const rows = text1.length + 1;
     const cols = text2.length + 1;
@@ -406,35 +279,3 @@ console.log(longestCommonSubsequence('abc', 'def'));    // 0
 // Sample Input:  'AGGTAB', 'GXTXAYB'
 // Expected Output: 4  (LCS = 'GTAB')
 console.log(longestCommonSubsequence('AGGTAB', 'GXTXAYB')); // 4
-
-
-/**
- * ========================================================================
- * 9. 0/1 KNAPSACK - CONCEPT
- * ========================================================================
- * NOTES:
- * - Item choose ya skip.
- * - Har item ek baar use ho sakta hai.
- * - State: index + remaining capacity.
- *
- * COMMON DP STATE THINKING:
- * - What changes between recursive calls?
- * - That becomes state.
- * - State ko memo/table key banao.
- */
-
-
-/**
- * ========================================================================
- * 10. DP CHECKLIST
- * ========================================================================
- *
- * 1. Brute force recursion likh sakte ho?
- * 2. Kya same calls repeat ho rahi hain?
- * 3. State variables identify karo.
- * 4. Base cases likho.
- * 5. Recurrence relation socho.
- * 6. Memoization add karo.
- * 7. Need ho to tabulation me convert karo.
- * 8. Space optimize ho sakta hai kya?
- */

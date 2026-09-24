@@ -291,7 +291,7 @@ export const scenarioQuestions = [
     level: 'Intermediate',
     question: 'Fallback mein || ke bajay ?? kab use karoge?',
     answer:
-      "|| every falsy value par fallback karta hai: 0,false,'' bhi. ?? sirf null/undefined par fallback karta hai. Valid zero bachana ho toh nullish fallback plus explicit numeric validation lo. NaN nullish nahi, isliye Number.isNaN/finite check alag chahiye. Missing aur invalid values ka contract clear rakho; convenient fallback data error hide na kare.",
+      "- `||` — har falsy value par fallback; valid zero bhi replace hota hai.\n- `??` — sirf null/undefined par fallback.\n- `NaN` — nullish nahi; numeric validation alag karo.",
     followUp: 'Zero allow karke NaN separately reject kaise karoge?',
     tags: ['conditionals', 'coercion'],
   },

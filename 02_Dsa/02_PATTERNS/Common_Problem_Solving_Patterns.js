@@ -1,44 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Frequency counter — repeated counts ke liye map; nested scans bach sakte hain.
+ * - Two pointers — ordered/partitioned structure par boundaries move karo.
+ * - Sliding window — contiguous range ko incremental add/remove se maintain karo.
+ * - Variable window — shrink condition valid honi chahiye; negative sums monotonicity tod sakte hain.
+ * - Prefix sum — range sum `prefix[r + 1] - prefix[l]`.
+ * - Prefix map — previous sums count karke target-sum subarrays nikalo.
+ * - Invariant — pointer/window move ke baad jo rule true rehta hai.
+ * - Dry run — duplicates, empty input aur exact boundary check karo.
+ * - Difference array — range updates mark karke prefix accumulation se final values nikalo.
+ * - Sorted two-sum — low sum par left badhao, high sum par right ghatao.
+ * - Permutation window — same length ke window mein required character frequencies match karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * COMMON PROBLEM SOLVING PATTERNS [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Patterns templates jaise hote hain.
- * - Problem dekhte hi agar pattern pehchan gaya, solution fast banega.
- * - Colt Steele ke course ke core patterns.
- *
- * PATTERNS MAP:
- * ┌──────────────────────────────────────────────────────────────┐
- * │ 1. Frequency Counter  → Objects/Maps for counting O(n)       │
- * │ 2. Multiple Pointers  → Left/Right pointers on sorted arrays │
- * │ 3. Sliding Window     → Subarray/substring window movement   │
- * │ 4. Divide & Conquer   → Binary search concept                │
- * └──────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. FREQUENCY COUNTER
- * ========================================================================
- * USE WHEN:
- * - Compare two arrays/strings.
- * - Count occurrences.
- * - Check anagram, same squared values, duplicates.
- *
- * IDEA:
- * - Nested loop O(n^2) avoid karo.
- * - Object/Map me count store karo.
- *
- * EXAMPLE - sameSquared:
- * Input:  arr1 = [1, 2, 3], arr2 = [4, 1, 9]
- * Output: true   (arr2 has squares of arr1: 1^2=1, 2^2=4, 3^2=9)
- *
- * Input:  arr1 = [1, 2, 3], arr2 = [1, 9, 9]
- * Output: false  (9 appears twice but 3^2=9 should be once)
- */
 
 function sameSquared(arr1, arr2) {
     if (arr1.length !== arr2.length) return false;
@@ -71,15 +48,6 @@ console.log(sameSquared([1, 2, 3], [1, 9, 9])); // false
 console.log(sameSquared([1, 2, 1], [4, 4, 1])); // false
 
 
-/**
- * EXAMPLE - validAnagram:
- * Input:  str1 = 'anagram', str2 = 'nagaram'
- * Output: true
- *
- * Input:  str1 = 'rat', str2 = 'car'
- * Output: false
- */
-
 function validAnagram(str1, str2) {
     if (str1.length !== str2.length) return false;
 
@@ -110,26 +78,6 @@ console.log(validAnagram('rat', 'car')); // false
 console.log(validAnagram('', '')); // true
 
 
-/**
- * ========================================================================
- * 2. MULTIPLE POINTERS
- * ========================================================================
- * USE WHEN:
- * - Sorted array/string.
- * - Need pair, unique count, partition, palindrome check.
- *
- * IDEA:
- * - Two pointers alag positions se move karte hain.
- * - Usually O(n) time, O(1) space.
- *
- * EXAMPLE - sumZero:
- * Input:  [-3, -2, -1, 0, 1, 2, 3]
- * Output: [-3, 3]   (sum = 0)
- *
- * Input:  [-2, 0, 1, 3]
- * Output: undefined  (no pair sums to 0)
- */
-
 function sumZero(sortedNums) {
     let left = 0;
     let right = sortedNums.length - 1;
@@ -158,12 +106,6 @@ console.log(sumZero([-2, 0, 1, 3])); // undefined
 console.log(sumZero([1, 2, 3])); // undefined
 
 
-/**
- * EXAMPLE - countUniqueValues:
- * Input:  [1, 1, 2, 2, 3, 4, 4, 5]
- * Output: 5   (unique values: 1, 2, 3, 4, 5)
- */
-
 function countUniqueValues(sortedNums) {
     if (sortedNums.length === 0) return 0;
 
@@ -191,25 +133,6 @@ console.log(countUniqueValues([])); // 0
 // Expected Output: 2
 console.log(countUniqueValues([1, 1, 1, 1, 1, 2])); // 2
 
-
-/**
- * ========================================================================
- * 3. SLIDING WINDOW
- * ========================================================================
- * USE WHEN:
- * - Contiguous subarray/substring.
- * - Max/min/sum/length of a window.
- *
- * IDEA:
- * - Window ko grow/shrink karo instead of recalculating from scratch.
- *
- * EXAMPLE - maxSubarraySum:
- * Input:  nums = [2, 6, 9, 2, 1, 8, 5, 6, 3], windowSize = 3
- * Output: 19   (subarray [9, 2, 1] nahi, [8, 5, 6] = 19... actually [6,9,2]=17, [8,5,6]=19)
- *
- * Input:  nums = [1, 2, 5, 2, 8, 1, 5], windowSize = 2
- * Output: 10  (subarray [2, 8] = 10)
- */
 
 function maxSubarraySum(nums, windowSize) {
     if (nums.length < windowSize) return null;
@@ -243,12 +166,6 @@ console.log(maxSubarraySum([2, 6, 9, 2, 1, 8, 5, 6, 3], 3)); // 19
 console.log(maxSubarraySum([1, 2], 5)); // null
 
 
-/**
- * EXAMPLE - longestUniqueSubstring:
- * Input:  'thisishowwedoit'
- * Output: 6  ('wedoit' or 'howwed'... actually 'wedoit' = 6)
- */
-
 function longestUniqueSubstring(str) {
     let start = 0;
     let longest = 0;
@@ -281,27 +198,6 @@ console.log(longestUniqueSubstring('bbbbb')); // 1
 console.log(longestUniqueSubstring('pwwkew')); // 3
 
 
-/**
- * ========================================================================
- * 4. DIVIDE AND CONQUER
- * ========================================================================
- * USE WHEN:
- * - Data sorted hai ya split ho sakta hai.
- * - Problem ko smaller subproblems me tod sakte ho.
- *
- * EXAMPLES:
- * - Binary search
- * - Merge sort
- * - Quick sort
- *
- * EXAMPLE - binarySearchPattern:
- * Input:  [1, 2, 3, 4, 5, 6, 7, 8], target = 6
- * Output: 5  (index of 6)
- *
- * Input:  [1, 2, 3, 4, 5, 6, 7, 8], target = 99
- * Output: -1  (not found)
- */
-
 function binarySearchPattern(sortedNums, target) {
     let left = 0;
     let right = sortedNums.length - 1;
@@ -328,17 +224,3 @@ console.log(binarySearchPattern([1, 2, 3, 4, 5, 6, 7, 8], 99)); // -1
 // Sample Input:  [10, 20, 30, 40, 50], target = 10
 // Expected Output: 0
 console.log(binarySearchPattern([10, 20, 30, 40, 50], 10)); // 0
-
-
-/**
- * ========================================================================
- * 5. TWO LOOP REPLACEMENT THINKING
- * ========================================================================
- * NOTES:
- * - Agar nested loop sirf "find matching item/count" kar raha hai,
- *   frequency counter ya hash map try karo.
- * - Agar sorted array me pair dhoondhna hai,
- *   multiple pointers try karo.
- * - Agar contiguous range chahiye,
- *   sliding window try karo.
- */

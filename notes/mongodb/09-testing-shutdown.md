@@ -18,6 +18,9 @@ tags: node, testing, shutdown, integration, resources
 - Cleanup — HTTP server, database, cursors aur workers close karo.
 - Deadline — force termination ka budget; endlessly hang mat karo.
 - Readiness — shutdown start par traffic se hatao.
+- Open handles — tests hang hon toh server/timer/socket/DB connection cleanup inspect.
+- Readiness drain — load balancer propagation ke baad active requests finish karne ka budget.
+- Shutdown repeat — repeated signal par cleanup idempotent; new background work start na ho.
 
 ## Sources — aur padhne ke liye
 

@@ -19,6 +19,9 @@ tags: greedy, intervals, sweep-line, proofs
 - Meeting rooms — active end-times ka min-heap ya sweep line.
 - Weighted intervals — earliest finish alone enough nahi; DP use hota hai.
 - Verification — small cases ke brute-force optimum se compare karo.
+- Greedy failure — coin denominations arbitrary hon toh largest coin first minimum coins guarantee nahi.
+- Sweep tie — same coordinate par starts/ends ka order overlap definition se match.
+- Proof habit — chhota counterexample search karo; sample pass hona correctness proof nahi.
 
 ## Sources — aur padhne ke liye
 

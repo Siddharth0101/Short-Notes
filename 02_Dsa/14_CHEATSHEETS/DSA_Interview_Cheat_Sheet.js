@@ -1,57 +1,53 @@
+/**
+ * ## Quick revision
+ *
+ * - Big-O — input badhne par upper-bound growth; exact milliseconds nahi.
+ * - O(1) — constant; O(log n) — range shrink; O(n) — single scan.
+ * - O(n log n) — efficient comparison sorts; O(n²) — many pairwise scans.
+ * - Space — auxiliary memory aur recursion stack count karo.
+ * - Worst/average/amortized — alag guarantees; interchangeable nahi.
+ * - Amortized — operations ki sequence ka total cost average karo.
+ * - Recursion — calls × per-call work; stack depth bhi count karo.
+ * - Solve — constraints → brute force → bottleneck → invariant → optimize.
+ * - JS trap — `shift`, `slice`, spread aur string copies ka cost mat bhoolo.
+ * - Frequency counter — repeated counts ke liye map; nested scans bach sakte hain.
+ * - Two pointers — ordered/partitioned structure par boundaries move karo.
+ * - Sliding window — contiguous range ko incremental add/remove se maintain karo.
+ * - Variable window — shrink condition valid honi chahiye; negative sums monotonicity tod sakte hain.
+ * - Prefix sum — range sum `prefix[r + 1] - prefix[l]`.
+ * - Prefix map — previous sums count karke target-sum subarrays nikalo.
+ * - Invariant — pointer/window move ke baad jo rule true rehta hai.
+ * - Dry run — duplicates, empty input aur exact boundary check karo.
+ * - Bubble sort — adjacent swaps; O(n²), early-exit variant best O(n).
+ * - Selection sort — minimum select; O(n²), generally unstable.
+ * - Insertion sort — sorted prefix mein insert; O(n²), nearly sorted input par useful.
+ * - Merge sort — split + merge; O(n log n), array version extra O(n) space.
+ * - Quicksort — partition + recurse; average O(n log n), worst O(n²).
+ * - Three-way partition — less/equal/greater regions; duplicates ke liye useful.
+ * - Heap sort — O(n log n), typical array version O(1) extra space.
+ * - Radix/counting — key range/digits ki assumptions par depend karte hain.
+ * - Quickselect — kth item; expected O(n), worst O(n²).
+ * - Stability — equal-key items ka original order bachta hai.
+ * - Comparator — consistent ordering; JS numeric sort mein `(a, b) => a - b`.
+ * - Inversions — merge ke waqt cross inversions count; O(n log n).
+ * - Graph — vertices + edges; direction/weights clarify karo.
+ * - Adjacency list — sparse graphs mein O(V + E) storage.
+ * - BFS — unweighted shortest path; enqueue karte hi visited mark.
+ * - DFS — reachability, cycles aur structural traversal.
+ * - Topological sort — DAG dependency order; cycle ho toh complete order nahi.
+ * - Dijkstra — non-negative weights; negative edge par use mat karo.
+ * - Bellman-Ford — negative edges handle; reachable negative cycle detect kar sakta hai.
+ * - DAG shortest path — topological relaxation; negative edges allowed.
+ * - 0–1 BFS — weights 0/1; deque front/back se O(V + E).
+ * - Union-Find — connectivity; path compression + rank/size useful.
+ * - Path reconstruction — parent pointers se target se source wapas chalo.
+ * - Independent inputs — two lists sizes n,m hon toh O(n+m); blindly O(n) mat bolo.
+ * - Log base — constant bases Big-O mein equivalent; repeated halving logarithmic growth deta hai.
+ * - Output space — result materialize karna required ho toh minimum output-size cost bhi batao.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * DSA INTERVIEW CHEAT SHEET [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Ye quick revision file hai.
- * - Detailed explanations topic folders me hain.
- */
-
-
-/**
- * ========================================================================
- * 1. BIG O QUICK ORDER
- * ========================================================================
- *
- * O(1)        Best - constant
- * O(log n)    Binary search style
- * O(n)        Single pass
- * O(n log n)  Efficient sorting
- * O(n^2)      Nested loops
- * O(2^n)      Brute force subsets/recursion
- * O(n!)       Permutations
- *
- * EXAMPLE - comparing time for same input n=1000:
- * O(1)       -> 1 operation
- * O(log n)   -> ~10 operations
- * O(n)       -> 1000 operations
- * O(n log n) -> ~10000 operations
- * O(n^2)     -> 1,000,000 operations  <- DANGER ZONE for large inputs
- */
-
-
-/**
- * ========================================================================
- * 2. DATA STRUCTURE CHOOSING GUIDE
- * ========================================================================
- *
- * Need ordered collection                -> Array
- * Need fast lookup by key                -> Map / Object
- * Need unique values                     -> Set
- * Need first-in-first-out                -> Queue
- * Need last-in-first-out                 -> Stack
- * Need frequent insert/delete nodes      -> Linked List
- * Need hierarchy                         -> Tree
- * Need fast min/max                      -> Heap
- * Need prefix search                     -> Trie
- * Need relationships/networks            -> Graph
- * Need connected components              -> Union Find
- * Need range queries                     -> Segment Tree / Fenwick Tree
- *
- * EXAMPLE - quick demonstration:
- */
 
 // Array - ordered
 // Input:  [3, 1, 2], index=1
@@ -72,41 +68,6 @@ console.log(map.get('name')); // 'sidd'
 const set = new Set([1, 2, 2, 3, 3, 3]);
 console.log([...set]); // [1, 2, 3]
 
-
-/**
- * ========================================================================
- * 3. PATTERN SIGNALS
- * ========================================================================
- *
- * "Count frequency", "same chars", "anagram"
- * -> Frequency counter / Map
- *
- * "Sorted array", "pair", "target sum"
- * -> Multiple pointers
- *
- * "Contiguous subarray/substring"
- * -> Sliding window
- *
- * "Sorted search"
- * -> Binary search
- *
- * "All combinations/permutations/subsets"
- * -> Backtracking
- *
- * "Shortest path unweighted"
- * -> BFS
- *
- * "Shortest path weighted non-negative"
- * -> Dijkstra
- *
- * "Dependencies order"
- * -> Topological sort
- *
- * "Repeated subproblems"
- * -> Dynamic programming
- *
- * EXAMPLE - pattern matching:
- */
 
 // FREQUENCY COUNTER pattern
 // Input:  str1='listen', str2='silent'
@@ -166,24 +127,6 @@ function maxSumWindow(nums, k) {
 console.log(maxSumWindow([2, 6, 9, 2, 1, 8, 5, 6, 3], 3)); // 19
 
 
-/**
- * ========================================================================
- * 4. ARRAY AND OBJECT COMPLEXITIES
- * ========================================================================
- *
- * Array access by index       O(1)
- * Array push/pop              O(1)
- * Array shift/unshift         O(n)
- * Array search                O(n)
- * Array sort                  O(n log n)
- *
- * Object/Map get/set/delete   O(1) average
- * Object keys/values/entries  O(n)
- * Set has/add/delete          O(1) average
- *
- * EXAMPLE:
- */
-
 const a = [1, 2, 3, 4, 5];
 
 // O(1) access
@@ -200,24 +143,6 @@ console.log(a.pop()); // 6
 console.log([...a].sort((x, y) => y - x)); // [5, 4, 3, 2, 1] (descending)
 
 
-/**
- * ========================================================================
- * 5. SORTING COMPLEXITIES
- * ========================================================================
- *
- * Bubble sort       O(n^2), best O(n) with noSwap
- * Selection sort    O(n^2)
- * Insertion sort    O(n^2), good for nearly sorted data
- * Merge sort        O(n log n), space O(n)
- * Quick sort        O(n log n) average, O(n^2) worst
- * Radix sort        O(n * k), integers/digits based
- *
- * EXAMPLE - demonstrate stable vs unstable sort behavior:
- * Input:  [{name:'A', score:1}, {name:'B', score:1}, {name:'C', score:2}]
- * Stable sort by score: A and B keep relative order
- * JavaScript Array.sort() is stable in modern engines.
- */
-
 const students = [
     { name: 'Alice', score: 2 },
     { name: 'Bob', score: 1 },
@@ -228,108 +153,11 @@ const students = [
 console.log(students.sort((x, y) => x.score - y.score).map(s => s.name)); // ['Bob', 'Charlie', 'Alice']
 
 
-/**
- * ========================================================================
- * 6. GRAPH COMPLEXITIES
- * ========================================================================
- *
- * BFS / DFS adjacency list    O(V + E)
- * BFS / DFS adjacency matrix  O(V^2)
- * Dijkstra with heap          O((V + E) log V)
- * Bellman-Ford                O(V * E)
- * Floyd-Warshall              O(V^3)
- * Topological sort            O(V + E)
- * Union Find operations       Almost O(1) with path compression + rank
- */
-
-
-/**
- * ========================================================================
- * 7. TREE TRAVERSALS
- * ========================================================================
- *
- * BFS:
- * - Level order.
- * - Queue.
- *
- * DFS Preorder:
- * - Node, left, right.
- *
- * DFS Inorder:
- * - Left, node, right.
- * - BST me sorted result.
- *
- * DFS Postorder:
- * - Left, right, node.
- *
- * EXAMPLE - simple traversal on array-represented tree:
- *
- * Tree:     1
- *          / \
- *         2   3
- *        / \
- *       4   5
- *
- * BFS order:      [1, 2, 3, 4, 5]
- * PreOrder:       [1, 2, 4, 5, 3]
- * InOrder:        [4, 2, 5, 1, 3]
- * PostOrder:      [4, 5, 2, 3, 1]
- */
-
 // Inorder traversal of a sorted BST gives sorted array:
 // Input BST: insert 5, 3, 7, 1, 4
 // InOrder -> [1, 3, 4, 5, 7]  <- sorted!
 console.log('BST InOrder gives sorted array: [1, 3, 4, 5, 7]');
 
-
-/**
- * ========================================================================
- * 8. BROADER DSA CONCEPT MAP
- * ========================================================================
- *
- * Foundations:
- * - Big O, time/space complexity, logarithms, recursion, bit manipulation.
- *
- * Linear structures:
- * - Array, string, linked list, stack, queue, deque.
- *
- * Hashing:
- * - Hash table, Map, Set, collision handling, frequency counter.
- *
- * Trees:
- * - Binary tree, BST, AVL, Red Black tree, heap, trie, segment tree, Fenwick tree.
- *
- * Graphs:
- * - BFS, DFS, shortest path, MST, topological sort, connected components.
- *
- * Algorithm patterns:
- * - Two pointers, sliding window, divide and conquer, greedy, backtracking, DP.
- *
- * Advanced:
- * - Union Find, KMP, rolling hash, bitmasking, interval problems, sweep line.
- */
-
-
-/**
- * ========================================================================
- * 9. INTERVIEW ANSWER TEMPLATE
- * ========================================================================
- *
- * 1. Clarify input/output.
- * 2. Mention brute force first if useful.
- * 3. Explain optimized idea.
- * 4. Walk through example.
- * 5. Code cleanly.
- * 6. Test edge cases.
- * 7. State time and space complexity.
- *
- * EXAMPLE walkthrough for Two Sum:
- * Problem: Find indices of two numbers that add to target.
- * Input:   [2, 7, 11, 15], target=9
- * Brute:   O(n^2) - check all pairs
- * Optimal: O(n) - use Map to store seen numbers
- * Answer:  [0, 1]  (2+7=9)
- */
 
 // Quick Two Sum demo:
 function twoSumCheat(nums, target) {
@@ -350,27 +178,6 @@ console.log(twoSumCheat([2, 7, 11, 15], 9)); // [0, 1]
 // Expected Output: [1, 2]  (5+3=8)
 console.log(twoSumCheat([1, 5, 3, 7], 8)); // [1, 2]
 
-
-/**
- * ========================================================================
- * 10. EDGE CASES TO REMEMBER
- * ========================================================================
- *
- * - Empty input
- * - One item
- * - Duplicates
- * - Negative numbers
- * - Zero
- * - Already sorted
- * - Reverse sorted
- * - Very large input
- * - Target not found
- * - Disconnected graph
- * - Cycle in graph/list
- * - Null root in tree
- *
- * EXAMPLE - edge cases for binary search:
- */
 
 function binarySearchEdge(sorted, target) {
     let l = 0, r = sorted.length - 1;

@@ -1,27 +1,24 @@
+/**
+ * ## Quick revision
+ *
+ * - SSR/Pug — server HTML banata hai; untrusted output escape karo.
+ * - Upload — size/type validate; safe generated filename aur isolated storage.
+ * - Payment webhook — raw-body signature verify, then durable idempotent processing.
+ * - Duplicate event — unique event ID aur transaction se repeat effect roko.
+ * - Email — queue/retry; API response ko slow provider par depend mat karao.
+ * - Order state — payment/refund transitions explicit rakho.
+ * - Deployment — secrets, health checks, logs aur graceful shutdown.
+ * - Recovery — partial failure par retry/reconciliation; browser success screen final proof nahi.
+ * - Signed upload — allowed size/type/object key control; uploaded file scan/validate.
+ * - Webhook ack — durable receipt/process contract; retries aur duplicates expected.
+ * - Email template — escape user text; provider failure par bounded retry.
+ * - File path — user filename ko filesystem path authority mat do; generated safe key use.
+ * - Provider timeout — external effect ho chuka ho sakta hai; retry se pehle idempotency/reconciliation.
+ * - Outbox job — business write aur pending notification same durable boundary mein record.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * PAYMENTS, EMAIL, FILE UPLOADS - SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Ye section production app features add karta hai.
- * - Stripe for payments, Nodemailer/SendGrid for emails, Multer/Sharp for uploads.
- */
-
-
-/**
- * ========================================================================
- * 1. STRIPE CHECKOUT FLOW
- * ========================================================================
- * FLOW:
- * - User clicks book tour.
- * - Client asks backend for checkout session.
- * - Backend creates Stripe Checkout Session.
- * - Client redirects to Stripe checkout.
- * - Payment success -> user returns to app.
- * - Booking should be created safely, ideally via webhook.
- */
 
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 //
@@ -51,27 +48,8 @@
 // });
 
 
-/**
- * ========================================================================
- * 2. STRIPE WEBHOOKS
- * ========================================================================
- * NOTES:
- * - Real production me booking webhook se create karo.
- * - Webhook Stripe ka server-to-server event hota hai.
- * - Raw body needed for signature verification.
- */
-
 // app.post('/webhook-checkout', express.raw({ type: 'application/json' }), bookingController.webhookCheckout);
 
-
-/**
- * ========================================================================
- * 3. BOOKING MODEL
- * ========================================================================
- * NOTES:
- * - Booking user + tour + price relation store karta hai.
- * - Prevent duplicate bookings if app needs that rule.
- */
 
 // const bookingSchema = new mongoose.Schema({
 //     tour: {
@@ -99,16 +77,6 @@
 // });
 
 
-/**
- * ========================================================================
- * 4. EMAIL WITH NODEMAILER
- * ========================================================================
- * NOTES:
- * - Development: Mailtrap.
- * - Production: SendGrid or other provider.
- * - Keep email config in environment variables.
- */
-
 // const sendEmail = async options => {
 //     const transporter = nodemailer.createTransport({
 //         host: process.env.EMAIL_HOST,
@@ -130,16 +98,6 @@
 // };
 
 
-/**
- * ========================================================================
- * 5. EMAIL CLASS
- * ========================================================================
- * NOTES:
- * - Email sending ko reusable class me move karo.
- * - Welcome email, password reset email, booking email, etc.
- * - Pug templates can render HTML emails too.
- */
-
 // class Email {
 //     constructor(user, url) {
 //         this.to = user.email;
@@ -157,16 +115,6 @@
 //     }
 // }
 
-
-/**
- * ========================================================================
- * 6. FILE UPLOADS WITH MULTER
- * ========================================================================
- * NOTES:
- * - Multer multipart/form-data parse karta hai.
- * - Store in memory if Sharp processing needed.
- * - File filter only images allow kare.
- */
 
 // const multerStorage = multer.memoryStorage();
 //
@@ -186,16 +134,6 @@
 // exports.uploadUserPhoto = upload.single('photo');
 
 
-/**
- * ========================================================================
- * 7. IMAGE PROCESSING WITH SHARP
- * ========================================================================
- * NOTES:
- * - Resize, convert, compress images.
- * - Save consistent filenames.
- * - Store filename on req.file.filename or req.body.photo.
- */
-
 // exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 //     if (!req.file) return next();
 //
@@ -211,43 +149,13 @@
 // });
 
 
-/**
- * ========================================================================
- * 8. MULTIPLE IMAGE UPLOADS
- * ========================================================================
- * NOTES:
- * - upload.fields for multiple named fields.
- * - Example tour imageCover + images array.
- */
-
 // exports.uploadTourImages = upload.fields([
 //     { name: 'imageCover', maxCount: 1 },
 //     { name: 'images', maxCount: 3 }
 // ]);
 
 
-/**
- * ========================================================================
- * 9. FORM DATA
- * ========================================================================
- * NOTES:
- * - File upload ke liye JSON nahi, multipart/form-data.
- * - Client side FormData use karo.
- */
-
 // const form = new FormData();
 // form.append('name', document.getElementById('name').value);
 // form.append('email', document.getElementById('email').value);
 // form.append('photo', document.getElementById('photo').files[0]);
-
-
-/**
- * ========================================================================
- * 10. ADVANCED FEATURE RULES
- * ========================================================================
- * - Payments should trust server-side prices, not client price.
- * - Booking creation should ideally use Stripe webhooks.
- * - Email failures in reset password flow should clear reset token fields.
- * - Uploaded files must be type-checked and size-limited.
- * - Never store API secrets in frontend JS.
- */

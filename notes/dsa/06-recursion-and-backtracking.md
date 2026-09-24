@@ -21,6 +21,9 @@ visual: recursion-stack
 - Snapshot — result mein mutable path ki copy save karo.
 - Memoization — same state ka computed result reuse karo.
 - Complexity — branching factor aur depth se tree size estimate karo.
+- Permutations/subsets — order matters / selection matters; duplicate handling accordingly.
+- Visited undo — path-specific visited mark ko backtrack par release; global graph visited ka rule alag.
+- Tail recursion — language/runtime optimization guaranteed na ho toh stack space still count karo.
 
 ## Sources — aur padhne ke liye
 

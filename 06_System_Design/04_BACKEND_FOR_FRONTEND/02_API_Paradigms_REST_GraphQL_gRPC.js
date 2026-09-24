@@ -1,36 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - REST — resources + HTTP semantics; caching/status/conditional requests useful.
+ * - GraphQL — client-selected shape; resolver batching aur query cost limits chahiye.
+ * - N+1 — per-item resolver calls; request-scoped batching/cache use karo.
+ * - GraphQL auth — each resource/field boundary par policy; endpoint access alone enough nahi.
+ * - gRPC — typed protobuf contracts; internal RPC/streaming ke liye useful.
+ * - Contract evolution — backward-compatible fields/status/schema changes.
+ * - Deadline — client budget downstream propagate; cancellation cooperative hai.
+ * - Idempotency — write retries ka duplicate-effect contract har protocol mein chahiye.
+ * - API version — additive field bhi strict clients ko affect kar sakta hai; compatibility test karo.
+ * - Retry signal — overload par appropriate status + retry timing; client retry budget respect kare.
+ * - Pagination token — opaque cursor validate/sign as needed; user-supplied cursor authorization bypass na kare.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 02. API PARADIGMS: REST VS GRAPHQL VS GRPC [⚡ FULLSTACK SYSTEM DESIGN]
- * ========================================================================
- * SOURCE: Distributed Systems & Chirag Goel Case Studies
- *
- * COMPARISON KO WORKLOAD KE SAATH PADHO:
- * - REST HTTP resource contracts use karta hai; representation JSON-only nahi.
- * - GraphQL client fields select karta hai, lekin expensive resolvers/N+1 ab bhi possible hain.
- * - GraphQL queries HTTP GET ya POST se serve ho sakti hain; cache strategy explicit chahiye.
- * - gRPC commonly HTTP/2 + Protocol Buffers use karta hai; browser gRPC-Web path alag evaluate karo.
- * - Binary payload se total latency guaranteed kam nahi; backend work measure karo.
- * - Structured course: notes/system-design/14-api-contracts.md
- */
-
-/**
- * ========================================================================
- * 1. THE GRAPHQL N+1 PROBLEM & DATALOADER SOLUTION
- * ========================================================================
- * SCENARIO:
- * - Query fetches 100 Posts and each post's Author.
- * - Naive execution:
- *   - 1 query for 100 posts: `SELECT * FROM posts LIMIT 100`
- *   - 100 separate queries for each author: `SELECT * FROM users WHERE id = ...`
- *   - Total = 1 + 100 = 101 database roundtrips! (Kills the database).
- *
- * FIX: DataLoader (Batching & In-Memory Memoization)
- * - DataLoader waits for the current tick of the event loop.
- * - Batches all 100 user IDs into a SINGLE query:
- *   `SELECT * FROM users WHERE id IN (1, 2, 3, ... 100);`
- */
 
 // Simulated DataLoader batching in single event loop tick
 // Teaching helper: batching only; no memoization, per-key errors, or cancellation.

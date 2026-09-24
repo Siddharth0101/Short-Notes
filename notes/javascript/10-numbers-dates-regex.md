@@ -4,7 +4,7 @@ title: Numbers dates strings and regular expressions
 track: javascript
 order: 10
 level: Intermediate
-minutes: 1
+minutes: 2
 summary: Numbers — JS `number` floating point hai; `0.1 + 0.2` exactly `0.3` nahi.
 tags: numbers, dates, intl, regex, strings, timers
 ---
@@ -21,6 +21,9 @@ tags: numbers, dates, intl, regex, strings, timers
 - Regex — text pattern match; untrusted patterns se expensive matching ho sakti hai.
 - Global regex — `g`/`y` ke saath `test()` ka `lastIndex` badalta hai.
 - Timer — delay minimum wait hai; exact execution time guarantee nahi.
+- `Number.isFinite` — sirf finite number accept; string ko coerce nahi karta.
+- Date subtraction — do Date objects subtract karo toh milliseconds ka difference.
+- Regex anchors — full input validation mein start/end boundaries aur newline behavior dhyaan rakho.
 
 ## Sources — aur padhne ke liye
 

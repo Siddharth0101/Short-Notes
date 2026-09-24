@@ -19,6 +19,9 @@ tags: maven, junit, testing, build
 - Mockito — dependency behavior control; har internal call verify mat karo.
 - Integration test — real database/HTTP boundary verify karo.
 - Reproducible build — versions pin karo aur clean build verify karo.
+- Dependency conflict — transitive versions inspect; effective dependency tree se winner samjho.
+- Test double — fake simple implementation, stub canned result, mock interaction expectations.
+- Build wrapper — project ka expected Maven version consistently run karne mein useful.
 
 ## Sources — aur padhne ke liye
 

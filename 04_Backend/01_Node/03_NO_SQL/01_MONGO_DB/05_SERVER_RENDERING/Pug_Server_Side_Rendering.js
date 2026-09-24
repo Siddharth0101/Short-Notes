@@ -1,39 +1,31 @@
+/**
+ * ## Quick revision
+ *
+ * - SSR/Pug — server HTML banata hai; untrusted output escape karo.
+ * - Upload — size/type validate; safe generated filename aur isolated storage.
+ * - Payment webhook — raw-body signature verify, then durable idempotent processing.
+ * - Duplicate event — unique event ID aur transaction se repeat effect roko.
+ * - Email — queue/retry; API response ko slow provider par depend mat karao.
+ * - Order state — payment/refund transitions explicit rakho.
+ * - Deployment — secrets, health checks, logs aur graceful shutdown.
+ * - Recovery — partial failure par retry/reconciliation; browser success screen final proof nahi.
+ * - Pug — indentation-based server template syntax.
+ * - Escaped interpolation — untrusted text safe output; raw HTML interpolation carefully control.
+ * - Extends/block — shared layout; include/mixin — reusable template parts.
+ * - SSR route — data load → safe locals → render; auth server par enforce.
+ * - File path — user filename ko filesystem path authority mat do; generated safe key use.
+ * - Provider timeout — external effect ho chuka ho sakta hai; retry se pehle idempotency/reconciliation.
+ * - Outbox job — business write aur pending notification same durable boundary mein record.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * SERVER-SIDE RENDERING WITH PUG - SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - SSR me server HTML generate karke browser ko bhejta hai.
- * - Pug template engine concise syntax use karta hai.
- * - Natours app me API ke saath website views bhi banti hain.
- */
-
-
-/**
- * ========================================================================
- * 1. SETTING VIEW ENGINE
- * ========================================================================
- * NOTES:
- * - app.set('view engine', 'pug') Express ko Pug use karne bolta hai.
- * - views folder location set kar sakte ho.
- */
 
 // const path = require('path');
 //
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, 'views'));
 
-
-/**
- * ========================================================================
- * 2. RENDERING A TEMPLATE
- * ========================================================================
- * NOTES:
- * - res.render('templateName', data)
- * - Express views/templateName.pug find karta hai.
- */
 
 // exports.getOverview = catchAsync(async (req, res, next) => {
 //     const tours = await Tour.find();
@@ -45,17 +37,6 @@
 // });
 
 
-/**
- * ========================================================================
- * 3. PUG BASICS
- * ========================================================================
- * NOTES:
- * - Indentation structure define karta hai.
- * - #{variable} interpolation.
- * - if/else condition.
- * - each loop.
- */
-
 // PUG EXAMPLE:
 // h1= title
 // each tour in tours
@@ -64,16 +45,6 @@
 // if user
 //   p Logged in as #{user.name}
 
-
-/**
- * ========================================================================
- * 4. BASE TEMPLATE AND BLOCKS
- * ========================================================================
- * NOTES:
- * - base.pug common layout hota hai.
- * - Other templates extends base.
- * - block content replaceable area hota hai.
- */
 
 // base.pug:
 // doctype html
@@ -91,55 +62,18 @@
 //   h1 All Tours
 
 
-/**
- * ========================================================================
- * 5. INCLUDES
- * ========================================================================
- * NOTES:
- * - Reusable pieces: header, footer, tour card.
- * - File name often starts with underscore: _header.pug.
- */
-
 // include _header
 // include _footer
 
 
-/**
- * ========================================================================
- * 6. STATIC ASSETS
- * ========================================================================
- * NOTES:
- * - CSS/images/client JS public folder me.
- * - express.static se serve.
- */
-
 // app.use(express.static(path.join(__dirname, 'public')));
 
-
-/**
- * ========================================================================
- * 7. VIEW ROUTES
- * ========================================================================
- * NOTES:
- * - API routes JSON return karte hain.
- * - View routes HTML render karte hain.
- */
 
 // router.get('/', getOverview);
 // router.get('/tour/:slug', getTour);
 // router.get('/login', getLoginForm);
 // router.get('/me', protect, getAccount);
 
-
-/**
- * ========================================================================
- * 8. LOGIN FROM WEBSITE
- * ========================================================================
- * NOTES:
- * - Browser form submit ya client JS axios/fetch call.
- * - API login success pe JWT cookie set.
- * - Page reload/redirect ke baad server cookie read kar sakta hai.
- */
 
 // Client-side idea:
 // const login = async (email, password) => {
@@ -154,16 +88,6 @@
 //     }
 // };
 
-
-/**
- * ========================================================================
- * 9. IS LOGGED IN MIDDLEWARE
- * ========================================================================
- * NOTES:
- * - For rendered pages, user login state check.
- * - If JWT cookie exists and valid, set res.locals.user.
- * - Templates can access res.locals variables.
- */
 
 // exports.isLoggedIn = async (req, res, next) => {
 //     if (req.cookies.jwt) {
@@ -183,15 +107,6 @@
 // };
 
 
-/**
- * ========================================================================
- * 10. LOGOUT
- * ========================================================================
- * NOTES:
- * - JWT cookie overwrite with short expiry.
- * - Browser loses auth.
- */
-
 // exports.logout = (req, res) => {
 //     res.cookie('jwt', 'loggedout', {
 //         expires: new Date(Date.now() + 10 * 1000),
@@ -199,38 +114,3 @@
 //     });
 //     res.status(200).json({ status: 'success' });
 // };
-
-
-/**
- * ========================================================================
- * 11. PROTECTING PAGES
- * ========================================================================
- * NOTES:
- * - API protect returns JSON error.
- * - View protect can redirect/render login if not logged in.
- * - In Jonas style, protect middleware works for both if adjusted.
- */
-
-
-/**
- * ========================================================================
- * 12. UPDATING USER DATA FROM ACCOUNT PAGE
- * ========================================================================
- * NOTES:
- * - Account page sends PATCH /api/v1/users/updateMe.
- * - For photo upload, use FormData.
- * - After success, reload page to show updated data.
- */
-
-
-/**
- * ========================================================================
- * 13. SSR GOOD PRACTICES
- * ========================================================================
- * - Keep templates mostly presentation.
- * - Fetch data in controller.
- * - Put reusable UI in includes.
- * - Store logged-in user in res.locals.
- * - Never expose secrets to templates.
- * - Use escaped output for user content.
- */

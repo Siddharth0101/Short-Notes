@@ -21,6 +21,9 @@ tags: tree, bst, dfs, traversal, balancing
 - Balance — rotations order preserve karke height control karti hain.
 - LCA — BST mein values se direction; general tree mein subtree results combine.
 - Postorder — height/diameter jaise child results se parent answer banao.
+- Tree height — nodes vs edges convention choose; empty-tree base case usi se match.
+- Subtree size — child sizes + 1; order-statistics queries mein useful augmentation.
+- Serialization — null markers/shape preserve; values alone tree uniquely reconstruct nahi karte.
 
 ## Research notes: Balance the height that controls lookup
 

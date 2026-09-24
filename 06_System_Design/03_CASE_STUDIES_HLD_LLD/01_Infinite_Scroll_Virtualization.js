@@ -1,51 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Infinite scroll — next page fetch; virtualization — visible rows hi render.
+ * - Fixed row window — start=floor(scrollTop/rowHeight); viewport count=ceil(height/rowHeight).
+ * - Overscan — viewport ke aas-paas extra rows; flicker/memory tradeoff.
+ * - Spacer — total height preserve; rendered window ko correct offset.
+ * - Variable rows — measured heights/prefix offsets; fixed-height formula enough nahi.
+ * - Cursor — stable ordered boundary; duplicate pages/items dedupe.
+ * - Sentinel — IntersectionObserver se next fetch; in-flight guard aur end state.
+ * - Accessibility — focus, keyboard aur loaded-content announcements preserve.
+ * - Scroll anchor — data prepend/row resize par same visible item position maintain.
+ * - Fetch dedupe — sentinel repeated trigger kare toh same cursor ka duplicate request guard.
+ * - End marker — hasMore false par observer/fetch stop; empty page loop avoid.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * CASE STUDY 01: INFINITE SCROLL & DOM VIRTUALIZATION [⚡ SYSTEM DESIGN]
- * ========================================================================
- * SOURCE: Chirag Goel & Akshay Saini LLD Case Studies
- *
- * THE PROBLEM:
- * - When users scroll through 5,000 tweets, rendering 5,000 DOM nodes crashes
- *   mobile browser tabs with Out-Of-Memory (OOM) errors.
- * - Scrolling becomes janky (drops from 60 FPS to 15 FPS).
- *
- * THE SOLUTION: VIRTUALIZATION (WINDOWING):
- * - Keep only visible items (e.g. 10 items) + small buffer (3 above, 3 below) in the real DOM.
- * - Replace unmounted items with an invisible spacer div representing total scroll height.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                     VIRTUAL LIST WINDOWING MECHANISM                │
- * │                                                                     │
- * │  ┌───────────────────────────────────────────┐                      │
- * │  │ Top Spacer Div (height = startIndex * 50px│                      │
- * │  ├───────────────────────────────────────────┤                      │
- * │  │ [Visible Item #10]                        │ ◄── Viewport Window  │
- * │  │ [Visible Item #11]                        │     (Only ~10 nodes  │
- * │  │ [Visible Item #12]                        │      exist in DOM!)  │
- * │  ├───────────────────────────────────────────┤                      │
- * │  │ Bottom Spacer Div (remaining scroll height│                      │
- * │  └───────────────────────────────────────────┘                      │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. MATHEMATICAL FORMULAS FOR VIRTUALIZATION
- * ========================================================================
- * Assumptions:
- * - Fixed item height = 50px
- * - Viewport container height = 400px
- * - Buffer count = 2 items
- *
- * Calculations:
- * 1. visibleCount = Math.ceil(containerHeight / itemHeight) = 400 / 50 = 8 items
- * 2. startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - buffer)
- * 3. endIndex = Math.min(totalItems - 1, startIndex + visibleCount + 2 * buffer)
- * 4. offsetY = startIndex * itemHeight (Top padding / spacer)
- * 5. totalHeight = totalItems * itemHeight
- */
 
 // Production Virtualizer calculation simulation
 function calculateVirtualWindow({ totalItems, itemHeight, containerHeight, scrollTop, buffer = 2 }) {
@@ -82,16 +52,3 @@ console.log('Total list height:', windowState.totalHeight, 'px');
 console.log('Rendered item indices:', `${windowState.startIndex} to ${windowState.endIndex}`);
 console.log('Total DOM nodes rendered:', windowState.renderedCount, '(out of 10,000 items!)');
 console.log('Top Spacer Offset Y:', windowState.offsetY, 'px');
-
-/**
- * ========================================================================
- * 2. CURSOR-BASED VS OFFSET-BASED PAGINATION
- * ========================================================================
- * ❌ OFFSET-BASED (LIMIT 20 OFFSET 40):
- *   - Bad for real-time feeds! If new tweets are posted at top while user scrolls,
- *     offset shifts, causing duplicate posts or skipped posts!
- *
- * ✅ CURSOR-BASED (LIMIT 20 BEFORE_ID=10924):
- *   - Consistent even when new items are added at head.
- *   - O(1) database index lookup on primary key / timestamp.
- */

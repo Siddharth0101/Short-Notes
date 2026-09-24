@@ -18,6 +18,9 @@ tags: enums, sealed, records, annotations, reflection
 - Type erasure — most generic type arguments runtime objects par directly available nahi.
 - Sealed type — permitted subtypes restrict karta hai.
 - Pattern matching — type test aur extraction ko readable banata hai.
+- Enum comparison — same enum type ke constants == se safely compare kar sakte ho.
+- Annotation target — metadata kin declarations/type uses par allowed hai, Target se define.
+- Reflection failure — missing member/access error handle; string-based coupling refactor mein toot sakti hai.
 
 ## Sources — aur padhne ke liye
 

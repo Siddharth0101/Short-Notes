@@ -1,56 +1,31 @@
+/**
+ * ## Quick revision
+ *
+ * - `useEffect` — external system ke saath sync; render calculation ke liye nahi.
+ * - Dependencies — effect mein used reactive values list karo; linter ko ignore mat karo.
+ * - Cleanup — next setup se pehle aur unmount par old listener/timer/connection hatao.
+ * - `[]` — changing reactive dependency nahi; development checks setup repeat kar sakte hain.
+ * - `useRef` — renders ke beech mutable value; update se rerender nahi hota.
+ * - Stale closure — old render ki values capture; dependencies/updater se solve karo.
+ * - Fetch race — abort + latest-result guard se old response ignore karo.
+ * - Custom Hook — stateful logic reuse; har call ka state separate hota hai.
+ * - `useLayoutEffect` — paint se pehle layout work; blocking ka cost dhyaan rakho.
+ * - Profiler — pehle slow render/interaction measure karo.
+ * - `memo` — same props par render skip kar sakta hai; state/context updates phir bhi aa sakti hain.
+ * - `useMemo` — expensive calculation cache; correctness ispar depend mat karao.
+ * - `useCallback` — function identity cache; har callback ko wrap karna zaroori nahi.
+ * - Lazy loading — route/component code zaroorat par load karo.
+ * - Suspense — supported suspending work ka fallback; normal effect fetch auto-handle nahi hota.
+ * - Transition — non-urgent update mark; computation magically cheap nahi hoti.
+ * - Virtualization — visible list window render; stable identity/accessibility preserve karo.
+ * - Production — bundle, errors, accessibility aur real-user performance verify karo.
+ * - Hook order — ordinary Hooks ko loops/conditions mein call mat karo; each render ka order stable rakho.
+ * - Ref/closure — latest mutable ref aur render snapshot alag semantics; callback ko kaunsi value chahiye decide.
+ * - Imperative handle — parent ko narrow operations expose; component internals ka poora control mat do.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * ADVANCED HOOKS - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - useRef, useReducer, useMemo, useCallback.
- *
- * useReducer FLOW DIAGRAM:
- * ┌─────────────────────────────────────────────────────────────┐
- * │                                                             │
- * │  Event ──→ dispatch({ type: 'ADD', payload: data })         │
- * │                                 │                           │
- * │                                 ▼                           │
- * │  reducer(currentState, action) ──→ Returns NEW State ──→ UI │
- * │                                                             │
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. RULES OF HOOKS
- * ========================================================================
- * NOTES:
- * - Rule 1: Hooks SIRF TOP LEVEL pe call karo.
- *   ❌ Conditionals, loops, nested functions ke andar nahi.
- *   Why? React hooks ka order track karta hai. Order change = crash.
- *
- * - Rule 2: Hooks SIRF React functions me call karo.
- *   ✅ Function components.
- *   ✅ Custom hooks.
- *   ❌ Regular JS functions, class components.
- *
- * - ESLint plugin: eslint-plugin-react-hooks (CRA/Vite me built-in).
- */
-
-
-/**
- * ========================================================================
- * 2. useRef VS useState
- * ========================================================================
- * NOTES:
- * ┌───────────────────────────┬─────────────────────────────────┐
- * │  useState                 │  useRef                         │
- * ├───────────────────────────┼─────────────────────────────────┤
- * │  Triggers re-render       │  Does NOT trigger re-render     │
- * │  Immutable updates        │  Mutable (.current property)    │
- * │  Async state updates      │  Synchronous current value      │
- * │  Use for UI state         │  Use for DOM nodes / timers     │
- * └───────────────────────────┴─────────────────────────────────┘
- */
 
 // import { useRef, useEffect } from 'react';
 
@@ -97,31 +72,6 @@ function Timer() {
 }
 
 
-/**
- * ========================================================================
- * 3. useReducer
- * ========================================================================
- * NOTES:
- * - useState ka advanced version.
- * - Complex state logic ke liye: multiple related state variables,
- *   state transitions jo ek dusre pe depend karein.
- *
- * PATTERN:
- * - const [state, dispatch] = useReducer(reducer, initialState);
- * - dispatch({ type: 'ACTION_NAME', payload: data });
- * - reducer(state, action) -> newState (pure function, no side effects).
- *
- * WHEN useReducer OVER useState:
- * - 3+ related state variables.
- * - Complex update logic.
- * - Next state purane state pe depend karta hai.
- * - State machine pattern chahiye.
- *
- * ANALOGY:
- * - useState = setState directly.
- * - useReducer = "kya hua" (action) dispatch karo, reducer decide kare "kya karna hai".
- */
-
 // import { useReducer } from 'react';
 
 const initialState = {
@@ -164,15 +114,6 @@ function CounterReducer() {
     );
 }
 
-
-/**
- * ========================================================================
- * 4. useReducer — REAL WORLD EXAMPLE (Quiz App)
- * ========================================================================
- * NOTES:
- * - Complex state: status, questions, current index, answer, points, timer.
- * - Sab related hain -> useReducer perfect fit.
- */
 
 // const quizInitialState = {
 //     questions: [],
@@ -221,25 +162,6 @@ function CounterReducer() {
 // }
 
 
-/**
- * ========================================================================
- * 5. useMemo
- * ========================================================================
- * NOTES:
- * - useMemo = MEMOIZE a VALUE. Cache karta hai, re-calculate tab karta hai
- *   jab dependencies change hon.
- * - const memoizedValue = useMemo(() => expensiveCalculation(a, b), [a, b]);
- *
- * WHEN TO USE:
- * - Expensive calculations (sort large arrays, heavy math).
- * - Referential equality preserve karna (objects/arrays as dependencies).
- * - Pass as prop to memo() wrapped component.
- *
- * WHEN NOT TO USE:
- * - Simple calculations (overhead > benefit).
- * - Premature optimization (profile pehle!).
- */
-
 // import { useMemo } from 'react';
 
 function Dashboard({ items }) {
@@ -262,26 +184,6 @@ function Dashboard({ items }) {
     );
 }
 
-
-/**
- * ========================================================================
- * 6. useCallback
- * ========================================================================
- * NOTES:
- * - useCallback = MEMOIZE a FUNCTION. Same function reference persist karta hai
- *   jab tak dependencies na change hon.
- * - const memoizedFn = useCallback(function() { ... }, [deps]);
- *
- * WHY NEEDED?
- * - Har render pe functions NAYA reference create karte hain.
- * - Agar memo() wrapped child ko function prop pass karte ho,
- *   naye reference se child unnecessarily re-render hoga.
- * - useCallback reference stable rakhta hai.
- *
- * RELATIONSHIP:
- * - useMemo(() => fn, [deps]) === useCallback(fn, [deps])
- * - useMemo values memoize karta hai, useCallback functions.
- */
 
 // import { useCallback, memo } from 'react';
 
@@ -309,31 +211,3 @@ function Dashboard({ items }) {
 //
 //     return <MovieList movies={movies} onSelectMovie={handleSelectMovie} />;
 // }
-
-
-/**
- * ========================================================================
- * 7. WHICH HOOK WHEN? (DECISION GUIDE)
- * ========================================================================
- *
- * WHAT DO YOU NEED?                    HOOK
- * ──────────────────────────────────────────────────────
- * Simple state (1-2 variables):        useState
- * Complex related state:               useReducer
- * Side effects (fetch, timer, DOM):    useEffect
- * DOM element access:                  useRef
- * Persist value without re-render:     useRef
- * Memoize expensive calculation:       useMemo
- * Memoize function reference:          useCallback
- * Read context value:                  useContext
- * Global state (simple):              useContext + useReducer
- * Global state (complex):             Redux / Zustand
- *
- * OPTIMIZATION ORDER:
- * 1. Profile first (React DevTools Profiler).
- * 2. Identify slow renders.
- * 3. memo() on child components that re-render unnecessarily.
- * 4. useMemo/useCallback for props passed to memo() children.
- * 5. Move state down (closer to where it's used).
- * 6. Children as props pattern (composition).
- */

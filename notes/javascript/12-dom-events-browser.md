@@ -21,6 +21,9 @@ tags: dom, events, delegation, browser, accessibility
 - Debounce — rukne ke baad run; throttle — frequency limit karo.
 - Layout thrashing — repeated write/read se forced layout; reads aur writes batch karo.
 - Observer — visibility ke liye IntersectionObserver, size ke liye ResizeObserver.
+- `target`/`currentTarget` — event ka original target / current listener wala element.
+- `classList` — add/remove/toggle se classes manage; poora className overwrite zaroori nahi.
+- `once` listener — pehli invocation ke baad automatically remove ho jaata hai.
 
 ## Research notes: Own a listener lifecycle
 

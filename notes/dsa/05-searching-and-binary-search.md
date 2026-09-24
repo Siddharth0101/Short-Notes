@@ -21,6 +21,9 @@ visual: binary-search
 - Duplicates — any match aur first/last match alag contracts.
 - Answer search — feasible/infeasible monotonic boundary par search karo.
 - Termination — har branch interval shrink kare; empty range handle karo.
+- Overflow-safe answer — numeric search range chosen number type mein fit honi chahiye.
+- Rotated search — sorted half identify; duplicates decision ambiguous karke worst cost badha sakte hain.
+- Predicate cost — answer search O(log range × feasibility-check cost).
 
 ## Sources — aur padhne ke liye
 

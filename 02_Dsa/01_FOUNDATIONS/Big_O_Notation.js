@@ -1,40 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - Big-O — input badhne par upper-bound growth; exact milliseconds nahi.
+ * - O(1) — constant; O(log n) — range shrink; O(n) — single scan.
+ * - O(n log n) — efficient comparison sorts; O(n²) — many pairwise scans.
+ * - Space — auxiliary memory aur recursion stack count karo.
+ * - Worst/average/amortized — alag guarantees; interchangeable nahi.
+ * - Amortized — operations ki sequence ka total cost average karo.
+ * - Recursion — calls × per-call work; stack depth bhi count karo.
+ * - Solve — constraints → brute force → bottleneck → invariant → optimize.
+ * - JS trap — `shift`, `slice`, spread aur string copies ka cost mat bhoolo.
+ * - Independent inputs — two lists sizes n,m hon toh O(n+m); blindly O(n) mat bolo.
+ * - Log base — constant bases Big-O mein equivalent; repeated halving logarithmic growth deta hai.
+ * - Output space — result materialize karna required ho toh minimum output-size cost bhi batao.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * BIG O NOTATION - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Big O ka kaam hai code ki performance ko input size ke hisaab se describe karna.
- * - Input size ko usually "n" bolte hain.
- *
- * BIG O COMPLEXITY CHART:
- * ┌─────────────────────────────────────────────────────────────┐
- * │ Operations                                                  │
- * │     ▲                                                       │
- * │     │  O(n^2) Quadratic [Horrible]                         │
- * │     │     │   O(n log n) Linearithmic [Bad]                 │
- * │     │     │      │   O(n) Linear [Fair]                     │
- * │     │     │      │      │   O(log n) Logarithmic [Good]     │
- * │     │     │      │      │      │   O(1) Constant [Excellent]│
- * │  ───┴─────┴──────┴──────┴──────┴──────┴───────────────────► │
- * │                                                  Input (n)  │
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. TIME COMPLEXITY
- * ========================================================================
- * NOTES:
- * - Time complexity = input badhne par operations kaise grow karte hain.
- * - Machine speed alag ho sakti hai, but operation growth same concept rehta hai.
- *
- * EXAMPLE:
- * Input:  arr = [10, 20, 30, 40, 50]
- * Output: getFirstItem => 10  (O(1) - instant, no matter how big arr is)
- */
 
 // O(1) - CONSTANT TIME
 // Input size kitna bhi ho, operations fixed rahenge.
@@ -73,22 +55,6 @@ function printAllPairs(arr) {
 printAllPairs([1, 2]);
 
 
-/**
- * ========================================================================
- * 2. COMMON BIG O ORDER
- * ========================================================================
- * FASTEST TO SLOWEST COMPARISON TABLE:
- * ┌───────────┬───────────────┬──────────────────────┬──────────────────┐
- * │ Notation  │ Name          │ Growth Rate          │ Example          │
- * ├───────────┼───────────────┼──────────────────────┼──────────────────┤
- * │ O(1)      │ Constant      │ Fixed operations     │ Array lookup     │
- * │ O(log n)  │ Logarithmic   │ Halves input size    │ Binary Search    │
- * │ O(n)      │ Linear        │ Proportional to n    │ Simple Loop      │
- * │ O(n log n)│ Linearithmic  │ Divide & conquer     │ Merge Sort       │
- * │ O(n^2)    │ Quadratic     │ Nested loops         │ Bubble Sort      │
- * │ O(2^n)    │ Exponential   │ Doubles each step    │ Recursive Fibonacci│
- * └───────────┴───────────────┴──────────────────────┴──────────────────┘
- */
  * O(2^n)      Exponential     - many brute force recursion problems
  * O(n!)       Factorial       - all permutations brute force
  *
@@ -98,30 +64,6 @@ printAllPairs([1, 2]);
  * - O(2^n), O(n!) usually need optimization, DP, pruning, or different approach.
  */
 
-
-/**
- * ========================================================================
- * 3. SIMPLIFYING BIG O
- * ========================================================================
- * RULES:
- * 1. Constants drop karo.
- *    O(2n) -> O(n), O(500) -> O(1)
- *
- * 2. Smaller terms drop karo.
- *    O(n + 10) -> O(n)
- *    O(n^2 + n + 5) -> O(n^2)
- *
- * 3. Different inputs ko different variables do.
- *    Two arrays: O(a + b), nested two arrays: O(a * b)
- *
- * 4. Assignment, arithmetic, comparison, object property access usually O(1).
- *
- * 5. Loop complexity depends on loop growth.
- *
- * EXAMPLE:
- * Input:  arr1 = ['a', 'b'], arr2 = [1, 2, 3]
- * Output: prints arr1 items then arr2 items => O(a + b)
- */
 
 function differentInputs(arr1, arr2) {
     // O(a)
@@ -154,32 +96,6 @@ function nestedDifferentInputs(arr1, arr2) {
 nestedDifferentInputs(['A'], [1, 2]);
 
 
-/**
- * ========================================================================
- * 4. SUM FROM 1 TO N FORMULA
- * ========================================================================
- * NOTES:
- * - 1 + 2 + 3 + ... + n ka direct formula:
- *   n * (n + 1) / 2
- * - Isse loop ke bina sum mil jaata hai, so calculation O(1) hoti hai.
- *
- * HOW FORMULA AAYA?
- * - Example: 1 + 2 + 3 + 4 + 5 + 6
- * - Ends se pair banao:
- *   1 + 6 = 7
- *   2 + 5 = 7
- *   3 + 4 = 7
- * - Har pair ka sum n + 1 hota hai.
- * - Total numbers n hain, so pairs n / 2 hain.
- * - Sum = number of pairs * value of each pair
- * - Sum = (n / 2) * (n + 1)
- * - Same thing: n * (n + 1) / 2
- *
- * EXAMPLE:
- * Input:  n = 6
- * Output: 21   (1+2+3+4+5+6 = 21)
- */
-
 function sumOneToN(n) {
     return n * (n + 1) / 2;
 }
@@ -192,32 +108,6 @@ console.log(sumOneToN(6)); // 21
 // Expected Output: 5050
 console.log(sumOneToN(100)); // 5050
 
-
-/**
- * ========================================================================
- * 5. SPACE COMPLEXITY
- * ========================================================================
- * NOTES:
- * - Space complexity = input badhne par memory usage kaise grow hota hai.
- * - Interviews me mostly "auxiliary space" count karte hain.
- * - Auxiliary space = input ke alawa algorithm kitni extra memory use karta hai.
- *
- * COLT STEELE STYLE RULES OF THUMB:
- * - Most primitives O(1) space hote hain:
- *   number, boolean, null, undefined
- * - String O(n) space leti hai:
- *   n = string length, because characters badhte hain.
- * - Arrays and objects usually O(n) space lete hain:
- *   n = array length ya object keys count.
- * - Fixed variables use ho rahe hain -> O(1) space.
- * - New array/object/string ban raha hai with n items -> O(n) space.
- * - Recursion me call stack bhi memory count hoti hai.
- *
- * EXAMPLE:
- * Input:  [1, 2, 3, 4]
- * Output: sumArraySpaceOne => 10  (O(1) space, just 'total' variable)
- *         doubleArray      => [2, 4, 6, 8]  (O(n) space, new array)
- */
 
 // O(1) auxiliary space - sirf ek extra variable
 function sumArraySpaceOne(arr) {
@@ -266,20 +156,6 @@ function countValues(arr) {
 console.log(countValues(['a', 'b', 'a', 'c', 'b', 'a'])); // { a: 3, b: 2, c: 1 }
 
 
-/**
- * ========================================================================
- * 6. LOGARITHMS - WHY O(log n) FAST HOTA HAI?
- * ========================================================================
- * NOTES:
- * - log ka simple meaning: kitni baar divide karna padega.
- * - Binary search me har step me search space half ho jaata hai.
- * - 1,000,000 items me binary search about 20 steps me answer dhoondh sakta hai.
- *
- * EXAMPLE:
- * Input:  n = 16
- * Output: 4  (16->8->4->2->1 = 4 halvings)
- */
-
 function countHalves(n) {
     let count = 0;
 
@@ -299,24 +175,6 @@ console.log(countHalves(16)); // 4
 // Expected Output: 19  (about 20 halvings for 1 million)
 console.log(countHalves(1000000)); // 19
 
-
-/**
- * ========================================================================
- * 7. BEST, AVERAGE, WORST CASE
- * ========================================================================
- * NOTES:
- * - Best case: easiest input.
- * - Average case: normal expected input.
- * - Worst case: hardest input.
- * - Usually interviews me worst case Big O discuss hota hai.
- *
- * EXAMPLE:
- * Input:  arr = [3, 7, 1, 9, 4], target = 3
- * Output: 0  (target is first item -> Best case O(1))
- *
- * Input:  arr = [3, 7, 1, 9, 4], target = 99
- * Output: -1  (target not found -> Worst case O(n))
- */
 
 function linearSearchExample(arr, target) {
     for (let i = 0; i < arr.length; i++) {
@@ -339,22 +197,3 @@ console.log(linearSearchExample([3, 7, 1, 9, 4], 4)); // 4
 // Sample Input:  [3, 7, 1, 9, 4], target = 99
 // Expected Output: -1
 console.log(linearSearchExample([3, 7, 1, 9, 4], 99)); // -1
-
-
-/**
- * ========================================================================
- * 8. QUICK CHEAT TABLE
- * ========================================================================
- *
- * Access array by index              O(1)
- * Loop through array                 O(n)
- * Nested loop same array             O(n^2)
- * Binary search sorted array         O(log n)
- * Merge sort / quick sort average    O(n log n)
- * Hash map get/set average           O(1)
- * BFS/DFS graph adjacency list       O(V + E)
- *
- * INTERVIEW LINE:
- * - "Time complexity is O(n), space complexity is O(1)"
- * - Hamesha time aur space dono mention karne ki habit banao.
- */

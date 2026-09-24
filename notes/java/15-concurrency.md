@@ -21,6 +21,9 @@ visual: thread-sync
 - Deadlock — locks cyclic order mein wait; consistent lock order rakho.
 - Executor — tasks submit karo; lifecycle aur shutdown manage karo.
 - Interrupt — cooperative cancellation signal; catch karke blindly swallow mat karo.
+- Lock identity — different lock objects same shared data ko protect nahi karte.
+- Wait condition — wait ke baad condition loop mein recheck; spurious wakeups possible.
+- Join — thread completion wait; timeout/interrupt behavior define karo.
 
 ## Sources — aur padhne ke liye
 

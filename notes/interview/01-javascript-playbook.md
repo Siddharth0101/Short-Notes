@@ -20,6 +20,9 @@ visual: event-loop
 - Debounce — last call ke baad delay; throttle — call frequency limit.
 - Debug — reproduce, state/queue trace, smallest fix, regression case.
 - Project — problem, apna contribution, decision aur measured result bolo.
+- Output puzzle — runtime, strict/module mode aur sync/async boundaries pehle identify.
+- Unknown API — behavior invent mat karo; assumption bolo aur minimal experiment suggest.
+- Answer length — definition, one example, one caveat; follow-up par detail kholo.
 
 ## Research notes: Explain the contract before coding
 

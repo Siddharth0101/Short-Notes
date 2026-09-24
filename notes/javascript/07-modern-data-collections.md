@@ -4,7 +4,7 @@ title: Objects arrays and modern data transformations
 track: javascript
 order: 7
 level: Intermediate
-minutes: 1
+minutes: 2
 summary: `map` — har item transform karke naya array.
 tags: arrays, objects, map, set, destructuring, immutability
 ---
@@ -23,6 +23,9 @@ tags: arrays, objects, map, set, destructuring, immutability
 - `?.` — null/undefined par access rokta hai; missing variable declaration nahi bachata.
 - `sort` — original array badalta hai; numbers ke liye `(a, b) => a - b`.
 - Grouping — key ke hisaab se buckets banao; accumulator har step return karo.
+- `flatMap` — transform ke baad result ek level flatten karta hai.
+- Empty reduce — initial value bina empty array par reduce error deta hai.
+- Mutation trap — map naya array banata hai, par callback shared nested object mutate kar sakta hai.
 
 ## Sources — aur padhne ke liye
 

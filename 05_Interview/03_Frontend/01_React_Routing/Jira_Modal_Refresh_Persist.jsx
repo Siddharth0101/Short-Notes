@@ -1,32 +1,17 @@
 /**
- * ========================================================================
- * URL-BASED STATE PERSISTENCE (Jira-style Modal Reopen on Refresh)
- * ========================================================================
- * NOTES:
- * - Jira me humne notice kiya hai: Active Sprint board par, jab hum kisi ticket par click
- *   karte hain to modal khulta hai. Page refresh karne ke baad bhi wo modal open rehta hai!
- * - Normal React app me agar hum `const [isOpen, setIsOpen] = useState(false)` ya
- *   `const [selectedTicket, setSelectedTicket] = useState(null)` use karenge,
- *   to refresh hone par React state completely wipe out (reset) ho jayega.
- * - Solution: URL Query Params (Search Params) ko React state ki tarah use karna!
- *   E.g., `/active-sprint?ticketId=PROJ-101`
- * - Ise hum "URL as the Single Source of Truth" kehte hain.
- * 
- * ADVANTAGES OF THIS APPROACH:
- * 1. PERSISTENCE: Page refresh ya reload karne par bhi state save rehta hai.
- * 2. SHAREABILITY (Deep Linking): Agar hum ye URL kisi aur developer ko share karenge,
- *    to uske system pe bhi directly wahi ticket modal open hoga.
- * 3. BROWSER HISTORY: Browser ka Back button press karne par modal close hoga,
- *    aur Forward button se wapas modal open ho sakega.
- */
-
-
-/**
- * ========================================================================
- * METHOD 1: React Router DOM (v6+) — Standard Single Page App (SPA)
- * ========================================================================
- * - Sabse popular tareeka. Hum `useSearchParams` hook ka use karte hain.
- * - Ye exact `useState` ki tarah hi behave karta hai, bas values URL me store hoti hain.
+ * ## Quick revision
+ *
+ * - Router — URL ko screen/layout se map karta hai.
+ * - Path param — resource identity; query param — filters, sort aur page.
+ * - Nested route — shared layout ke andar child route render.
+ * - URL state — shareable/bookmarkable state URL mein rakho.
+ * - Navigation — link use karo; button action ke liye.
+ * - Loader — route data fetch; error/pending handling define karo.
+ * - Protected route — UI guard hai; backend authorization phir bhi chahiye.
+ * - Back/forward — URL se state derive karo, duplicate local copy drift na kare.
+ * - Modal identity — query mein ticket ID; page reload par selected entity server se resolve karo.
+ * - Deleted ticket — deep link valid syntax ho sakta hai but resource missing; useful error/close action.
+ * - Close history — push/replace/back choice define; unrelated query filters preserve karo.
  */
 
 import React from 'react';
@@ -105,59 +90,6 @@ export function ActiveSprintReactRouter() {
 }
 
 
-/**
- * ========================================================================
- * METHOD 2: Next.js (App Router) — Server & Client Side Navigation
- * ========================================================================
- * - Next.js me directly `useSearchParams` update nahi hota.
- * - Next.js (App Router) me hum `useSearchParams` se read karte hain aur
- *   `useRouter` & `usePathname` ka use karke navigation dynamically push karte hain.
- */
-
-/*
-'use client'; // Required in Next.js App Router for client hooks
-
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-
-export function ActiveSprintNextJS() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const activeTicketId = searchParams.get('selectedTicket');
-  const activeTicket = MOCK_TICKETS.find(ticket => ticket.id === activeTicketId);
-
-  const openTicketModal = (id) => {
-    // URLSearchParams creates a mutable copy of active search params
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('selectedTicket', id);
-    
-    // Updates URL path: e.g. /sprint?selectedTicket=JIRA-101
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
-  const closeTicketModal = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('selectedTicket');
-    
-    // If other parameters are empty, push pathname only
-    const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
-  };
-
-  // Rendering remains same as React Router DOM example
-}
-*/
-
-
-/**
- * ========================================================================
- * METHOD 3: Custom Hook pattern (useQueryState)
- * ========================================================================
- * - Clean code ke liye hum custom hook bana sakte hain jo exact useState
- *   ki tarah return kare [value, setValue] but context backend pe URL me saved ho.
- */
-
 export function useQueryState(key, defaultValue = '') {
   const [searchParams, setSearchParams] = useSearchParams();
   
@@ -182,12 +114,6 @@ export function useQueryState(key, defaultValue = '') {
 // close modal: setActiveTicketId('')
 
 
-
-/**
- * ========================================================================
- * STYLES (Clean UI Preview)
- * ========================================================================
- */
 const styles = {
   container: {
     padding: '40px',
@@ -262,4 +188,3 @@ const styles = {
     color: 'var(--text)',
   }
 };
-

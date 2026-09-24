@@ -21,6 +21,9 @@ visual: request-flow
 - Collaboration — OT/CRDT ya server serialization ka conflict contract choose.
 - Snapshot — compact durable state + later operations replay.
 - Permissions — subscription aur every write par access validate.
+- Resume cursor — cursor retention expire ho toh full snapshot + new cursor fallback.
+- Bounded fan-out — slow subscriber ke buffers limit; disconnect/replay policy.
+- Tombstone — deleted item ki identity retain jab replay/offline merges stale data resurrect kar sakte hon.
 
 ## Sources — aur padhne ke liye
 

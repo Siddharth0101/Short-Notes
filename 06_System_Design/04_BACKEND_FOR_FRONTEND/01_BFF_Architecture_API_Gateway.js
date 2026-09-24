@@ -1,46 +1,25 @@
+/**
+ * ## Quick revision
+ *
+ * - Layers — controller contract, service rules, repository persistence.
+ * - Transaction — business invariant ko atomic database boundary mein rakho.
+ * - Constraint — uniqueness/foreign-key/check se invalid state database par roko.
+ * - Idempotency key — same operation retry ka same durable result.
+ * - Pagination — stable order + bounded size; large feeds mein cursor useful.
+ * - Pool — DB connections scarce resource; wait time aur saturation monitor karo.
+ * - Outbox — business write aur event row same transaction mein.
+ * - Migration — compatible rollout; old/new versions coexist kar sakein.
+ * - BFF — frontend-specific aggregation/shape; gateway routing/auth/rate limits share kar sakta hai.
+ * - Fan-out — independent calls bounded parallel; partial failure contract.
+ * - Token translation — browser credentials ko internal identity se safely map.
+ * - Caching — user/tenant scope + freshness; private payload mix mat karo.
+ * - ETag/If-Match — resource version match ho tab update; lost-update conflict surface karo.
+ * - Bulk endpoint — bounded batch size; partial success/error response contract clear.
+ * - Read model — optimized query view; source write model se freshness/lag explicitly define.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 01. BACKEND FOR FRONTEND (BFF) & API GATEWAYS [⚡ FULLSTACK SYSTEM DESIGN]
- * ========================================================================
- * SOURCE: Chirag Goel & Distributed Systems Core
- *
- * THE ANTI-PATTERN: DIRECT CLIENT-TO-MICROSERVICES
- * - Web/Mobile client makes 8 separate HTTP calls to User Service, Cart Service,
- *   Catalog Service, Recommendations, Reviews, Inventory, Shipping, and Ads.
- * - Result: 8 round-trips over cellular network, high battery drain, massive latency.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                   BFF (BACKEND FOR FRONTEND) PATTERN                │
- * │                                                                     │
- * │   [Web Client]     [Mobile Client]                                  │
- * │        │                 │                                          │
- * │        ▼                 ▼                                          │
- * │   ┌──────────┐      ┌──────────┐                                    │
- * │   │ Web BFF  │      │Mobile BFF│  ◄── Shapes payload tailored to UI │
- * │   └────┬─────┘      └────┬─────┘                                    │
- * │        └───────┬─────────┘                                          │
- * │                ▼                                                    │
- * │   ┌─────────────────────────────┐                                   │
- * │   │    Internal API Gateway     │                                   │
- * │   └────────────┬────────────────┘                                   │
- * │        ┌───────┼───────┐                                            │
- * │        ▼       ▼       ▼                                            │
- * │     [User]  [Order] [Catalog] (Microservices via gRPC / Internal)   │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. RESPONSIBILITIES OF A BFF LAYER
- * ========================================================================
- * 1. Data Aggregation: Calls multiple backend microservices concurrently and joins data.
- * 2. Overfetching Reduction: Filters out sensitive internal fields (hashed passwords, internal audit logs).
- * 3. Protocol Translation: Talks gRPC / Protobuf internally with services, returns JSON to browser.
- * 4. Tailored Responses: Desktop gets rich multi-column widgets; Mobile gets compact streamlined payloads.
- * 5. Token Orchestration: Translates browser session cookies to internal JWT / OAuth tokens.
- */
 
 // Simulated BFF Aggregator Function
 async function webBffDashboardHandler(userId) {

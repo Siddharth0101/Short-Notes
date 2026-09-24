@@ -1,17 +1,9 @@
 # NoSQL Short Notes
 
-Jonas Schmedtmann's Node.js, Express, MongoDB bootcamp — database sections.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../../../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-Auth, error handling, SSR, and advanced features are app-layer topics, but in
-this course they are built on the MongoDB Natours project, so they live here
-for reading flow.
+## Topics
 
-## Padhne ka suggested order
-
-1. `01_MONGO_DB/README.md`
-
-## Yahan kya cover hai
-
-- NoSQL document database concepts
-- MongoDB and Mongoose
-- Mongo-powered Natours app sections from the Node course
+- [Mongo Db](01_MONGO_DB/README.md) — topic files kholo.

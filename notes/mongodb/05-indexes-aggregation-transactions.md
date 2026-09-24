@@ -21,6 +21,9 @@ visual: aggregation-pipeline
 - Geospatial — location query ke liye correct GeoJSON/index.
 - Transaction — multi-document atomicity; session, retries aur deployment support chahiye.
 - TTL — background expiry; exact deadline par deletion guaranteed nahi.
+- Early filtering — suitable $match stages downstream documents kam kar sakti hain; actual optimized plan inspect.
+- Unbounded array — document growth aur update cost; bucket/reference model consider.
+- Write concern — acknowledgement/durability requirement; successful response ka exact guarantee define karo.
 
 ## Research notes: Match the version you actually read
 

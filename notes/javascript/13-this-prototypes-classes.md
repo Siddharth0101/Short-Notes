@@ -4,7 +4,7 @@ title: This binding prototypes and classes
 track: javascript
 order: 13
 level: Intermediate
-minutes: 1
+minutes: 2
 summary: Regular `this` — function kaise call hua usse decide hota hai.
 tags: this, prototype, classes, oop, inheritance
 ---
@@ -21,6 +21,9 @@ tags: this, prototype, classes, oop, inheritance
 - `extends`/`super` — inheritance; derived constructor mein `this` se pehle `super()`.
 - Own property — `Object.hasOwn()` inherited property ko include nahi karta.
 - Private field — `#name` class ke bahar directly accessible nahi.
+- Static method — class/constructor par call; instance prototype method se alag.
+- `Object.create` — chosen prototype wala object; constructor automatically run nahi hota.
+- Getter/setter — property syntax par logic; same property ko setter mein assign karna recursion kara sakta hai.
 
 ## Sources — aur padhne ke liye
 

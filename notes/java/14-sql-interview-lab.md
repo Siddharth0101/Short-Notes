@@ -21,6 +21,9 @@ visual: transaction-race
 - Composite index — column order query ke filter/sort se match karo.
 - EXPLAIN — estimated plan; ANALYZE actual execution bhi karta hai.
 - Pagination — stable sort + tie-breaker; deep pages par keyset useful.
+- `UNION`/`UNION ALL` — duplicate rows remove / preserve; deduplication ka extra cost.
+- `ROW_NUMBER`/`RANK` — unique sequence / ties ko same rank aur next rank mein gap.
+- `EXISTS` — matching row ki existence; NOT IN ke null semantics se alag.
 
 ## Research notes: Read estimates alongside actual query work
 

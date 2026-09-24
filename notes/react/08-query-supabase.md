@@ -20,6 +20,9 @@ tags: tanstack-query, server-state, caching, supabase, mutations
 - Supabase — client convenience ke saath database RLS policies bhi enforce karo.
 - Auth change — old user ka private cache clear/isolate karo.
 - Pagination — cursor/page ko query key mein include karo.
+- Dependent query — required ID/auth ready ho tab fetch; undefined identity par accidental call avoid.
+- Background refresh — cached data dikhate hue refresh status separately handle karo.
+- Mutation ordering — rapid writes out-of-order aa sakti hain; version/reconciliation rule chahiye.
 
 ## Research notes: Freshness and retention are different clocks
 

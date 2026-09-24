@@ -1,34 +1,26 @@
+/**
+ * ## Quick revision
+ *
+ * - ES module — `import`/`export`; imports live bindings hote hain.
+ * - Module scope — variables automatically global nahi bante.
+ * - Dynamic import — `import()` Promise deta hai; zaroorat par code load karo.
+ * - Bundler — modules/assets ko production bundles mein prepare karta hai.
+ * - Tree shaking — unused exports hata sakta hai; side effects limit karte hain.
+ * - Lockfile — dependency resolution pin; reproducible install ke liye commit karo.
+ * - Source map — built code ko original source se map karta hai.
+ * - Debugging — reproduce → breakpoint → state inspect → smallest fix.
+ * - Environment — browser bundle mein bheja secret public samjho.
+ * - Deployment — hashed assets long-cache; HTML update/revalidation sochkar karo.
+ * - Logical assignment — `||=`, `&&=`, `??=` condition meet hone par hi assign.
+ * - Immutable array — `toSorted`/`toReversed` original preserve karte hain.
+ * - Debug tools — breakpoints, call stack aur Network panel se evidence lo.
+ * - Circular import — initialization order matter; module load ke dauran uninitialized binding read fail kar sakti hai.
+ * - Dependency audit — direct aur transitive packages alag; lockfile diff review karo.
+ * - Polyfill/transpile — missing runtime API provide / syntax transform; dono same kaam nahi.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * DEV SKILLS, DEBUGGING & NEWER ES2022+ FEATURES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Jonas ka "Developer Skills & Debugging" and modern ES2022/ES2023+ updates.
- * - Logical Assignment Operators (&&=, ||=, ??=).
- * - Change-by-copy Array methods (toSorted, toReversed, toSpliced, with).
- * - Debugging with browser DevTools and breakpoints.
- */
-
-
-/**
- * ========================================================================
- * 1. LOGICAL ASSIGNMENT OPERATORS (ES2021)
- * ========================================================================
- * NOTES:
- * - ||=  (Logical OR Assignment): assigns if variable is FALSY.
- * - ??=  (Logical Nullish Assignment): assigns if variable is NULL or UNDEFINED.
- * - &&=  (Logical AND Assignment): assigns if variable is TRUTHY.
- *
- * ┌───────────────────────────┬───────────────────────────────┐
- * │ Shorthand                 │ Equivalent To                 │
- * ├───────────────────────────┼───────────────────────────────┤
- * │ x ||= y                   │ x = x || y                    │
- * │ x ??= y                   │ x = x ?? y                    │
- * │ x &&= y                   │ x = x && y                    │
- * └───────────────────────────┴───────────────────────────────┘
- */
 
 const rest1 = { name: 'Capri', numGuests: 0 };
 const rest2 = { name: 'La Piazza', owner: 'Giovanni' };
@@ -47,23 +39,6 @@ rest2.owner &&= '<ANONYMOUS>'; // '<ANONYMOUS>' (had owner)
 console.log(rest1); // { name: 'Capri', numGuests: 0 }
 console.log(rest2); // { name: 'La Piazza', owner: '<ANONYMOUS>', numGuests: 10 }
 
-
-/**
- * ========================================================================
- * 2. IMMUTABLE ARRAY METHODS (ES2023 / ES14)
- * ========================================================================
- * NOTES:
- * - Modern JS added non-mutating alternatives to sort, reverse, splice, and index assignment.
- *
- * ┌─────────────────┬─────────────────────────────┬─────────────────────────┐
- * │ Mutating Method │ Non-Mutating Copy Method    │ Returns                 │
- * ├─────────────────┼─────────────────────────────┼─────────────────────────┤
- * │ sort()          │ toSorted()                  │ New sorted array        │
- * │ reverse()       │ toReversed()                │ New reversed array      │
- * │ splice()        │ toSpliced()                 │ New array with changes  │
- * │ arr[i] = val    │ with(index, value)          │ New array with replacement│
- * └─────────────────┴─────────────────────────────┴─────────────────────────┘
- */
 
 const original = [3, 1, 4, 1, 5, 9];
 
@@ -85,23 +60,6 @@ const numbers = [5, 12, 50, 130, 44];
 console.log(numbers.findLast(n => n > 45));       // 44 (searches from right!)
 console.log(numbers.findLastIndex(n => n > 45));  // 4 (index of 44)
 
-
-/**
- * ========================================================================
- * 3. DEVELOPER SKILLS & DEBUGGING FLOW
- * ========================================================================
- * NOTES:
- * - 4-step problem solving framework (Jonas method):
- *   1. Understand the problem (ask right questions, clarify inputs/outputs).
- *   2. Divide & conquer (break big problem into sub-problems).
- *   3. Don't be afraid to research (MDN, StackOverflow).
- *   4. Write pseudo-code before actual coding.
- *
- * DEBUGGING TOOLS:
- * - console.log(), console.warn(), console.error(), console.table().
- * - Chrome DevTools: Sources tab → Breakpoints → Step over / Step into / Call stack.
- * - `debugger;` statement in code triggers breakpoint automatically.
- */
 
 function measureKelvin() {
     const measurement = {

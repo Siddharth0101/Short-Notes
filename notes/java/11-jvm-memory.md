@@ -19,6 +19,9 @@ visual: gc-sweep
 - Heap dump — retained objects dekho; thread dump — blocked/waiting execution dekho.
 - `OutOfMemoryError` — heap ke alawa native/metaspace limits bhi check karo.
 - GC tuning — allocation, pause aur live-set evidence se start karo.
+- Metaspace — class metadata; classloader leaks memory retain kar sakte hain.
+- Stack overflow — excessive recursion/depth se; heap allocation problem se alag.
+- JIT — hot code optimize karta hai; benchmark warm-up aur dead-code elimination ka dhyaan.
 
 ## Sources — aur padhne ke liye
 

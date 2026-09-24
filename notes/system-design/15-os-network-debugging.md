@@ -19,6 +19,9 @@ tags: os, networking, tcp, dns, tls, debugging
 - Pool wait — slow request ka reason CPU nahi, resource queue bhi ho sakti hai.
 - Timeout — write hua ya nahi unclear ho sakta hai; retry idempotent banao.
 - Debug — symptoms → layer → evidence → smallest experiment.
+- File descriptor — sockets/files count limits; leaks high-load failures bana sakte hain.
+- DNS cache — stale resolution aur TTL failover latency affect karte hain.
+- Ephemeral ports — outgoing connection churn ports exhaust kar sakta hai; reuse aur connection metrics inspect.
 
 ## Sources — aur padhne ke liye
 

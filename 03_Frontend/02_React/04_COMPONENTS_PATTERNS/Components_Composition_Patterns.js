@@ -1,29 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Composition — small components ko `children`/props se jodo.
+ * - Container — data/control sambhalo; presentational component UI dikhaye.
+ * - Compound components — related parts shared contract/state ke saath kaam karein.
+ * - Controlled API — parent state own kare; uncontrolled API — component own kare.
+ * - CSS Modules — class names scoped; global styles ka accidental clash kam.
+ * - Tailwind — utility classes se style; repeated pattern ko readable rakho.
+ * - Styled components — component ke saath styles; runtime/build tradeoff dekho.
+ * - Accessibility — reusable component mein label, keyboard aur focus contract rakho.
+ * - Render prop — function prop se caller ko rendering customize karne do.
+ * - Prop spreading — internal/private props blindly DOM par forward mat karo.
+ * - Component boundary — reusable API small rakho; har styling detail ko configuration prop mat banao.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * COMPONENTS, COMPOSITION & PATTERNS - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Component design patterns jo Jonas course me cover hote hain.
- * - Composition, reusability, compound components, render props, HOC.
- */
-
-
-/**
- * ========================================================================
- * 1. COMPONENT COMPOSITION
- * ========================================================================
- * NOTES:
- * - Composition = components ko combine karna using children prop.
- * - Prop drilling solve karta hai (kuch cases me).
- * - Instead of passing data through 5 levels, component ko SLOT me daalo.
- *
- * PROP DRILLING:
- * - Parent -> Child1 -> Child2 -> Child3 -> target component.
- * - Beech ke components ko woh data chahiye hi nahi, bas forward kar rahe hain.
- * - Solutions: composition, context, or state management library.
- */
 
 // ❌ PROP DRILLING approach:
 // function App() {
@@ -57,21 +49,6 @@ function MovieList({ movies }) {
     return movies.map(m => <div key={m.id}>{m.title}</div>);
 }
 
-
-/**
- * ========================================================================
- * 2. REUSABLE COMPONENTS
- * ========================================================================
- * NOTES:
- * - Good component: props se behavior customize ho.
- * - External state nahi rakhta (stateless/presentational) ya manageable internal state.
- * - Clear prop API (interface).
- *
- * EXAMPLE: StarRating component
- * - Reusable: koi bhi app me import karo.
- * - Configurable via props: maxRating, color, size, defaultRating, onSetRating.
- * - Internal state: hover/selected rating.
- */
 
 function StarRating({ maxRating = 5, color = '#fcc419', size = 48, onSetRating }) {
     const [rating, setRating] = useState(0);
@@ -108,36 +85,6 @@ function StarRating({ maxRating = 5, color = '#fcc419', size = 48, onSetRating }
 // <StarRating maxRating={10} color="red" onSetRating={setMovieRating} />
 
 
-/**
- * ========================================================================
- * 3. COMPONENT CATEGORIES
- * ========================================================================
- * NOTES:
- * - PRESENTATIONAL (Stateless): sirf props leke UI render.
- *   Zero logic. Reusable. Example: Logo, NumResults, Movie.
- *
- * - STATEFUL: internal state manage karta hai.
- *   UI + logic. Example: SearchBar (input state), MovieList (filtered data).
- *
- * - STRUCTURAL: app structure define karta hai.
- *   Layout components: Pages, App, Sidebar, Header.
- *   Usually composition use karte hain (children prop).
- *
- * NOT RIGID categories — most components are a mix.
- */
-
-
-/**
- * ========================================================================
- * 4. PROP TYPES
- * ========================================================================
- * NOTES:
- * - PropTypes = runtime type checking for props (development me).
- * - package: prop-types
- * - TypeScript better alternative hai (compile-time check).
- * - But quick projects ya existing codebases me PropTypes useful hain.
- */
-
 // import PropTypes from 'prop-types';
 //
 // StarRating.propTypes = {
@@ -147,23 +94,6 @@ function StarRating({ maxRating = 5, color = '#fcc419', size = 48, onSetRating }
 //     onSetRating: PropTypes.func,
 // };
 
-
-/**
- * ========================================================================
- * 5. COMPOUND COMPONENT PATTERN
- * ========================================================================
- * NOTES:
- * - Related components ko ek group me rakho jo TOGETHER kaam karte hain.
- * - Parent component internal state manage karta hai.
- * - Children components parent ke state ko Context se access karte hain.
- * - API clean aur flexible rehti hai.
- *
- * REAL EXAMPLES:
- * - <Select> + <Option>
- * - <Accordion> + <AccordionItem>
- * - <Tabs> + <Tab> + <TabPanel>
- * - HTML: <table> + <thead> + <tr> + <td> (same pattern)
- */
 
 // import { createContext, useContext } from 'react';
 
@@ -213,17 +143,6 @@ function StarRating({ maxRating = 5, color = '#fcc419', size = 48, onSetRating }
 // }
 
 
-/**
- * ========================================================================
- * 6. RENDER PROPS PATTERN
- * ========================================================================
- * NOTES:
- * - Component ko ek function prop pass karo jo JSX return kare.
- * - Component logic handle karta hai, rendering CALLER decide karta hai.
- * - Hooks aane se pehle ye MAIN pattern tha reusable logic ke liye.
- * - Ab custom hooks preferred hain, but legacy code me dikhega.
- */
-
 // function List({ items, render }) {
 //     const [isCollapsed, setIsCollapsed] = useState(false);
 //
@@ -245,18 +164,6 @@ function StarRating({ maxRating = 5, color = '#fcc419', size = 48, onSetRating }
 //     render={(item, i) => <li key={i}>{item.toUpperCase()}</li>}
 // />
 
-
-/**
- * ========================================================================
- * 7. HIGHER-ORDER COMPONENT (HOC) PATTERN
- * ========================================================================
- * NOTES:
- * - HOC = function jo component leke ENHANCED component return kare.
- * - Convention: withSomething naming (withAuth, withTooltip).
- * - Ab mostly custom hooks ne replace kar diya.
- * - But libraries me abhi bhi dikhta hai: React Router's withRouter (legacy),
- *   Redux's connect (legacy).
- */
 
 // function withToggle(WrappedComponent) {
 //     return function EnhancedComponent(props) {

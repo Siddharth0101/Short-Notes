@@ -1,68 +1,24 @@
+/**
+ * ## Quick revision
+ *
+ * - Tree — hierarchical nodes; root, child aur leaf.
+ * - BST — left keys smaller, right larger; duplicate policy explicit rakho.
+ * - Search — O(height); balanced O(log n), skewed O(n).
+ * - DFS — preorder root-left-right; inorder left-root-right; postorder left-right-root.
+ * - BFS — queue se level-wise traverse; width ke hisaab se memory.
+ * - BST validation — ancestor lower/upper bounds pass karo; sirf child compare enough nahi.
+ * - Delete — leaf remove; one child replace; two children mein successor/predecessor.
+ * - Balance — rotations order preserve karke height control karti hain.
+ * - LCA — BST mein values se direction; general tree mein subtree results combine.
+ * - Postorder — height/diameter jaise child results se parent answer banao.
+ * - Trie — prefix lookup O(word length); child representation se memory cost badalta hai.
+ * - Tree height — nodes vs edges convention choose; empty-tree base case usi se match.
+ * - Subtree size — child sizes + 1; order-statistics queries mein useful augmentation.
+ * - Serialization — null markers/shape preserve; values alone tree uniquely reconstruct nahi karte.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * TREES, BINARY SEARCH TREES, TRAVERSALS, TRIES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Tree hierarchical data structure hai.
- * - Root top node hota hai.
- * - Child, parent, sibling, leaf, edge, path, depth, height common terms hain.
- *
- * REAL EXAMPLES:
- * - DOM tree
- * - File system
- * - Organization chart
- * - Comment threads
- */
-
-
-/**
- * ========================================================================
- * 1. TREE TERMS
- * ========================================================================
- *
- * Root: tree ka top node.
- * Parent: jis node ke children hain.
- * Child: parent se connected lower node.
- * Leaf: jiske children nahi.
- * Edge: parent-child connection.
- * Depth: root se node tak distance.
- * Height: node se deepest leaf tak distance.
- * Subtree: tree ka smaller part.
- */
-
-
-/**
- * ========================================================================
- * 2. BINARY SEARCH TREE
- * ========================================================================
- * RULE:
- * - Har node ke left me smaller values.
- * - Har node ke right me larger values.
- *
- * BIG O:
- * - Insert/search average: O(log n)
- * - Insert/search worst: O(n) if tree becomes a line.
- *
- * EXAMPLE - insert + find:
- * Input:  insert(10), insert(6), insert(15), insert(3), insert(8)
- * Tree:
- *          10
- *         /  \
- *        6    15
- *       / \
- *      3   8
- *
- * find(6)  -> true
- * find(99) -> false
- *
- * EXAMPLE - traversals:
- * BFS order:       [10, 6, 15, 3, 8]
- * DFS PreOrder:    [10, 6, 3, 8, 15]
- * DFS InOrder:     [3, 6, 8, 10, 15]  (sorted!)
- * DFS PostOrder:   [3, 8, 6, 15, 10]
- */
 
 class BSTNode {
     constructor(value) {
@@ -224,64 +180,6 @@ console.log(bst.dfsPostOrder()); // [3, 8, 6, 20, 15, 10]
 // Expected Output: undefined  (duplicates not allowed)
 console.log(bst.insert(10)); // undefined
 
-
-/**
- * ========================================================================
- * 3. TREE TRAVERSAL
- * ========================================================================
- * BFS:
- * - Level by level.
- * - Queue use hoti hai.
- * - Shortest path in unweighted tree/graph thinking me useful.
- *
- * DFS PREORDER:
- * - Node, left, right.
- * - Tree copy/serialize karne me useful.
- *
- * DFS INORDER:
- * - Left, node, right.
- * - BST me sorted order deta hai.
- *
- * DFS POSTORDER:
- * - Left, right, node.
- * - Delete/free/evaluate expression tree me useful.
- */
-
-
-/**
- * ========================================================================
- * 4. BALANCED TREES - CONCEPT
- * ========================================================================
- * NOTES:
- * - Normal BST skewed ho sakta hai, then operations O(n).
- * - Balanced BST height ko controlled rakhta hai.
- *
- * EXAMPLES:
- * - AVL Tree
- * - Red Black Tree
- * - B-Tree / B+Tree (databases/file systems)
- */
-
-
-/**
- * ========================================================================
- * 5. TRIE - PREFIX TREE
- * ========================================================================
- * NOTES:
- * - Strings/prefixes store karne ke liye tree.
- * - Autocomplete, dictionary, spell-check, prefix search me useful.
- *
- * TIME:
- * - Insert/search: O(k), k = word length.
- *
- * EXAMPLE:
- * Insert: 'apple', 'app', 'apply', 'bat'
- * search('app')    -> true
- * search('ap')     -> false  ('ap' not a complete word)
- * startsWith('ap') -> true   ('ap' is a valid prefix)
- * search('bat')    -> true
- * search('batman') -> false
- */
 
 class TrieNode {
     constructor() {

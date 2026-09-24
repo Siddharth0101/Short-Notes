@@ -19,6 +19,9 @@ tags: java, concurrency, virtual-threads, executors, backpressure
 - CompletableFuture — async composition; blocking work ke executor ka choice explicit rakho.
 - ThreadLocal — request data cleanup karo; reused threads par leakage ho sakti hai.
 - Shutdown — new work roko, in-flight work ko bounded wait, resources close.
+- CAS loop — compare-and-set fail ho toh latest state se retry; contention cost monitor.
+- CPU work — more threads se cores magically nahi badhte; oversubscription slow kar sakti hai.
+- Queue latency — service time ke saath waiting time include; throughput alone overload hide kar sakta hai.
 
 ## Research notes: Virtual threads still need task ownership
 

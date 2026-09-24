@@ -1,72 +1,27 @@
+/**
+ * ## Quick revision
+ *
+ * - Graph — vertices + edges; direction/weights clarify karo.
+ * - Adjacency list — sparse graphs mein O(V + E) storage.
+ * - BFS — unweighted shortest path; enqueue karte hi visited mark.
+ * - DFS — reachability, cycles aur structural traversal.
+ * - Topological sort — DAG dependency order; cycle ho toh complete order nahi.
+ * - Dijkstra — non-negative weights; negative edge par use mat karo.
+ * - Bellman-Ford — negative edges handle; reachable negative cycle detect kar sakta hai.
+ * - DAG shortest path — topological relaxation; negative edges allowed.
+ * - 0–1 BFS — weights 0/1; deque front/back se O(V + E).
+ * - Union-Find — connectivity; path compression + rank/size useful.
+ * - Path reconstruction — parent pointers se target se source wapas chalo.
+ * - Directed/undirected — edge one-way/two-way; weighted edge ka cost hota hai.
+ * - Adjacency matrix — O(V²) space; edge existence O(1).
+ * - Prim/Kruskal — minimum spanning tree; shortest-path problem se alag.
+ * - Connected components — har unvisited vertex se traversal start; single BFS disconnected nodes miss karega.
+ * - Kahn algorithm — indegree-zero queue; processed count < V ho toh directed cycle hai.
+ * - MST — all vertices minimum total edge cost se connect; source shortest paths se different problem.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * GRAPHS, TRAVERSALS, AND SHORTEST PATH [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Graph nodes/vertices aur connections/edges ka collection hai.
- * - Trees graphs ka special case hain, but graphs me cycles ho sakte hain.
- *
- * REAL EXAMPLES:
- * - Social network
- * - Google Maps
- * - Recommendation systems
- * - Network routing
- * - Dependency graph
- */
-
-
-/**
- * ========================================================================
- * 1. GRAPH TYPES
- * ========================================================================
- *
- * Directed graph:
- * - Edge ka direction hota hai. A -> B.
- *
- * Undirected graph:
- * - Edge two-way hota hai. A - B.
- *
- * Weighted graph:
- * - Edge par cost/distance/time hota hai.
- *
- * Unweighted graph:
- * - Edge same cost maana jaata hai.
- *
- * Cyclic:
- * - Cycle present hai.
- *
- * Acyclic:
- * - Cycle nahi hai.
- */
-
-
-/**
- * ========================================================================
- * 2. GRAPH REPRESENTATION
- * ========================================================================
- *
- * Adjacency matrix:
- * - 2D matrix.
- * - Check edge: O(1)
- * - Space: O(V^2)
- *
- * Adjacency list:
- * - Har vertex ke neighbours ki list.
- * - Space: O(V + E)
- * - Sparse graphs ke liye best.
- *
- * EXAMPLE - Graph operations:
- * addVertex('A'), addVertex('B'), addVertex('C'), addVertex('D')
- * addEdge('A', 'B'), addEdge('A', 'C'), addEdge('B', 'D'), addEdge('C', 'D')
- *
- * adjacencyList:
- * { A: ['B', 'C'], B: ['A', 'D'], C: ['A', 'D'], D: ['B', 'C'] }
- *
- * DFS from 'A': ['A', 'B', 'D', 'C'] or similar (order may vary)
- * BFS from 'A': ['A', 'B', 'C', 'D']  (level by level)
- */
 
 class Graph {
     constructor() {
@@ -216,42 +171,6 @@ console.log(g.adjacencyList['C']); // undefined
 console.log(g.adjacencyList['A']); // []  (A had only C left after B removed)
 
 
-/**
- * ========================================================================
- * 3. DFS VS BFS
- * ========================================================================
- *
- * DFS:
- * - Deep jaata hai pehle.
- * - Stack/recursion use hota hai.
- * - Connected components, cycle detection, topological sort.
- *
- * BFS:
- * - Level by level.
- * - Queue use hoti hai.
- * - Unweighted shortest path.
- */
-
-
-/**
- * ========================================================================
- * 4. WEIGHTED GRAPH AND DIJKSTRA
- * ========================================================================
- * NOTES:
- * - Dijkstra non-negative weights wale graph me shortest path find karta hai.
- * - Priority queue se closest unvisited node pehle process hota hai.
- *
- * TIME:
- * - With binary heap: O((V + E) log V)
- *
- * EXAMPLE:
- * Graph:  A -4-> B, A -2-> C, B -3-> D, C -1-> B, C -5-> D, D -1-> F
- *
- * dijkstra('A', 'F'):
- * Shortest path: A -> C -> B -> D -> F  (cost: 2+1+3+1 = 7)
- * Output: ['A', 'C', 'B', 'D', 'F']
- */
-
 class SimplePriorityQueue {
     constructor() {
         this.values = [];
@@ -361,39 +280,6 @@ console.log(wg.dijkstra('A', 'F')); // ['A', 'C', 'B', 'D', 'F']
 // Expected Output: ['A', 'C', 'B', 'D']  (cost = 2+1+3 = 6)
 console.log(wg.dijkstra('A', 'D')); // ['A', 'C', 'B', 'D']
 
-
-/**
- * ========================================================================
- * 5. OTHER GRAPH ALGORITHMS - SHORT MAP
- * ========================================================================
- *
- * Topological sort:
- * - Directed acyclic graph dependencies order karna.
- * - Example: course prerequisites, build steps.
- *
- * Bellman-Ford:
- * - Negative weights handle kar sakta hai.
- * - Negative cycle detect kar sakta hai.
- *
- * Floyd-Warshall:
- * - All pairs shortest path.
- * - Time O(V^3).
- *
- * Minimum Spanning Tree:
- * - Connect all vertices with minimum total edge weight.
- * - Algorithms: Kruskal, Prim.
- *
- * Union Find / Disjoint Set:
- * - Components merge/find karne ke liye.
- * - Kruskal and cycle detection me useful.
- *
- * EXAMPLE - UnionFind:
- * Size 5 (nodes: 0,1,2,3,4)
- * union(0,1) -> 0 and 1 in same component
- * union(1,2) -> 0,1,2 in same component
- * find(0) === find(2) -> true  (same root)
- * find(3) === find(0) -> false  (3 not yet connected)
- */
 
 class UnionFind {
     constructor(size) {

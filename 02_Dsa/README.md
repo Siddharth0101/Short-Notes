@@ -1,41 +1,22 @@
 # DSA Short Notes
 
-> Pehle [ordered Hinglish course](../notes/README.md#data-structures--algorithms). Yahan original source notes aur examples references ke liye hain.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-Yeh notes bhi repo ke JavaScript aur Frontend jaisi style mein hain: short Hinglish explanations, important rules aur JavaScript examples.
+## Topics
 
-## Padhne ka suggested order
-
-1. `01_FOUNDATIONS/Big_O_Notation.js`
-2. `01_FOUNDATIONS/Arrays_Objects_Strings.js`
-3. `02_PATTERNS/Problem_Solving_Approach.js`
-4. `02_PATTERNS/Common_Problem_Solving_Patterns.js`
-5. `03_RECURSION/Recursion_Backtracking.js`
-6. `04_SEARCHING/Searching_Algorithms.js`
-7. `05_SORTING/Sorting_Algorithms.js`
-8. `06_LINKED_LISTS/Singly_Doubly_Linked_List.js`
-9. `07_STACKS_QUEUES/Stacks_Queues.js`
-10. `08_TREES/Trees_BST_Traversal.js`
-11. `09_HEAPS/Binary_Heaps_Priority_Queue.js`
-12. `10_HASH_TABLES/Hash_Tables.js`
-13. `11_GRAPHS/Graphs_Traversal_Dijkstra.js`
-14. `12_DYNAMIC_PROGRAMMING/Dynamic_Programming.js`
-15. `13_ADVANCED/Advanced_DSA_Concepts.js`
-16. `14_CHEATSHEETS/DSA_Interview_Cheat_Sheet.js`
-
-## Yahan kya cover hai
-
-- Big O, time complexity, space complexity, logarithms
-- Objects, arrays, strings, built-in operations
-- Problem solving approach and common patterns
-- Recursion, helper recursion, pure recursion, backtracking
-- Linear search, binary search, string search
-- Bubble, selection, insertion, merge, quick, radix sort
-- Singly linked list and doubly linked list
-- Stacks, queues, trees, BST, traversals
-- Binary heaps, priority queues, hash tables
-- Graph representation, DFS, BFS, Dijkstra
-- Dynamic programming, memoization, tabulation
-- Greedy, intervals, bit manipulation, bitmasking
-- Segment tree, Fenwick tree, rolling hash, advanced concept map
-- Interview cheat sheet and broader DSA concept map
+- [Foundations](01_FOUNDATIONS/) — topic files kholo.
+- [Patterns](02_PATTERNS/) — topic files kholo.
+- [Recursion](03_RECURSION/) — topic files kholo.
+- [Searching](04_SEARCHING/) — topic files kholo.
+- [Sorting](05_SORTING/) — topic files kholo.
+- [Linked Lists](06_LINKED_LISTS/) — topic files kholo.
+- [Stacks Queues](07_STACKS_QUEUES/) — topic files kholo.
+- [Trees](08_TREES/) — topic files kholo.
+- [Heaps](09_HEAPS/) — topic files kholo.
+- [Hash Tables](10_HASH_TABLES/) — topic files kholo.
+- [Graphs](11_GRAPHS/) — topic files kholo.
+- [Dynamic Programming](12_DYNAMIC_PROGRAMMING/) — topic files kholo.
+- [Advanced](13_ADVANCED/) — topic files kholo.
+- [Cheatsheets](14_CHEATSHEETS/) — topic files kholo.

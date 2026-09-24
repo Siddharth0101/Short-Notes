@@ -1,31 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - Recursion — function smaller subproblem ko call karta hai.
+ * - Base case — recursion rokne ka valid smallest case.
+ * - Progress — har call base case ke paas jaaye.
+ * - Call stack — pending calls memory leti hain; depth limit socho.
+ * - Backtracking — choose → explore → undo.
+ * - Pruning — impossible branch early skip; valid solutions lose na karo.
+ * - Snapshot — result mein mutable path ki copy save karo.
+ * - Memoization — same state ka computed result reuse karo.
+ * - Complexity — branching factor aur depth se tree size estimate karo.
+ * - Permutations/subsets — order matters / selection matters; duplicate handling accordingly.
+ * - Visited undo — path-specific visited mark ko backtrack par release; global graph visited ka rule alag.
+ * - Tail recursion — language/runtime optimization guaranteed na ho toh stack space still count karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * RECURSION AND BACKTRACKING [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Recursion = function khud ko call karta hai.
- * - Har recursive call call stack me ek new frame add karti hai.
- * - Recursive solution me 2 cheezein mandatory hain (Colt Steele's Rule):
- *   1. Base Case (The condition when the recursion ends)
- *   2. Different Input (Calling the function again with a different piece of data)
- */
-
-
-/**
- * ========================================================================
- * 1. CALL STACK
- * ========================================================================
- * NOTES:
- * - Function call hota hai -> stack me push.
- * - Function return hota hai -> stack se pop.
- * - Base case missing hua to stack overflow.
- *
- * EXAMPLE - countDown:
- * Input:  3
- * Output: 3  2  1  'All done'
- */
 
 function countDown(num) {
     if (num <= 0) {
@@ -45,24 +36,6 @@ countDown(3); // 3, 2, 1, All done
 // Expected Output: 'All done'  (base case immediately)
 countDown(0); // All done
 
-
-/**
- * ========================================================================
- * 2. BASIC RECURSION EXAMPLES
- * ========================================================================
- *
- * EXAMPLE - factorial:
- * Input:  5
- * Output: 120  (5 * 4 * 3 * 2 * 1)
- *
- * EXAMPLE - sumRange:
- * Input:  4
- * Output: 10  (4 + 3 + 2 + 1)
- *
- * EXAMPLE - power:
- * Input:  base=2, exponent=3
- * Output: 8  (2 * 2 * 2)
- */
 
 function factorial(num) {
     if (num === 0 || num === 1) return 1;
@@ -112,32 +85,6 @@ console.log(power(5, 0)); // 1
 console.log(power(3, 4)); // 81
 
 
-/**
- * ========================================================================
- * 3. COMMON RECURSION MISTAKES (Colt Steele's Callouts)
- * ========================================================================
- * MISTAKES (Where things go wrong):
- * - No base case (or base case is missing/wrong) -> leads to Stack Overflow!
- * - Forgetting to return or returning the wrong thing!
- * - Recursive call same input se ho rahi hai (Not changing the input).
- * - Console.log instead of returning the value.
- */
-
-
-/**
- * ========================================================================
- * 4. HELPER METHOD RECURSION
- * ========================================================================
- * NOTES:
- * - Outer function result variable banata hai.
- * - Inner helper recursive kaam karta hai.
- * - Jab result collect karna ho, ye style easy hota hai.
- *
- * EXAMPLE - collectOddValues:
- * Input:  [1, 2, 3, 4, 5, 6, 7, 8, 9]
- * Output: [1, 3, 5, 7, 9]
- */
-
 function collectOddValues(arr) {
     const result = [];
 
@@ -164,24 +111,6 @@ console.log(collectOddValues([1, 2, 3, 4, 5, 6, 7, 8, 9])); // [1, 3, 5, 7, 9]
 console.log(collectOddValues([2, 4, 6, 8])); // []
 
 
-/**
- * ========================================================================
- * 5. PURE RECURSION
- * ========================================================================
- * NOTES:
- * - Helper array nahi, function return values combine karta hai.
- * - Space zyada lag sakti hai because new arrays bante hain.
- *
- * COLT STEELE'S PURE RECURSION TIPS:
- * - For arrays, use methods like `slice`, the `spread operator`, and `concat` that make copies of arrays so you do not mutate them.
- * - Remember that strings are immutable so you will need to use methods like `slice`, `substr`, or `substring` to make copies of strings.
- * - To make copies of objects use `Object.assign`, or the `spread operator`.
- *
- * EXAMPLE - collectOddValuesPure:
- * Input:  [1, 2, 3, 4, 5]
- * Output: [1, 3, 5]
- */
-
 function collectOddValuesPure(arr) {
     let newArr = [];
 
@@ -203,26 +132,6 @@ console.log(collectOddValuesPure([1, 2, 3, 4, 5])); // [1, 3, 5]
 // Expected Output: []
 console.log(collectOddValuesPure([4, 6, 8])); // []
 
-
-/**
- * ========================================================================
- * 6. RECURSION WITH ARRAYS/STRINGS
- * ========================================================================
- *
- * EXAMPLE - productOfArray:
- * Input:  [1, 2, 3, 4]
- * Output: 24  (1 * 2 * 3 * 4)
- *
- * EXAMPLE - reverseString:
- * Input:  'hello'
- * Output: 'olleh'
- *
- * EXAMPLE - isPalindrome:
- * Input:  'racecar'
- * Output: true
- * Input:  'hello'
- * Output: false
- */
 
 function productOfArray(arr) {
     if (arr.length === 0) return 1;
@@ -268,24 +177,6 @@ console.log(isPalindrome('hello')); // false
 // Expected Output: true  (single char is palindrome)
 console.log(isPalindrome('a')); // true
 
-
-/**
- * ========================================================================
- * 7. BACKTRACKING
- * ========================================================================
- * NOTES:
- * - Backtracking = choice lo, explore karo, undo karo.
- * - Useful for permutations, combinations, subsets, maze, N-Queens, Sudoku.
- * - Brute force hota hai but pruning se optimized ho sakta hai.
- *
- * EXAMPLE - getPermutations:
- * Input:  [1, 2, 3]
- * Output: [ [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1] ]  (6 = 3! permutations)
- *
- * EXAMPLE - getSubsets:
- * Input:  [1, 2, 3]
- * Output: [ [], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3] ]  (8 = 2^3 subsets)
- */
 
 function getPermutations(nums) {
     const result = [];
@@ -348,21 +239,3 @@ console.log(getSubsets([1, 2, 3]));
 // Sample Input:  [1, 2]
 // Expected Output: 4 subsets: [ [], [1], [1,2], [2] ]
 console.log(getSubsets([1, 2])); // [ [], [1], [1, 2], [2] ]
-
-
-/**
- * ========================================================================
- * 8. RECURSION VS ITERATION
- * ========================================================================
- * NOTES:
- * - Recursion code clean bana sakta hai, especially trees/graphs/backtracking.
- * - Iteration stack overflow avoid karta hai.
- * - JS me very deep recursion dangerous ho sakti hai.
- *
- * GOOD FIT FOR RECURSION:
- * - Tree traversal
- * - Graph DFS
- * - Divide and conquer
- * - Backtracking
- * - Dynamic programming top-down
- */

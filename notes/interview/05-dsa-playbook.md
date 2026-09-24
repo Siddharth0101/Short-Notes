@@ -19,6 +19,9 @@ visual: dynamic-programming
 - Complexity — time + extra space + recursion stack; input variables define karo.
 - Verify — empty, singleton, duplicates, extremes aur normal example.
 - Tradeoff — sorting mutates? extra memory? streaming input? contract check karo.
+- Think aloud — next decision aur reason bolo; har typed character narrate karna zaroori nahi.
+- Counterexample — proposed pattern ko negative/duplicate/extreme input se challenge.
+- Incomplete solution — working part, remaining bug aur next step honestly batao.
 
 ## Research notes: Prove before optimizing
 

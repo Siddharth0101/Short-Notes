@@ -21,6 +21,9 @@ visual: react-render
 - Transition — non-urgent update mark; computation magically cheap nahi hoti.
 - Virtualization — visible list window render; stable identity/accessibility preserve karo.
 - Production — bundle, errors, accessibility aur real-user performance verify karo.
+- Deferred value — expensive result ko lagging value se render; network requests automatically debounce nahi hoti.
+- Bundle split — very tiny chunks bhi request overhead badha sakte hain; loading behavior measure karo.
+- Render purity — memoization hataane par bhi component logically correct rehna chahiye.
 
 ## Research notes: Measure user experience as well as renders
 

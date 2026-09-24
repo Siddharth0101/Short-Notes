@@ -19,6 +19,9 @@ visual: monotonic-stack
 - Amortized O(n) — har item ek baar push aur maximum ek baar pop.
 - Daily temperatures — warmer day ka index minus old index answer.
 - Unresolved — scan ke end par bache items ka default answer rakho.
+- Histogram area — popped bar ki height × nearest smaller boundaries ke beech width.
+- Circular next-greater — indices wrap karke two-pass scan; answers/stack additions bounded rakho.
+- Monotonic deque — expired front aur dominated back hataakar sliding maximum maintain.
 
 ## Sources — aur padhne ke liye
 

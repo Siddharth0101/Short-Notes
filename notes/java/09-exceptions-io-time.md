@@ -19,6 +19,9 @@ tags: exceptions, io, time, resources
 - Path/Files — filesystem operations; missing file aur permission errors handle karo.
 - `Instant` — timestamp; `LocalDate` — date; `ZonedDateTime` — timezone ke saath date/time.
 - Exception handling — useful context do, secrets log mat karo, failure silently swallow mat karo.
+- Suppressed exception — try-with-resources cleanup failure main exception ke saath attach ho sakti hai.
+- Charset — byte/text conversion mein explicit encoding; platform default par blind depend mat karo.
+- Duration/Period — elapsed time-based amount / calendar date-based amount.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: Execution contexts scope and closures
 track: javascript
 order: 9
 level: Intermediate
-minutes: 1
+minutes: 2
 summary: Scope — variable kahan accessible hai; lexical scope code ki location se decide hota hai.
 tags: scope, closures, hoisting, execution-context, memory
 visual: closures
@@ -22,6 +22,9 @@ visual: closures
 - TDZ — lexical binding initialize hone tak access error deta hai.
 - Memory — reachable closure captured objects ko alive rakh sakta hai.
 - Use — private counters, callbacks aur function factories.
+- Factory isolation — outer function ki har call apni local bindings banati hai.
+- Captured reference — object reachable rahe toh closure se uske latest mutations dikh sakte hain.
+- Shadowing trap — inner same-name binding TDZ mein ho toh outer value fallback nahi milti.
 
 ## Research notes: Live bindings versus snapshots
 

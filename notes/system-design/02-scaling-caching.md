@@ -21,6 +21,9 @@ visual: caching
 - Stampede — same miss par duplicate work; coalescing, jitter ya refresh control.
 - Replication — copies for reads/availability; lag ho sakta hai.
 - Partitioning — data split; key skew aur hot partitions socho.
+- Hot key — ek popular key/shard bottleneck; replication, splitting ya coalescing consider.
+- Negative cache — not-found result briefly cache; creation ke baad staleness rule chahiye.
+- Consistent hashing — membership change par limited keys remap; balancing replicas/virtual nodes se improve.
 
 ## Research notes: Define behavior beyond capacity
 

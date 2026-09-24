@@ -1,26 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - NOT NULL — missing value reject.
+ * - UNIQUE — duplicate keys reject; NULL behavior DB/options se confirm karo.
+ * - PRIMARY KEY — unique + non-null row identity.
+ * - FOREIGN KEY — referenced row exist kare; delete/update action define karo.
+ * - CHECK — row rule; NULL/unknown pass ho sakta hai, NOT NULL alag lagao.
+ * - DEFAULT — omitted field ki default value; explicit NULL ko automatically replace nahi karta.
+ * - App validation — clear message; DB constraint — concurrent writes ke against final guard.
+ * - Migration — existing bad rows clean/validate karke constraint add karo.
+ * - Cross-row rule — plain row CHECK se arbitrary other rows safely enforce nahi hote; appropriate constraint/transaction choose.
+ * - Race guard — app pre-check pass hone ke baad concurrent insert ho sakta hai; database uniqueness final guard.
+ * - Constraint name — stable meaningful names se violations ko useful errors mein map karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * VALIDATION AND CONSTRAINTS - SHORT NOTES (Stephen Grider Course)
- * ========================================================================
- * NOTES:
- * - Constraints = database level pe data integrity enforce karne ke rules.
- * - Application-level validation ke saath saath DB-level constraints bhi ZARURI hain.
- * - Agar constraint violate hota hai → INSERT/UPDATE fail with error.
- * - Defense in depth: app + DB dono pe validation rakho.
- */
-
-
-/**
- * ========================================================================
- * 1. NOT NULL
- * ========================================================================
- * NOTES:
- * - Column me NULL value insert nahi hone deta.
- * - Required fields ke liye use karo.
- * - Default me columns NULL allowed hain (unless NOT NULL lagao).
- */
 
 // CREATE TABLE users (
 //     id SERIAL PRIMARY KEY,
@@ -32,17 +27,6 @@
 // INSERT INTO users (username) VALUES ('grider');  -- ❌ ERROR: email is NOT NULL
 
 
-/**
- * ========================================================================
- * 2. UNIQUE
- * ========================================================================
- * NOTES:
- * - Column ki values duplicate nahi ho sakti.
- * - NULL values ko UNIQUE constraint affect nahi karta.
- *   (Multiple NULLs allowed hain unique column me — PostgreSQL behavior).
- * - Unique automatically ek index create karta hai (fast lookups).
- */
-
 // CREATE TABLE users (
 //     id SERIAL PRIMARY KEY,
 //     email VARCHAR(100) UNIQUE NOT NULL,
@@ -52,17 +36,6 @@
 // INSERT INTO users (email) VALUES ('a@b.com');
 // INSERT INTO users (email) VALUES ('a@b.com');  -- ❌ ERROR: duplicate key
 
-
-/**
- * ========================================================================
- * 3. PRIMARY KEY
- * ========================================================================
- * NOTES:
- * - PRIMARY KEY = UNIQUE + NOT NULL.
- * - Har row ko uniquely identify karta hai.
- * - Ek table me sirf EK primary key allowed.
- * - Composite primary key bhi ho sakti hai (multiple columns).
- */
 
 // -- Single column PK
 // CREATE TABLE users (
@@ -77,17 +50,6 @@
 //     PRIMARY KEY (student_id, course_id)    -- combination unique honi chahiye
 // );
 
-
-/**
- * ========================================================================
- * 4. FOREIGN KEY
- * ========================================================================
- * NOTES:
- * - Referential integrity enforce karta hai.
- * - FK value ZARURI parent table ki PK me exist karni chahiye (ya NULL).
- * - ON DELETE / ON UPDATE actions define karo.
- * - Inline ya table-level dono tarike se define ho sakta hai.
- */
 
 // -- Inline FK
 // CREATE TABLE photos (
@@ -106,16 +68,6 @@
 // );
 
 
-/**
- * ========================================================================
- * 5. DEFAULT
- * ========================================================================
- * NOTES:
- * - Column ki default value define karta hai jab INSERT me value na di jaaye.
- * - Functions bhi default value ho sakti hain (CURRENT_TIMESTAMP, NOW()).
- * - NULL insert karne pe DEFAULT USE NAHI HOTA — sirf omit karne pe hota hai.
- */
-
 // CREATE TABLE posts (
 //     id SERIAL PRIMARY KEY,
 //     title VARCHAR(200) NOT NULL,
@@ -130,17 +82,6 @@
 // INSERT INTO posts (title, is_published) VALUES ('Draft', NULL);
 // -- ⚠️ is_published = NULL (not false!) — NULL was explicitly given
 
-
-/**
- * ========================================================================
- * 6. CHECK CONSTRAINT
- * ========================================================================
- * NOTES:
- * - Custom validation rule define karta hai.
- * - Expression true honi chahiye for INSERT/UPDATE to succeed.
- * - Complex business rules enforce karne ke liye powerful.
- * - Column-level ya table-level dono pe define ho sakta hai.
- */
 
 // -- Column-level CHECK
 // CREATE TABLE products (
@@ -171,16 +112,6 @@
 // INSERT INTO products (name, price) VALUES ('Widget', -5);  -- ❌ CHECK violation
 
 
-/**
- * ========================================================================
- * 7. MULTI-COLUMN UNIQUE CONSTRAINT
- * ========================================================================
- * NOTES:
- * - Individual columns duplicate ho sakti hain, but COMBINATION unique honi chahiye.
- * - Example: Ek user ek post pe sirf ek baar like kar sakta hai.
- * - Table-level UNIQUE constraint define karo.
- */
-
 // CREATE TABLE likes (
 //     id SERIAL PRIMARY KEY,
 //     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
@@ -197,16 +128,6 @@
 //     CONSTRAINT no_self_follow CHECK (follower_id <> following_id)
 // );
 
-
-/**
- * ========================================================================
- * 8. ADDING / DROPPING CONSTRAINTS (ALTER TABLE)
- * ========================================================================
- * NOTES:
- * - Existing table me constraints baad me add/remove kar sakte ho.
- * - Named constraints drop karna easier hai.
- * - Constraint add karte waqt existing data violate kare toh ERROR.
- */
 
 // -- Add NOT NULL
 // ALTER TABLE users ALTER COLUMN email SET NOT NULL;
@@ -235,16 +156,6 @@
 // ALTER TABLE photos DROP CONSTRAINT fk_user;
 
 
-/**
- * ========================================================================
- * 9. EXCLUSION CONSTRAINTS (ADVANCED)
- * ========================================================================
- * NOTES:
- * - PostgreSQL specific. Overlap ya conflict prevent karte hain.
- * - Common use: date ranges overlap nahi hone chahiye.
- * - btree_gist extension enable karna padta hai.
- */
-
 // CREATE EXTENSION IF NOT EXISTS btree_gist;
 //
 // CREATE TABLE room_bookings (
@@ -258,40 +169,6 @@
 // );
 // -- Same room ke overlapping bookings automatically block ho jayengi
 
-
-/**
- * ========================================================================
- * 10. CONSTRAINT VALIDATION TABLE [⚡ VISUAL]
- * ========================================================================
- *
- * ┌─────────────────────┬──────────────────────────────────────────────────────┐
- * │ Constraint          │ What it Enforces                                     │
- * ├─────────────────────┼──────────────────────────────────────────────────────┤
- * │ NOT NULL            │ Column must have a value (no NULL)                   │
- * │ UNIQUE              │ No duplicate values (NULLs allowed)                  │
- * │ PRIMARY KEY         │ NOT NULL + UNIQUE (row identifier)                   │
- * │ FOREIGN KEY         │ Value must exist in referenced table                 │
- * │ DEFAULT             │ Auto-fill value when omitted in INSERT               │
- * │ CHECK               │ Custom boolean condition must be true                │
- * │ EXCLUSION           │ Prevents conflicting rows (e.g. overlaps)            │
- * │ UNIQUE(col1, col2)  │ Combination must be unique                          │
- * └─────────────────────┴──────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 11. CONSTRAINT RULES
- * ========================================================================
- * - Always name constraints (easier to drop/debug later).
- * - NOT NULL on required fields — never trust application alone.
- * - UNIQUE on emails, usernames etc.
- * - CHECK for business rules (price > 0, end_date >= start_date).
- * - FK constraints maintain referential integrity — always use.
- * - Multi-column UNIQUE for "one per" rules (one like per user per post).
- * - Add constraints AFTER initial data load causes error if data violates.
- * - Constraints are checked on INSERT, UPDATE (not SELECT).
- */
 
 const constraintRules = {
     naming: 'Always name your constraints',

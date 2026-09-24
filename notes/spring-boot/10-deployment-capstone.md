@@ -18,6 +18,9 @@ tags: spring, deployment, capstone
 - Graceful shutdown — traffic drain, in-flight wait aur resources close.
 - Deployment — small rollout, health checks aur rollback plan.
 - Capstone — validation, auth, transaction, duplicate retry aur recovery verify karo.
+- Resource limits — container memory/CPU budget aur JVM/application usage align karo.
+- Image tag — immutable version/digest se exact deployed artifact identify karo.
+- Smoke check — release ke baad critical route + persistence + dependency path verify karo.
 
 ## Sources — aur padhne ke liye
 

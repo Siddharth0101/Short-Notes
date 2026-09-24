@@ -18,6 +18,9 @@ tags: frontend, react, system-design, accessibility, caching
 - Performance — measure likely bottleneck; list/image/network budget do.
 - Accessibility — keyboard/focus behavior design ka part hai.
 - Tradeoff — choice ke saath rejected alternative ka concrete cost bolo.
+- Capacity — rendered items, payload size, concurrent requests aur memory budget quantify.
+- Recoverable UI — retry action user input preserve kare; whole page reset zaroori nahi.
+- Observability plan — error rate, interaction latency aur failed request correlation include.
 
 ## Sources — aur padhne ke liye
 

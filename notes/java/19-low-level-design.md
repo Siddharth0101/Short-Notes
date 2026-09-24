@@ -20,6 +20,9 @@ tags: lld, oop, design, concurrency, contracts
 - Composition — inheritance se pehle delegation consider karo.
 - Concurrency — shared invariant ko atomic boundary ke andar enforce karo.
 - Testing — public behavior aur failure paths verify karo.
+- Interface segregation — client ko unnecessary methods implement/use karne par force mat karo.
+- State machine — allowed transitions explicit; invalid order of operations reject karo.
+- Composition root — dependencies ek clear assembly point par wire karo.
 
 ## Sources — aur padhne ke liye
 

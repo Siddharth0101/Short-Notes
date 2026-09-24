@@ -1,57 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Local state — sirf component use kare toh paas rakho.
+ * - Context — tree mein value share; changed value consumers rerender kara sakti hai.
+ * - `useReducer` — action se next state; reducer pure rakho.
+ * - Context split — unrelated fast-changing values alag providers mein rakho.
+ * - Redux — predictable shared store; actions se state transitions.
+ * - Redux Toolkit — reducers mein draft mutation syntax Immer handle karta hai.
+ * - Selector — needed slice padho; unstable return references extra renders kara sakte hain.
+ * - Server state — fetching/cache tool ko do; store mein duplicate copy se bacho.
+ * - Reducer action — event ka meaning express karo, jaise itemAdded; reducer ke andar network call nahi.
+ * - Normalized store — entities ID se rakho; repeated nested copies ka update cost kam.
+ * - Dispatch/context — value objects ki identity stable rakhna unnecessary notifications kam kar sakta hai.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * REDUX & REDUX TOOLKIT - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Redux = global state management library based on Flux architecture.
- * - Single source of truth (store), read-only state, changes via pure functions (reducers).
- * - Redux Toolkit (RTK) = modern, opinionated, batteries-included standard way to write Redux.
- *
- * REDUX FLOW:
- * ┌─────────────────────────────────────────────────────────────────┐
- * │                                                                 │
- * │  ┌──────────────┐     dispatch(action)     ┌─────────────────┐  │
- * │  │  UI Component│ ───────────────────────> │ Reducer Function│  │
- * │  └──────▲───────┘                          └────────┬────────┘  │
- * │         │                                           │           │
- * │         │ useSelector                               │ new state │
- * │         │                                           ▼           │
- * │  ┌──────┴───────────────────────────────────────────┴──────┐   │
- * │  │                   REDUX STORE                           │   │
- * │  └─────────────────────────────────────────────────────────┘   │
- * │                                                                 │
- * └─────────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. CLASSIC REDUX VS REDUX TOOLKIT (RTK)
- * ========================================================================
- * NOTES:
- * ┌─────────────────────────────┬─────────────────────────────────┐
- * │ Classic Redux (Legacy)      │ Redux Toolkit (Modern RTK)      │
- * ├─────────────────────────────┼─────────────────────────────────┤
- * │ Boilerplate heavy           │ Minimal boilerplate             │
- * │ Manual action creators      │ Auto-generated actions          │
- * │ Manual immutable updates    │ Immer built-in (mutable syntax) │
- * │ Manual thunk setup          │ createAsyncThunk built-in       │
- * │ Complex store configuration │ configureStore auto setup       │
- * └─────────────────────────────┴─────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 2. REDUX TOOLKIT: CREATING A SLICE
- * ========================================================================
- * NOTES:
- * - Slice = state + reducers + actions for a single feature.
- * - createSlice automatically generates action creators and action types.
- * - Mutating syntax (state.value++) is allowed inside createSlice because of Immer!
- */
 
 // import { createSlice } from '@reduxjs/toolkit';
 
@@ -99,14 +63,6 @@
 // export default accountSlice.reducer;
 
 
-/**
- * ========================================================================
- * 3. CONFIGURING THE STORE
- * ========================================================================
- * NOTES:
- * - configureStore combines reducers and sets up DevTools & Middleware automatically.
- */
-
 // import { configureStore } from '@reduxjs/toolkit';
 // import accountReducer from './accountSlice';
 // import userReducer from './userSlice';
@@ -120,16 +76,6 @@
 //
 // export default store;
 
-
-/**
- * ========================================================================
- * 4. CONNECTING TO REACT (Provider, useSelector, useDispatch)
- * ========================================================================
- * NOTES:
- * - Provider wraps the App.
- * - useSelector reads state.
- * - useDispatch triggers actions.
- */
 
 // import { Provider, useSelector, useDispatch } from 'react-redux';
 // import store from './store';
@@ -149,15 +95,6 @@
 //     return <div>Balance: {balance}</div>;
 // }
 
-
-/**
- * ========================================================================
- * 5. ASYNC THUNKS (createAsyncThunk)
- * ========================================================================
- * NOTES:
- * - Async logic (API calls) inside Redux requires Thunks.
- * - createAsyncThunk generates pending, fulfilled, rejected action types.
- */
 
 // import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 //
@@ -188,19 +125,3 @@
 //             });
 //     },
 // });
-
-
-/**
- * ========================================================================
- * 6. REDUX VS CONTEXT API VS ZUSTAND / REACT QUERY
- * ========================================================================
- * NOTES:
- * ┌─────────────────────┬──────────────────┬──────────────────┬──────────────────┐
- * │ Feature             │ Context API      │ Redux Toolkit    │ React Query      │
- * ├─────────────────────┼──────────────────┼──────────────────┼──────────────────┤
- * │ Primary Use         │ Shared UI state  │ Complex App state│ Server Data      │
- * │ Boilerplate         │ Low              │ Medium           │ Low              │
- * │ Perf (Re-renders)   │ Re-renders all   │ Optimized (sub)  │ Cache optimized  │
- * │ DevTools            │ React DevTools   │ Redux DevTools   │ RQ DevTools      │
- * └─────────────────────┴──────────────────┴──────────────────┴──────────────────┘
- */

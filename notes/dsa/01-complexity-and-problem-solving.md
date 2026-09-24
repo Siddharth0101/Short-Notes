@@ -20,6 +20,9 @@ tags: big-o, complexity, problem-solving, invariants
 - Recursion — calls × per-call work; stack depth bhi count karo.
 - Solve — constraints → brute force → bottleneck → invariant → optimize.
 - JS trap — `shift`, `slice`, spread aur string copies ka cost mat bhoolo.
+- Independent inputs — two lists sizes n,m hon toh O(n+m); blindly O(n) mat bolo.
+- Log base — constant bases Big-O mein equivalent; repeated halving logarithmic growth deta hai.
+- Output space — result materialize karna required ho toh minimum output-size cost bhi batao.
 
 ## Sources — aur padhne ke liye
 

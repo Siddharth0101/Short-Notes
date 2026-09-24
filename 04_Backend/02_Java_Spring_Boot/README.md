@@ -1,8 +1,10 @@
 # Java & Spring Boot
 
-This section contains Java, Spring Boot, and related database notes.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-## Padhne ka suggested order
+## Topics
 
-1. `01_Java_Notes/README.md` (Main Java and Spring Boot notes)
-2. `02_SQL/README.md` (JDBC and Hibernate ORM notes)
+- [Java Notes](01_Java_Notes/README.md) — topic files kholo.
+- [Sql](02_SQL/README.md) — topic files kholo.

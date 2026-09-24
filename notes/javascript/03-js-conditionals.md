@@ -19,6 +19,9 @@ tags: fundamentals, js, conditionals
 - Ternary — `condition ? yes : no`; chhoti value selection ke liye.
 - `switch` — cases strict equality se match; fall-through rokne ko `break`.
 - Boundary — `age >= 18` mein 18 included hai; 17, 18, 19 se check karo.
+- Guard clause — invalid/finished case par early return; nesting kam hoti hai.
+- Optional value — `user?.age ?? 0` missing user/age handle karta hai, valid zero bachata hai.
+- Assignment trap — `if (x = 5)` assign karta hai; comparison ke liye `===`.
 
 ## Sources — aur padhne ke liye
 

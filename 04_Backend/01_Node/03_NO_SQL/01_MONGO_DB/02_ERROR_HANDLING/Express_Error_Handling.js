@@ -1,55 +1,26 @@
+/**
+ * ## Quick revision
+ *
+ * - Express — routing aur middleware ka HTTP framework.
+ * - Middleware — order matters; response bhejo ya `next()` se control do.
+ * - Route — method + path + handler; input ki type/range validate karo.
+ * - Express 5 — returned rejected Promise error flow mein jaati hai; detached async work alag handle karo.
+ * - Error handler — `(err, req, res, next)`; routes ke baad register karo.
+ * - Double response — send ke baad execution/control flow rokna ya return karna socho.
+ * - REST — resource URL, consistent methods/status aur bounded pagination.
+ * - Error response — safe message/code; stack trace client ko nahi.
+ * - 404 handler — unmatched route response; thrown exception se alag flow.
+ * - Body limit — parser/upload payload bound karo; unlimited request memory risk.
+ * - Middleware continuation — next() ke baad current JS execution automatically return nahi hoti.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * EXPRESS ERROR HANDLING - SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Error handling scattered nahi hona chahiye.
- * - Jonas style: AppError class + catchAsync wrapper + global error middleware.
- */
-
-
-/**
- * ========================================================================
- * 1. TYPES OF ERRORS
- * ========================================================================
- * OPERATIONAL ERRORS:
- * - Predictable problems.
- * - Invalid user input, invalid DB id, duplicate email, not found.
- * - Client ko safe message bhej sakte hain.
- *
- * PROGRAMMING ERRORS:
- * - Bugs in code.
- * - Undefined variable, wrong function call, bad logic.
- * - Production me details leak nahi karna.
- */
-
-
-/**
- * ========================================================================
- * 2. UNHANDLED ROUTES
- * ========================================================================
- * NOTES:
- * - Sab routes ke baad catch-all route/middleware rakho.
- * - app.all('*') all HTTP methods catch karta hai.
- */
 
 // app.all('*', (req, res, next) => {
 //     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 // });
 
-
-/**
- * ========================================================================
- * 3. APPERROR CLASS
- * ========================================================================
- * NOTES:
- * - Custom operational error.
- * - statusCode -> 404, 400 etc.
- * - status -> fail/client or error/server.
- * - isOperational -> trusted error.
- */
 
 class AppError extends Error {
     constructor(message, statusCode) {
@@ -66,15 +37,6 @@ class AppError extends Error {
 console.log(new AppError('Not found', 404).status);
 
 
-/**
- * ========================================================================
- * 4. GLOBAL ERROR MIDDLEWARE
- * ========================================================================
- * NOTES:
- * - Express error middleware has 4 args: err, req, res, next.
- * - Ye middleware routes ke baad mount hota hai.
- */
-
 // app.use((err, req, res, next) => {
 //     err.statusCode = err.statusCode || 500;
 //     err.status = err.status || 'error';
@@ -85,20 +47,6 @@ console.log(new AppError('Not found', 404).status);
 //     });
 // });
 
-
-/**
- * ========================================================================
- * 5. DEVELOPMENT VS PRODUCTION ERRORS
- * ========================================================================
- * DEVELOPMENT:
- * - Full stack trace.
- * - Full error object.
- * - Helpful debugging.
- *
- * PRODUCTION:
- * - Operational error -> safe message.
- * - Programming/unknown error -> generic message.
- */
 
 // const sendErrorDev = (err, res) => {
 //     res.status(err.statusCode).json({
@@ -119,15 +67,6 @@ console.log(new AppError('Not found', 404).status);
 // };
 
 
-/**
- * ========================================================================
- * 6. CATCHING ASYNC ERRORS
- * ========================================================================
- * NOTES:
- * - Async controller me try/catch repeat karna boring hai.
- * - catchAsync promise rejection ko next(err) bhejta hai.
- */
-
 const catchAsync = fn => {
     return (req, res, next) => {
         fn(req, res, next).catch(next);
@@ -147,29 +86,11 @@ console.log(typeof catchAsync);
 // });
 
 
-/**
- * ========================================================================
- * 7. MONGOOSE CASTERROR
- * ========================================================================
- * NOTES:
- * - Invalid ObjectId format se CastError aata hai.
- * - Production me friendly 400 response do.
- */
-
 // const handleCastErrorDB = err => {
 //     const message = `Invalid ${err.path}: ${err.value}`;
 //     return new AppError(message, 400);
 // };
 
-
-/**
- * ========================================================================
- * 8. DUPLICATE FIELDS
- * ========================================================================
- * NOTES:
- * - MongoDB duplicate unique field error code: 11000.
- * - Example: duplicate tour name or email.
- */
 
 // const handleDuplicateFieldsDB = err => {
 //     const value = err.keyValue ? Object.values(err.keyValue)[0] : 'duplicate value';
@@ -177,41 +98,15 @@ console.log(typeof catchAsync);
 // };
 
 
-/**
- * ========================================================================
- * 9. VALIDATION ERRORS
- * ========================================================================
- * NOTES:
- * - Multiple validation errors ek saath aa sakte hain.
- * - messages combine karke client ko clear response do.
- */
-
 // const handleValidationErrorDB = err => {
 //     const errors = Object.values(err.errors).map(el => el.message);
 //     return new AppError(`Invalid input data. ${errors.join('. ')}`, 400);
 // };
 
 
-/**
- * ========================================================================
- * 10. JWT ERRORS
- * ========================================================================
- * JsonWebTokenError -> invalid token.
- * TokenExpiredError -> expired token.
- */
-
 // const handleJWTError = () => new AppError('Invalid token. Please log in again', 401);
 // const handleJWTExpiredError = () => new AppError('Your token has expired. Please log in again', 401);
 
-
-/**
- * ========================================================================
- * 11. UNHANDLED REJECTIONS
- * ========================================================================
- * NOTES:
- * - DB connection fail, promise reject without catch.
- * - Server gracefully close karo, process exit.
- */
 
 // const server = app.listen(port);
 //
@@ -222,29 +117,8 @@ console.log(typeof catchAsync);
 // });
 
 
-/**
- * ========================================================================
- * 12. UNCAUGHT EXCEPTIONS
- * ========================================================================
- * NOTES:
- * - Sync code ke uncaught bugs.
- * - Listener app start se pehle define karo.
- * - App uncertain state me hai, so crash and restart.
- */
-
 // process.on('uncaughtException', err => {
 //     console.log('UNCAUGHT EXCEPTION. Shutting down...');
 //     console.log(err.name, err.message);
 //     process.exit(1);
 // });
-
-
-/**
- * ========================================================================
- * 13. ERROR HANDLING RULE
- * ========================================================================
- * Controller detects problem -> next(new AppError(...))
- * catchAsync catches rejected promises -> next(err)
- * Global middleware formats response -> res.status(...).json(...)
- * Process handlers catch outside Express -> log, close, exit
- */

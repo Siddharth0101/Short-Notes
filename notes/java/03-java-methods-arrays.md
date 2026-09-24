@@ -18,6 +18,9 @@ tags: fundamentals, java, methods, arrays
 - Array — fixed length; index `0` se `length - 1`.
 - 2D array — arrays ka array; rows ki lengths alag ho sakti hain.
 - Varargs — multiple arguments array ki tarah milte hain; last parameter hota hai.
+- Array length — fixed property; String length() method hai.
+- Bounds — invalid index par ArrayIndexOutOfBoundsException; negative/empty cases check karo.
+- Return contract — non-void method ke har normally completing path ko value chahiye.
 
 ## Sources — aur padhne ke liye
 

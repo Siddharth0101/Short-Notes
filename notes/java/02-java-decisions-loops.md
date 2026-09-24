@@ -18,6 +18,9 @@ tags: fundamentals, java, decisions, loops
 - `break` — loop/switch se exit; `continue` — next iteration.
 - Integer division — `5 / 2` → `2`; decimal chahiye toh floating operand.
 - Boundary — zero, exact limit aur limit ke aas-paas inputs check karo.
+- Short-circuit — &&/|| right expression tabhi evaluate jab result decide karna baaki ho.
+- Switch expression — value produce karti hai; block branch mein yield use hota hai.
+- Loop mutation — enhanced-for ke andar collection structural change unsafe ho sakta hai; proper iterator/API choose.
 
 ## Sources — aur padhne ke liye
 

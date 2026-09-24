@@ -21,6 +21,9 @@ visual: react-render
 - Derived state — existing props/state se calculate ho toh duplicate state mat rakho.
 - Lift state — shared data nearest common parent mein rakho.
 - Form — submit par validate; pending/error/success states clear rakho.
+- Lazy initializer — `useState(() => initialValue)` se initialization calculation pass karo; initializer pure rakho.
+- State replacement — hook setter object ko merge nahi karta; needed fields spread karo.
+- Checkbox input — event.target.checked boolean deta hai; value alag property hai.
 
 ## Research notes: Represent coherent request states
 

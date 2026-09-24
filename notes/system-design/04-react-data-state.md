@@ -20,6 +20,9 @@ visual: caching
 - Race — old request/result ko new selection overwrite na karne do.
 - Logout — private cache clear ya user scope se isolate.
 - Offline — queued writes ki identity aur conflict resolution define karo.
+- Optimistic concurrency — version/ETag se stale writes reject; conflict UI define.
+- Cache identity — same endpoint but different locale/currency/permissions ho toh key bhi accordingly.
+- Cross-tab state — logout/preferences coordination; local copy ko universal truth mat samjho.
 
 ## Research notes: Client caches do not enforce database access
 

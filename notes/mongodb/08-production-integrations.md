@@ -20,6 +20,9 @@ visual: request-flow
 - Order state — payment/refund transitions explicit rakho.
 - Deployment — secrets, health checks, logs aur graceful shutdown.
 - Recovery — partial failure par retry/reconciliation; browser success screen final proof nahi.
+- File path — user filename ko filesystem path authority mat do; generated safe key use.
+- Provider timeout — external effect ho chuka ho sakta hai; retry se pehle idempotency/reconciliation.
+- Outbox job — business write aur pending notification same durable boundary mein record.
 
 ## Sources — aur padhne ke liye
 

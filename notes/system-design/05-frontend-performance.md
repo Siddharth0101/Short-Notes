@@ -20,6 +20,9 @@ visual: react-render
 - Virtualization — visible list window; focus/keyboard behavior preserve.
 - Resilience — slow/error state aur usable retry/fallback.
 - Accessibility — keyboard, semantic roles, labels aur focus flow.
+- Latency waterfall — dependent requests sequential round trips add karte hain; safe batching/parallelism choose.
+- Performance regression — release ke before/after same device/network cohort compare.
+- Skeleton layout — final content ka approximate size reserve; fake spinner alone layout shift nahi rokta.
 
 ## Sources — aur padhne ke liye
 

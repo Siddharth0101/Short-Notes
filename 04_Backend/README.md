@@ -1,14 +1,11 @@
 # Backend Short Notes
 
-> Pehle [ordered Hinglish course](../notes/README.md#java--spring). Yahan original source notes aur examples references ke liye hain.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-## Padhne ka suggested order
+## Topics
 
-1. `01_Node/README.md`
-2. `02_Java_Spring_Boot/README.md`
-
-## Yahan kya cover hai
-
-- Node.js backend fundamentals, Express REST APIs, SQL, NoSQL
-- Java, Spring Boot, Microservices, and Docker (Telusko course)
-- Authentication, security, SSR, payments, uploads, deployment
+- [Node](01_Node/README.md) — topic files kholo.
+- [Java Spring Boot](02_Java_Spring_Boot/README.md) — topic files kholo.
+- [theory-lectures](theory-lectures.pdf) — original reference PDF.

@@ -4,7 +4,7 @@ title: HTML CSS and browser rendering essentials
 track: javascript
 order: 11
 level: Foundation
-minutes: 1
+minutes: 2
 summary: HTML — structure; CSS — styling/layout; JS — behavior.
 tags: html, css, accessibility, browser, layout
 ---
@@ -21,6 +21,9 @@ tags: html, css, accessibility, browser, layout
 - `relative` — normal position se offset; `absolute` — containing block ke respect mein position.
 - Responsive — flexible sizes, media queries aur usable small-screen layout.
 - Accessibility — labels, keyboard access aur visible focus zaroori hain.
+- `defer` — classic external script parsing ke baad document order mein execute hota hai.
+- `async` script — ready hote hi execute; sibling scripts ka order guaranteed nahi.
+- Form labels — label ko input ID se jodo; placeholder label ka replacement nahi.
 
 ## Research notes: Semantic HTML before custom interaction
 

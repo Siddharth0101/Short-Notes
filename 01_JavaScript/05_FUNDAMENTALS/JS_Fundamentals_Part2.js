@@ -1,38 +1,38 @@
+/**
+ * ## Quick revision
+ *
+ * - `for` — initialization → condition → body → update repeat hota hai.
+ * - `while` — condition pehle check; body zero baar bhi chal sakti hai.
+ * - `do...while` — body kam-se-kam ek baar chalti hai.
+ * - `for...of` — iterable ki values; `for...in` — enumerable string keys.
+ * - `break` — loop rokta hai; `continue` — current iteration skip.
+ * - Index — array mein `0` se `length - 1` tak; condition `i < length`.
+ * - Infinite loop — condition kabhi false na ho; counter/update check karo.
+ * - Nested loop — cost iterations ke total se nikalo; hamesha O(n²) assume mat karo.
+ * - Function — reusable kaam; inputs lo aur result return karo.
+ * - Parameter — definition ka naam; argument — call ki actual value.
+ * - `return` — result deta hai aur function se turant bahar nikalta hai.
+ * - No return — normal function ka result `undefined` hota hai.
+ * - `console.log` — screen par dikhata hai; caller ko result return nahi karta.
+ * - Default parameter — argument missing/undefined ho tab default lagta hai.
+ * - Function declaration — apne scope mein declaration se pehle call ho sakti hai.
+ * - Arrow — concise function; apna `this` nahi hota.
+ * - Pure function — same input par same output; outside state change nahi karti.
+ * - Array — ordered values; index zero se start hota hai.
+ * - Object — named properties; `user.name` ya `user[key]` se padho.
+ * - `push`/`pop` — array ke end par add/remove karte hain.
+ * - `const` object — properties badal sakti hain; reference reassign nahi hota.
+ * - Reference copy — `b = a` se dono same object ko point karte hain.
+ * - Shallow copy — `{...a}`/`[...a]` outer copy banate hain; nested objects shared rehte hain.
+ * - Equality — do alag `{}` objects `===` se equal nahi hote.
+ * - Missing property — value `undefined`; existence ke liye `Object.hasOwn(obj, key)`.
+ * - Accumulator — total/count ko loop se pehle initialize, andar update karo.
+ * - Reverse traversal — end se delete karne par remaining earlier indices shift nahi hote.
+ * - Iterable — `for...of` plain object par direct nahi; `Object.entries(obj)` use kar sakte ho.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * JAVASCRIPT FUNDAMENTALS PART 2 - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Part 2 me functions, arrays, objects, loops cover hote hain.
- * - Ye building blocks hain — har project me use honge.
- *
- * TOPICS MAP:
- * ┌─────────────────────────────────────────────────────────────┐
- * │           JS FUNDAMENTALS PART 2                           │
- * ├────────────────────┬────────────────────┬───────────────────┤
- * │ Strict Mode        │ Functions          │ Arrow Functions   │
- * │ (Always on!)       │ (3 types)          │ (no own this)     │
- * ├────────────────────┼────────────────────┼───────────────────┤
- * │ Arrays             │ Objects            │ Loops             │
- * │ (push/pop/etc.)    │ (dot vs bracket)   │ (for / while)     │
- * └────────────────────┴────────────────────┴───────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. STRICT MODE
- * ========================================================================
- * NOTES:
- * - 'use strict'; file ke top pe likho.
- * - Strict mode silent errors ko visible errors bana deta hai.
- * - Reserved words ko block karta hai (interface, private, etc.).
- * - Accidental global variables create nahi hone deta.
- *
- * ALWAYS USE STRICT MODE.
- */
 
 // Without strict mode:
 // hasDriversLicence = false; // typo -> silently creates global variable!
@@ -40,18 +40,6 @@
 // With strict mode:
 // hasDriversLicence = false; // ❌ ReferenceError: not defined
 
-
-/**
- * ========================================================================
- * 2. FUNCTIONS
- * ========================================================================
- * NOTES:
- * - Function = reusable block of code.
- * - Parameters = placeholders (function define karte waqt).
- * - Arguments = actual values (function call karte waqt).
- * - return statement value wapas bhejta hai aur function rokta hai.
- * - Agar return nahi likha toh function undefined return karta hai.
- */
 
 function fruitProcessor(apples, oranges) {
     const juice = `Juice with ${apples} apples and ${oranges} oranges.`;
@@ -64,25 +52,6 @@ console.log(appleJuice); // 'Juice with 5 apples and 0 oranges.'
 const appleOrangeJuice = fruitProcessor(2, 4);
 console.log(appleOrangeJuice); // 'Juice with 2 apples and 4 oranges.'
 
-
-/**
- * ========================================================================
- * 3. FUNCTION DECLARATIONS VS EXPRESSIONS
- * ========================================================================
- * NOTES:
- *
- * ┌─────────────────────────────────────────────────────────────┐
- * │  Type         │  Hoisted?   │  Syntax                    │
- * ├───────────────┼────────────┼────────────────────────────┤
- * │  Declaration   │  ✅ Yes     │  function name() { }       │
- * │  Expression    │  ❌ No      │  const name = function() { } │
- * │  Arrow        │  ❌ No      │  const name = () => { }     │
- * └───────────────┴────────────┴────────────────────────────┘
- *
- * Jonas prefers expressions because:
- * - Forces you to define before use -> cleaner code flow.
- * - All functions become first-class values.
- */
 
 // DECLARATION (hoisted — call before define works):
 function calcAge1(birthYear) {
@@ -97,21 +66,6 @@ const calcAge2 = function (birthYear) {
 console.log(calcAge2(1991)); // 46
 
 
-/**
- * ========================================================================
- * 4. ARROW FUNCTIONS
- * ========================================================================
- * NOTES:
- * - ES6 shorthand for function expressions.
- * - One-liner: implicit return (no {}, no return keyword).
- * - Multi-line: need {} and explicit return.
- *
- * IMPORTANT DIFFERENCE:
- * - Arrow functions do NOT get their own `this` keyword.
- * - Ye OOPs section me detail me samjhenge.
- * - Event handlers aur object methods me arrow function se bachna.
- */
-
 // One-liner (implicit return):
 const calcAge3 = birthYear => 2037 - birthYear;
 console.log(calcAge3(1991)); // 46
@@ -124,15 +78,6 @@ const yearsUntilRetirement = (birthYear, firstName) => {
 };
 console.log(yearsUntilRetirement(1991, 'Jonas')); // 'Jonas retires in 19 years'
 
-
-/**
- * ========================================================================
- * 5. FUNCTIONS CALLING OTHER FUNCTIONS
- * ========================================================================
- * NOTES:
- * - Functions ke andar doosre functions call kar sakte hain.
- * - DRY principle: repeat mat karo, function bana do.
- */
 
 function cutFruitPieces(fruit) {
     return fruit * 4;
@@ -148,32 +93,6 @@ console.log(fruitProcessorV2(2, 3));
 // 'Juice with 8 apple pieces and 12 orange pieces.'
 
 
-/**
- * ========================================================================
- * 6. ARRAYS
- * ========================================================================
- * NOTES:
- * - Array = ordered list of values. Index 0 se start.
- * - const array me bhi push/pop kar sakte ho (reference nahi badalti, content badalta hai).
- * - Array me mixed types rakh sakte ho (not recommended though).
- *
- * BASIC ARRAY METHODS:
- * ┌────────────────┬─────────────────┬────────────────────────────┐
- * │ Method         │ Does What?        │ Returns                    │
- * ├────────────────┼─────────────────┼────────────────────────────┤
- * │ push(val)      │ End me add        │ New length                 │
- * │ unshift(val)   │ Start me add      │ New length                 │
- * │ pop()          │ End se remove     │ Removed element            │
- * │ shift()        │ Start se remove   │ Removed element            │
- * │ indexOf(val)   │ Position find     │ Index (-1 if not found)    │
- * │ includes(val)  │ Check exists?     │ true/false (uses ===)      │
- * └────────────────┴─────────────────┴────────────────────────────┘
- *
- * VISUAL:
- *   push → [ 'a', 'b', 'c', NEW ] ← unshift
- *    pop → [ 'a', 'b', 'c' ] X   ← shift removes from start
- */
-
 const friends = ['Michael', 'Steven', 'Peter'];
 console.log(friends[0]);        // 'Michael'
 console.log(friends.length);    // 3
@@ -188,26 +107,6 @@ console.log(friends); // ['Michael', 'Steven', 'Peter']
 console.log(friends.includes('Steven')); // true
 console.log(friends.indexOf('Peter'));    // 2
 
-
-/**
- * ========================================================================
- * 7. OBJECTS
- * ========================================================================
- * NOTES:
- * - Object = key-value pairs ka collection.
- * - Keys = properties.
- * - Object literal: {} me define karo.
- *
- * ACCESS PATTERNS:
- * ┌──────────────────────────────────────────────────────────┐
- * │  DOT NOTATION         │  BRACKET NOTATION               │
- * │  obj.key              │  obj['key']                     │
- * │  ──────────────────── │  ────────────────────────────── │
- * │  Simple, clean         │  Dynamic keys allowed          │
- * │  Static key only       │  Computed/variable keys        │
- * │  obj.firstName         │  obj['first' + 'Name']         │
- * └───────────────────────┴──────────────────────────────────┘
- */
 
 const jonas = {
     firstName: 'Jonas',
@@ -230,16 +129,6 @@ jonas.location = 'Portugal';
 jonas['twitter'] = '@jonasschmedtman';
 
 
-/**
- * ========================================================================
- * 8. OBJECT METHODS
- * ========================================================================
- * NOTES:
- * - Object ke andar function rakh sakte ho -> method.
- * - Method ke andar `this` keyword us object ko refer karta hai.
- * - this.property se object ke properties access kar sakte ho.
- */
-
 const jonas2 = {
     firstName: 'Jonas',
     birthYear: 1991,
@@ -260,17 +149,6 @@ console.log(jonas2.calcAge());    // 46
 console.log(jonas2.age);          // 46 (stored by calcAge)
 console.log(jonas2.getSummary()); // 'Jonas is a 46-year old teacher...'
 
-
-/**
- * ========================================================================
- * 9. FOR LOOP
- * ========================================================================
- * NOTES:
- * - for (initializer; condition; update) { ... }
- * - Loop tab tak chalega jab tak condition true hai.
- * - break -> loop turant band.
- * - continue -> current iteration skip, next pe jump.
- */
 
 // Basic for loop:
 for (let rep = 1; rep <= 5; rep++) {
@@ -293,16 +171,6 @@ for (let i = 0; i < typesArr.length; i++) {
 }
 
 
-/**
- * ========================================================================
- * 10. WHILE LOOP
- * ========================================================================
- * NOTES:
- * - while (condition) { ... }
- * - Jab iterations ka count pata na ho tab while use karo.
- * - Example: dice roll karo jab tak 6 na aaye.
- */
-
 // Random dice roll:
 // let dice = Math.trunc(Math.random() * 6) + 1;
 //
@@ -312,15 +180,6 @@ for (let i = 0; i < typesArr.length; i++) {
 //     if (dice === 6) console.log('You rolled a 6! Loop ends.');
 // }
 
-
-/**
- * ========================================================================
- * 11. LOOPING BACKWARDS AND NESTED LOOPS
- * ========================================================================
- * NOTES:
- * - Backwards loop: start from length - 1, decrement.
- * - Nested loops: loop ke andar loop (like multiplication table).
- */
 
 // Backward:
 const arr = ['Jonas', 'teacher', 46];

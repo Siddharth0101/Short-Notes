@@ -19,6 +19,9 @@ tags: fundamentals, js, arrays, objects
 - Shallow copy — `{...a}`/`[...a]` outer copy banate hain; nested objects shared rehte hain.
 - Equality — do alag `{}` objects `===` se equal nahi hote.
 - Missing property — value `undefined`; existence ke liye `Object.hasOwn(obj, key)`.
+- `Array.isArray` — actual array check; `typeof []` object aata hai.
+- `slice`/`splice` — slice copy; splice original array mein insert/delete karta hai.
+- Dynamic key — bracket access mein expression evaluate hota hai: `obj[field]`.
 
 ## Sources — aur padhne ke liye
 

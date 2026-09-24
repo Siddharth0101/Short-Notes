@@ -1,23 +1,11 @@
 # Interview workbook — Hinglish mein practice aur answers
 
-App mein 444 questions hain. Yeh workbook supplied checklist aur extra backend, DSA, design topics ko canonical questions se jodta hai. 104 questions add hue; 21 existing questions reuse hue. Repeat topic ke liye duplicate card nahi banaya.
-
-App ka **Interview topic** filter subject-specific practice ke liye use karo. HTML/CSS JavaScript ke browser-foundation chapter se linked hain. App mein answers reveal karne par dikhte hain; yeh Markdown workbook offline reference hai. Pehle khud attempt karo, phir answer padho. Code original hai; framework excerpts ki setup assumptions saath padho.
-
-## Corrections aur coverage ki limits
-
-- Console, SetTimeout, SetImmidiate, async fun aur mismatched brackets jaise syntax/casing errors intended trace exercises mein correct kiye hain. Original code intended output se pehle fail ho sakta tha.
-- Node timer ordering ka runtime context padho. Timer handle par await lagana completion promise nahi banata. ES modules top-level await allow karte hain.
-- HTML AppCache obsolete hai; web app manifest apne-aap offline caching nahi karta. Heading ranks ko explicit rakha hai.
-- Position/display CSS properties hain. React mein function components aur hooks main focus hain; boundaries aur connect ke integration concepts bhi cover hain.
-- Answers repo ke liye likhe hain, supplied sites/videos se copy nahi kiye. Linked videos ko watched/transcribed nahi bataya hai. Primary links se aage study karo; employer-frequency ka claim nahi hai.
-
-### Supplied image exercises
-
-Dono public Drive image previews inspect kiye gaye the. Pehla flex-direction aur doosra wrapped lines ke align-content par hai. Neeche dedicated questions aur original solutions hain. Extra responsive-header/card exercise alag original practice hai.
-
-- [Flexbox image 1](https://drive.google.com/file/d/1VQoW4glm0yzXWPDmy4LkjXjuuVaDMbmi/view) — iq-added-flex-image-one mein solution.
-- [Flexbox image 2](https://drive.google.com/file/d/1ee2q7grgqZfuqkzu1XKQkdvr9nN4Ld2_/view) — iq-added-flex-image-two mein solution.
+- Bank — 444 questions; neeche supplied checklist ke mapped answers.
+- Practice — subject filter karo; pehle khud answer, phir bullets compare.
+- Code — snippets ki runtime/setup assumptions check karo.
+- Scope — original practice; employer-frequency ranking nahi.
+- Image 1 — [flex direction reference](https://drive.google.com/file/d/1VQoW4glm0yzXWPDmy4LkjXjuuVaDMbmi/view).
+- Image 2 — [wrapped alignment reference](https://drive.google.com/file/d/1ee2q7grgqZfuqkzu1XKQkdvr9nN4Ld2_/view).
 
 ## Reused questions — ek topic, ek canonical entry
 

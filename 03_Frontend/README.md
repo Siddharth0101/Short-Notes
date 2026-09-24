@@ -1,13 +1,10 @@
 # Frontend Short Notes
 
-> Pehle [ordered Hinglish course](../notes/README.md#react). Yahan original source notes aur examples references ke liye hain.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-## Padhne ka suggested order
+## Topics
 
-1. `01_CSS/Vw_Vh,Rem,Px.js`
-2. `02_React/README.md`
-
-## Yahan kya cover hai
-
-- CSS units: px, rem, em, %, vw, vh, responsive sizing basics
-- Complete React framework notes (Jonas Schmedtmann course style)
+- [Css](01_CSS/) — topic files kholo.
+- [React](02_React/README.md) — topic files kholo.

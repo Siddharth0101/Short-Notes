@@ -20,6 +20,9 @@ visual: request-flow
 - Injection — fields/operators allowlist karo; input se raw query mat banao.
 - Rate limit — login/reset jaise sensitive endpoints protect karo.
 - Browser security — XSS, CSRF aur cookie flags ko credential flow se match karo.
+- Mass assignment — update fields allowlist; request body se role/owner blindly change mat karao.
+- Session fixation — login/privilege change par suitable session identity rotation.
+- Reset token — short-lived, single-use aur securely stored verification data.
 
 ## Research notes: Authorize both the action and its object
 

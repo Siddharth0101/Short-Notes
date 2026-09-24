@@ -19,6 +19,9 @@ tags: actuator, observability, metrics, tracing, logging
 - Cardinality — user/request ID ko unbounded metric label mat banao.
 - SLO — user-visible reliability target; actionable alerts rakho.
 - Endpoint security — management endpoints ka exposure/auth explicit rakho.
+- Histogram — latency distribution/percentiles; average slow tail hide kar sakta hai.
+- Trace sampling — overhead/storage control; rare failures ki visibility plan karo.
+- Health dependency — optional dependency down hone se unnecessarily poora instance restart mat karao.
 
 ## Sources — aur padhne ke liye
 

@@ -1,58 +1,28 @@
+/**
+ * ## Quick revision
+ *
+ * - Realtime — WebSocket/SSE choose interaction direction aur infra se.
+ * - Message ID — stable client/server identity; reconnect duplicates dedupe karo.
+ * - Ack — accepted, persisted aur delivered ka meaning alag define karo.
+ * - Reconnect — last cursor/sequence se missed events replay.
+ * - Ordering — conversation/document scope; global order zaroori nahi hota.
+ * - Presence — temporary state; heartbeat/TTL se stale users expire.
+ * - Collaboration — OT/CRDT ya server serialization ka conflict contract choose.
+ * - Snapshot — compact durable state + later operations replay.
+ * - Permissions — subscription aur every write par access validate.
+ * - HTTP/1.1 — request connections; HTTP/2 — one connection par multiplexed streams.
+ * - HTTP/3 — QUIC transport; independent streams transport head-of-line issue kam karte hain.
+ * - SSE — server-to-browser event stream; reconnect/event ID useful.
+ * - WebSocket — bidirectional connection; auth, heartbeat aur reconnect protocol chahiye.
+ * - Polling — simple repeated fetch; interval latency/load tradeoff.
+ * - Long polling — server update/timeout tak request hold karta hai.
+ * - Reconnect jitter — saare clients ek saath reconnect karke server overload na karein.
+ * - Slow receiver — outgoing queue bound; drop/disconnect/replay policy explicit.
+ * - Connection auth — long-lived socket par expiry/revocation ka recheck mechanism.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 04. NETWORK PROTOCOLS & REAL-TIME COMMUNICATION [⚡ CHIRAG GOEL]
- * ========================================================================
- * SOURCE: Chirag Goel (Frontend System Design)
- *
- * HOW DOES THE CLIENT TALK TO THE SERVER?
- * - Modern web apps require instant live updates (Chat, Stocks, AI streaming, Rideshare).
- * - Picking the wrong network protocol leads to battery drain, server collapse, or high latency.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                REAL-TIME DATA STREAMING MATRIX                      │
- * ├──────────────┬───────────────┬────────────────┬─────────────────────┤
- * │ Protocol     │ Direction     │ Protocol Base  │ Primary Use Case    │
- * ├──────────────┼───────────────┼────────────────┼─────────────────────┤
- * │ Short Poll   │ Client ──► Svr│ Standard HTTP  │ Infrequent checks   │
- * │ Long Poll    │ Client ──► Svr│ Held HTTP conn │ Legacy fallback     │
- * │ SSE (Events) │ Svr ──► Client│ HTTP/2 Stream  │ AI Stream / Stocks  │
- * │ WebSockets   │ Svr ◄──►Client│ ws:// / wss:// │ Chat, Multiplayer   │
- * │ WebRTC       │ Peer ◄──► Peer│ UDP / SCTP     │ Video/Audio Calls   │
- * └──────────────┴───────────────┴────────────────┴─────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. HTTP/1.1 VS HTTP/2 VS HTTP/3
- * ========================================================================
- * - HTTP/1.1:
- *   - Head-of-line blocking at application level.
- *   - Browsers allow maximum 6 simultaneous TCP connections per domain.
- *   - Requires domain sharding (assets1.cdn.com, assets2.cdn.com).
- *
- * - HTTP/2:
- *   - Single TCP connection with Binary Framing.
- *   - Multiplexing: Multiple requests/responses interleave concurrently.
- *   - HPACK header compression saves huge bandwidth.
- *
- * - HTTP/3 (QUIC):
- *   - Built on UDP instead of TCP!
- *   - Zero Head-of-Line blocking even if packet loss occurs on mobile networks!
- *   - Faster 0-RTT connection establishment.
- */
-
-/**
- * ========================================================================
- * 2. SERVER-SENT EVENTS (SSE) — THE UNSUNG HERO
- * ========================================================================
- * - Used by ChatGPT / Claude for streaming tokens!
- * - Unidirectional (Server sends text streams to Client over standard HTTP).
- * - Content-Type: `text/event-stream`.
- * - Browser has built-in `EventSource` API with AUTOMATIC reconnection!
- * - Works natively through corporate firewalls and standard load balancers without custom proxy config.
- */
 
 // Simulated SSE Stream parser
 function simulateEventSourceParser(rawStreamChunks) {
@@ -78,20 +48,6 @@ console.log('--- Server-Sent Events (SSE) Simulation ---');
 const parsed = simulateEventSourceParser(mockChunks);
 console.log('Streamed Tokens received:', parsed.map((p) => JSON.parse(p).token).join(''));
 
-/**
- * ========================================================================
- * 3. WEBSOCKETS (BIDIRECTIONAL FULL-DUPLEX)
- * ========================================================================
- * - Upgrades standard HTTP/HTTPS connection using `Upgrade: websocket` header.
- * - Persistent TCP socket between browser and server.
- * - Very low framing overhead (only 2 to 10 bytes per frame).
- *
- * PRODUCTION WEBSOCKET ARCHITECTURE REQUIREMENTS:
- * 1. Heartbeat / Ping-Pong: Detect silent socket disconnection (every 30s).
- * 2. Exponential Backoff Reconnection: If network drops, retry with jitter:
- *    retryDelay = Math.min(1000 * Math.pow(2, attempt) + Math.random() * 500, 30000).
- * 3. Offline Message Queue: Queue outgoing messages in memory/IndexedDB and flush when reconnected!
- */
 
 // Exponential Backoff with Jitter algorithm
 function calculateReconnectDelay(attempt) {

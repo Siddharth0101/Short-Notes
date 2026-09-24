@@ -4,7 +4,7 @@ title: Messaging outbox retries and distributed workflows
 track: system-design
 order: 8
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Dual write — DB success + message failure se inconsistent state ban sakti hai.
 tags: messaging, outbox, idempotency, sagas
 visual: outbox-pattern
@@ -23,6 +23,9 @@ visual: outbox-pattern
 - Drain time — backlog / (processing rate - arrival rate), jab processing faster ho.
 - DLQ — failed messages ke owner, diagnosis aur safe replay ka plan.
 - Saga — steps + compensations; distributed ACID rollback nahi.
+- Poison message — deterministic failure ko endless retry mat karo; quarantine + diagnosis.
+- Fencing token — newer lease owner ke token se stale worker writes reject.
+- Replay — consumer schema, idempotency aur event retention safe reprocessing support kare.
 
 ## Research notes: Budget retries across the call graph
 

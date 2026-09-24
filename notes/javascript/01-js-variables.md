@@ -21,6 +21,9 @@ tags: fundamentals, js, variables
 - Primitive copy — `let b = a` ke baad `a` badalne se `b` nahi badalta.
 - Naming — `score` aur `Score` alag; naam digit se start nahi hota.
 - Default — pehle `const`; reassignment chahiye toh `let`.
+- Shadowing — inner scope ka same naam outer variable ko hide karta hai.
+- Redeclaration — same scope mein `let`/`const` dobara declare karna error hai.
+- Initialization — `let x;` ke baad undefined; `const` ko declaration par value chahiye.
 
 ## Sources — aur padhne ke liye
 

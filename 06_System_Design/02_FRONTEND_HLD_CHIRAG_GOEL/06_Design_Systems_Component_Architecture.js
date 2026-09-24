@@ -1,33 +1,32 @@
+/**
+ * ## Quick revision
+ *
+ * - Composition — small components ko `children`/props se jodo.
+ * - Container — data/control sambhalo; presentational component UI dikhaye.
+ * - Compound components — related parts shared contract/state ke saath kaam karein.
+ * - Controlled API — parent state own kare; uncontrolled API — component own kare.
+ * - CSS Modules — class names scoped; global styles ka accidental clash kam.
+ * - Tailwind — utility classes se style; repeated pattern ko readable rakho.
+ * - Styled components — component ke saath styles; runtime/build tradeoff dekho.
+ * - Accessibility — reusable component mein label, keyboard aur focus contract rakho.
+ * - Testing Library — user ke visible behavior se tests likho.
+ * - Query — accessible role/name prefer; implementation selector se bacho.
+ * - User event — realistic typing/click; async interaction await karo.
+ * - `findBy` — async appearance; `queryBy` — absence check.
+ * - Mock network — loading, error, retry aur out-of-order response cover karo.
+ * - Accessibility — semantic HTML, labels, contrast aur keyboard flow.
+ * - Focus — modal/route/error ke baad focus meaningful jagah par rahe.
+ * - Coverage — line percentage se zyada important user journeys aur failure cases.
+ * - Design token — shared colors/spacing/type values; theme mein centrally update.
+ * - Micro-frontend — independent ownership/deploy; duplicate dependencies, consistency aur runtime integration cost.
+ * - Module federation — runtime module sharing; version/security/fallback contract chahiye.
+ * - Render prop — function prop se caller ko rendering customize karne do.
+ * - Prop spreading — internal/private props blindly DOM par forward mat karo.
+ * - Component boundary — reusable API small rakho; har styling detail ko configuration prop mat banao.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 06. DESIGN SYSTEMS & ADVANCED COMPONENT ARCHITECTURE [⚡ CHIRAG GOEL]
- * ========================================================================
- * SOURCE: Chirag Goel (Frontend System Design)
- *
- * WHAT IS A PRODUCTION DESIGN SYSTEM?
- * - A single source of truth connecting designers and developers:
- *   Design Tokens ──► Primitive Atoms ──► Compound Organisms ──► Full App Layouts.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                     ATOMIC DESIGN METHODOLOGY                       │
- * │                                                                     │
- * │  Atoms      ──► Button, Input, Icon, Typography Text                │
- * │  Molecules  ──► SearchBar (Input + Button + Icon)                   │
- * │  Organisms  ──► Navbar (Logo + SearchBar + UserMenu + Cart)         │
- * │  Templates  ──► Dashboard Layout (Sidebar + Header + Content Slot)  │
- * │  Pages      ──► Final page with live API data hydrated              │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. DESIGN TOKENS (CSS VARIABLES)
- * ========================================================================
- * - Abstract design decisions (colors, radii, spacing, fonts) into tokens.
- * - Enables instant theming (Dark Mode, High Contrast, Brand Reskinning).
- */
 
 // Design Tokens definition simulation
 const designTokens = {
@@ -56,36 +55,6 @@ console.log('--- Design Tokens Palette ---');
 console.log('Primary brand color:', designTokens.colors.brandPrimary);
 console.log('Base spacing unit:', designTokens.spacing.md);
 
-/**
- * ========================================================================
- * 2. COMPOUND COMPONENTS PATTERN (LLD PATTERN)
- * ========================================================================
- * - Used by Radix UI, Headless UI, and modern React libraries.
- * - Components share state implicitly via React Context without prop drilling.
- *
- * Example:
- * ```jsx
- * <Accordion defaultOpen={0}>
- *   <Accordion.Item index={0}>
- *     <Accordion.Header>What is LLD?</Accordion.Header>
- *     <Accordion.Body>Low-Level Design focuses on component APIs...</Accordion.Body>
- *   </Accordion.Item>
- * </Accordion>
- * ```
- */
-
-/**
- * ========================================================================
- * 3. ACCESSIBILITY (A11Y) & FOCUS TRAPPING
- * ========================================================================
- * Top requirements for accessible UI (WCAG 2.1 AA):
- * 1. Keyboard Navigation: All interactive elements reachable via `Tab`, triggered via `Enter` / `Space`.
- * 2. Focus Trap in Modals:
- *    - When modal opens, focus moves inside the modal.
- *    - Pressing `Tab` cycles focus ONLY inside modal elements (never escapes to body).
- *    - Pressing `Escape` closes the modal and returns focus to the trigger button!
- * 3. Screen Readers: `aria-expanded`, `aria-label`, `aria-live="polite"` for dynamic content alerts.
- */
 
 // Focus Trap cycle simulator in pure JS
 function simulateFocusTrapCycle(focusableElements) {
@@ -110,13 +79,3 @@ console.log('Initial focus:', modalTrap.getCurrentElement());
 console.log('Tab 1:', modalTrap.tabForward());
 console.log('Tab 2:', modalTrap.tabForward());
 console.log('Tab 3 (Trapped, loops back to first!):', modalTrap.tabForward());
-
-/**
- * ========================================================================
- * 4. MICRO-FRONTENDS & MODULE FEDERATION
- * ========================================================================
- * - Decomposing a large frontend monolith into autonomous, independently deployable micro-apps.
- * - Module Federation (Webpack 5 / Vite):
- *   - Host App dynamically downloads and mounts Remote App components at runtime over HTTP!
- *   - Shared dependencies (e.g. `react`, `react-dom`) loaded only once across all micro-apps.
- */

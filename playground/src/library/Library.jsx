@@ -35,7 +35,7 @@ export function NoteRow({ note, index }) {
           {note.minutes > 0 && (
             <>
               <span>·</span>
-              <span>{note.minutes} min study</span>
+              <span>{note.minutes} min revision</span>
             </>
           )}
         </div>
@@ -146,7 +146,15 @@ export default function Library({ saved = false, paths = false }) {
           note.references.some((item) => progress.saved.includes(item.id)),
       )
     : notes;
-  const filtered = filterNotes(source, { query, track, level });
+  const status = params.get('status') || 'all';
+  const filtered = filterNotes(source, { query, track, level }).filter((note) =>
+    status === 'completed'
+      ? progress.completed.includes(note.id)
+      : status === 'pending'
+        ? !progress.completed.includes(note.id)
+        : true,
+  );
+  const hasFilters = !!query || track !== 'all' || level !== 'all' || status !== 'all';
   const selected = trackById[track];
   const update = (key, value) =>
     setParams(
@@ -159,7 +167,7 @@ export default function Library({ saved = false, paths = false }) {
       { replace: true },
     );
   return (
-    <div className="page-enter">
+    <div className={`collection-page page-enter ${paths ? 'paths-view' : 'browse-view'}`}>
       <div className="page-eyebrow">
         <span className="small-line" />{' '}
         {saved
@@ -183,24 +191,17 @@ export default function Library({ saved = false, paths = false }) {
               ? 'Jin concepts ko dobara padhna hai, yahan rakho.'
               : paths
                 ? 'Order follow karo, saath practice karo, concept khud explain karo.'
-                : selected?.description ||
-                  'Subject choose karke first lesson se numbered stages follow karo.'}
+                : selected?.description || 'Saare subjects, short notes aur code — ek jagah.'}
           </p>
         </div>
         <span className="count-pill">{filtered.length} chapters</span>
       </div>
       {saved && <ProgressBackup />}
-      {!saved && (
-        <p className="learning-tip">
-          Ek course, ek order: concept padho, source example samjho aur usi chapter ke interview
-          questions khud attempt karo.
-        </p>
-      )}
       <div className="filter-toolbar">
         <label className="filter-search">
           <Icon name="search" size={18} />
           <input
-            placeholder="Concepts, examples ya interview questions dhundo…"
+            placeholder="Kya revise karna hai? Search karo…"
             aria-label="Search this collection"
             value={query}
             onChange={(event) => update('q', event.target.value)}
@@ -225,14 +226,28 @@ export default function Library({ saved = false, paths = false }) {
           <option>Intermediate</option>
           <option>Advanced</option>
         </select>
+        <select
+          aria-label="Filter progress"
+          value={status}
+          onChange={(event) => update('status', event.target.value)}
+        >
+          <option value="all">All progress</option>
+          <option value="pending">Abhi baaki hai</option>
+          <option value="completed">Revised</option>
+        </select>
       </div>
       <div className="filter-chips" aria-label="Filter subject">
-        <button className={track === 'all' ? 'active' : ''} onClick={() => update('track', 'all')}>
+        <button
+          aria-pressed={track === 'all'}
+          className={track === 'all' ? 'active' : ''}
+          onClick={() => update('track', 'all')}
+        >
           Saare subjects
         </button>
         {TRACKS.map((item) => (
           <button
             className={track === item.id ? 'active' : ''}
+            aria-pressed={track === item.id}
             key={item.id}
             onClick={() => update('track', item.id)}
           >
@@ -251,21 +266,7 @@ export default function Library({ saved = false, paths = false }) {
           </p>
         </div>
       )}
-      {!saved && (
-        <div className="resource-links">
-          {resources.map((resource) => (
-            <a key={resource.source} href={resource.url} target="_blank" rel="noreferrer">
-              <Icon name="file" size={18} />
-              <span>
-                <strong>{resource.title}</strong>
-                <small>Original PDF reference · new tab mein khulega</small>
-              </span>
-              <Icon name="external" size={17} />
-            </a>
-          ))}
-        </div>
-      )}
-      <div className="results-heading">
+      <div className="results-heading" role="status">
         <span>
           {filtered.length} results
           {query && (
@@ -275,7 +276,13 @@ export default function Library({ saved = false, paths = false }) {
             </>
           )}
         </span>
-        <span>Course order · filter par lesson numbers same rahenge</span>
+        {hasFilters ? (
+          <button className="text-button" onClick={() => setParams({})}>
+            <Icon name="reset" size={14} /> Reset filters
+          </button>
+        ) : (
+          <span>Course order</span>
+        )}
       </div>
       {filtered.length === 0 ? (
         <div className="empty-state">
@@ -294,13 +301,14 @@ export default function Library({ saved = false, paths = false }) {
             Saare notes kholo <Icon name="arrow" size={16} />
           </Link>
         </div>
-      ) : !saved ? (
+      ) : paths ? (
         <div className="learning-paths">
           {TRACKS.map((item) => {
             const chapters = filtered.filter((note) => note.track === item.id);
             if (!chapters.length) return null;
             return (
               <CourseOutline
+                aria-pressed={track === item.id}
                 key={item.id}
                 track={item}
                 visibleNotes={chapters}
@@ -315,6 +323,23 @@ export default function Library({ saved = false, paths = false }) {
             <NoteRow key={note.id} note={note} index={index} />
           ))}
         </div>
+      )}
+      {!saved && (
+        <details className="reference-drawer">
+          <summary>Original PDF references</summary>
+          <div className="resource-links">
+            {resources.map((resource) => (
+              <a key={resource.source} href={resource.url} target="_blank" rel="noreferrer">
+                <Icon name="file" size={18} />
+                <span>
+                  <strong>{resource.title}</strong>
+                  <small>Original PDF reference · new tab mein khulega</small>
+                </span>
+                <Icon name="external" size={17} />
+              </a>
+            ))}
+          </div>
+        </details>
       )}
     </div>
   );

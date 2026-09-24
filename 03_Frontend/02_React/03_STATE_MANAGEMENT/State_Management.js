@@ -1,64 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - `useState` — component ki memory; setter next render schedule karta hai.
+ * - Snapshot — handler current render ki state dekhta hai.
+ * - Functional update — old state se calculate ho toh `setN(n => n + 1)`.
+ * - Batching — multiple updates saath process ho sakti hain; turant state variable change nahi hota.
+ * - Object state — mutate mat karo; changed nesting tak nayi copies banao.
+ * - Controlled input — `value` + `onChange`; checkbox mein `checked`.
+ * - Derived state — existing props/state se calculate ho toh duplicate state mat rakho.
+ * - Lift state — shared data nearest common parent mein rakho.
+ * - Form — submit par validate; pending/error/success states clear rakho.
+ * - Lazy initializer — `useState(() => initialValue)` se initialization calculation pass karo; initializer pure rakho.
+ * - State replacement — hook setter object ko merge nahi karta; needed fields spread karo.
+ * - Checkbox input — event.target.checked boolean deta hai; value alag property hai.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * STATE MANAGEMENT - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - State kahan rakhna hai, kaise manage karna hai — ye React ka core design step hai.
- *
- * LIFTING STATE UP FLOW:
- * ┌─────────────────────────────────────────────────────────────┐
- * │                       COMMON PARENT                         │
- * │                   const [items, setItems]                   │
- * │                     ┌─────────┴─────────┐                   │
- * │        State (props)│                   │Callback (handler) │
- * │                     ▼                   ▼                   │
- * │               <DisplayList>       <AddItemForm>             │
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. THINKING ABOUT STATE
- * ========================================================================
- * NOTES:
- * - STATE = data jo time ke saath change hota hai aur UI ko drive karta hai.
- *
- * STATE PLACEMENT DECISION TREE:
- * 1. Sirf ek component use karta hai? -> LOCAL STATE (useState in that component).
- * 2. Sibling components share karte hain? -> LIFT STATE UP (parent me rakho).
- * 3. Deeply nested components? -> CONTEXT API ya REDUX.
- * 4. Server data? -> React Query / SWR (server state).
- *
- * TYPES OF STATE:
- * - LOCAL STATE: ek component ke andar. useState / useReducer.
- * - GLOBAL STATE: puri app ya kaafi components share karte hain. Context / Redux.
- * - SERVER STATE: API se aaya data. React Query best hai.
- * - URL STATE: search params, path params. React Router.
- */
-
-
-/**
- * ========================================================================
- * 2. WHEN AND WHERE TO CREATE STATE
- * ========================================================================
- * NOTES:
- * - NEED state? Ask:
- *   - Kya ye data time ke saath change hoga?
- *   - Kya ye UI ko affect karta hai?
- *   - Kya ye existing state ya props se derive ho sakta hai? (toh state mat banao!)
- *
- * - WHERE to place state? Ask:
- *   - Sirf ye component use karega? -> yahi rakho.
- *   - Child ko chahiye? -> parent me rakho, prop se pass karo.
- *   - Multiple unrelated components? -> lift to common parent ya context.
- *
- * DERIVED STATE:
- * - State se calculate ho sake -> naya state MAT banao.
- * - Example: cart items hai state, total = items.reduce() -> derived, state nahi.
- */
 
 function PackingList() {
     const [items, setItems] = useState([
@@ -78,23 +36,6 @@ function PackingList() {
     );
 }
 
-
-/**
- * ========================================================================
- * 3. LIFTING STATE UP
- * ========================================================================
- * NOTES:
- * - Problem: sibling components ko same data chahiye.
- * - Solution: state unke COMMON PARENT me rakho.
- * - Parent -> child: data via PROPS.
- * - Child -> parent: event via CALLBACK FUNCTION (handler prop).
- *
- * PATTERN:
- * 1. State parent me create karo.
- * 2. State value child ko prop se bhejo.
- * 3. State setter (handler function) child ko prop se bhejo.
- * 4. Child handler call kare -> parent state update -> sab children re-render.
- */
 
 function ParentApp() {
     const [items, setItems] = useState([]);
@@ -176,21 +117,6 @@ function Stats({ items }) {
 }
 
 
-/**
- * ========================================================================
- * 4. IMMUTABLE STATE UPDATES
- * ========================================================================
- * NOTES:
- * ┌─────────────────┬───────────────────────────────┬───────────────────────────┐
- * │ Operation       │ ❌ MUTABLE (DO NOT DO)        │ ✅ IMMUTABLE (DO THIS)    │
- * ├─────────────────┼───────────────────────────────┼───────────────────────────┤
- * │ Add element     │ arr.push(item)                │ [...arr, item]            │
- * │ Remove element  │ arr.splice(index, 1)          │ arr.filter(i => i.id!==id)│
- * │ Update element  │ arr[index].value = 10         │ arr.map(i => i.id===id?...)│
- * │ Update object   │ obj.name = 'New'              │ { ...obj, name: 'New' }   │
- * └─────────────────┴───────────────────────────────┴───────────────────────────┘
- */
-
 // ❌ WRONG (mutation):
 // items.push(newItem);
 // setItems(items); // same reference -> React ignores!
@@ -205,17 +131,6 @@ function Stats({ items }) {
 // ✅ CORRECT (new object):
 // setUser(prev => ({ ...prev, name: 'Jonas' }));
 
-
-/**
- * ========================================================================
- * 5. CHILDREN PROP
- * ========================================================================
- * NOTES:
- * - children = special prop. Component ke opening and closing tags ke beech
- *   jo bhi likho wo children prop ke through milta hai.
- * - Component composition ke liye essential.
- * - Reusable wrappers (cards, modals, layouts) banane ke liye use hota hai.
- */
 
 function Button({ children, onClick, bgColor = '#7950f2' }) {
     return (
@@ -238,25 +153,3 @@ function Example() {
         </div>
     );
 }
-
-
-/**
- * ========================================================================
- * 6. COMPONENT SPLITTING GUIDELINES
- * ========================================================================
- * NOTES:
- * - Component bahut bada hai? Split karo.
- * - Ek component ek kaam kare (Single Responsibility).
- * - Reusable hona chahiye? Alag component banao.
- * - State logic alag, UI logic alag.
- *
- * WHEN TO SPLIT:
- * - Component file 100+ lines ho rahi hai.
- * - Multiple unrelated state pieces hain.
- * - Different parts independently re-render hone chahiye.
- * - JSX me clearly separate sections dikh rahe hain.
- *
- * NAMING:
- * - Descriptive naam: SearchBar, MovieList, StarRating (not Component1, Div2).
- * - Props interface clean rakho: bahut zyada props = component split karo.
- */

@@ -1,38 +1,21 @@
 # PostgreSQL Short Notes
 
-Stephen Grider's SQL and PostgreSQL: The Complete Developer's Guide — short notes.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../../../../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-These files follow the same style as the MongoDB/Jonas notes in this repo:
-short Hinglish explanations, important rules, and compact SQL examples inside JS comment blocks.
+## Topics
 
-## Padhne ka suggested order
-
-1. `01_SQL_BASICS/SQL_Fundamentals.js`
-2. `02_FILTERING_SORTING/Filtering_Sorting_Operators.js`
-3. `03_RELATIONSHIPS_JOINS/Relationships_Joins.js`
-4. `04_AGGREGATION_GROUPING/Aggregation_Grouping.js`
-5. `05_SUBQUERIES/Subqueries.js`
-6. `06_DATABASE_DESIGN/Database_Design_Schema.js`
-7. `07_VALIDATION_CONSTRAINTS/Validation_Constraints.js`
-8. `08_INDEXES_PERFORMANCE/Indexes_Performance.js`
-9. `09_VIEWS_TRANSACTIONS/Views_Transactions_CTE.js`
-10. `10_SECURITY_ROLES/Security_Roles_Permissions.js`
-11. `11_NODE_INTEGRATION/Express_PG_Repository.js`
-12. `12_MIGRATIONS_TESTING/Migrations_Parallel_Testing.js`
-13. `13_DATABASE_INTERNALS/Database_Internals.js`
-
-## Yahan kya cover hai
-
-- SQL basics, CRUD, data types, PostgreSQL setup (pgAdmin, psql)
-- Filtering, sorting, comparison operators, NULL handling
-- Primary/foreign keys, relationships, all JOIN types, ON DELETE
-- Aggregate functions, GROUP BY, HAVING
-- Scalar/correlated subqueries, EXISTS, ANY/ALL, LATERAL JOIN
-- Normalization (1NF–3NF), schema design, ALTER TABLE, polymorphic associations
-- Constraints: NOT NULL, UNIQUE, CHECK, DEFAULT, multi-column
-- Indexes (B-Tree, GIN, partial), EXPLAIN ANALYZE, query performance
-- Views, materialized views, CTEs, recursive CTEs, transactions, isolation levels
-- Roles, GRANT/REVOKE, row-level security, SQL injection prevention
-- Node.js API integration (pg pool), Parameterized Queries, Repository Pattern
-- Schema migrations (node-pg-migrate) and fast parallel testing strategies
-- Database Internals (Heap files, 8KB Pages, Tuples, CTID, Buffer Pool, MVCC)
+- [Sql Basics](01_SQL_BASICS/) — topic files kholo.
+- [Filtering Sorting](02_FILTERING_SORTING/) — topic files kholo.
+- [Relationships Joins](03_RELATIONSHIPS_JOINS/) — topic files kholo.
+- [Aggregation Grouping](04_AGGREGATION_GROUPING/) — topic files kholo.
+- [Subqueries](05_SUBQUERIES/) — topic files kholo.
+- [Database Design](06_DATABASE_DESIGN/) — topic files kholo.
+- [Validation Constraints](07_VALIDATION_CONSTRAINTS/) — topic files kholo.
+- [Indexes Performance](08_INDEXES_PERFORMANCE/) — topic files kholo.
+- [Views Transactions](09_VIEWS_TRANSACTIONS/) — topic files kholo.
+- [Security Roles](10_SECURITY_ROLES/) — topic files kholo.
+- [Node Integration](11_NODE_INTEGRATION/) — topic files kholo.
+- [Migrations Testing](12_MIGRATIONS_TESTING/) — topic files kholo.
+- [Database Internals](13_DATABASE_INTERNALS/) — topic files kholo.

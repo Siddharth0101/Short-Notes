@@ -1,46 +1,28 @@
+/**
+ * ## Quick revision
+ *
+ * - Realtime — WebSocket/SSE choose interaction direction aur infra se.
+ * - Message ID — stable client/server identity; reconnect duplicates dedupe karo.
+ * - Ack — accepted, persisted aur delivered ka meaning alag define karo.
+ * - Reconnect — last cursor/sequence se missed events replay.
+ * - Ordering — conversation/document scope; global order zaroori nahi hota.
+ * - Presence — temporary state; heartbeat/TTL se stale users expire.
+ * - Collaboration — OT/CRDT ya server serialization ka conflict contract choose.
+ * - Snapshot — compact durable state + later operations replay.
+ * - Permissions — subscription aur every write par access validate.
+ * - HLS/DASH — video segments + manifest; bandwidth ke hisaab se bitrate switch.
+ * - Buffer — startup delay vs stall risk; bounded prefetch.
+ * - Seek — target segment load; obsolete fetch/work cancel.
+ * - CDN — video near users; authorization aur cache policy clear.
+ * - Watch analytics — actual playback intervals measure; retries dedupe.
+ * - Accessibility — captions, keyboard controls aur useful loading/error UI.
+ * - Startup metric — first playable frame ka time; full download time se alag.
+ * - Rebuffer ratio — playback ke comparison mein stalled time; quality switch decision se relate karo.
+ * - Segment identity — cache key mein content/version/rendition; wrong variant mix mat karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * CASE STUDY 03: VIDEO STREAMING PLATFORM (YOUTUBE / NETFLIX) [⚡ SYSTEM DESIGN]
- * ========================================================================
- * SOURCE: Chirag Goel (Frontend System Design)
- *
- * REQUIREMENTS:
- * - Play video smoothly across fluctuating mobile bandwidth without pauses.
- * - Custom player UI: Play/Pause, Timeline scrubber, Buffer progress, Speed, Quality.
- * - Adaptive Bitrate Streaming (ABR).
- * - Video analytics & watch time tracking via non-blocking beacons.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                   ADAPTIVE STREAMING PIPELINE                       │
- * │                                                                     │
- * │   Server (CDN)             Client Player Engine       HTML5 <video> │
- * │  ┌──────────────┐         ┌─────────────────────┐    ┌────────────┐ │
- * │  │ Master .m3u8 │ ──────► │ MediaSource API     │──► │ Video Tag  │ │
- * │  │ 1080p chunks │         │ ABR Bitrate Decider │    │ Display    │ │
- * │  │ 720p chunks  │         │ SourceBuffer Queue  │    └────────────┘ │
- * │  │ 480p chunks  │         └─────────────────────┘                   │
- * │  └──────────────┘                                                   │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. ADAPTIVE BITRATE STREAMING (HLS & MPEG-DASH)
- * ========================================================================
- * - Video is sliced into small 2 to 6-second `.ts` or `.m4s` chunks at different bitrates.
- * - A master manifest (`playlist.m3u8`) lists all available resolutions:
- *   - 1080p (5000 kbps)
- *   - 720p (2500 kbps)
- *   - 480p (1000 kbps)
- *   - 360p (400 kbps)
- *
- * ABR ALGORITHM (ADAPTIVE BITRATE DECIDER):
- * - Measures chunk download time: `bandwidth = chunkSize / downloadDuration`.
- * - If user network degrades: immediately request next 2-second chunk at 480p!
- * - Smooth transition without stalling or showing a loading spinner.
- */
 
 // Simulated ABR Quality Switcher
 function decideStreamQuality(estimatedBandwidthKbps) {
@@ -63,18 +45,3 @@ console.log('--- ABR Resolution Decision Simulation ---');
 console.log('High-speed Wi-Fi (6000 kbps):', decideStreamQuality(6000));
 console.log('Moderate 4G (2800 kbps):', decideStreamQuality(2800));
 console.log('Weak 3G (600 kbps):', decideStreamQuality(600));
-
-/**
- * ========================================================================
- * 2. BUFFER MANAGEMENT & SCRUBBING
- * ========================================================================
- * - Buffer Window: Maintain a sliding window of ~30 seconds of buffered audio/video.
- * - Scrubbing / Hover Thumbnails:
- *   - Generate a single image sprite sheet (`sprites.jpg`) containing mini thumbnails
- *     for every 5 seconds of video.
- *   - Compute CSS `background-position` on hover to show instant preview without downloading full video!
- *
- * 3. ANALYTICS & WATCH TIME BEACONS:
- * - Never use standard `fetch()` or `xhr` on tab close/page unload (browser cancels them!).
- * - Always use `navigator.sendBeacon('/api/analytics/watch-heartbeat', payload)`.
- */

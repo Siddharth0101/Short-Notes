@@ -1,13 +1,10 @@
 # Java SQL & Databases
 
-This section covers database access within Java applications.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../../../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-## Padhne ka suggested order
+## Topics
 
-1. `01_JDBC/JDBC_Database.java`
-2. `02_HIBERNATE/Hibernate_ORM.java`
-
-## Yahan kya cover hai
-
-- JDBC for raw Database Connectivity
-- Hibernate ORM mapping
+- [Jdbc](01_JDBC/) — topic files kholo.
+- [Hibernate](02_HIBERNATE/) — topic files kholo.

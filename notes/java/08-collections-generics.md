@@ -20,6 +20,9 @@ tags: collections, generics, hashmap, pecs
 - PECS — producer `extends`, consumer `super`.
 - Comparator — consistent ordering define; subtraction overflow se bacho.
 - Concurrent collection — thread-safe operations; multi-step invariants phir bhi design karo.
+- Iterator remove — supported iterator ka remove safe traversal deletion ke liye use karo.
+- Unmodifiable view — writes block, underlying collection ke external changes phir bhi dikh sakte hain.
+- Generic invariance — List<Integer> ko List<Number> assign nahi kar sakte.
 
 ## Research notes: A read-only view is not an immutable snapshot
 

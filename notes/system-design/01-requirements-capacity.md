@@ -19,6 +19,9 @@ visual: request-flow
 - Storage — records × size × retention; indexes/replicas ka overhead jodo.
 - SLO — measurable user-visible target; assumptions numbers ke saath bolo.
 - Tradeoff — choice ka benefit, cost aur failure behavior explain karo.
+- Percentile — p99 batata hai 99% requests us latency tak; average tail ko hide karta hai.
+- Availability math — serial required dependencies combined success probability reduce kar sakti hain.
+- Growth estimate — present peak ke saath retention, traffic growth aur safety headroom.
 
 ## Sources — aur padhne ke liye
 

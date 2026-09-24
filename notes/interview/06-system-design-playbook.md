@@ -20,6 +20,9 @@ visual: outbox-pattern
 - Failure — timeout, duplicate, partial commit aur reconnect walkthrough.
 - Tradeoff — benefit + cost + kab decision change hoga.
 - Decision record — choice, reason aur revisit trigger short likho.
+- Bottleneck defense — load double ho toh first saturated resource identify.
+- Design alternatives — do options compare using given constraints; tool popularity se decision nahi.
+- Recovery story — failure detect → isolate → repair → reconcile → verify.
 
 ## Research notes: Expose assumptions and failure recovery
 

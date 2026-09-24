@@ -20,6 +20,9 @@ tags: trie, bitmask, fenwick, segment-tree
 - Range sum — prefix(r) minus prefix(l - 1).
 - Segment tree — flexible range queries/updates; merge rule define karo.
 - Lazy propagation — range updates ko defer karke pending tags propagate karo.
+- Coordinate compression — sparse ordered values ko dense ranks; actual distance separately retain karo.
+- Prefix trie terminal — word ending marker chahiye; path exist hona complete word ka proof nahi.
+- Segment merge — associative operation required; empty-range identity compatible honi chahiye.
 
 ## Sources — aur padhne ke liye
 

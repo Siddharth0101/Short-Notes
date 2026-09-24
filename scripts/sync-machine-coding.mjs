@@ -61,38 +61,28 @@ ${machineCodingQuestions.length} original drills · ${INTERVIEW_TOPICS.length} s
 
 [Home](../README.md) · [Study guide](STUDY_GUIDE.md) · [Concept interview priorities](INTERVIEW_PRIORITY_GUIDE.md)
 
-**Top questions ka matlab:** P1 pehle karo kyunki inmein reusable state, async, data aur correctness skills practice hoti hain. Yeh learning-based shortlist hai; company-frequency ranking nahi. P2 next challenge hai. HTML/CSS, JavaScript, React/Redux, Java, Spring Boot/SQL, Node/MongoDB, DSA aur system design sab included hain. Interview playbooks ke mock rounds ke saath apne subject ka drill use karo.
+- Priority — apne subject ke P1 pehle, phir P2; learning shortlist hai.
+- App — machine-coding search karo; subject se filter karo.
+- Setup — stated runtime/database ready rakho; setup coding timebox se alag.
+- Attempt — prompt se build karo, acceptance checks verify, phir hint/answer dekho.
+- Review — failed boundary case likho aur retry karo.
+- Scope — guide approach deta hai; har drill ka complete runnable project nahi.
 
-App ke Interview page par search mein **machine-coding** likho; **Interview topic** se subject select karo. Sirf shortlist ke liye **practice-first** search karo. Prompt aur acceptance checks answer reveal se pehle dikhte hain; hint aur answer guide reveal ke andar hain. Yeh guide offline reference hai, executable starter project ya full reference-solution repository nahi.
+## Scorecard
 
-## Interview jaisa session kaise chalao
+- Contract/model — 4 points.
+- Working core — 6 points.
+- Edge cases — 4 points.
+- Verification — 4 points.
+- Explanation — 2 points.
+- Target — 16/20; correctness bug ho toh score ke bawajood retry.
 
-1. Apne track ka prerequisite chapter padho, phir blank project se ek prompt choose karo. Existing course runtime use karo; database drill se pehle stated DB ready rakho. Setup time coding timebox se alag hai.
-2. Time ka pehla 10% contract aur examples, next 60% working implementation, next 20% acceptance tests, last 10% demo/refactor ke liye rakho. Pehle hint/answer mat padho.
-3. Har acceptance bullet ka repeatable test ya visible demo dikhao. UI ke liye keyboard aur failure state; backend ke liye real persistence/concurrency jahan required; data structures ke liye invariant aur complexity explain karo.
-4. Interviewer role wala partner midpoint par ek boundary case de; final demo ke baad listed follow-up pooche. Solo ho toh failed scenario likhkar retest karo.
-5. Answer guide se apna approach compare karo. Alternate design valid hai agar same contract aur checks satisfy hon; guide full runnable solution nahi hai.
+## Route
 
-## Scorecard — har round 20 points
-
-| Area | Points | Evidence |
-| --- | ---: | --- |
-| Contract aur model | 0–4 | Assumptions, identity, state aur scope clear hain |
-| Working core | 0–6 | Required operations end-to-end chalti hain |
-| Edge cases aur correctness | 0–4 | Prompt ke failure/boundary checks pass hain |
-| Verification | 0–4 | Repeatable tests/demo actual behavior prove karte hain |
-| Explanation | 0–2 | Tradeoff aur follow-up clearly explain kiya |
-
-16+ target rakho, lekin violated data invariant ya missing core operation ko score se hide mat karo. Incomplete drill ko same contract ke saath dobara attempt karo. First pass mein apne subject ke four P1 rounds, phir seven P2 rounds karo; saare subjects same week mein karna zaroori nahi.
-
-## Practice sequence — apna route choose karo
-
-- Frontend: HTML + CSS → JavaScript → React → Redux → frontend/system design rounds.
-- Java backend: Java → Spring Boot (SQL/reporting included) → system design.
-- Node backend: JavaScript → Node.js → MongoDB → system design.
-- DSA: apni primary language mein data structures implement karo; language/framework rounds ke saath alternate karo.
-- Har subject ke sessions 1–4 P1 hain; 5–11 P2 hain. Har third round ke baad ek failed round bina hint repeat karo. Cross-track sequence prerequisite comfort ke hisaab se follow karo.
-- Progress ke liye app confidence tracking use karo, aur apne log mein drill ID, date, minutes used, score /20, failed check aur next retry date likho. Follow-up ko implementation ke baad 5-minute spoken question banao.
+- Frontend — HTML/CSS → JS → React/Redux → design.
+- Java — Java → Spring/SQL → design.
+- Node — JS → Node → MongoDB → design.
+- DSA — primary language mein implement; invariant + complexity bolo.
 
 ## Subject directory
 

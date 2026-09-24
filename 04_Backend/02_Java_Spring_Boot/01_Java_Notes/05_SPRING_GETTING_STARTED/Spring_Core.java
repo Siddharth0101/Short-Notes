@@ -1,37 +1,28 @@
 /**
- * ========================================================================
- * 05. SPRING CORE (IoC & DI)
- * ========================================================================
- * NOTES:
- * - Spring ek comprehensive enterprise Java framework hai. Core concept Inversion of Control (IoC) hai.
- * 
- * THE PROBLEM SPRING SOLVES (Tightly Coupled Code):
- * - Agar aap ek class me dusri class ka object banate ho (e.g. `Engine e = new Engine()`), toh dono classes tightly coupled ho jati hain. Agar Engine ka constructor change hua, toh saari classes ko change karna padega.
- * 
- * 1. INVERSION OF CONTROL (IoC):
- * - Object creation aur lifecycle management ka control ab developer ke paas nahi, balki Spring Container (ApplicationContext) ke paas hai.
- * - Hum Spring ko batate hain (via Annotations ya Config) ki kaunse objects (Beans) banane hain.
- * 
- * 2. DEPENDENCY INJECTION (DI):
- * - IoC implement karne ka tarika.
- * - Jab ek class dusri class (dependency) pe depend karti hai, toh Spring Container automatically woh class "inject" (pass) kar deta hai.
- * - Types of Injection:
- *   a) Constructor Injection (Best Practice): Dependencies via constructor milti hain.
- *   b) Setter Injection: Dependencies via setter method.
- *   c) Field Injection (`@Autowired` directly on variable): Not recommended due to testing difficulty.
- * 
- * 3. SPRING BEAN LIFECYCLE:
- * - Bean = Woh Java Object jo Spring IoC container manage karta hai.
- * - Scopes:
- *   - Singleton (Default): Ek hi object banta hai aur poori app me share hota hai. (Stateless classes ke liye).
- *   - Prototype: Har baar naya object banta hai jab aap maangte ho.
- * 
- * 4. KEY ANNOTATIONS:
- * - @Component: Class ke upar lagao, Spring uska object (Bean) khud banayega.
- * - @Autowired: Dependency inject karne ke liye use hota hai.
- * - @Configuration: Woh class jo beans define karne ke liye use hoti hai (Java-based configuration).
- * - @Bean: @Configuration class ke andar ek method pe lagta hai, method jo object return karta hai, wo Spring Bean ban jata hai.
- * - @Primary: Agar interface ke 2 implementations (@Component) hain, toh ambiguity dur karne ke liye kisko priority deni hai.
+ * ## Quick revision
+ *
+ * - Spring — objects aur dependencies manage karta hai; Boot setup/configuration simplify karta hai.
+ * - Starter — related dependencies ka convenient bundle.
+ * - `@SpringBootApplication` — configuration, auto-configuration aur component scan combine.
+ * - Component scan — main class ke package/subpackages mein default scan.
+ * - Auto-configuration — classpath/properties/beans ke hisaab se conditional setup.
+ * - Startup failure — root cause padho: missing bean, port conflict ya invalid config.
+ * - Bean — Spring container ka managed object.
+ * - DI — dependencies bahar se milti hain; khud har jagah `new` nahi karte.
+ * - Constructor injection — required dependencies explicit aur testable.
+ * - Singleton scope — container mein ek instance; automatically thread-safe nahi.
+ * - `@Qualifier`/`@Primary` — multiple matching beans mein selection clear karo.
+ * - Lifecycle — initialization aur destruction callbacks resource ownership se match karo.
+ * - Circular dependency — responsibilities/design split karo.
+ * - Configuration — values code se alag properties/environment mein rakho.
+ * - `@ConfigurationProperties` — related settings typed object mein bind karo.
+ * - Validation — invalid required setting par startup fail karao.
+ * - Profile — environment-specific configuration group; secret storage nahi.
+ * - Precedence — same key multiple sources mein ho toh winning source inspect karo.
+ * - Secrets — source control/logs se door, approved secret store/environment se lo.
+ * - Application context — bean definitions, creation aur dependency wiring ka container.
+ * - Embedded server — Boot web app apne process mein HTTP server run kar sakti hai.
+ * - Condition report — auto-configuration kyun match/back off hui, startup diagnosis mein dekho.
  */
 
 // WITHOUT SPRING (Tightly Coupled)

@@ -20,6 +20,9 @@ tags: fundamentals, js, functions
 - Function declaration — apne scope mein declaration se pehle call ho sakti hai.
 - Arrow — concise function; apna `this` nahi hota.
 - Pure function — same input par same output; outside state change nahi karti.
+- Rest parameter — `(...args)` extra arguments ko array mein collect karta hai.
+- Higher-order function — function ko input le ya function return kare.
+- Early return — `return` ke baad same function ka remaining code skip hota hai.
 
 ## Sources — aur padhne ke liye
 

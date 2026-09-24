@@ -1,33 +1,31 @@
+/**
+ * ## Quick revision
+ *
+ * - `map` — har item transform karke naya array.
+ * - `filter` — matching items ka naya array.
+ * - `reduce` — items se ek accumulated result; initial value dena clear rehta hai.
+ * - `find` — pehla matching item; na mile toh `undefined`.
+ * - `some`/`every` — koi match / sab match; empty array par false / true.
+ * - `Set` — unique values; object uniqueness reference se hoti hai.
+ * - `Map` — kisi bhi type ki keys; insertion order preserve hota hai.
+ * - Destructuring — array/object se values seedha variables mein nikalo.
+ * - Spread — values expand; rest — bachi values collect.
+ * - `?.` — null/undefined par access rokta hai; missing variable declaration nahi bachata.
+ * - `sort` — original array badalta hai; numbers ke liye `(a, b) => a - b`.
+ * - Grouping — key ke hisaab se buckets banao; accumulator har step return karo.
+ * - `slice` — copy; `splice` — original mein insert/delete.
+ * - `forEach` — side-effect iteration; result array nahi aur async completion wait nahi.
+ * - `flat` — nested arrays flatten; `flatMap` — map + one-level flatten.
+ * - `findIndex` — first matching index; missing par -1.
+ * - `Array.from` — iterable/array-like ko array mein convert.
+ * - Immutable methods — `toSorted`, `toReversed`, `toSpliced`, `with` naya array dete hain.
+ * - `flatMap` — transform ke baad result ek level flatten karta hai.
+ * - Empty reduce — initial value bina empty array par reduce error deta hai.
+ * - Mutation trap — map naya array banata hai, par callback shared nested object mutate kar sakta hai.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * ADVANCED ARRAYS - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Jonas ka "Working with Arrays" section — map, filter, reduce.
- *
- * MAP, FILTER, REDUCE PIPELINE:
- * ┌─────────────────────────────────────────────────────────────┐
- * │ MAP    │ [1, 2, 3] ──(x2)──→ [2, 4, 6]      (Transform arr) │
- * │ FILTER │ [1, 2, 3] ──(>1)──→ [2, 3]         (Select subset) │
- * │ REDUCE │ [1, 2, 3] ──(sum)──→ 6            (Boil to single)│
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. SIMPLE ARRAY METHODS RECAP
- * ========================================================================
- * NOTES:
- * - slice(start, end)   -> returns new array. Original SAFE.
- * - splice(start, deleteCount) -> MUTATES original. Removed items return.
- * - reverse()            -> MUTATES original.
- * - concat(arr2)         -> merge. Returns new array. Same as [...a, ...b].
- * - join(separator)      -> array to string.
- * - at(index)            -> ES2022. Negative indexing support.
- */
 
 let testArr = ['a', 'b', 'c', 'd', 'e'];
 
@@ -46,21 +44,6 @@ console.log(testArr.slice());       // shallow copy
 console.log(testArr.at(0));  // 'a'
 console.log(testArr.at(-1)); // 'e' — last element (cleaner than arr[arr.length-1])
 
-
-/**
- * ========================================================================
- * 2. forEach
- * ========================================================================
- * NOTES:
- * - forEach har element pe callback chalata hai.
- * - callback ke args: (currentElement, index, entireArray).
- * - forEach me break/continue NAHI kaam karta (for-of me kaam karta hai).
- * - Side effects ke liye: logging, DOM update, push to another array.
- *
- * forEach on Maps and Sets:
- * - Map: forEach((value, key, map) => { ... })
- * - Set: forEach((value, _, set) => { ... })  // key = value (set me keys nahi)
- */
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
@@ -84,19 +67,6 @@ currencies.forEach(function (value, key, map) {
 });
 
 
-/**
- * ========================================================================
- * 3. MAP METHOD
- * ========================================================================
- * NOTES:
- * - map() = har element pe function chalao, NAYA ARRAY return karo.
- * - Original array change NAHI hota.
- * - forEach se difference: map RETURNS new array, forEach sirf loop karta hai.
- *
- * WHEN TO USE:
- * - Jab har element ko transform karna ho aur result array chahiye.
- */
-
 const eurToUsd = 1.1;
 
 // Movements EUR -> USD:
@@ -110,36 +80,12 @@ const movDescriptions = movements.map(
 console.log(movDescriptions);
 
 
-/**
- * ========================================================================
- * 4. FILTER METHOD
- * ========================================================================
- * NOTES:
- * - filter() = condition se match hone wale elements ka NAYA ARRAY.
- * - Callback must return true/false.
- * - Original array change nahi hota.
- */
-
 const deposits = movements.filter(mov => mov > 0);
 console.log(deposits); // [200, 450, 3000, 70, 1300]
 
 const withdrawals = movements.filter(mov => mov < 0);
 console.log(withdrawals); // [-400, -650, -130]
 
-
-/**
- * ========================================================================
- * 5. REDUCE METHOD
- * ========================================================================
- * NOTES:
- * - reduce() = array ko EK SINGLE VALUE me "boil down" karta hai.
- * - callback args: (accumulator, currentElement, index, array).
- * - Second argument = accumulator ki initial value. HAMESHA do.
- *
- * USE CASES:
- * - Sum, max, min, average, counting, grouping, flattening.
- * - reduce sab kuch kar sakta hai — ye sabse powerful method hai.
- */
 
 // Sum:
 const balance = movements.reduce((acc, mov) => acc + mov, 0);
@@ -153,20 +99,6 @@ console.log(maxMov); // 3000
 const depositCount = movements.reduce((count, mov) => (mov > 0 ? count + 1 : count), 0);
 console.log(depositCount); // 5
 
-
-/**
- * ========================================================================
- * 6. METHOD CHAINING
- * ========================================================================
- * NOTES:
- * - Methods ko ek ke baad ek chain kar sakte ho (pipeline).
- * - Jab tak method array return karta hai, chain continue rakh sakte ho.
- * - Debugging: chain ke beech me log karne ke liye arr parameter use karo.
- *
- * RULES:
- * - Mutating methods (splice, reverse) chain me AVOID karo.
- * - Zyada lambi chain readability kharab karti hai — todne me hesitate mat karo.
- */
 
 // Pipeline: deposits filter -> convert EUR to USD -> sum
 const totalDepositsUSD = movements
@@ -183,16 +115,6 @@ console.log(totalDepositsUSD); // 5522.000000000001
 // })
 
 
-/**
- * ========================================================================
- * 7. FIND METHOD
- * ========================================================================
- * NOTES:
- * - find() = pehla element return karta hai jo condition match kare.
- * - filter se difference: find sirf EK element return karta hai, array nahi.
- * - Agar koi match nahi -> undefined.
- */
-
 const firstWithdrawal = movements.find(mov => mov < 0);
 console.log(firstWithdrawal); // -400
 
@@ -205,20 +127,6 @@ const accounts = [
 const jessicaAccount = accounts.find(acc => acc.owner === 'Jessica');
 console.log(jessicaAccount); // { owner: 'Jessica', movements: [5000, 3400] }
 
-
-/**
- * ========================================================================
- * 8. findIndex, some, every
- * ========================================================================
- * NOTES:
- * - findIndex(fn)  -> pehle match ka INDEX return (-1 if not found).
- *   indexOf se difference: findIndex me condition function de sakte ho.
- *
- * - some(fn)       -> koi EK bhi element condition match kare toh TRUE.
- *   includes se difference: includes equality check, some condition check.
- *
- * - every(fn)      -> SAARE elements condition match karein toh TRUE.
- */
 
 // findIndex:
 const closeIndex = movements.findIndex(mov => mov === -400);
@@ -233,17 +141,6 @@ console.log(movements.every(mov => mov > 0)); // false (sab positive nahi hain)
 console.log([430, 1000, 700].every(mov => mov > 0)); // true
 
 
-/**
- * ========================================================================
- * 9. FLAT AND FLATMAP
- * ========================================================================
- * NOTES:
- * - flat(depth) -> nested arrays ko flatten karta hai.
- *   Default depth = 1.
- * - flatMap(fn) -> map() + flat(1) combined. Sirf 1 level deep.
- *   Performance better hai map().flat() se.
- */
-
 // flat:
 const arrNested = [[1, 2, 3], [4, 5, 6], 7, 8];
 console.log(arrNested.flat()); // [1, 2, 3, 4, 5, 6, 7, 8]
@@ -257,25 +154,6 @@ const allMovements = accounts.flatMap(acc => acc.movements);
 console.log(allMovements); // [200, 450, 5000, 3400]
 
 
-/**
- * ========================================================================
- * 10. SORT METHOD
- * ========================================================================
- * NOTES:
- * - sort() MUTATES original array.
- * - Default sort: STRINGS ki tarah sort karta hai (even numbers!).
- * - Numbers ke liye compare function dena ZAROORI hai.
- *
- * COMPARE FUNCTION:
- * - return < 0 -> a pehle (a, b keep order).
- * - return > 0 -> b pehle (swap).
- * - return 0   -> no change.
- *
- * SHORTCUT:
- * - Ascending: (a, b) => a - b
- * - Descending: (a, b) => b - a
- */
-
 // Default (string sort — WRONG for numbers!):
 // [3, 1, 11, 2].sort() -> [1, 11, 2, 3] ← WRONG!
 
@@ -286,17 +164,6 @@ console.log(sorted); // [-650, -400, -130, 70, 200, 450, 1300, 3000]
 const sortedDesc = [...movements].sort((a, b) => b - a); // descending
 console.log(sortedDesc); // [3000, 1300, 450, 200, 70, -130, -400, -650]
 
-
-/**
- * ========================================================================
- * 11. Array.from AND CREATING ARRAYS
- * ========================================================================
- * NOTES:
- * - Array.from({length}, mapFn) -> array create with map function.
- * - Array.from(nodeList)        -> NodeList ko real array me convert.
- * - new Array(7)                -> 7 empty slots. Sirf .fill() kaam karta hai.
- * - Array.from() > Array constructor for most use cases.
- */
 
 // Create array with values:
 const ones = Array.from({ length: 7 }, () => 1);
@@ -318,30 +185,3 @@ const diceRolls = Array.from({ length: 100 }, () => Math.trunc(Math.random() * 6
 const emptyArr = new Array(7);
 emptyArr.fill(1, 3, 5); // fill 1 from index 3 to 5
 console.log(emptyArr);  // [empty × 3, 1, 1, empty × 2]
-
-
-/**
- * ========================================================================
- * 12. WHICH ARRAY METHOD TO USE? (CHEAT SHEET)
- * ========================================================================
- *
- * WHAT DO YOU WANT?                METHOD
- * ──────────────────────────────────────────────────
- * Mutate original:                 push, pop, shift, unshift, splice,
- *                                  reverse, sort, fill
- *
- * New array:                       map, filter, slice, concat, flat,
- *                                  flatMap, Array.from, [...spread]
- *
- * Index:                           indexOf, findIndex
- *
- * Element:                         find
- *
- * Know if includes:                includes, some, every
- *
- * String:                          join
- *
- * Single value (boil down):        reduce
- *
- * Loop (side effects):             forEach
- */

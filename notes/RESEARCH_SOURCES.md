@@ -1,15 +1,9 @@
-# Primary sources — course ke saath aage kaise padhein
+# Primary sources
 
-Reviewed 13 September 2026. Yeh sources curriculum ke concepts samajhne ke liye select kiye hain: exact behavior ke liye official docs, algorithms ki reasoning ke liye university notes aur production tradeoffs ke liye engineering publications. Yeh internet ki exhaustive ranking nahi hai.
-
-Linked chapters mein original explanations, worked examples, answered interview checks aur drills hain. Full articles publishers ki websites par hain. Framework upgrade karte waqt version aur primary source dobara check karo. MIT 2011 notes durable algorithm reasoning ke liye hain, current framework APIs ke liye nahi.
-
-## Sources ka use
-
-1. Syllabus order mein chapter padho aur uska research section kholo.
-2. Output predict karo, interview check answer karo aur failure case khud attempt karo.
-3. API caveat ya complete derivation ke liye primary link kholo.
-4. Jo counterexample tumhari understanding badle, mistake log mein likho.
+- Use — exact API behavior/caveat ke liye original source kholo.
+- Notes — short Hinglish revision; full articles publisher ki site par.
+- Version — framework upgrade par current docs dobara check karo.
+- Source review — original selection 13 September 2026 ki hai.
 
 ## javascript
 

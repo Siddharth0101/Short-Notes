@@ -1,28 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - View — saved query; regular view data ki separate copy nahi.
+ * - Materialized view — stored result; refresh/freshness strategy chahiye.
+ * - Transaction — BEGIN → work → COMMIT; failure par ROLLBACK.
+ * - ACID — atomicity, consistency, isolation, durability ke guarantees.
+ * - Isolation — concurrent visibility/anomalies ka contract; level ke hisaab se change.
+ * - Savepoint — transaction ke ek part tak rollback.
+ * - CTE — WITH se named intermediate query.
+ * - Recursive CTE — base + recursive step; cycle/termination guard rakho.
+ * - Lock/deadlock — short transactions, consistent order aur retry policy.
+ * - Read anomaly — isolation level ke hisaab se repeat reads aur concurrent writes ka outcome differ.
+ * - Transaction duration — remote call ke liye locks unnecessarily hold mat karo.
+ * - Recursive safety — maximum depth/cycle guard aur result bound define karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * VIEWS, TRANSACTIONS AND CTEs - SHORT NOTES (Stephen Grider Course)
- * ========================================================================
- * NOTES:
- * - Views = saved queries jo virtual table ki tarah kaam karti hain.
- * - CTEs (Common Table Expressions) = readable, reusable query blocks (WITH clause).
- * - Transactions = multiple operations ko ek atomic unit banana.
- * - Ye sab SQL ke powerful features hain jo real apps me heavily use hote hain.
- */
-
-
-/**
- * ========================================================================
- * 1. VIEWS — VIRTUAL TABLES
- * ========================================================================
- * NOTES:
- * - VIEW = saved SQL query. Data store NAHI karta, sirf query definition save hota hai.
- * - Jab VIEW query karo → underlying query har baar execute hoti hai.
- * - Complex queries ko simple naam de do → clean aur reusable.
- * - Security: Users ko direct table access nahi dena, sirf VIEW dikhana.
- * - Views ke through INSERT/UPDATE possible hai (simple views me).
- */
 
 // -- Create a view
 // CREATE VIEW active_users AS
@@ -52,29 +46,6 @@
 // DROP VIEW IF EXISTS active_users;
 
 
-/**
- * ========================================================================
- * 2. MATERIALIZED VIEWS
- * ========================================================================
- * NOTES:
- * - Materialized View = query result CACHE karke disk pe STORE karta hai.
- * - Regular view har baar re-execute hoti hai. Materialized view cached result deti hai.
- * - FAST reads but data STALE ho sakta hai (auto-refresh nahi hota).
- * - REFRESH MANUALLY karna padta hai jab fresh data chahiye.
- * - Reporting, dashboards, analytics ke liye perfect.
- *
- * REGULAR VIEW vs MATERIALIZED VIEW:
- * ┌─────────────────────┬──────────────────────────┬──────────────────────────┐
- * │ Feature             │ Regular View              │ Materialized View        │
- * ├─────────────────────┼──────────────────────────┼──────────────────────────┤
- * │ Data Storage        │ No (runs query each time) │ Yes (cached on disk)     │
- * │ Read Speed          │ Depends on query           │ Fast (pre-computed)      │
- * │ Data Freshness      │ Always current              │ Stale until REFRESH      │
- * │ Index Support       │ No                          │ Yes                      │
- * │ Use Case            │ Simple abstraction          │ Expensive queries        │
- * └─────────────────────┴──────────────────────────┴──────────────────────────┘
- */
-
 // -- Create materialized view
 // CREATE MATERIALIZED VIEW monthly_revenue AS
 // SELECT
@@ -97,18 +68,6 @@
 // -- Drop materialized view
 // DROP MATERIALIZED VIEW monthly_revenue;
 
-
-/**
- * ========================================================================
- * 3. CTE — COMMON TABLE EXPRESSIONS (WITH clause)
- * ========================================================================
- * NOTES:
- * - CTE = WITH clause se temporary named result set define karna.
- * - Query ko readable, modular blocks me todte hain.
- * - CTE sirf us single query ke scope me exist karta hai.
- * - Subquery ka cleaner, more readable alternative.
- * - Multiple CTEs comma se chain kar sakte ho.
- */
 
 // -- Basic CTE
 // WITH active_users AS (
@@ -144,20 +103,6 @@
 // FROM active AS a
 // JOIN popular AS p ON p.user_id = a.id;
 
-
-/**
- * ========================================================================
- * 4. RECURSIVE CTE
- * ========================================================================
- * NOTES:
- * - WITH RECURSIVE = CTE apne aap ko reference karke iterate karta hai.
- * - Hierarchical data ke liye perfect: org charts, categories, comments.
- * - Two parts:
- *   1. Base case (non-recursive — starting rows).
- *   2. Recursive case (UNION ALL — previous result reference karke expand).
- * - TERMINATION: Jab recursive part 0 rows return kare → stop.
- * - ⚠️ Infinite loop se bachne ke liye LIMIT ya depth column use karo.
- */
 
 // -- Count from 1 to 10
 // WITH RECURSIVE counter AS (
@@ -199,24 +144,6 @@
 // SELECT * FROM category_tree;
 
 
-/**
- * ========================================================================
- * 5. TRANSACTIONS — ATOMIC OPERATIONS
- * ========================================================================
- * NOTES:
- * - Transaction = multiple SQL statements ka ek atomic unit.
- * - ACID properties:
- *   A = Atomicity: Sab succeed ya sab fail (partial nahi).
- *   C = Consistency: DB valid state me rahega.
- *   I = Isolation: Concurrent transactions ek dusre ko affect nahi karte.
- *   D = Durability: Commit ke baad data permanently saved.
- *
- * COMMANDS:
- * - BEGIN: Transaction start karo.
- * - COMMIT: Changes permanently save karo.
- * - ROLLBACK: Changes undo karo (transaction cancel).
- */
-
 // -- Transfer money: debit from A, credit to B (both or nothing!)
 // BEGIN;
 //     UPDATE accounts SET balance = balance - 500 WHERE id = 1;
@@ -230,17 +157,6 @@
 // ROLLBACK;
 // -- No changes saved, balance unchanged
 
-
-/**
- * ========================================================================
- * 6. SAVEPOINT
- * ========================================================================
- * NOTES:
- * - SAVEPOINT transaction ke andar ek checkpoint hai.
- * - ROLLBACK TO savepoint_name: partial undo (puri transaction cancel nahi).
- * - RELEASE savepoint: savepoint remove karo (memory free).
- * - Complex transactions me intermediate checkpoints ke liye useful.
- */
 
 // BEGIN;
 //     INSERT INTO orders (product, qty) VALUES ('Widget', 10);
@@ -257,62 +173,12 @@
 // COMMIT;
 
 
-/**
- * ========================================================================
- * 7. TRANSACTION ISOLATION LEVELS [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Isolation level define karta hai ki concurrent transactions ek dusre ka data
- *   kitna dekh sakte hain.
- * - Higher isolation = more safety but slower performance.
- *
- * ┌────────────────────────┬──────────┬──────────────────┬──────────────┬───────────┐
- * │ Isolation Level        │ Dirty    │ Non-Repeatable   │ Phantom      │ Speed     │
- * │                        │ Read     │ Read             │ Read         │           │
- * ├────────────────────────┼──────────┼──────────────────┼──────────────┼───────────┤
- * │ READ UNCOMMITTED       │ Possible │ Possible         │ Possible     │ Fastest   │
- * │ READ COMMITTED (PG     │ No       │ Possible         │ Possible     │ Fast      │
- * │ default)               │          │                  │              │           │
- * │ REPEATABLE READ        │ No       │ No               │ Possible*    │ Moderate  │
- * │ SERIALIZABLE           │ No       │ No               │ No           │ Slowest   │
- * └────────────────────────┴──────────┴──────────────────┴──────────────┴───────────┘
- *
- * * PostgreSQL's REPEATABLE READ also prevents phantom reads (stronger than SQL standard).
- *
- * PROBLEM DEFINITIONS:
- * - Dirty Read: Uncommitted data dusre transaction ko dikhna.
- * - Non-Repeatable Read: Same row ko do baar read karo, different values.
- * - Phantom Read: Same query do baar run karo, different number of rows.
- *
- * PostgreSQL default: READ COMMITTED (practical for most apps).
- */
-
 // SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 // BEGIN;
 //     SELECT * FROM accounts WHERE id = 1;
 //     -- ... other operations ...
 // COMMIT;
 
-
-/**
- * ========================================================================
- * 8. WINDOW FUNCTIONS (BONUS)
- * ========================================================================
- * NOTES:
- * - Window functions = aggregate jaisi but rows ko GROUP nahi karti.
- * - Har row apna value rakhti hai + window ke across calculated value bhi milta hai.
- * - OVER() clause define karta hai "window" (scope of rows for computation).
- * - PARTITION BY = groups define karo (like GROUP BY but rows preserved).
- * - ORDER BY inside OVER = window ke andar sort.
- *
- * COMMON WINDOW FUNCTIONS:
- * - ROW_NUMBER(): sequential number per partition
- * - RANK(): same values ko same rank (gaps allowed)
- * - DENSE_RANK(): same values ko same rank (no gaps)
- * - LAG(col, n): n rows peeche ki value
- * - LEAD(col, n): n rows aage ki value
- * - SUM/AVG/COUNT OVER(): running aggregate
- */
 
 // -- Row number per user's photos (ordered by created_at)
 // SELECT user_id, url,
@@ -335,19 +201,6 @@
 // FROM orders;
 
 
-/**
- * ========================================================================
- * 9. UNION, INTERSECT, EXCEPT
- * ========================================================================
- * NOTES:
- * - Set operations: do queries ke results combine/compare karte hain.
- * - UNION: dono results merge (duplicates removed).
- * - UNION ALL: dono results merge (duplicates RAKHTA hai — faster).
- * - INTERSECT: sirf common rows (dono me exist kare).
- * - EXCEPT: pehli query ke rows minus dusri query ke rows.
- * - Column count aur types match ZARURI hai dono queries me.
- */
-
 // -- UNION: all unique cities from both queries
 // SELECT name FROM indian_cities
 // UNION
@@ -368,21 +221,6 @@
 // EXCEPT
 // SELECT name FROM asian_cities;
 
-
-/**
- * ========================================================================
- * 10. VIEWS, CTE AND TRANSACTION RULES
- * ========================================================================
- * - Views security aur abstraction ke liye use karo.
- * - Materialized views expensive queries ko cache karo — REFRESH mat bhoolna.
- * - CTEs complex queries ko readable banate hain — subquery se prefer karo.
- * - Recursive CTEs me always termination condition rakho.
- * - Transactions me related operations group karo — ACID guarantee.
- * - SAVEPOINT partial rollback ke liye use karo.
- * - Default isolation READ COMMITTED — most apps ke liye sufficient.
- * - SERIALIZABLE sirf critical financial/inventory ops ke liye.
- * - Window functions aggregate results chahiye per-row basis pe toh use karo.
- */
 
 const viewsRules = {
     views: 'Abstraction + Security — saved queries',

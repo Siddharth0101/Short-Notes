@@ -1,97 +1,17 @@
+/**
+ * ## Quick revision
+ *
+ * - OTP — each box digit state; overall value derive.
+ * - Input — valid digit par next focus; deletion par sensible previous focus.
+ * - Paste — sanitize aur remaining boxes fill; length bound.
+ * - Keyboard — arrows/backspace plus labels; mobile inputMode useful.
+ * - Submit — complete value par controlled action; duplicate guard.
+ * - Paste boundary — pasted length boxes se zyada ho toh bounded handling; partial paste selected position se.
+ * - Autofill — browser one-time-code support ko input design se align; manual entry fallback.
+ * - Focus race — value render ke baad intended box focus; removed/disabled node handle.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 01. OTP INPUT COMPONENT [⚡ MACHINE CODING PATTERNS]
- * ========================================================================
- * SOURCE: Akshay Saini (Ace Machine Coding Round)
- *
- * REQUIREMENTS:
- * - A series of N inputs (usually 4 or 6) for entering an OTP.
- * - Auto-focus next input on typing.
- * - Auto-focus previous input on Backspace.
- * - Support pasting a full OTP string into any input.
- * - Only allow numbers (validation).
- */
-
-/**
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                     REACT IMPLEMENTATION LOGIC                      │
- * └─────────────────────────────────────────────────────────────────────┘
- *
- * ```jsx
- * import React, { useState, useRef, useEffect } from 'react';
- *
- * const OtpInput = ({ length = 4, onOtpSubmit = () => {} }) => {
- *   const [otp, setOtp] = useState(new Array(length).fill(""));
- *   const inputRefs = useRef([]);
- *
- *   useEffect(() => {
- *     if (inputRefs.current[0]) {
- *       inputRefs.current[0].focus();
- *     }
- *   }, []);
- *
- *   const handleChange = (index, e) => {
- *     const value = e.target.value;
- *     if (isNaN(value)) return; // Only numbers allowed
- *
- *     const newOtp = [...otp];
- *     // allow only one input
- *     newOtp[index] = value.substring(value.length - 1);
- *     setOtp(newOtp);
- *
- *     // submit trigger
- *     const combinedOtp = newOtp.join("");
- *     if (combinedOtp.length === length) onOtpSubmit(combinedOtp);
- *
- *     // Move to next input if current field is filled
- *     if (value && index < length - 1 && inputRefs.current[index + 1]) {
- *       inputRefs.current[index + 1].focus();
- *     }
- *   };
- *
- *   const handleClick = (index) => {
- *     inputRefs.current[index].setSelectionRange(1, 1);
- *
- *     // optional: focus empty input if user clicks past filled inputs
- *     if (index > 0 && !otp[index - 1]) {
- *       inputRefs.current[otp.indexOf("")].focus();
- *     }
- *   };
- *
- *   const handleKeyDown = (index, e) => {
- *     if (
- *       e.key === "Backspace" &&
- *       !otp[index] &&
- *       index > 0 &&
- *       inputRefs.current[index - 1]
- *     ) {
- *       // Move focus to the previous input field on backspace
- *       inputRefs.current[index - 1].focus();
- *     }
- *   };
- *
- *   return (
- *     <div>
- *       {otp.map((value, index) => {
- *         return (
- *           <input
- *             key={index}
- *             type="text"
- *             ref={(input) => (inputRefs.current[index] = input)}
- *             value={value}
- *             onChange={(e) => handleChange(index, e)}
- *             onClick={() => handleClick(index)}
- *             onKeyDown={(e) => handleKeyDown(index, e)}
- *             className="otpInput"
- *           />
- *         );
- *       })}
- *     </div>
- *   );
- * };
- * ```
- */
 
 console.log('✅ OTP Input Machine Coding Pattern parsed successfully.');

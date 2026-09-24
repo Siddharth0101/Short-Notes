@@ -4,7 +4,7 @@ title: Sorting from elementary methods to divide and conquer
 track: dsa
 order: 7
 level: Intermediate
-minutes: 1
+minutes: 2
 summary: Bubble sort — adjacent swaps; O(n²), early-exit variant best O(n).
 tags: sorting, merge-sort, quick-sort, radix-sort, stability
 visual: sorting
@@ -24,6 +24,9 @@ visual: sorting
 - Stability — equal-key items ka original order bachta hai.
 - Comparator — consistent ordering; JS numeric sort mein `(a, b) => a - b`.
 - Inversions — merge ke waqt cross inversions count; O(n log n).
+- Comparison lower bound — arbitrary comparison sorting worst-case Ω(n log n); restricted-key algorithms different assumptions use karte hain.
+- Stable merge — equal keys par left item pehle lo toh original order preserve kar sakte ho.
+- Pivot choice — randomized pivot adversarial pattern risk kam; worst-case bound automatically remove nahi hota.
 
 ## Sources — aur padhne ke liye
 

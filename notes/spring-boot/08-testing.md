@@ -18,6 +18,9 @@ tags: spring, testing, integration
 - MockMvc — HTTP contract without full external server.
 - Isolation — test data unique/clean rakho; parallel tests ek-doosre ko na tod dein.
 - Rollback caveat — separate HTTP thread ka transaction test rollback se cover na ho.
+- Context reuse — compatible cached test context suite fast karta hai; unnecessary full resets avoid.
+- HTTP boundary — JSON shape, status aur validation errors assert; sirf service return value enough nahi.
+- External stub — timeout/malformed response simulate; real integration ka substitute samajhkar use karo.
 
 ## Sources — aur padhne ke liye
 

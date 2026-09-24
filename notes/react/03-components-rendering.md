@@ -20,6 +20,9 @@ visual: react-render
 - Strict Mode — development mein extra checks; render/effect ko safe rakho.
 - Class lifecycle — mount/update/unmount; Hooks mein responsibilities ke hisaab se socho.
 - Error boundary — descendant render errors ke fallback; har async/event error nahi pakadti.
+- Nested component definition — parent render ke andar component type define karna state reset kara sakta hai.
+- Same-value update — React Object.is comparison se redundant state update skip kar sakta hai.
+- Portal — DOM location badalti hai; context aur React event propagation parent tree follow karte hain.
 
 ## Sources — aur padhne ke liye
 

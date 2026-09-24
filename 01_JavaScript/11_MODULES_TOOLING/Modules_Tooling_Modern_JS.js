@@ -1,65 +1,26 @@
+/**
+ * ## Quick revision
+ *
+ * - ES module — `import`/`export`; imports live bindings hote hain.
+ * - Module scope — variables automatically global nahi bante.
+ * - Dynamic import — `import()` Promise deta hai; zaroorat par code load karo.
+ * - Bundler — modules/assets ko production bundles mein prepare karta hai.
+ * - Tree shaking — unused exports hata sakta hai; side effects limit karte hain.
+ * - Lockfile — dependency resolution pin; reproducible install ke liye commit karo.
+ * - Source map — built code ko original source se map karta hai.
+ * - Debugging — reproduce → breakpoint → state inspect → smallest fix.
+ * - Environment — browser bundle mein bheja secret public samjho.
+ * - Deployment — hashed assets long-cache; HTML update/revalidation sochkar karo.
+ * - Named/default — named export ka imported naam match; default ka local naam choose kar sakte ho.
+ * - Top-level await — ES module mein allowed; dependent module execution wait kar sakti hai.
+ * - Transpile — syntax transform; polyfill — missing runtime API provide.
+ * - Declarative — desired transformation bolo; unnecessary mutation se bacho.
+ * - Circular import — initialization order matter; module load ke dauran uninitialized binding read fail kar sakti hai.
+ * - Dependency audit — direct aur transitive packages alag; lockfile diff review karo.
+ * - Polyfill/transpile — missing runtime API provide / syntax transform; dono same kaam nahi.
+ */
+
 'use strict';
-
-/**
- * ========================================================================
- * MODULES, TOOLING & MODERN JS - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Jonas ka last theory section: ES6 modules, bundling, transpiling.
- *
- * MODERN BUILD PIPELINE:
- * ┌─────────────────────────────────────────────────────────────┐
- * │  Development          │  Build Process (Bundler)           │
- * │  ───────────          │  ───────────────────────           │
- * │  Modules (import/exp) ├──→ Bundling (Merge files)          │
- * │  Uncompiled ES6+      ├──→ Transpiling (Babel -> ES5)       │
- * │  Assets               ├──→ Polyfilling (Core-js)           │
- * │                       └──→ Minification (Remove whitespace)│
- * │                                     │                      │
- * │                                     ▼                      │
- * │                              Production Bundle (dist/bundle.js)│
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. MODULES OVERVIEW
- * ========================================================================
- * NOTES:
- * - Module = reusable piece of code that encapsulates implementation details.
- * - Module usually ek standalone file hota hai.
- *
- * WHY MODULES?
- * - Abstraction: internal detail hide, public API expose.
- * - Organization: code split into logical files.
- * - Encapsulation: variables private by default.
- * - Reusability: import same module in multiple files.
- *
- * JS MODULE SYSTEMS:
- * - ES6 Modules (ESM):  import/export. Browser + Node. STANDARD.
- * - CommonJS (CJS):     require/module.exports. Node.js traditional.
- * - AMD:                define/require. Older, browser. Mostly dead.
- */
-
-
-/**
- * ========================================================================
- * 2. ES6 MODULES (ESM) — import / export
- * ========================================================================
- * NOTES:
- * - File me `type="module"` HTML script tag me likhna padta hai.
- * - Strict mode by default (no need for 'use strict').
- * - Top-level `this` = undefined (not window).
- * - Imports hoisted hote hain (top pe move hote hain).
- * - LIVE CONNECTION: import ki value export me change ho toh import bhi update.
- *
- * EXECUTION ORDER:
- * - Importing module PEHLE execute hota hai.
- * - Ek module sirf EK BAAR execute hota hai (cached after first import).
- */
-
-// ──── shoppingCart.js (exporting module) ────
 // NAMED EXPORTS:
 // export const addToCart = function (product, quantity) {
 //     cart.push({ product, quantity });
@@ -73,8 +34,6 @@
 // export default function (product, quantity) {
 //     cart.push({ product, quantity });
 // };
-
-// ──── script.js (importing module) ────
 
 // Named imports (must match export names):
 // import { addToCart, totalPrice as price, totalQuantity } from './shoppingCart.js';
@@ -94,32 +53,6 @@
 // import add, { addToCart, totalPrice } from './shoppingCart.js';
 
 
-/**
- * ========================================================================
- * 3. NAMED VS DEFAULT EXPORTS
- * ========================================================================
- * NOTES:
- * - Named exports: multiple per module. Import with exact name (or rename with `as`).
- * - Default export: ek per module. Import with any name.
- *
- * CONVENTION:
- * - Ek file se sirf ek cheez export karna hai -> default export.
- * - Multiple cheezein export karna hai -> named exports.
- * - MIXING avoid karo (confusion hota hai).
- */
-
-
-/**
- * ========================================================================
- * 4. TOP-LEVEL AWAIT (ES2022)
- * ========================================================================
- * NOTES:
- * - Modules me await top level pe use kar sakte ho (function ke bahar).
- * - But ye MODULE KA EXECUTION BLOCK karta hai.
- * - Importing module bhi WAIT karega jab tak top-level await resolve na ho.
- * - Sirf necessary jagah use karo; zyada use se loading slow hoti hai.
- */
-
 // const res = await fetch('https://jsonplaceholder.typicode.com/posts');
 // const data = await res.json();
 // console.log(data);
@@ -135,17 +68,6 @@
 // const lastPost = await getLastPost();
 // console.log(lastPost);
 
-
-/**
- * ========================================================================
- * 5. THE MODULE PATTERN (Pre-ES6)
- * ========================================================================
- * NOTES:
- * - ES6 modules se pehle IIFE + closures se modules banate the.
- * - IIFE run hota hai, returned object = public API.
- * - Closure variables ko private rakhti hai.
- * - Purane codebases me dikhega. New code me ES6 modules use karo.
- */
 
 const ShoppingCart2 = (function () {
     const cart = [];
@@ -172,18 +94,6 @@ console.log(ShoppingCart2.cart);        // [{...}, {...}]
 // console.log(ShoppingCart2.shippingCost); // undefined (private!)
 
 
-/**
- * ========================================================================
- * 6. COMMONJS MODULES
- * ========================================================================
- * NOTES:
- * - Node.js ka traditional module system.
- * - module.exports = value;  -> export.
- * - const mod = require('./module');  -> import.
- * - Browser me directly nahi chalte (bundler chahiye).
- * - Node me default hai (unless "type": "module" in package.json).
- */
-
 // EXPORT (in Node):
 // module.exports.addToCart = function (product, quantity) {
 //     cart.push({ product, quantity });
@@ -192,46 +102,6 @@ console.log(ShoppingCart2.cart);        // [{...}, {...}]
 // IMPORT (in Node):
 // const { addToCart } = require('./shoppingCart');
 
-
-/**
- * ========================================================================
- * 7. BUNDLING — WHY AND WHAT
- * ========================================================================
- * NOTES:
- * - Problem: 100 small JS files -> 100 HTTP requests -> slow load.
- * - Solution: BUNDLER sab files ko EK (ya few) bundles me merge karta hai.
- *
- * BUNDLERS:
- * - Webpack: powerful, widely used, complex config.
- * - Parcel: zero-config, beginner friendly, fast.
- * - Vite: modern, super fast dev server, Rollup-based production build.
- * - esbuild: blazing fast (Go-based).
- *
- * WHAT BUNDLER DOES:
- * 1. Sab modules ek file me join.
- * 2. Dead code eliminate (tree shaking).
- * 3. Code minify (whitespace, variable names shrink).
- * 4. Old browser support ke liye transpile (Babel).
- * 5. Assets optimize (images, CSS, etc.).
- */
-
-
-/**
- * ========================================================================
- * 8. PARCEL BASICS (Jonas course me use hota hai)
- * ========================================================================
- * NOTES:
- * - npx parcel index.html        -> dev server start.
- * - npx parcel build index.html   -> production build.
- * - Hot Module Replacement (HMR): code change hone par page full reload nahi,
- *   sirf changed module replace. State preserved!
- *
- * PARCEL FEATURES:
- * - Zero config: no webpack.config.js needed.
- * - Automatic code splitting.
- * - Automatic polyfills.
- * - Built-in support for SASS, TypeScript, React, etc.
- */
 
 // Hot Module Replacement (Parcel specific):
 // if (module.hot) {
@@ -247,25 +117,6 @@ console.log(ShoppingCart2.cart);        // [{...}, {...}]
 // }
 
 
-/**
- * ========================================================================
- * 9. TRANSPILING AND POLYFILLING
- * ========================================================================
- * NOTES:
- * - Transpiling: naye syntax ko purane me convert karna.
- *   Arrow function -> regular function. const -> var. Optional chaining -> if checks.
- *   Tool: Babel (most bundlers me built-in).
- *
- * - Polyfilling: naye FEATURES/METHODS jo purane JS me exist nahi karte,
- *   unko manually add karna.
- *   Promise, Array.from, Array.flat, etc.
- *   Tool: core-js, regenerator-runtime.
- *
- * DIFFERENCE:
- * - Transpile = SYNTAX change (bundler handles).
- * - Polyfill = NEW FUNCTIONALITY add (library import karo).
- */
-
 // Polyfill imports:
 // import 'core-js/stable';              // all polyfills
 // import 'regenerator-runtime/runtime';  // async/await polyfill
@@ -274,29 +125,6 @@ console.log(ShoppingCart2.cart);        // [{...}, {...}]
 // import 'core-js/stable/array/find';
 // import 'core-js/stable/promise';
 
-
-/**
- * ========================================================================
- * 10. DECLARATIVE AND FUNCTIONAL JS (Modern Trend)
- * ========================================================================
- * NOTES:
- * - Imperative: HOW karna hai step by step. (for loops, manual state).
- * - Declarative: WHAT chahiye. (map, filter, reduce, ternary).
- *
- * FUNCTIONAL PROGRAMMING PRINCIPLES:
- * - Pure functions: same input -> same output. No side effects.
- * - Immutability: data mutate mat karo, naya data create karo.
- * - First-class functions: functions as values.
- * - Avoid: var, for loops, direct DOM mutation, mutable state.
- * - Prefer: const, array methods, spread/rest, Object.freeze.
- *
- * JONAS KI RECOMMENDATION:
- * - Pure functional JS achievable nahi hai (side effects zaroori hain).
- * - But functional TECHNIQUES use karo jahan possible:
- *   map/filter/reduce instead of for loops.
- *   Spread instead of push/mutation.
- *   Immutable objects where feasible.
- */
 
 // Imperative:
 const doubled1 = [];

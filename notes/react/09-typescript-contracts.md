@@ -20,6 +20,9 @@ tags: typescript, state, narrowing, api, testing
 - Event type — actual element/event ka type use karo.
 - API response — external JSON ko runtime schema se validate karo.
 - Nullability — missing value explicitly handle; `!` se blindly silence mat karo.
+- Exhaustive check — union ka har variant handle; missing branch compiler se pakdo.
+- Readonly — TypeScript write restriction; runtime deep-freeze guarantee nahi.
+- Type assertion — `as Type` runtime conversion/validation nahi karta.
 
 ## Research notes: Make omitted states visible to the compiler
 

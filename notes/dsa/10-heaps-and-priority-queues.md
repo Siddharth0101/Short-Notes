@@ -20,6 +20,9 @@ tags: heap, priority-queue, top-k, heapify
 - Priority queue — priority ke hisaab se next item; full sorting guaranteed nahi.
 - Stale entry — priority update ka old queue entry pop par skip karo.
 - Tie-breaker — equal priorities ka deterministic order define karo.
+- K-way merge — har sorted source ka next candidate heap mein; O(total items × log k).
+- Streaming median — lower half max-heap, upper half min-heap; sizes/order balanced rakho.
+- Arbitrary delete — item locate karne ke liye index map ya lazy deletion chahiye.
 
 ## Sources — aur padhne ke liye
 

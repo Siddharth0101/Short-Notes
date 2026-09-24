@@ -20,6 +20,9 @@ visual: request-flow
 - Pool — DB connections scarce resource; wait time aur saturation monitor karo.
 - Outbox — business write aur event row same transaction mein.
 - Migration — compatible rollout; old/new versions coexist kar sakein.
+- ETag/If-Match — resource version match ho tab update; lost-update conflict surface karo.
+- Bulk endpoint — bounded batch size; partial success/error response contract clear.
+- Read model — optimized query view; source write model se freshness/lag explicitly define.
 
 ## Sources — aur padhne ke liye
 

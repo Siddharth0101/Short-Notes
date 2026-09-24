@@ -1,43 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Testing Library — user ke visible behavior se tests likho.
+ * - Query — accessible role/name prefer; implementation selector se bacho.
+ * - User event — realistic typing/click; async interaction await karo.
+ * - `findBy` — async appearance; `queryBy` — absence check.
+ * - Mock network — loading, error, retry aur out-of-order response cover karo.
+ * - Accessibility — semantic HTML, labels, contrast aur keyboard flow.
+ * - Focus — modal/route/error ke baad focus meaningful jagah par rahe.
+ * - Coverage — line percentage se zyada important user journeys aur failure cases.
+ * - `useId` — accessible label/description IDs banane ke liye; list keys ke liye data ID use karo.
+ * - Accessible name — visible label aur control name match; icon-only button ko label do.
+ * - Test cleanup — mounted UI, mocks aur fake timers next test mein leak na hon.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 06. TESTING WITH REACT TESTING LIBRARY (RTL) & JEST [⚡ NAMASTE REACT]
- * ========================================================================
- * SOURCE: Akshay Saini (Namaste React - Ep 13)
- *
- * TESTING PYRAMID:
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                                                                     │
- * │                             /   E2E   \      (Cypress / Playwright) │
- * │                            / Integration\    (RTL Multi-Component)  │
- * │                           /     Unit     \   (RTL / Jest Isolated)  │
- * │                                                                     │
- * └─────────────────────────────────────────────────────────────────────┘
- *
- * RTL PHILOSOPHY:
- * - Test user behavior, NOT implementation details!
- * - Never assert internal state values (e.g. component.state.count === 2).
- * - Instead assert user-visible elements (e.g. expect(screen.getByText('Cart (2)')).toBeInTheDocument()).
- */
-
-/**
- * ========================================================================
- * 1. QUERY PRIORITY IN REACT TESTING LIBRARY
- * ========================================================================
- * Always prefer accessible queries that reflect user interaction:
- * 1. getByRole (e.g., getByRole('button', { name: /submit/i })) 🌟 BEST
- * 2. getByLabelText (form fields with associated <label>)
- * 3. getByPlaceholderText (search inputs)
- * 4. getByText (headings, paragraphs)
- * 5. getByDisplayValue (input current value)
- * 6. getByTestId (data-testid="cart-badge") - LAST RESORT ONLY!
- *
- * getBy vs queryBy vs findBy:
- * - getBy: Returns element or THROWS immediate error (use for elements that MUST exist).
- * - queryBy: Returns element or NULL (use when asserting element is NOT in the DOM).
- * - findBy: Returns a PROMISE (use for async elements loaded via API / useEffect).
- */
 
 // Simulation of RTL Test Runner assertions
 class TestRunner {
@@ -87,19 +65,3 @@ runner.test('Should filter top-rated restaurants with rating > 4.0', () => {
   const topRated = restaurants.filter((r) => r.rating > 4.0);
   runner.expect(topRated.length).toBe(2);
 });
-
-/**
- * ========================================================================
- * 2. MOCKING ASYNC APIS & FETCH
- * ========================================================================
- * In Jest / RTL:
- * ```javascript
- * global.fetch = jest.fn(() =>
- *   Promise.resolve({
- *     json: () => Promise.resolve(mockRestaurantData)
- *   })
- * );
- * ```
- * - Always wrap async state transitions in `act()` or use RTL's `await waitFor(...)`
- *   to avoid "Warning: An update to Component inside a test was not wrapped in act(...)".
- */

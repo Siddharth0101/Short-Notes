@@ -17,6 +17,9 @@ tags: spring, validation, errors
 - `@RestControllerAdvice` — centralized exception-to-response mapping.
 - Error response — stable code, safe message, field details aur correlation ID.
 - Security — stack trace, SQL ya secret client ko mat bhejo.
+- Nested validation — child DTO validation ke liye appropriate cascaded validation lagao.
+- Constraint combination — size limit alone null reject nahi karta; requiredness separate define karo.
+- Error taxonomy — validation, missing resource, conflict aur internal failure ke stable codes alag rakho.
 
 ## Sources — aur padhne ke liye
 

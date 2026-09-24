@@ -19,6 +19,9 @@ tags: consistency, rate-limiting, token-bucket, distributed
 - Token bucket — refillable tokens; rate + burst capacity control.
 - Distributed limiter — shared atomic decision ya explicit approximate limit.
 - Fail-open/closed — limiter outage par availability/security tradeoff decide.
+- Quorum — read/write set overlap useful; alone linearizability ka complete proof nahi.
+- Clock skew — client timestamps ko total global order ka unquestioned proof mat samjho.
+- Monotonic reads — user ko previously seen version se older state na dikhe; routing/version tracking chahiye.
 
 ## Sources — aur padhne ke liye
 

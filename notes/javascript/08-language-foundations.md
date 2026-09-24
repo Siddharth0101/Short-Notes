@@ -20,6 +20,9 @@ tags: variables, types, coercion, functions, fundamentals
 - Short-circuit — `&&`, `||`, `??` zaroorat padne par hi right side evaluate karte hain.
 - Destructuring default — sirf `undefined` par lagta hai, `null` par nahi.
 - Equality — `Object.is(NaN, NaN)` true; `Object.is(0, -0)` false.
+- `in` operator — own aur inherited properties dono check karta hai.
+- Automatic semicolon — `return` ke turant baad newline unexpected undefined de sakti hai.
+- `delete` — object property hataata hai; array slot delete karne se length shrink nahi hoti.
 
 ## Sources — aur padhne ke liye
 

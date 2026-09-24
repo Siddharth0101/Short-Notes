@@ -1,10 +1,34 @@
+/**
+ * ## Quick revision
+ *
+ * - Node.js — JavaScript runtime; I/O async ho sakti hai, heavy JS event loop block karta hai.
+ * - Event loop — callbacks schedule; worker pool aur OS kuch async work handle karte hain.
+ * - HTTP — method, URL, headers aur body se request; status/headers/body se response.
+ * - Module — ESM `import/export`; CommonJS `require/module.exports`.
+ * - Stream — chunks mein data; poori file memory mein lena zaroori nahi.
+ * - Backpressure — slow consumer ho toh producer ko slow/pause karo.
+ * - Buffer — binary bytes; text decode karte waqt encoding sahi rakho.
+ * - Environment — config validate karo; secrets client/logs mein leak mat karo.
+ * - Express — routing aur middleware ka HTTP framework.
+ * - Middleware — order matters; response bhejo ya `next()` se control do.
+ * - Route — method + path + handler; input ki type/range validate karo.
+ * - Express 5 — returned rejected Promise error flow mein jaati hai; detached async work alag handle karo.
+ * - Error handler — `(err, req, res, next)`; routes ke baad register karo.
+ * - Double response — send ke baad execution/control flow rokna ya return karna socho.
+ * - REST — resource URL, consistent methods/status aur bounded pagination.
+ * - Error response — safe message/code; stack trace client ko nahi.
+ * - EventEmitter — listeners synchronous call ho sakte hain; emit ko automatic async mat samjho.
+ * - Client disconnect — abandoned response ke database/stream work ko cancel/close karo.
+ * - CPU saturation — event-loop delay measure; heavy computation ko bounded worker execution do.
+ */
+
 import React, { useState } from 'react';
 
 const STAGES = [
   {
     name: 'Client Browser',
     icon: '💻',
-    description: 'The browser packs the request. It sets headers (Authorization Bearer Token, Content-Type: application/json) and serializes the payload.',
+    description: "Request — browser headers aur serialized body prepare karta hai.",
     details: {
       Method: 'POST',
       URL: 'https://api.app.com/v1/auth/login',
@@ -15,7 +39,7 @@ const STAGES = [
   {
     name: 'Network Transport',
     icon: '🌐',
-    description: 'The DNS resolves the URL to an IP address. A TCP/IP handshake is completed. TLS encryption is established and packet routing transfers data to the server gateway.',
+    description: "Network — DNS resolve, connection/TLS establish, request server tak.",
     details: {
       DNS: 'api.app.com -> 104.24.12.18',
       Handshake: 'SYN -> SYN-ACK -> ACK (Secure TLS v1.3)',
@@ -25,7 +49,7 @@ const STAGES = [
   {
     name: 'Server Middleware',
     icon: '🛡️',
-    description: 'The server parses raw headers. It executes global middlewares: CORS allowances, request logging, body-parsing (parsing req.body), and Rate Limiting.',
+    description: "Middleware — parsing, logging, CORS aur rate limits apply.",
     details: {
       Logger: 'POST /v1/auth/login - 12:54:21',
       BodyParser: 'Constructing req.body object from buffer stream',
@@ -35,7 +59,7 @@ const STAGES = [
   {
     name: 'Authentication Guard',
     icon: '🔑',
-    description: 'If protected route, Auth middlewares read the Authorization header token, run signature verification, extract user payload, and bind req.user context.',
+    description: "Auth — credentials verify; user identity aur permissions check.",
     details: {
       RouteGuard: 'Public Route (Login endpoint bypasses JWT validation checks)',
       Status: 'Permitted - proceeding to controller router mapping'
@@ -44,7 +68,7 @@ const STAGES = [
   {
     name: 'Controller Route Handler',
     icon: '⚙️',
-    description: 'The router matches matching endpoint definitions. It runs controller logic, calls databases or APIs, authenticates credentials, and constructs outputs.',
+    description: "Handler — route match, business logic aur DB/API calls.",
     details: {
       RouterMatch: '/v1/auth/login -> authController.login()',
       DatabaseQuery: 'db.users.findOne({ email: "user@gmail.com" })',
@@ -54,7 +78,7 @@ const STAGES = [
   {
     name: 'Response Dispatch',
     icon: '📤',
-    description: 'The response is serialized. The status code (200 OK) is set. It flies back across network and reaches client, updating local state.',
+    description: "Response — status/body client ko milte hain; UI state update.",
     details: {
       Status: '200 OK',
       Headers: '{ "Content-Type": "application/json", "Set-Cookie": "jwt=..." }',

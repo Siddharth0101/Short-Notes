@@ -19,6 +19,9 @@ tags: frequency-counter, two-pointers, sliding-window, prefix-sum
 - Prefix map — previous sums count karke target-sum subarrays nikalo.
 - Invariant — pointer/window move ke baad jo rule true rehta hai.
 - Dry run — duplicates, empty input aur exact boundary check karo.
+- Difference array — range updates mark karke prefix accumulation se final values nikalo.
+- Sorted two-sum — low sum par left badhao, high sum par right ghatao.
+- Permutation window — same length ke window mein required character frequencies match karo.
 
 ## Sources — aur padhne ke liye
 

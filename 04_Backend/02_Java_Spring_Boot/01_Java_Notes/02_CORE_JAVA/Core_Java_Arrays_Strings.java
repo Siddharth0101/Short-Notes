@@ -1,126 +1,34 @@
+/**
+ * ## Quick revision
+ *
+ * - Method — typed parameters lo, declared type ka result return karo.
+ * - `void` — return value nahi; early `return` allowed.
+ * - Overloading — same naam, different parameter list; return type alone enough nahi.
+ * - Pass-by-value — reference ki copy pass hoti hai; object mutate ho sakta hai.
+ * - Array — fixed length; index `0` se `length - 1`.
+ * - 2D array — arrays ka array; rows ki lengths alag ho sakti hain.
+ * - Varargs — multiple arguments array ki tarah milte hain; last parameter hota hai.
+ * - Primitive types — byte, short, int, long, float, double, char, boolean.
+ * - Wrapper — primitive ka object type; unboxing null se `NullPointerException`.
+ * - String — immutable; content compare ke liye `.equals()`.
+ * - `==` — primitives ki value, objects ki reference identity compare.
+ * - `StringBuilder` — repeated string building mein mutable buffer.
+ * - Overflow — integer arithmetic wrap ho sakti hai; checked math/range validation use karo.
+ * - Casting — narrowing mein data lose ho sakta hai; blindly cast mat karo.
+ * - `final` — variable reassign nahi; object automatically immutable nahi.
+ * - String pool — literals reuse ho sakte hain; content equality ke liye `.equals()`.
+ * - StringBuffer — synchronized mutable buffer; StringBuilder unsynchronized.
+ * - Jagged array — har row ki length independent.
+ * - Array length — fixed property; String length() method hai.
+ * - Bounds — invalid index par ArrayIndexOutOfBoundsException; negative/empty cases check karo.
+ * - Return contract — non-void method ke har normally completing path ko value chahiye.
+ */
+
 import java.util.Arrays;
 
-/**
- * ========================================================================
- * 02c. CORE JAVA - ARRAYS & STRINGS [⚡ VISUAL]
- * ========================================================================
- * 
- * ========================================================================
- * 1. ARRAYS
- * ========================================================================
- * - Array = FIXED SIZE container jo SAME TYPE ke multiple values store karta hai.
- * - Array ek OBJECT hai -> Heap Memory me store hota hai.
- * - Index 0 se start hota hai. arr[0] = first element, arr[length-1] = last element.
- * - Size ek baar define karne ke baad CHANGE nahi ho sakta (Fixed size! Dynamic chahiye toh ArrayList use karo).
- * 
- * DECLARATION & INITIALIZATION:
- * - int[] nums = new int[5];             // Default values: [0, 0, 0, 0, 0]
- * - int[] nums = {10, 20, 30, 40, 50};   // Direct initialization
- * - String[] names = new String[3];       // Default: [null, null, null]
- * 
- * IMPORTANT PROPERTIES:
- * - arr.length -> Array ki size (Note: ye method nahi hai, field hai. No parentheses!)
- * - ArrayIndexOutOfBoundsException -> Agar galat index access karo toh ye error aata hai.
- * 
- * 2D ARRAY (Multidimensional):
- * - Array ke andar arrays. Like rows and columns (matrix).
- * - int[][] matrix = new int[3][4];  // 3 rows, 4 columns
- * - int[][] matrix = { {1,2,3}, {4,5,6}, {7,8,9} };
- * 
- * JAGGED ARRAY:
- * - 2D array jisme har row ki DIFFERENT length ho sakti hai.
- * - int[][] jagged = new int[3][];  // 3 rows, columns abhi define nahi
- * - jagged[0] = new int[2];  // Row 0 has 2 columns
- * - jagged[1] = new int[4];  // Row 1 has 4 columns
- * - jagged[2] = new int[1];  // Row 2 has 1 column
- * 
- * ARRAYS UTILITY CLASS (java.util.Arrays):
- * - Arrays.sort(arr)       -> Sort karta hai (ascending)
- * - Arrays.toString(arr)   -> Array ko readable String me convert karta hai "[1, 2, 3]"
- * - Arrays.fill(arr, val)  -> Sabko same value de deta hai
- * - Arrays.copyOf(arr, n)  -> New array banata hai first n elements ke sath
- * 
- * ========================================================================
- * 2. STRINGS
- * ========================================================================
- * - String = sequence of characters. Java me String ek CLASS hai (primitive nahi!).
- * - String IMMUTABLE hai: Ek baar create hone ke baad value CHANGE NAHI hoti.
- *   Jab bhi modify karte ho, naya String object banta hai heap me.
- * 
- * STRING POOL (Intern Pool):
- * - Java ek special memory area maintain karta hai called "String Pool" (heap ke andar).
- * - Jab tum String literal create karte ho: String s = "Hello";
- *   Java pehle pool me check karta hai ki "Hello" already hai ya nahi.
- *   Agar hai -> same reference return karta hai (memory save!).
- *   Agar nahi -> pool me naya object banata hai.
- * - new String("Hello") -> Ye HAMESHA heap me naya object banata hai, pool bypass karta hai.
- * 
- * STRING vs == vs .equals():
- * - == : REFERENCE compare karta hai (kya dono same memory location point kar rahe hain?)
- * - .equals() : CONTENT compare karta hai (kya dono ki value same hai?)
- * - RULE: Strings compare karne ke liye HAMESHA .equals() use karo!
- * 
- * COMMON STRING METHODS:
- * - s.length()             -> Length (ye method hai, array me field tha!)
- * - s.charAt(index)        -> Character at given index
- * - s.substring(start, end) -> Sub-string from start to end-1
- * - s.indexOf("text")      -> First occurrence ka index (-1 if not found)
- * - s.toLowerCase()        -> Lowercase me convert
- * - s.toUpperCase()        -> Uppercase me convert
- * - s.trim()               -> Leading/trailing whitespace remove
- * - s.contains("text")     -> true/false if substring exists
- * - s.replace("old","new") -> Replace occurrences
- * - s.split("delimiter")   -> String ko array me split karta hai
- * - s.toCharArray()        -> String to char array
- * - s.equals(other)        -> Content equality check
- * - s.equalsIgnoreCase(other) -> Case-insensitive equality
- * - s.compareTo(other)     -> Lexicographic comparison (0=equal, +ve=greater, -ve=lesser)
- * - String.valueOf(123)    -> int/other types to String
- * 
- * ========================================================================
- * 3. STRINGBUILDER vs STRINGBUFFER
- * ========================================================================
- * - Problem: String immutable hai. Agar baar baar modify karo (loop me concatenation),
- *   toh har baar naya object banta hai -> SLOW + MEMORY WASTE.
- * 
- * - Solution: StringBuilder aur StringBuffer -> MUTABLE strings.
- *   Ye same object ko modify karte hain, naya object nahi banate.
- * 
- * StringBuilder:
- * - FAST (no synchronization overhead).
- * - NOT thread-safe (single-threaded environment me use karo).
- * - Java 5 me aaya.
- * 
- * StringBuffer:
- * - SLOW compared to StringBuilder (synchronization overhead).
- * - THREAD-SAFE (multithreaded environment me safe hai).
- * - Legacy class (Java 1.0 se hai).
- * 
- * ┌──────────────────┬────────────────┬─────────────────┬─────────────────┐
- * │    Feature       │   String       │ StringBuilder   │  StringBuffer   │
- * ├──────────────────┼────────────────┼─────────────────┼─────────────────┤
- * │ Mutability       │ Immutable      │ Mutable         │ Mutable         │
- * │ Thread Safety    │ Yes (immutable)│ No              │ Yes (synced)    │
- * │ Performance      │ Slow (concat)  │ Fastest         │ Slower          │
- * │ Use Case         │ Few changes    │ Single thread   │ Multi thread    │
- * └──────────────────┴────────────────┴─────────────────┴─────────────────┘
- * 
- * COMMON METHODS (both StringBuilder & StringBuffer):
- * - sb.append("text")         -> End me add karta hai
- * - sb.insert(index, "text")  -> Given position pe insert
- * - sb.delete(start, end)     -> Range delete karta hai
- * - sb.deleteCharAt(index)    -> Single character delete
- * - sb.reverse()              -> String ko ulta kar deta hai
- * - sb.replace(start,end,str) -> Range ko replace karta hai
- * - sb.length()               -> Current length
- * - sb.capacity()             -> Internal buffer size (default 16 + initial string length)
- * - sb.toString()             -> StringBuilder/Buffer ko String me convert
- */
 
 public class Core_Java_Arrays_Strings {
     public static void main(String[] args) {
-
-        // ===== 1. ARRAYS =====
         System.out.println("===== Arrays =====");
 
         // --- 1D Array ---
@@ -185,8 +93,6 @@ public class Core_Java_Arrays_Strings {
         for (int i = 0; i < jagged.length; i++) {
             System.out.println("Row " + i + " (length=" + jagged[i].length + "): " + Arrays.toString(jagged[i]));
         }
-
-        // ===== 2. STRINGS =====
         System.out.println("\n===== Strings =====");
 
         // --- String Pool & Immutability ---
@@ -228,8 +134,6 @@ public class Core_Java_Arrays_Strings {
         String a = "Apple";
         String b = "Banana";
         System.out.println("\n\"Apple\".compareTo(\"Banana\"): " + a.compareTo(b)); // negative (A < B)
-
-        // ===== 3. STRINGBUILDER =====
         System.out.println("\n===== StringBuilder =====");
 
         // Why StringBuilder? String concatenation in loop is BAD:

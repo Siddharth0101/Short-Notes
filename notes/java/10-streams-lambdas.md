@@ -21,6 +21,9 @@ tags: streams, lambdas, optional, collectors
 - Side effects — pipeline mein shared mutable state avoid karo.
 - Parallel stream — workload, thread pool aur merge cost dekho; always faster nahi.
 - Optional — missing result model karo; unchecked `get()` se bacho.
+- `findFirst`/`findAny` — encounter-order first / koi matching element; parallel result differ kar sakta hai.
+- `orElseGet` — fallback supplier zaroorat par; orElse argument pehle evaluate hota hai.
+- Method reference — existing method ko functional interface se adapt, jaise String::trim.
 
 ## Research notes: Keep the source when traversing twice
 

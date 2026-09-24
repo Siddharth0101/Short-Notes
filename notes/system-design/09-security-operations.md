@@ -21,6 +21,9 @@ visual: request-flow
 - Cardinality — unbounded IDs metric labels mein mat rakho.
 - Rollout — canary, health signal aur rollback trigger.
 - Degradation — optional features shed karo; correctness-critical rules preserve.
+- RTO/RPO — service restore time target / acceptable data-loss window.
+- Backup restore — backup file hona enough nahi; restore path regularly verify.
+- Error budget burn — allowable failure kitni fast consume ho rahi hai, alert severity usse align.
 
 ## Research notes: Turn an SLO into a concrete budget
 

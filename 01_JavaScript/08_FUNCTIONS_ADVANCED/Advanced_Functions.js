@@ -1,36 +1,32 @@
+/**
+ * ## Quick revision
+ *
+ * - Function — reusable kaam; inputs lo aur result return karo.
+ * - Parameter — definition ka naam; argument — call ki actual value.
+ * - `return` — result deta hai aur function se turant bahar nikalta hai.
+ * - No return — normal function ka result `undefined` hota hai.
+ * - `console.log` — screen par dikhata hai; caller ko result return nahi karta.
+ * - Default parameter — argument missing/undefined ho tab default lagta hai.
+ * - Function declaration — apne scope mein declaration se pehle call ho sakti hai.
+ * - Arrow — concise function; apna `this` nahi hota.
+ * - Pure function — same input par same output; outside state change nahi karti.
+ * - Scope — variable kahan accessible hai; lexical scope code ki location se decide hota hai.
+ * - Block scope — `let`/`const` `{}` tak; `var` nearest function tak.
+ * - Scope chain — naam local se outer scopes mein search hota hai.
+ * - Closure — function outer bindings yaad rakhta hai, outer call khatam hone ke baad bhi.
+ * - Live binding — closure latest binding padhta hai; automatic snapshot nahi.
+ * - Loop trap — `var` callbacks same binding share; `let` har iteration ki binding deta hai.
+ * - Hoisting — declarations pehle register; initialization ka timing alag hai.
+ * - TDZ — lexical binding initialize hone tak access error deta hai.
+ * - Memory — reachable closure captured objects ko alive rakh sakta hai.
+ * - Use — private counters, callbacks aur function factories.
+ * - Rest parameter — `(...args)` extra arguments ko array mein collect karta hai.
+ * - Higher-order function — function ko input le ya function return kare.
+ * - Early return — `return` ke baad same function ka remaining code skip hota hai.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * ADVANCED FUNCTIONS - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Jonas ka "A Closer Look at Functions" section.
- * - Covers: default params, higher-order functions, closures, IIFE.
- *
- * CLOSURE VISUAL MODEL (Backpack Analogy):
- * ┌─────────────────────────────────────────────────────────────┐
- * │  Outer Function returns Inner Function                      │
- * │                                                             │
- * │  ┌───────────────────────────────────────────────────────┐ │
- * │  │ Inner Function                                         │ │
- * │  │  - Code                                              │ │
- * │  │  - [[Scopes]]: BACKPACK 🎒 (Closed over variables)    │ │
- * │  │    (Contains outer function's variable environment!) │ │
- * │  └───────────────────────────────────────────────────────┘ │
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. DEFAULT PARAMETERS
- * ========================================================================
- * NOTES:
- * - ES6 me function parameters ko default values de sakte ho.
- * - Default expressions me pehle defined parameters use kar sakte ho.
- * - Skip karne ke liye undefined pass karo (not null, not 0).
- */
 
 const bookings = [];
 
@@ -45,24 +41,6 @@ createBooking('LH123', 2);            // { flightNum: 'LH123', numPassengers: 2,
 createBooking('LH123', undefined, 500); // skip numPassengers -> default 1, price = 500
 
 
-/**
- * ========================================================================
- * 2. PASSING ARGUMENTS: VALUE VS REFERENCE
- * ========================================================================
- * NOTES:
- * - Primitives: function ko COPY milti hai. Original change nahi hota.
- * - Objects: function ko REFERENCE ki copy milti hai. Original CHANGE ho sakta hai!
- *
- * IMPORTANT:
- * - JS me technically sirf "pass by value" hota hai.
- * - Objects ke liye value = reference address ki copy.
- * - C++ me "pass by reference" hota hai (actual reference). JS me nahi.
- *
- * DANGER:
- * - Multiple functions same object modify kar sakti hain -> bugs!
- * - Solution: object clone karo function ke andar.
- */
-
 const flight = 'LH234';
 const jonas = { name: 'Jonas Schmedtmann', passport: 24739479284 };
 
@@ -75,21 +53,6 @@ checkIn(flight, jonas);
 console.log(flight);     // 'LH234' — unchanged (primitive)
 console.log(jonas.name); // 'Mr. Jonas Schmedtmann' — CHANGED! (object reference)
 
-
-/**
- * ========================================================================
- * 3. FIRST-CLASS VS HIGHER-ORDER FUNCTIONS
- * ========================================================================
- * NOTES:
- * - First-Class Functions = concept/feature. JS me functions values hain.
- *   -> Variables me store, arrays me store, return, pass as argument.
- *
- * - Higher-Order Functions = practice. Wo functions jo:
- *   a) Doosre function ko argument ke roop me accept karte hain (callback pattern).
- *   b) Ya naya function RETURN karte hain.
- *
- * - Har JS developer ko ye samajhna zaroori hai.
- */
 
 // Functions as values:
 const greet = () => console.log('Hey Jonas');
@@ -109,19 +72,6 @@ const triple = multiplier(3);
 console.log(double(5)); // 10
 console.log(triple(5)); // 15
 
-
-/**
- * ========================================================================
- * 4. CALLBACK FUNCTIONS (Pattern)
- * ========================================================================
- * NOTES:
- * - Callback = function jo doosre function ko pass karte ho, baad me call hoti hai.
- * - JS me EVERYWHERE use hota hai: events, array methods, async, timers.
- *
- * BENEFITS:
- * - Abstraction: logic split karo.
- * - Reusability: same higher-order function, different callbacks.
- */
 
 function oneWord(str) {
     return str.replace(/ /g, '').toLowerCase();
@@ -146,16 +96,6 @@ transformer('JavaScript is the best!', oneWord);
 // Transformed: javascriptisthebest!
 
 
-/**
- * ========================================================================
- * 5. FUNCTIONS RETURNING FUNCTIONS
- * ========================================================================
- * NOTES:
- * - Function return karna = closure create karna.
- * - Functional programming me common pattern.
- * - Currying se related hai.
- */
-
 function greetFn(greeting) {
     return function (name) {
         console.log(`${greeting} ${name}`);
@@ -173,28 +113,6 @@ greetFn('Hello')('Jonas'); // 'Hello Jonas'
 const greetArrow = greeting => name => console.log(`${greeting} ${name}`);
 greetArrow('Hi')('Jonas'); // 'Hi Jonas'
 
-
-/**
- * ========================================================================
- * 6. CLOSURES
- * ========================================================================
- * NOTES:
- * - Closure = function apne parent scope ki variables yaad rakhta hai,
- *   EVEN AFTER parent function return ho chuki hai.
- * - Closure automatically hota hai — explicitly create nahi karna padta.
- * - Closure scope chain se zyada priority rakhta hai.
- *
- * ANALOGY:
- * - Function ek backpack leke paida hota hai.
- * - Backpack me parent scope ki saari variables hoti hain.
- * - Parent function khatam hone ke baad bhi backpack saath rehta hai.
- *
- * WHERE CLOSURES HAPPEN:
- * - Functions returning functions.
- * - Callbacks (setTimeout, event listeners).
- * - IIFE.
- * - Any function that references outer variables.
- */
 
 function secureBooking() {
     let passengerCount = 0; // local variable
@@ -247,17 +165,6 @@ function boardPassengers(n, wait) {
 // count lives in closure — every click increments the SAME count
 
 
-/**
- * ========================================================================
- * 7. IMMEDIATELY INVOKED FUNCTION EXPRESSIONS (IIFE)
- * ========================================================================
- * NOTES:
- * - IIFE = function define karo aur TURANT execute karo. Dobara call nahi kar sakte.
- * - Purpose: private scope create karna (data encapsulation).
- * - ES6 me block scope (let/const in {}) ne IIFE ki zaroorat kam kar di.
- * - But module pattern aur legacy code me abhi bhi dikhta hai.
- */
-
 // IIFE — function expression:
 (function () {
     console.log('This will never run again');
@@ -275,23 +182,6 @@ function boardPassengers(n, wait) {
 // console.log(isPrivate);  // ❌ Error
 console.log(notPrivate);    // 46 — var leaked
 
-
-/**
- * ========================================================================
- * 8. CALL, APPLY, BIND (OVERVIEW)
- * ========================================================================
- * NOTES:
- * - Ye methods `this` keyword manually set karne ke liye hain.
- *
- * COMPARISON:
- * ┌──────────────┬────────────────────────────┬─────────────────────────────┐
- * │ Method       │ Invocation                 │ Arguments                   │
- * ├──────────────┼────────────────────────────┼─────────────────────────────┤
- * │ call()       │ Invokes function immediately│ Passed individually (a, b) │
- * │ apply()      │ Invokes function immediately│ Passed as Array [a, b]      │
- * │ bind()       │ Returns NEW function       │ Bound for future invocation │
- * └──────────────┴────────────────────────────┴─────────────────────────────┘
- */
 
 const lufthansa = {
     airline: 'Lufthansa',

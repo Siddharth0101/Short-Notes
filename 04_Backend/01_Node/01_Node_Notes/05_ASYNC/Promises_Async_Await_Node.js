@@ -1,24 +1,33 @@
+/**
+ * ## Quick revision
+ *
+ * - Call stack — synchronous functions yahin execute hote hain.
+ * - Event loop — stack khali hone par queued work ko chance deta hai.
+ * - Microtasks — Promise callbacks/`queueMicrotask`; checkpoint par queue drain hoti hai.
+ * - Timers — timer task se pehle queued microtasks chal sakti hain.
+ * - Promise — pending se fulfilled ya rejected; settle hone ke baad state fixed.
+ * - `.then` — nayi Promise deta hai; callback ka return chain ko feed karta hai.
+ * - `async` — hamesha Promise return; `await` sirf current async flow suspend karta hai.
+ * - `fetch` — HTTP 404/500 par usually resolve; `response.ok` check karo.
+ * - Abort — `AbortController` se supported operation cancel; late result bhi guard karo.
+ * - Starvation — endless microtasks rendering aur tasks delay kar sakti hain.
+ * - Sequential await — next kaam previous result par depend kare tab.
+ * - `Promise.all` — sab successful chahiye; ek reject toh reject, baaki auto-cancel nahi.
+ * - `allSettled` — har operation ka success/failure collect karo.
+ * - `race` — pehla settled result; `any` — pehla fulfilled result.
+ * - Timeout — race timeout underlying request cancel nahi karta; abort alag karo.
+ * - Concurrency limit — ek saath bounded requests; server ko flood mat karo.
+ * - Retry — transient failures par backoff + jitter; total attempts/deadline bounded rakho.
+ * - Idempotency — retry se duplicate side effect na bane.
+ * - Stale response — old request ko latest state overwrite na karne do.
+ * - Async iteration — `for...of` + await sequential; async `forEach` completion wait nahi karta.
+ * - Promise executor — `new Promise` ka executor synchronously run hota hai.
+ * - Rejected chain — catch se normal value return karo toh chain fulfilled ho sakti hai.
+ * - Finally — cleanup ke liye; throw/rejected Promise original outcome replace kar sakti hai.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * ASYNCHRONOUS JAVASCRIPT IN NODE - PROMISES AND ASYNC/AWAIT [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Node callbacks se start hua, modern Node promises/async-await prefer karta hai.
- * - Async flow clean rakho warna callback hell ban jata hai.
- */
-
-
-/**
- * ========================================================================
- * 1. CALLBACK HELL
- * ========================================================================
- * NOTES:
- * - Jab callback ke andar callback ke andar callback ho.
- * - Error handling repeat hoti hai.
- * - Code read and maintain karna tough hota hai.
- */
 
 // fs.readFile('./dog.txt', 'utf-8', (err, data) => {
 //     if (err) return console.log(err);
@@ -31,16 +40,6 @@
 //     });
 // });
 
-
-/**
- * ========================================================================
- * 2. PROMISE BASICS
- * ========================================================================
- * NOTES:
- * - Promise future value represent karta hai.
- * - States: pending, fulfilled, rejected.
- * - .then success, .catch error, .finally always.
- */
 
 const wait = seconds => new Promise(resolve => {
     setTimeout(resolve, seconds * 1000);
@@ -55,16 +54,6 @@ wait(1)
     .catch(err => console.log(err.message));
 
 
-/**
- * ========================================================================
- * 3. PROMISIFYING NODE CALLBACKS
- * ========================================================================
- * NOTES:
- * - Old Node APIs callback based hain.
- * - util.promisify callback API ko promise API bana sakta hai.
- * - fs.promises directly available hai.
- */
-
 // const fs = require('fs');
 // const { promisify } = require('util');
 //
@@ -75,17 +64,6 @@ wait(1)
 //     .then(data => writeFilePromise('./copy.txt', data))
 //     .catch(err => console.log(err));
 
-
-/**
- * ========================================================================
- * 4. ASYNC / AWAIT
- * ========================================================================
- * NOTES:
- * - async function always promise return karta hai.
- * - await promise settle hone tak function ko pause karta hai.
- * - Call stack block nahi hota.
- * - Error handling ke liye try/catch use karo.
- */
 
 async function runTask() {
     try {
@@ -99,30 +77,12 @@ async function runTask() {
 runTask().then(result => console.log(result));
 
 
-/**
- * ========================================================================
- * 5. RETURNING VALUES FROM ASYNC FUNCTIONS
- * ========================================================================
- * NOTES:
- * - async function ka return value promise me wrapped hota hai.
- * - Caller ko await ya .then use karna padega.
- */
-
 async function getNumber() {
     return 42;
 }
 
 getNumber().then(num => console.log(num));
 
-
-/**
- * ========================================================================
- * 6. TOP-LEVEL ASYNC WITH IIFE
- * ========================================================================
- * NOTES:
- * - CommonJS me old style top-level await nahi hota tha.
- * - Async IIFE use karke immediate async code run karte hain.
- */
 
 // (async () => {
 //     try {
@@ -133,16 +93,6 @@ getNumber().then(num => console.log(num));
 //     }
 // })();
 
-
-/**
- * ========================================================================
- * 7. PROMISE.ALL
- * ========================================================================
- * NOTES:
- * - Independent async tasks parallel run karne ke liye Promise.all.
- * - Agar ek promise reject hua, Promise.all reject ho jata hai.
- * - Sequential await slow ho sakta hai if tasks independent hain.
- */
 
 async function loadThreeThings() {
     const [a, b, c] = await Promise.all([
@@ -157,27 +107,6 @@ async function loadThreeThings() {
 loadThreeThings().then(console.log);
 
 
-/**
- * ========================================================================
- * 8. PROMISE COMBINATORS
- * ========================================================================
- * Promise.all        -> all fulfill, one reject fails all.
- * Promise.allSettled -> all complete, success/failure both collect.
- * Promise.race       -> first settled result.
- * Promise.any        -> first fulfilled result, ignores rejects until all reject.
- */
-
-
-/**
- * ========================================================================
- * 9. ASYNC ERROR RULES
- * ========================================================================
- * NOTES:
- * - Await ke errors try/catch me catch hote hain.
- * - Express async controllers me try/catch repeat avoid karne ke liye catchAsync.
- * - Unhandled promise rejection process crash kar sakta hai in production.
- */
-
 const catchAsyncExample = fn => {
     return (req, res, next) => {
         fn(req, res, next).catch(next);
@@ -185,15 +114,3 @@ const catchAsyncExample = fn => {
 };
 
 console.log(typeof catchAsyncExample);
-
-
-/**
- * ========================================================================
- * 10. WHEN TO USE WHAT
- * ========================================================================
- * Callback       -> event listeners, legacy APIs.
- * Promise chain  -> simple pipeline, library returns promises.
- * async/await    -> most controller/business logic.
- * Promise.all    -> independent tasks in parallel.
- * Streams        -> large continuous data.
- */

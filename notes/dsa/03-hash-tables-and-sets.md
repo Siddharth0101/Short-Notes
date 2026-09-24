@@ -19,6 +19,9 @@ tags: hashing, map, set, collisions, two-sum
 - Object key — JS Map mein identity se compare; equal-looking objects alag keys.
 - Canonical key — composite identity encode karte waqt collisions avoid karo.
 - LRU — hash map + doubly linked list se lookup/recency updates O(1).
+- Resize — rehash ek operation expensive; growing table ka amortized insertion cost alag.
+- Frequency map — presence se zyada multiplicity chahiye, toh boolean Set enough nahi.
+- Hash/equality — equal keys ko compatible hashes; collision ko unequal key ka proof mat samjho.
 
 ## Research notes: Expected and amortized are different guarantees
 

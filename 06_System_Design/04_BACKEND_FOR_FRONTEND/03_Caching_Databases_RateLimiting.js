@@ -1,52 +1,30 @@
+/**
+ * ## Quick revision
+ *
+ * - Vertical scaling — ek machine bigger; horizontal — more instances.
+ * - Load balancer — traffic distribute; health aur overload behavior define karo.
+ * - Stateless service — request state shared store/client contract mein; replicas simpler.
+ * - Cache-aside — miss par DB read aur cache fill.
+ * - TTL — staleness window; exact consistency guarantee nahi.
+ * - Invalidation — writes par cache update/delete; races handle karo.
+ * - Stampede — same miss par duplicate work; coalescing, jitter ya refresh control.
+ * - Replication — copies for reads/availability; lag ho sakta hai.
+ * - Partitioning — data split; key skew aur hot partitions socho.
+ * - Strong consistency — defined operation model ke hisaab se latest ordered state.
+ * - Eventual consistency — writes rukne par replicas converge; immediate freshness nahi.
+ * - Read-your-writes — apne write ke baad old value na dikhe; routing/version strategy chahiye.
+ * - Replica lag — stale reads possible; critical reads primary/appropriate consistency se.
+ * - CAP — network partition ke waqt consistency/availability tradeoff; normal-time universal toggle nahi.
+ * - Token bucket — refillable tokens; rate + burst capacity control.
+ * - Distributed limiter — shared atomic decision ya explicit approximate limit.
+ * - Fail-open/closed — limiter outage par availability/security tradeoff decide.
+ * - Hot key — ek popular key/shard bottleneck; replication, splitting ya coalescing consider.
+ * - Negative cache — not-found result briefly cache; creation ke baad staleness rule chahiye.
+ * - Consistent hashing — membership change par limited keys remap; balancing replicas/virtual nodes se improve.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 03. CACHING STRATEGIES, RATE LIMITING & DATABASES [⚡ SYSTEM DESIGN]
- * ========================================================================
- * SOURCE: Fullstack System Design & High Scale Architectures
- *
- * THE 5 LAYERS OF CACHING:
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │  1. Browser HTTP Cache (Cache-Control, ETag, Service Worker)        │
- * │  2. CDN Edge Cache (Cloudflare, Akamai - 50-100ms closer to user)   │
- * │  3. Reverse Proxy Cache (Nginx, Varnish)                            │
- * │  4. Distributed In-Memory Cache (Redis, Memcached - < 2ms latency)  │
- * │  5. Database Buffer Pool & Query Cache                              │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. CACHE STRATEGIES: CACHE-ASIDE VS WRITE-THROUGH
- * ========================================================================
- *
- * 1. CACHE-ASIDE (LAZY LOADING) — Most Common:
- *    - App looks in Redis cache first.
- *    - If Cache Hit: return data.
- *    - If Cache Miss: read from SQL database, write into Redis with TTL, return data.
- *
- * 2. WRITE-THROUGH:
- *    - App writes to Redis AND Database simultaneously.
- *    - High data consistency, but slightly slower writes.
- *
- * 3. WRITE-BEHIND (WRITE-BACK):
- *    - App writes to Redis immediately; Redis asynchronously flushes writes to DB in batches.
- *    - Ultra fast writes; risk of data loss if Redis crashes before flush.
- */
-
-/**
- * ========================================================================
- * 2. RATE LIMITING: THE TOKEN BUCKET ALGORITHM
- * ========================================================================
- * - Used by Stripe, GitHub, and Amazon AWS to protect APIs from DDoS attacks.
- * - Rules:
- *   - Bucket has capacity of N tokens (e.g. 5 tokens).
- *   - Refills at fixed rate (e.g. 1 token per second).
- *   - Each incoming request costs 1 token.
- *   - If tokens > 0: request allowed, decrement token.
- *   - If tokens == 0: reject request with HTTP 429 Too Many Requests!
- */
 
 // Production Token Bucket Rate Limiter simulation
 class TokenBucketRateLimiter {

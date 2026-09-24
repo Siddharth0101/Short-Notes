@@ -19,6 +19,9 @@ visual: react-render
 - Server cache — query key, invalidation aur auth scope define karo.
 - Machine coding — state model → working flow → edge cases → keyboard/error checks.
 - Testing — user-visible behavior; implementation calls par unnecessary coupling nahi.
+- Render debugging — parent update, changed props, context aur local state triggers separate karo.
+- Effect review — setup resource, reactive dependencies aur exact cleanup identify.
+- Demo — mouse ke saath keyboard, empty state aur failed network bhi dikhao.
 
 ## Research notes: Demonstrate component behavior
 

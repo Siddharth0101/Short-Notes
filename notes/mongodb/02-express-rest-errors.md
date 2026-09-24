@@ -20,6 +20,9 @@ visual: request-flow
 - Double response — send ke baad execution/control flow rokna ya return karna socho.
 - REST — resource URL, consistent methods/status aur bounded pagination.
 - Error response — safe message/code; stack trace client ko nahi.
+- 404 handler — unmatched route response; thrown exception se alag flow.
+- Body limit — parser/upload payload bound karo; unlimited request memory risk.
+- Middleware continuation — next() ke baad current JS execution automatically return nahi hoti.
 
 ## Research notes: Return the promise that owns the request
 

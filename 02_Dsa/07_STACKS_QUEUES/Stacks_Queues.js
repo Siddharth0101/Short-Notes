@@ -1,39 +1,24 @@
+/**
+ * ## Quick revision
+ *
+ * - Linked list — nodes references se linked; random access O(n).
+ * - Singly list — next pointer; doubly list — next + previous.
+ * - Insert/delete — node/predecessor milne par O(1); dhoondhne ka cost alag.
+ * - Stack — LIFO; push/pop top se.
+ * - Queue — FIFO; enqueue end, dequeue front.
+ * - JS queue — head index/ring buffer use karo; repeated `shift()` shifting kar sakta hai.
+ * - Reverse list — previous/current/next pointers se links palto.
+ * - Cycle detection — slow/fast pointers; meet karein toh cycle.
+ * - Edge cases — empty, one node, head/tail update.
+ * - Parentheses — opening stack mein; closing ko matching top chahiye.
+ * - Monotonic deque — sliding-window max/min ke outdated aur dominated indices hatao.
+ * - Sentinel node — dummy head se insert/delete ke special cases kam hote hain.
+ * - Deque — dono ends par add/remove; BFS aur sliding-window patterns mein useful.
+ * - Fast/slow gap — kth-from-end ke liye fixed pointer gap; invalid k define karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * STACKS AND QUEUES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Stack and queue abstract data types hain.
- * - Inka rule important hai, implementation array ya linked list se ho sakti hai.
- */
-
-
-/**
- * ========================================================================
- * 1. STACK
- * ========================================================================
- * RULE:
- * - LIFO = Last In, First Out
- *
- * EXAMPLES:
- * - Browser history back button
- * - Undo/redo
- * - Function call stack
- * - DFS iterative
- * - Valid parentheses
- *
- * BIG O:
- * - push: O(1)
- * - pop: O(1)
- *
- * EXAMPLE:
- * Operations: push(10) -> push(20) -> push(30) -> pop() -> pop()
- * After push 10,20,30: top = 30  (size = 3)
- * After pop():         returns 30, top = 20  (size = 2)
- * After pop():         returns 20, top = 10  (size = 1)
- */
 
 class StackNode {
     constructor(value) {
@@ -96,30 +81,6 @@ console.log(stack.pop()); // 10
 console.log(stack.pop()); // null  (empty stack)
 
 
-/**
- * ========================================================================
- * 2. QUEUE
- * ========================================================================
- * RULE:
- * - FIFO = First In, First Out
- *
- * EXAMPLES:
- * - Printer queue
- * - Task scheduling
- * - BFS
- * - Event queues
- *
- * BIG O:
- * - enqueue: O(1)
- * - dequeue: O(1)
- *
- * EXAMPLE:
- * Operations: enqueue('A') -> enqueue('B') -> enqueue('C') -> dequeue() -> dequeue()
- * After enqueue A,B,C: front='A', back='C'  (size = 3)
- * After dequeue():     returns 'A', front='B'  (size = 2)
- * After dequeue():     returns 'B', front='C'  (size = 1)
- */
-
 class QueueNode {
     constructor(value) {
         this.value = value;
@@ -181,22 +142,6 @@ console.log(queue.dequeue()); // 'C'
 console.log(queue.dequeue()); // null  (empty queue)
 
 
-/**
- * ========================================================================
- * 3. ARRAY IMPLEMENTATION TRADEOFF
- * ========================================================================
- * STACK WITH ARRAY:
- * - push/pop from end -> O(1)
- *
- * QUEUE WITH ARRAY:
- * - push + shift -> shift is O(n), not ideal for large queues.
- * - Better: linked list queue or head index technique.
- *
- * EXAMPLE - ArrayQueue:
- * Input:  enqueue(1), enqueue(2), enqueue(3) -> dequeue() twice
- * Output: dequeue returns 1, then 2
- */
-
 class ArrayQueue {
     constructor() {
         this.items = [];
@@ -227,22 +172,6 @@ console.log(aq.dequeue()); // 2
 console.log(aq.dequeue()); // 3
 console.log(aq.dequeue()); // undefined  (empty)
 
-
-/**
- * ========================================================================
- * 4. VALID PARENTHESES - STACK PATTERN
- * ========================================================================
- *
- * EXAMPLE:
- * Input:  '({[]})'
- * Output: true  (all brackets properly matched and closed)
- *
- * Input:  '([)]'
- * Output: false  (wrong order of closing)
- *
- * Input:  '{'
- * Output: false  (unclosed bracket)
- */
 
 function isValidParentheses(str) {
     const stack = [];
@@ -283,24 +212,6 @@ console.log(isValidParentheses('{')); // false
 // Expected Output: true  (empty string is valid)
 console.log(isValidParentheses('')); // true
 
-
-/**
- * ========================================================================
- * 5. MONOTONIC STACK / QUEUE - ADVANCED PATTERN
- * ========================================================================
- * NOTES:
- * - Monotonic stack increasing/decreasing order maintain karta hai.
- * - Next greater element, stock span, daily temperatures me useful.
- *
- * EXAMPLE - nextGreaterElements:
- * Input:  [2, 1, 2, 4, 3]
- * Output: [4, 2, 4, -1, -1]
- *   - 2 ka next greater = 4
- *   - 1 ka next greater = 2
- *   - 2 (second) ka next greater = 4
- *   - 4 ka next greater = -1 (none)
- *   - 3 ka next greater = -1 (none)
- */
 
 function nextGreaterElements(nums) {
     const result = new Array(nums.length).fill(-1);

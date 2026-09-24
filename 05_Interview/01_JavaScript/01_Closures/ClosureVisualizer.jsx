@@ -1,3 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Scope — variable kahan accessible hai; lexical scope code ki location se decide hota hai.
+ * - Block scope — `let`/`const` `{}` tak; `var` nearest function tak.
+ * - Scope chain — naam local se outer scopes mein search hota hai.
+ * - Closure — function outer bindings yaad rakhta hai, outer call khatam hone ke baad bhi.
+ * - Live binding — closure latest binding padhta hai; automatic snapshot nahi.
+ * - Loop trap — `var` callbacks same binding share; `let` har iteration ki binding deta hai.
+ * - Hoisting — declarations pehle register; initialization ka timing alag hai.
+ * - TDZ — lexical binding initialize hone tak access error deta hai.
+ * - Memory — reachable closure captured objects ko alive rakh sakta hai.
+ * - Use — private counters, callbacks aur function factories.
+ * - Factory isolation — outer function ki har call apni local bindings banati hai.
+ * - Captured reference — object reachable rahe toh closure se uske latest mutations dikh sakte hain.
+ * - Shadowing trap — inner same-name binding TDZ mein ho toh outer value fallback nahi milti.
+ */
+
 import React, { useState } from 'react';
 
 const CODE_LINES = [
@@ -18,7 +36,7 @@ const STEPS = [
     line: 0,
     stack: ['GlobalContext'],
     scopes: [{ title: 'Global Scope', vars: { globalVar: '"Global Scope"', outer: 'function' } }],
-    description: 'JavaScript engine starts. Global Execution Context is created and pushed onto Call Stack. globalVar is declared.'
+    description: "Global context — globalVar initialize hota hai aur outer function available hai."
   },
   {
     line: 8,
@@ -27,7 +45,7 @@ const STEPS = [
       { title: 'Global Scope', vars: { globalVar: '"Global Scope"', myCounter: 'undefined' } },
       { title: 'outer() Local Scope', vars: { count: '0' } }
     ],
-    description: 'outer() is called. A new local execution context is created and pushed onto the Call Stack. Local variable count is initialized to 0.'
+    description: "outer() — naya local context; count zero se start."
   },
   {
     line: 3,
@@ -36,7 +54,7 @@ const STEPS = [
       { title: 'Global Scope', vars: { globalVar: '"Global Scope"', myCounter: 'function inner' } },
       { title: 'Closure (outer)', vars: { count: '0' } }
     ],
-    description: 'outer() returns the inner function. outer() context pops off the stack. Since inner references count, the variable count is preserved in a Closure Memory Bubble.'
+    description: "Closure — outer return hota hai; inner ke through count accessible rehta hai."
   },
   {
     line: 9,
@@ -46,7 +64,7 @@ const STEPS = [
       { title: 'Closure (outer)', vars: { count: '0' } },
       { title: 'inner() Local Scope', vars: { } }
     ],
-    description: 'myCounter() (which is the inner function) is executed. Local context is pushed to Call Stack. Since inner does not have count locally, it looks up the Scope Chain to the Closure scope.'
+    description: "myCounter() — inner scope chain se captured count padhta hai."
   },
   {
     line: 4,
@@ -56,7 +74,7 @@ const STEPS = [
       { title: 'Closure (outer)', vars: { count: '1' } },
       { title: 'inner() Local Scope', vars: { } }
     ],
-    description: 'count is incremented inside the Closure memory bubble. Its value updates from 0 to 1.'
+    description: "Update — captured count 0 se 1 hota hai."
   },
   {
     line: 5,
@@ -65,7 +83,7 @@ const STEPS = [
       { title: 'Global Scope', vars: { globalVar: '"Global Scope"', myCounter: 'function inner' } },
       { title: 'Closure (outer)', vars: { count: '1' } }
     ],
-    description: 'The console prints 1. inner() context pops off the Call Stack. The Closure scope persists for subsequent invocations.'
+    description: "Output — 1 print; next call ke liye captured count bacha rehta hai."
   }
 ];
 

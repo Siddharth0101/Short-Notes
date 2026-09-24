@@ -81,6 +81,6 @@ test('Pre-render bootstrap matches app resolution for saved, missing, invalid an
       const expected = resolveTheme(normalizeTheme(saved), systemDark);
       assert.equal(root.dataset.theme, expected);
       assert.equal(root.style.colorScheme, expected);
-      assert.equal(meta.content, expected === 'dark' ? '#101c18' : '#f6f8f7');
+      assert.equal(meta.content, expected === 'dark' ? '#10121b' : '#f7f7fb');
     }
 });

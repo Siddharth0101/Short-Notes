@@ -4,7 +4,7 @@ title: Async patterns and bounded concurrency
 track: javascript
 order: 16
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Sequential await — next kaam previous result par depend kare tab.
 tags: promises, concurrency, cancellation, machine-coding
 ---
@@ -21,6 +21,9 @@ tags: promises, concurrency, cancellation, machine-coding
 - Idempotency — retry se duplicate side effect na bane.
 - Stale response — old request ko latest state overwrite na karne do.
 - Async iteration — `for...of` + await sequential; async `forEach` completion wait nahi karta.
+- Async generator — `async function*` values ko gradually yield; `for await...of` se consume.
+- Error ownership — fire-and-forget task ki rejection explicitly handle karo.
+- Request dedupe — same in-flight read share karo; different auth/query keys ko mix mat karo.
 
 ## Research notes: Independent outcomes with allSettled
 

@@ -21,12 +21,17 @@ tags: jpa, hibernate, transactions, n-plus-one
 - Optimistic lock — `@Version` se stale update detect; conflict handling chahiye.
 - Pessimistic lock — rows lock; contention/deadlock ka cost samjho.
 - Constraint — uniqueness/invariant database mein bhi enforce karo.
+- Flush/commit — flush SQL synchronize karta hai; transaction durability commit par decide hoti hai.
+- Read-only hint — optimization hint hai; write prevention ka universal guarantee nahi.
+- Propagation — caller ki transaction join ya separate boundary; chosen mode ka resource/rollback effect samjho.
 
 ## Research notes: Trace the actual transaction entry point
 
 - Default proxy transaction advice proxy-crossing calls intercept karti hai.
 
 ## Sources — aur padhne ke liye
+
+- [Spring transaction read-only hints](https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html)
 
 - [Spring transaction semantics](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
 - [Source yahan padho — Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)

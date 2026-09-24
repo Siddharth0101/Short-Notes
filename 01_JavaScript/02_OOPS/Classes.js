@@ -1,17 +1,28 @@
+/**
+ * ## Quick revision
+ *
+ * - Regular `this` — function kaise call hua usse decide hota hai.
+ * - Arrow `this` — surrounding scope se aata hai; `call`/`bind` se change nahi hota.
+ * - Detached method — `const f = obj.method` receiver kho deta hai.
+ * - `call` — args alag; `apply` — args array-like; `bind` — naya bound function.
+ * - Prototype — missing property prototype chain mein search hoti hai.
+ * - Class — prototype-based object creation ka syntax; methods prototype par hote hain.
+ * - `new` — object banata, prototype jodta aur constructor call karta hai.
+ * - `extends`/`super` — inheritance; derived constructor mein `this` se pehle `super()`.
+ * - Own property — `Object.hasOwn()` inherited property ko include nahi karta.
+ * - Private field — `#name` class ke bahar directly accessible nahi.
+ * - Getter/setter — property access par method; setter same property set kare toh recursion ho sakti hai.
+ * - Static method — class par call; instance par nahi.
+ * - Class TDZ — lexical declaration initialize hone se pehle class use nahi kar sakte.
+ * - Chaining — method `this` return kare toh calls chain kar sakte ho.
+ * - `instanceof` — prototype-chain relation check; cross-realm/custom behavior ka catch hai.
+ * - Prototype shadowing — instance ki own property same-name prototype property ko hide karti hai.
+ * - Instance fields — har object ki own state; shared prototype par mutable array rakhna accidental sharing kara sakta hai.
+ * - Object lookup — property milte hi search rukti hai; missing par chain ke end tak jaata hai.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 1. CONSTRUCTOR FUNCTIONS (The "Under the Hood" Way) [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Ye ek normal function hota hai jo 'new' keyword ke saath use hota hai.
- * - 'new' keyword 4 bade kaam karta hai:
- * 1. {} (Empty object banata hai).
- * 2. 'this' keyword ko naye object se link karta hai.
- * 3. Object ko prototype se connect karta hai.
- * 4. Object ko automatically return kar deta hai.
- */
 const Car = function (make, speed) {
     // Instance properties: Har object ki apni alag copy hogi.
     this.make = make; 
@@ -67,15 +78,6 @@ const nixon = new EV_Constructor('Tata Nexon EV', 100, 80);
 nixon.acc();     // Parent ka method (Inherited)
 nixon.charge();  // Child ka method
 
-/**
- * ========================================================================
- * 2. Object.create() (The Direct Link Way)
- * ========================================================================
- * NOTES:
- * - Isme koi constructor function nahi chahiye hota.
- * - Ye sabse manual aur "pure" tareeka hai inheritance ka.
- * - Hum manually ek object (CarProto) ko dusre object (maruti) ka prototype banate hain.
- */
 const CarProto = {
     init(make, speed) {
         this.make = make;
@@ -116,17 +118,6 @@ mgZSEV.initEV('MG ZS EV', 110, 90);
 mgZSEV.greet();  // Using inherited method (From CarProto)
 mgZSEV.charge(); // Using its own method (From EVProto)
 
-/**
- * ========================================================================
- * 3. ES6 CLASSES (Modern Syntax / Syntactic Sugar)
- * ========================================================================
- * NOTES:
- * - Ye backend mein prototypes hi use karti hain, bas likhne ka style naya hai.
- * * RULES:
- * 1. NOT HOISTED: Classes ko pehle define karo, phir 'new' call karo.
- * 2. FIRST-CLASS CITIZENS: Variables mein store ya function mein pass kar sakte ho.
- * 3. STRICT MODE: Class ke andar code hamesha strict mode mein rehta hai.
- */
 class CarClass {
     // A. PRIVATE FIELDS (#): Ye data encapsulation hai. 
     // Is property ko class ke bahar se koi change nahi kar sakta.
@@ -138,16 +129,6 @@ class CarClass {
         this.speed = speed; 
     }
 
-    /**
-     * C. GETTERS & SETTERS (Property Logic Control)
-     * --------------------------------------------
-     * USAGE RULES:
-     * 1. CALLING: Inhe use karte waqt brackets () nahi lagate.
-     * 2. ASSIGNMENT: Setter ko '=' operator se use karte hain (obj.speed = 100).
-     * 3. INFINITE LOOP: Setter ke andar property ka naam '_' ya '#' se start karein, 
-     * warna wo khud ko call karke Stack Overflow kar dega.
-     * 4. NO RETURN NEEDED: Setter ke andar 'return' keyword ki zaroorat nahi hoti (wo ignore ho jata hai).
-     */
     
     // SETTER: Value set karte waqt logic (Usage: car.speed = 100)
     set speed(value) {
@@ -168,9 +149,6 @@ class CarClass {
         console.log(`${this.make} speed is now ${this.#speed}`);
     }
 
-    /**
-     * D. STATIC METHODS: Sirf Class par call hote hain, instances par nahi.
-     */
     // Way 1: Inside Class
     static internalStatic() {
         console.log("Main class ke andar wala static method hoon!");
@@ -183,15 +161,6 @@ marutiSuzuki.acc(); // Calling instance method
 console.log(marutiSuzuki.speed); // Using Getter: "100 km/h"
 marutiSuzuki.speed = 120; // Using Setter to update value
 
-/**
- * ========================================================================
- * 4. INHERITANCE (Extends & Super)
- * ========================================================================
- * NOTES:
- * - 'extends' link banata hai (EV is a child of CarClass).
- * - 'super()' parent class ke constructor ko trigger karta hai.
- * - RULE: 'this' use karne se PEHLE hamesha 'super()' call karna hota hai.
- */
 class EV extends CarClass {
     #battery;
     constructor(make, speed, battery) {
@@ -204,14 +173,6 @@ class EV extends CarClass {
     }
 }
 
-/**
- * ========================================================================
- * 5. PROTOTYPE VS __PROTO__ (The Big Difference)
- * ========================================================================
- * - .prototype: Ye sirf Constructor Functions/Classes ke paas hota hai (Blueprint).
- * - __proto__: Ye har instance/object ke paas hota hai (Actual link to prototype).
- * - LINK: bmw.__proto__ === CarClass.prototype (True).
- */
 
 const tesla = new EV('Tesla', 150, 95);
 
@@ -235,22 +196,6 @@ const ford = new CarClass('Ford', 120);
 ford.acc(); // Calling instance method
 console.log(ford.speed); // Getting speed 
 
-/**
- * ========================================================================
- * 6. POLYMORPHISM (Method Overriding)
- * ========================================================================
- * NOTES:
- * - Jab Child class ke paas same naam ka method ho jo Parent ke paas bhi ho, 
- *   toh Child ka method "override" kar deta hai Parent ke method ko.
- * 
- * REASON & HOW IT WORKS (Under the Hood):
- * - JavaScript 'Prototype Chain' par kaam karta hai. Jab aap child object par method call 
- *   karte ho (jaise nexonEV.acc()), JS engine sabse pehle wahi method child class me dhundta hai.
- * - Agar child me mil gaya, toh usko chala deta hai aur Parent wale ko ignore kar deta hai (Isko "Method Shadowing" bhi kehte hain).
- * - OVERRIDE KYUN KARTE HAIN?: Hum Method Overriding tab use karte hain jab Child class ko Parent 
- *   ka fundamental feature toh chahiye, lekin ek "specialized" ya alag tareeke se (For example, 
- *   normal Car fuel se aawaz karke bhagti hai, par ElectricCar battery se silently bhagti hai).
- */
 class ElectricCar extends CarClass {
     constructor(make, speed) {
         super(make, speed);
@@ -278,22 +223,6 @@ regularTaxi.acc(); // Calls PARENT method: "Swift Dzire speed is now 90" (Uses o
 nexonEV.acc();     // Calls CHILD overridden method: "Tata Nexon EV accelerates completely silently..."
 console.log("------------------------------\n");
 
-/**
- * ========================================================================
- * 7. ENCAPSULATION (Data Hiding)
- * ========================================================================
- * NOTES:
- * - Encapsulation ka matlab hai data (properties) aur methods ko ek unit (class) me enclose karna, 
- *   aur sensible (important) data ko bahar ki duniya se chupana (Data Hiding).
- * - Isse data randomly ya accidentally class ke bahar se change hone se bachta hai aur bugs kam aate hain.
- * 
- * JAVASCRIPT MEIN KAISE HOTA HAI?:
- * - ES6 se pehle developers '_' (underscore) use karte the. Example: _balance. Ye sirf ek "Convention" 
- *   tha developers ke beech me dikhane ke liye ki ye private hai, par asal me wo change ho sakti thi.
- * - Ab Modern JS me Private Class Fields (#) usko truly private/encapsulated banate hain.
- * - Koi class instance class ke bahar se '#property' ko direct access nahi kar sakta. Unhe access/modify 
- *   karne ke liye Getters, Setters, ya class ke diye gaye Public methods ("Public API") ka sahara lena padta hai.
- */
 class BankAccount {
     // 1. Private Data (Encapsulated State)
     #balance;
@@ -358,47 +287,10 @@ siddAccount.withdraw(1000, 4444); // Incorrect PIN -> Blocked
 console.log(siddAccount.getSecureBalance); // Read only using getter
 console.log("--------------------------\n");
 
-/**
- * ========================================================================
- * 8. METHOD CHAINING
- * ========================================================================
- * NOTES:
- * - Agar koi method 'this' return karta hai, to us par direct agla method lagaya ja sakta hai.
- */
 // 🛑 Method Chaining Usage:
 nexonEV.acc().brake().acc(); 
 siddAccount.deposit(500).withdraw(200, 1122); // BankAccount object also supports chaining!
 
-/**
- * ========================================================================
- * 9. THE 'instanceof' OPERATOR
- * ========================================================================
- * NOTES:
- * - Ye check karta hai ki ek object kisi class/constructor se bana hai ya kisi parent se.
- */
 console.log(nexonEV instanceof ElectricCar); // true
 console.log(nexonEV instanceof CarClass);    // true (kyunki inherit kiya hai)
 console.log(nexonEV instanceof Object);      // true (JS me sab kuch Object hota hai)
-
-/*
-========================================================================
-FINAL REVISION TABLE
-========================================================================
-| Concept          | Detail (Hinglish Summary)                          |
-|------------------|----------------------------------------------------|
-| Constructor      | Naye objects banane ka blueprint.                 |
-| Delegation       | Method na milne par prototype chain mein dhundna.  |
-| Object.create()  | Bina constructor ke seedha prototype link karna.   |
-| Getter (get)     | Property ki tarah READ karna (No brackets).        |
-| Setter (set)     | Property ki tarah '=' se WRITE/VALIDATE karna.     |
-| Encapsulation    | Data/methods ko ek unit me band/hide karna.        |
-| #PrivateField    | Data ko class ke bahar se hide karna (JS Syntax).  |
-| super()          | Parent ke constructor ko call karne wala button.    |
-| Static (Old)     | `Car.hey = ...` (Directly on Constructor).         |
-| Static (New)     | `static sayHello()` (Inside Class).                |
-| ES5 Inheritance  | `Child.prototype = Object.create(Parent.prototype)`|
-| Polymorphism     | Parent ke method ko child mein override/change karna.|
-| Method Chaining  | `return this;` likh kar lagatar methods call karna. |
-| instanceof       | Check karna ki object kis class ya parent ka hai.  |
-========================================================================
-*/

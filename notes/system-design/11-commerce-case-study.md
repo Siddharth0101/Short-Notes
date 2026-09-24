@@ -21,6 +21,9 @@ visual: request-flow
 - Late payment — expired reservation par refund/re-reserve policy explicit rakho.
 - Outbox — order change aur notification/event durable saath record.
 - UI — pending/confirmed/failed state; browser redirect ko payment proof mat maano.
+- Price snapshot — order mein accepted price/currency/version record; later catalog change old order na badle.
+- Refund workflow — duplicate refund request ki identity aur reconciliation.
+- Inventory release — failed/expired order ka stock once release; retry double increment na kare.
 
 ## Sources — aur padhne ke liye
 

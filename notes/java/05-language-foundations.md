@@ -20,6 +20,9 @@ visual: java-memory
 - Overflow — integer arithmetic wrap ho sakti hai; checked math/range validation use karo.
 - Casting — narrowing mein data lose ho sakta hai; blindly cast mat karo.
 - `final` — variable reassign nahi; object automatically immutable nahi.
+- Autoboxing — primitive wrapper mein convert; wrapper identity ko numeric equality mat samjho.
+- BigDecimal — decimal arithmetic; precision/scale/rounding explicit rakho.
+- Char — UTF-16 code unit; emoji ek char mein fit hona guaranteed nahi.
 
 ## Sources — aur padhne ke liye
 

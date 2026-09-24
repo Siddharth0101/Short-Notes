@@ -20,6 +20,9 @@ visual: request-flow
 - CORS — browser cross-origin policy; authorization ka replacement nahi.
 - Microservice call — timeout, bounded retry aur identity propagation.
 - Object access — har resource par user/tenant permission check karo.
+- 401/403 — missing/invalid authentication / insufficient permission ka contract.
+- Method security — service entry par authorization; object ownership check phir bhi explicit.
+- Credential rotation — old/new key overlap, expiry aur revocation ka rollout plan rakho.
 
 ## Sources — aur padhne ke liye
 

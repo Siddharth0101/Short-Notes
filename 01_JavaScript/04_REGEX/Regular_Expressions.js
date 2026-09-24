@@ -1,40 +1,25 @@
 /**
- * ========================================================================
- * REGULAR EXPRESSIONS (RegEx) IN JAVASCRIPT - COMPLETE GUIDE [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Regular Expression (ya short me "RegEx") ek text pattern hota hai jo hum use
- *   karte hain kisi string me se kuch SEARCH, MATCH, REPLACE ya VALIDATE karne 
- *   ke liye.
- * - Jaise ki email validate karna, phone number dhundhna, ya kisi text me se 
- *   specific word nikalna — ye sab RegEx se hota hai.
- * - JavaScript me RegEx ek special object hota hai (RegExp object).
- * - Ye har programming language me hota hai, but yahan hum JavaScript ke context 
- *   me sikhenge.
- * 
- * REAL LIFE EXAMPLE SAMJHO:
- * - Sochlo aapke paas ek 1000 pages ki book hai aur aapko usme se sirf "JavaScript" 
- *   word dhundhna hai — to RegEx wahi kaam karta hai, par strings ke andar!
- */
-
-
-/**
- * ========================================================================
- * 1. RegEx BANANE KE 2 TARIKE (Creating Regular Expressions)
- * ========================================================================
- * NOTES:
- * - JavaScript me RegEx banane ke 2 tarike hain:
- * 
- *   1. LITERAL NOTATION (/ / ke andar likhte hain) — Ye sabse common hai.
- *      Syntax: /pattern/flags
- * 
- *   2. CONSTRUCTOR NOTATION (new RegExp() se banate hain) — Jab pattern 
- *      dynamically (runtime pe) banana ho tab use hota hai.
- *      Syntax: new RegExp("pattern", "flags")
- * 
- * DIFFERENCE:
- * - Literal me pattern fix hota hai (hard-coded).
- * - Constructor me aap variable se pattern bana sakte ho (dynamic).
+ * ## Quick revision
+ *
+ * - Literal — fixed pattern ke liye `/abc/`; dynamic text ke liye `new RegExp(...)`.
+ * - Escaping — constructor string mein backslash ko extra escape karna pad sakta hai.
+ * - `test`/`exec` — boolean check / match details; strings par match, search, replace, split.
+ * - Flags — `i` case-insensitive, `g` all matches, `m` line anchors, `s` dot-newline, `u` Unicode mode.
+ * - Classes — `\d` digit, `\w` word-character class, `\s` whitespace; uppercase variant negation.
+ * - Set — `[abc]` ek listed char; `[^abc]` listed chars ke alawa.
+ * - Quantifier — `*` zero+, `+` one+, `?` optional, `{m,n}` repeat range.
+ * - Anchors — `^` start, `$` end, `\b` word boundary; flags meaning affect karte hain.
+ * - Group — `(x)` capture, `(?:x)` non-capture, `x|y` alternatives.
+ * - Backreference — `\1` pehle captured text ko dobara match karta hai.
+ * - Lookaround — aas-paas ki condition check; matched text consume nahi karta.
+ * - Greedy/lazy — quantifier default zyada match; `?` suffix se lazy search.
+ * - Replace — `$1` capture reuse; callback se dynamic replacement.
+ * - Unicode — emoji/code points ke liye Unicode-aware matching; grapheme alag concept hai.
+ * - Stateful regex — `g`/`y` ke saath repeated `test` ka lastIndex badalta hai.
+ * - ReDoS — untrusted/ambiguous patterns se expensive backtracking ho sakti hai.
+ * - Escaped literal — user text ko regex pattern banate waqt metacharacters ka intended meaning decide karo.
+ * - Capture names — named groups result ko numbered positions se zyada readable bana sakte hain.
+ * - Zero-length match — manual global exec loop mein progress ensure; empty match infinite loop kara sakta hai.
  */
 
 // EXAMPLE 1: Literal Notation
@@ -51,25 +36,6 @@ const dynamicRegex = new RegExp(userInput, "i");  // User input se regex banaya
 console.log(dynamicRegex.test("I love JavaScript"));  // true
 console.log(dynamicRegex.test("I love python"));       // false
 
-
-/**
- * ========================================================================
- * 2. RegEx METHODS (RegEx ke saath kaunse methods use hote hain?)
- * ========================================================================
- * NOTES:
- * - RegEx ko use karne ke liye kuch built-in methods hain. Ye 2 jagah se aate hain:
- * 
- *   A) RegExp Object ke methods:
- *      - test()  → true/false return karta hai (match mila ya nahi)
- *      - exec()  → match ka detailed result (array) return karta hai, ya null
- * 
- *   B) String Object ke methods (jo regex accept karte hain):
- *      - match()   → saare matches ka array deta hai
- *      - search()  → pehle match ka INDEX deta hai (-1 agar na mile)
- *      - replace() → match ko replace karke NEW string deta hai
- *      - split()   → regex ke basis par string ko TODTA hai (array me)
- *      - matchAll() → saare matches ka iterator deta hai (detailed info ke saath)
- */
 
 // ---- A) RegExp Methods ----
 
@@ -137,28 +103,6 @@ for (const m of allMatches) {
 }
 
 
-/**
- * ========================================================================
- * 3. FLAGS (Regex ke Flags / Modifiers)
- * ========================================================================
- * NOTES:
- * - Flags regex ke behaviour ko change karte hain. 
- * - Ye regex ke BAAD likhte hain: /pattern/flags
- * - Multiple flags ek saath use kar sakte ho: /pattern/gi
- * 
- * IMPORTANT FLAGS:
- * 
- * | Flag | Naam              | Kya karta hai?                                              |
- * |------|-------------------|-------------------------------------------------------------|
- * | g    | Global            | SAARE matches dhundhta hai (pehle match pe nahi rukta)      |
- * | i    | Case Insensitive  | Upper/Lower case ignore karta hai ("A" = "a")               |
- * | m    | Multiline         | ^ aur $ har line ke start/end pe kaam karte hain            |
- * | s    | DotAll            | Dot (.) newline (\n) ko bhi match karta hai                 |
- * | u    | Unicode           | Unicode characters (emoji, etc.) sahi se match hote hain    |
- * | y    | Sticky            | lastIndex position se hi match karta hai (exact position)   |
- * | d    | hasIndices        | Match ke start/end indices bhi deta hai                     |
- */
-
 // FLAG: g (Global) — Sab dhundho, ek pe rukna nahi
 console.log("aaa".match(/a/));    // ["a"]       → sirf pehla mila
 console.log("aaa".match(/a/g));   // ["a","a","a"] → sab mile
@@ -186,25 +130,6 @@ stickyRegex.lastIndex = 4;
 console.log(stickyRegex.test("bar foo baz")); // true (4th index se "foo" shuru hai)
 
 
-/**
- * ========================================================================
- * 4. CHARACTER CLASSES (Character ka type batao)
- * ========================================================================
- * NOTES:
- * - Character classes se hum bata sakte hain ki hume KAUNSE type ke characters 
- *   chahiye — jaise digit, letter, space, etc.
- * 
- * | Shorthand | Full Form     | Matlab                                        |
- * |-----------|---------------|-----------------------------------------------|
- * | \d        | [0-9]         | Koi bhi DIGIT (0 se 9)                        |
- * | \D        | [^0-9]        | Jo digit NAHI hai (letter, symbol, space)      |
- * | \w        | [a-zA-Z0-9_]  | Koi bhi WORD character (letter, digit, _)     |
- * | \W        | [^a-zA-Z0-9_] | Jo word character NAHI hai (space, @, #, etc) |
- * | \s        |               | Koi bhi SPACE/WHITESPACE (space, tab, newline) |
- * | \S        |               | Jo SPACE nahi hai                              |
- * | .         |               | Koi BHI character (except newline by default)  |
- */
-
 // \d — Digits dhundho
 console.log("Phone: 9876".match(/\d/g));   // ["9","8","7","6"]
 console.log("Phone: 9876".match(/\d+/g));  // ["9876"]  (\d+ = ek ya zyada digits ek saath)
@@ -230,28 +155,6 @@ console.log("cot".match(/c.t/));    // ["cot"]
 console.log("ct".match(/c.t/));     // null (beech me koi character chahiye)
 
 
-/**
- * ========================================================================
- * 5. CHARACTER SETS & RANGES ( [ ] brackets)
- * ========================================================================
- * NOTES:
- * - Square brackets [ ] ke andar hum APNE CUSTOM character groups define 
- *   kar sakte hain.
- * - [abc]    → "a" YA "b" YA "c" me se koi bhi ek
- * - [a-z]    → "a" se "z" tak koi bhi lowercase letter
- * - [A-Z]    → koi bhi uppercase letter
- * - [0-9]    → koi bhi digit (same as \d)
- * - [a-zA-Z] → koi bhi letter (upper ya lower)
- * 
- * NEGATION (Ulta):
- * - [^abc]   → "a", "b", "c" ke ALAWA koi bhi character
- * - [^0-9]   → digits ke alawa kuch bhi (same as \D)
- * 
- * IMPORTANT:
- * - [ ] ke andar special characters (jaise . * +) apna special meaning KHO dete hain.
- *   Matlab [.] ka matlab sirf literal dot (.) hai, "koi bhi character" nahi.
- */
-
 // [aeiou] — Sirf vowels dhundho
 console.log("Hello World".match(/[aeiou]/gi));  // ["e","o","o"]
 
@@ -273,27 +176,6 @@ console.log("abc123".match(/[^0-9]+/g));   // ["abc"]
 // Special chars inside [] lose their power
 console.log("3.14".match(/[.]/g));  // ["."]  (sirf literal dot match hua)
 
-
-/**
- * ========================================================================
- * 6. QUANTIFIERS (Kitni baar repeat ho?)
- * ========================================================================
- * NOTES:
- * - Quantifiers batate hain ki ek character ya group KITNI BAAR aana chahiye.
- * 
- * | Quantifier | Matlab                                                    |
- * |------------|-----------------------------------------------------------|
- * | *          | 0 ya zyada baar (kuch bhi ho, chahe ek bhi na ho)         |
- * | +          | 1 ya zyada baar (kam se kam ek to hona chahiye)            |
- * | ?          | 0 ya 1 baar (ho ya na ho, optional hai)                    |
- * | {n}        | EXACTLY n baar (na kam, na zyada)                          |
- * | {n,}       | Kam se kam n baar (n ya usse zyada)                        |
- * | {n,m}      | Minimum n baar, Maximum m baar                             |
- * 
- * GREEDY vs LAZY:
- * - By default quantifiers GREEDY hote hain — jitna zyada match ho sake utna karte hain.
- * - Lazy banane ke liye quantifier ke baad ? lagao — jitna KAM ho sake utna match karega.
- */
 
 // * (Zero or more)
 console.log("goood".match(/go*/));   // ["gooo"]  (o 3 baar aaya, sab match)
@@ -332,26 +214,6 @@ console.log(htmlStr.match(/<.+?>/g));   // ["<b>", "</b>", "<i>", "</i>"]
 // Global + Lazy = sab tags alag alag mile!
 
 
-/**
- * ========================================================================
- * 7. ANCHORS (Position mark karo — kahan se shuru, kahan pe khatam)
- * ========================================================================
- * NOTES:
- * - Anchors kisi character ko match NAHI karte, ye POSITION ko match karte hain.
- * 
- * | Anchor | Matlab                                                        |
- * |--------|---------------------------------------------------------------|
- * | ^      | String ke SHURU me match karo (ya line ke shuru me with 'm')  |
- * | $      | String ke END me match karo (ya line ke end me with 'm')      |
- * | \b     | WORD BOUNDARY — jahan word shuru ya khatam hota hai           |
- * | \B     | NON-WORD BOUNDARY — word ke beech me (boundary ke alawa)      |
- * 
- * WORD BOUNDARY (\b) Samjho:
- * - "cat" me → \b hoga: _c-a-t_ (shuru aur end dono pe boundary hai)
- * - "cats" me "cat" dhundhne pe → \bcat\b se "cat" match NAHI hoga kyunki 
- *   "cat" ke baad "s" hai (boundary nahi hai wahan)
- */
-
 // ^ — Start me match karo
 console.log(/^Hello/.test("Hello World"));   // true  (string "Hello" se shuru hai)
 console.log(/^Hello/.test("Say Hello"));     // false ("Hello" start me nahi hai)
@@ -373,26 +235,6 @@ console.log(/\bcat\b/.test("concatenate"));     // false ("cat" beech me hai, fu
 console.log(/\Bcat\B/.test("concatenate"));     // true  ("cat" word ke andar hai)
 console.log(/\Bcat\B/.test("the cat sat"));     // false ("cat" full word hai, beech me nahi)
 
-
-/**
- * ========================================================================
- * 8. GROUPS & ALTERNATION (Grouping aur OR operator)
- * ========================================================================
- * NOTES:
- * - Parentheses ( ) se hum pattern ko GROUP kar sakte hain.
- * - Groups ke major uses:
- *   1. CAPTURING — Match ke hisse ko alag se capture karna (baad me use karna)
- *   2. QUANTIFIER apply karna — Puri group pe * ya + lagana
- *   3. ALTERNATION (|) — "ye YA wo" type condition banana (OR operator)
- * 
- * TYPES OF GROUPS:
- * | Syntax      | Type               | Kya karta hai?                           |
- * |-------------|--------------------|------------------------------------------|
- * | (abc)       | Capturing Group    | "abc" match + capture karega (memory me) |
- * | (?:abc)     | Non-Capturing Group| "abc" match karega, but capture NAHI      |
- * | (?<name>abc)| Named Group        | "abc" match + naam de ke capture karega  |
- * | (a|b)       | Alternation        | "a" YA "b" me se koi bhi match karega   |
- */
 
 // CAPTURING GROUP — ( )
 const dateStr = "2025-04-07";
@@ -428,22 +270,6 @@ console.log(/I like (tea|coffee)/.test("I like coffee"));  // true
 console.log(/I like (tea|coffee)/.test("I like juice"));   // false
 
 
-/**
- * ========================================================================
- * 9. BACKREFERENCES (Pehle capture kiya hua dobara use karo)
- * ========================================================================
- * NOTES:
- * - Jab aap capturing group se kuch capture karte ho, to wahi cheez dobara 
- *   match karne ke liye BACKREFERENCE use karte ho.
- * - \1 → Pehle group ka match dubara dhundho
- * - \2 → Doosre group ka match dubara dhundho
- * - Named backreference: \k<name>
- * 
- * USE CASE:
- * - Repeated words dhundhna (jaise "the the" — galti se 2 baar likha hua)
- * - Matching opening and closing HTML tags
- */
-
 // \1 — Same word dubara dhundho (Duplicate words detect)
 const duplicateRegex = /\b(\w+)\s+\1\b/;
 console.log(duplicateRegex.test("the the"));      // true  ("the" 2 baar aaya)
@@ -459,24 +285,6 @@ const namedBackRef = /(?<word>\w+)\s+\k<word>/;
 console.log(namedBackRef.test("hello hello"));     // true
 console.log(namedBackRef.test("hello world"));     // false
 
-
-/**
- * ========================================================================
- * 10. LOOKAHEAD & LOOKBEHIND (Aage/Peeche dekho, par match me mat lo)
- * ========================================================================
- * NOTES:
- * - Ye "assertions" hain — ye check karte hain ki match ke AAGE ya PEECHE 
- *   kya hai, but wo part match me include NAHI hota.
- * - Sochlo jaise aap kisi se puchho: "Samne chai ki dukaan hai kya?" — aap 
- *   chai ki dukaan ko dekhte ho but usse nahi milte, sirf confirm karte ho.
- * 
- * | Syntax     | Naam                | Matlab                                           |
- * |------------|---------------------|--------------------------------------------------|
- * | (?=abc)    | Positive Lookahead  | AAGE "abc" HONA chahiye (tab match karo)          |
- * | (?!abc)    | Negative Lookahead  | AAGE "abc" NAHI hona chahiye (tab match karo)      |
- * | (?<=abc)   | Positive Lookbehind | PEECHE "abc" HONA chahiye (tab match karo)         |
- * | (?<!abc)   | Negative Lookbehind | PEECHE "abc" NAHI hona chahiye (tab match karo)    |
- */
 
 // POSITIVE LOOKAHEAD — (?=)
 // "Wo digits dhundho jinke AAGE 'px' likha ho"
@@ -500,22 +308,6 @@ console.log("€50".match(/(?<!\$)\d+/));  // ["50"] ($ nahi hai peeche ✓)
 console.log("$50".match(/(?<!\$)\d+/));  // ["0"]  (tricky! "5" ke peeche $ hai, but "0" ke peeche "5" hai)
 
 
-/**
- * ========================================================================
- * 11. ESCAPE CHARACTERS (Special Characters ko literal banana)
- * ========================================================================
- * NOTES:
- * - RegEx me kuch characters SPECIAL hain — inke apne meaning hote hain.
- * - Agar aapko inhe literally (as it is) match karna hai, to BACKSLASH (\) lagao.
- * 
- * SPECIAL CHARACTERS JO ESCAPE CHAHTE HAIN:
- * . * + ? ^ $ { } [ ] ( ) | \ /
- * 
- * EXAMPLE:
- * - . ka matlab "koi bhi character" hai. But agar aapko literal DOT chahiye to \. likho.
- * - $ ka matlab "string ka end" hai. But agar aapko $ sign chahiye to \$ likho.
- */
-
 // Bina escape → galat result
 console.log(/3.14/.test("3X14"));   // true! (. ne "X" ko bhi match kar liya 😱)
 
@@ -533,22 +325,6 @@ console.log(/\(hello\)/.test("(hello)"));  // true (literal parentheses match ki
 console.log(/\\n/.test("\\n"));  // true (literal \n match kiya, newline nahi)
 
 
-/**
- * ========================================================================
- * 12. COMMON SPECIAL SEQUENCES (Commonly used escape patterns)
- * ========================================================================
- * NOTES:
- * 
- * | Sequence | Matlab                                              |
- * |----------|-----------------------------------------------------|
- * | \n       | Newline (nayi line)                                  |
- * | \t       | Tab (tab space)                                      |
- * | \r       | Carriage Return                                      |
- * | \0       | Null character                                       |
- * | \xNN     | Hex code se character (e.g., \x41 = "A")            |
- * | \uNNNN   | Unicode character (e.g., \u0041 = "A")              |
- */
-
 // \n — Newline match karo
 const multiLineStr = "line1\nline2";
 console.log(multiLineStr.match(/line1\nline2/));  // Match karega ✓
@@ -562,15 +338,6 @@ console.log(/\x41/.test("A"));  // true ('A' ka hex code 41 hai)
 // \u0041 — Unicode se "A" match karo
 console.log(/\u0041/.test("A"));  // true
 
-
-/**
- * ========================================================================
- * 13. PRACTICAL EXAMPLES — Real World RegEx Patterns
- * ========================================================================
- * NOTES:
- * - Ab tak jo seekha hai wo sab milake kuch REAL WORLD problems solve karte hain.
- * - Ye patterns interviews me aur actual projects me bahut kaam aate hain.
- */
 
 // ---- 13.1 EMAIL VALIDATION ----
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -685,20 +452,6 @@ console.log(dateFormatRegex.test("32/13/2025"));  // false ✗ (32nd date? 13th 
 console.log(dateFormatRegex.test("7/4/2025"));    // false ✗ (single digit, 07/04 chahiye)
 
 
-/**
- * ========================================================================
- * 14. REPLACE WITH FUNCTIONS (Dynamic Replace)
- * ========================================================================
- * NOTES:
- * - String.replace() me dusra argument ek FUNCTION bhi ho sakta hai!
- * - Ye function har match ke liye call hota hai, aur jo return karega wahi 
- *   replace hoga.
- * - Function ko milte hain: (match, group1, group2, ..., offset, fullString)
- * 
- * USE CASE:
- * - Har match pe alag logic lagana ho (jaise capitalize karna, calculate karna)
- */
-
 // Example: Sab words ko capitalize karo (Title Case)
 const sentence = "hello world from javascript";
 const titled = sentence.replace(/\b\w/g, (char) => char.toUpperCase());
@@ -717,24 +470,6 @@ const doubled = priceStr.replace(/\$(\d+)/g, (match, price) => "$" + (price * 2)
 console.log(doubled);  // "Apple: $10, Banana: $6, Mango: $20"
 
 
-/**
- * ========================================================================
- * 15. REGEX WITH replace() — $1, $2 SYNTAX (Replacement Patterns)
- * ========================================================================
- * NOTES:
- * - Replace me captured groups ko $1, $2, etc. se refer kar sakte ho.
- * - Ye bahut powerful hai — bina function likhke bhi groups ko rearrange kar sakte ho.
- * 
- * | Pattern | Matlab                                          |
- * |---------|-------------------------------------------------|
- * | $1      | Pehle capturing group ka match                  |
- * | $2      | Doosre capturing group ka match                 |
- * | $&      | Pura match (sab groups mila ke)                 |
- * | $`      | Match se PEHLE ki string                        |
- * | $'      | Match ke BAAD ki string                         |
- * | $$      | Literal "$" sign                                |
- */
-
 // Date format change: YYYY-MM-DD → DD/MM/YYYY
 const isoDate = "2025-04-07";
 const indianDate = isoDate.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3/$2/$1");
@@ -750,21 +485,6 @@ const highlighted = "I love JavaScript".replace(/JavaScript/, "**$&**");
 console.log(highlighted);  // "I love **JavaScript**"
 
 
-/**
- * ========================================================================
- * 16. UNICODE & EMOJI IN REGEX
- * ========================================================================
- * NOTES:
- * - Modern JavaScript me aapko emoji aur non-English characters bhi handle karne 
- *   padte hain.
- * - 'u' flag use karo taaki Unicode properly kaam kare.
- * - \p{} se Unicode categories match kar sakte ho (with 'u' flag):
- *   - \p{L}     → Koi bhi letter (kisi bhi language ka)
- *   - \p{N}     → Koi bhi number
- *   - \p{Emoji} → Koi bhi emoji
- *   - \p{Script=Devanagari} → Hindi/Sanskrit characters
- */
-
 // Emoji detect karo
 const emojiRegex = /\p{Emoji}/gu;
 console.log("Hello 😀🎉 World".match(emojiRegex));  
@@ -779,11 +499,7 @@ console.log("Hello नमस्ते World".match(hindiRegex));
 const anyLetter = /\p{L}+/gu;
 console.log("Hello مرحبا 你好".match(anyLetter));  
 // ["Hello", "مرحبا", "你好"]
-
-
-// ========================================================================
 // 17. REGEX PERFORMANCE TIPS
-// ========================================================================
 // NOTES:
 // - RegEx powerful hai, but galat use se SLOW bhi ho sakta hai.
 // - Yahan kuch tips hain performance better rakhne ke liye:
@@ -812,81 +528,3 @@ console.log("Hello مرحبا 你好".match(anyLetter));
 //    ✅ Ek baar banao, baar baar use karo
 //       const re = /abc/;
 //       for(let i=0; i<1000; i++) { "abc".match(re); }
-
-
-/*
-========================================================================
-FINAL REVISION TABLE — COMPLETE RegEx CHEAT SHEET
-========================================================================
-
-🔹 CREATING REGEX:
-| Method       | Syntax                    | Use                                |
-|------------- |---------------------------|------------------------------------|
-| Literal      | /pattern/flags            | Fixed/known patterns               |
-| Constructor  | new RegExp("pattern","f") | Dynamic patterns (variable se)     |
-
-🔹 METHODS:
-| Method       | Return              | Example                              |
-|------------- |---------------------|--------------------------------------|
-| test()       | true/false          | /abc/.test("abc") → true             |
-| exec()       | Array ya null       | /abc/.exec("abc") → ["abc"]          |
-| match()      | Array ya null       | "abc".match(/a/) → ["a"]            |
-| matchAll()   | Iterator            | "aaa".matchAll(/a/g)                 |
-| search()     | Index ya -1         | "abc".search(/b/) → 1               |
-| replace()    | New string          | "abc".replace(/a/,"x") → "xbc"      |
-| split()      | Array               | "a-b".split(/-/) → ["a","b"]        |
-
-🔹 FLAGS:
-| Flag | Kaam                                                          |
-|------|---------------------------------------------------------------|
-| g    | Global — sab matches dhundho                                  |
-| i    | Case insensitive                                              |
-| m    | Multiline — ^ $ har line pe                                   |
-| s    | DotAll — . newline bhi match kare                             |
-| u    | Unicode — emoji/special chars sahi se match ho                |
-| y    | Sticky — exact position se match                              |
-
-🔹 CHARACTER CLASSES:
-| Symbol | Matlab                    | Symbol | Matlab (Ulta)             |
-|--------|---------------------------|--------|---------------------------|
-| \d     | Digit [0-9]               | \D     | Non-digit                 |
-| \w     | Word [a-zA-Z0-9_]        | \W     | Non-word                  |
-| \s     | Space/Whitespace          | \S     | Non-space                 |
-| .      | Koi bhi (except newline)  |        |                           |
-
-🔹 QUANTIFIERS:
-| Symbol  | Matlab               | Greedy/Lazy         |
-|---------|----------------------|---------------------|
-| *       | 0 ya zyada           | *? = lazy           |
-| +       | 1 ya zyada           | +? = lazy           |
-| ?       | 0 ya 1               | ?? = lazy           |
-| {n}     | Exactly n             |                     |
-| {n,}    | Minimum n             | {n,}? = lazy        |
-| {n,m}   | n se m ke beech       | {n,m}? = lazy       |
-
-🔹 ANCHORS:
-| Symbol | Matlab                                        |
-|--------|-----------------------------------------------|
-| ^      | String/line ke start me                       |
-| $      | String/line ke end me                         |
-| \b     | Word boundary                                 |
-| \B     | Non-word boundary                             |
-
-🔹 GROUPS:
-| Syntax         | Type                | Capture? |
-|----------------|---------------------|----------|
-| (abc)          | Capturing           | Haan ✓   |
-| (?:abc)        | Non-Capturing       | Nahi ✗   |
-| (?<name>abc)   | Named Capturing     | Haan ✓   |
-| (a|b)          | Alternation (OR)    | Haan ✓   |
-
-🔹 LOOKAROUND:
-| Syntax     | Type                 | Match me aata hai? |
-|------------|----------------------|--------------------|
-| (?=abc)    | Positive Lookahead   | Nahi               |
-| (?!abc)    | Negative Lookahead   | Nahi               |
-| (?<=abc)   | Positive Lookbehind  | Nahi               |
-| (?<!abc)   | Negative Lookbehind  | Nahi               |
-
-========================================================================
-*/

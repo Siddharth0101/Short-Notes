@@ -19,6 +19,9 @@ tags: router, url, loaders, navigation, routing
 - Loader — route data fetch; error/pending handling define karo.
 - Protected route — UI guard hai; backend authorization phir bhi chahiye.
 - Back/forward — URL se state derive karo, duplicate local copy drift na kare.
+- Replace navigation — current history entry replace; push nayi entry banata hai.
+- 404 handling — unknown route aur resource-not-found ko useful fallback do.
+- URL encoding — user values encode karo; raw text ko path/query mein concatenate mat karo.
 
 ## Sources — aur padhne ke liye
 

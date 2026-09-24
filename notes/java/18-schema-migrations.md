@@ -18,6 +18,9 @@ tags: sql, normalization, constraints, migrations
 - Backfill — batches mein data update; locks/load monitor karo.
 - Constraint — existing data clean karke validate/enforce karo.
 - Rollback — schema/data loss ko app rollback se alag plan karo.
+- Migration lock — concurrent deployers same change apply na karein; tool coordination verify.
+- Forward fix — destructive rollback se better nayi corrective migration ho sakti hai.
+- Compatibility test — old/new application dono rollout ke shared schema par kaam karein.
 
 ## Sources — aur padhne ke liye
 

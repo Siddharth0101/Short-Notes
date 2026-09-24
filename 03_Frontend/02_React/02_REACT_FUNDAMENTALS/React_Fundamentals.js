@@ -1,64 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Component — props se UI return karne wala function.
+ * - JSX — JS mein UI syntax; expressions `{}` ke andar.
+ * - Props — parent se input; child mutate nahi karta.
+ * - Children — nested content ko composition ke liye pass karo.
+ * - Render — pure calculation; network/DOM side effects render mein mat chalao.
+ * - Capital name — custom component `<Card />`; lowercase tag native element.
+ * - Fragment — extra DOM wrapper bina elements group karo.
+ * - Key — siblings ki stable identity; array position se bachna jab list badalti ho.
+ * - Event prop — handler pass karo: `onClick={save}`; `save()` render ke time call hota hai.
+ * - JSX attributes — className aur htmlFor use; inline style JS object hota hai.
+ * - Key prop — React identity ke liye; child ko ID chahiye toh separate prop do.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * REACT FUNDAMENTALS - COMPLETE SHORT NOTES [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - React ek JavaScript library hai UI build karne ke liye.
- *
- * REACT RENDER & DATA FLOW:
- * ┌─────────────────────────────────────────────────────────────┐
- * │                                                             │
- * │   State / Props Change ──→ Virtual DOM Re-render            │
- * │                                    │                        │
- * │                                    ▼                        │
- * │   Real DOM Update   ◄── Diffing Algorithm (Reconciliation)  │
- * │   (Only changed nodes)                                      │
- * │                                                             │
- * └─────────────────────────────────────────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. WHY REACT?
- * ========================================================================
- * NOTES:
- * - Vanilla JS me complex UIs me DOM manually sync karna painful hai.
- * - React automatically UI ko STATE ke saath sync rakhta hai.
- * - Component = UI piece + uska logic + uska data.
- *
- * REACT VS OTHERS:
- * - React: library. Sirf UI. Routing/state management bahar se lagao.
- * - Angular: full framework. Sab built-in. Opinionated.
- * - Vue: middle ground. Progressive framework.
- *
- * REACT ECOSYSTEM:
- * - Routing: React Router.
- * - State: Context API, Redux, Zustand.
- * - Forms: React Hook Form.
- * - Styling: CSS Modules, styled-components, Tailwind.
- * - Full-stack: Next.js, Remix.
- */
-
-
-/**
- * ========================================================================
- * 2. COMPONENTS
- * ========================================================================
- * NOTES:
- * - Component = JavaScript function jo JSX return karta hai.
- * - Name MUST start with uppercase: Pizza, Header, App.
- * - Ek component = ek independent UI piece with its own data, logic, appearance.
- * - Components ko nest karte hain (tree structure).
- * - Component re-usable hai: same component different data ke saath.
- *
- * TYPES:
- * - Function components (modern, hooks use karte hain).
- * - Class components (legacy, lifecycle methods use karte hain).
- * - Jonas course me sirf function components use hote hain.
- */
 
 function Pizza() {
     return (
@@ -81,26 +38,6 @@ function App() {
 }
 
 
-/**
- * ========================================================================
- * 3. JSX
- * ========================================================================
- * NOTES:
- * - JSX = JavaScript XML. HTML-like syntax in JS files.
- * - JSX is NOT HTML. It compiles to React.createElement() calls.
- * - JSX me JavaScript expressions likh sakte ho {} ke andar.
- * - Statements (if, for, switch) JSX me directly NAHI likh sakte.
- *
- * JSX RULES:
- * - Sirf EK root element return karna hai (ya <> Fragment).
- * - class -> className.
- * - for -> htmlFor.
- * - Inline styles = object: style={{ color: 'red', fontSize: '20px' }}.
- * - Camelcase for attributes: onClick, onChange, tabIndex.
- * - Self-closing tags zaroori: <img />, <br />, <input />.
- * - Har cheez close honi chahiye.
- */
-
 function Header() {
     const companyName = 'Fast React Pizza Co.';
     const hour = new Date().getHours();
@@ -116,25 +53,6 @@ function Header() {
     );
 }
 
-
-/**
- * ========================================================================
- * 4. PROPS VS STATE
- * ========================================================================
- * NOTES:
- * ┌───────────────────────────┬─────────────────────────────────┐
- * │  PROPS                    │  STATE                          │
- * ├───────────────────────────┼─────────────────────────────────┤
- * │  Passed from parent       │  Created inside component       │
- * │  Read-Only (immutable)    │  Can be updated (setter)        │
- * │  Component configuration  │  Component memory               │
- * │  Triggers re-render       │  Triggers re-render on change   │
- * └───────────────────────────┴─────────────────────────────────┘
- *
- * ONE-WAY DATA FLOW:
- * - Data sirf parent se child jaata hai (top-down).
- * - Child parent ko data bhejne ke liye callback function use karta hai (event up).
- */
 
 // Parent passes data:
 function Menu() {
@@ -165,28 +83,6 @@ function PizzaItem({ name, price, photoName, soldOut }) {
     );
 }
 
-
-/**
- * ========================================================================
- * 5. STATE
- * ========================================================================
- * NOTES:
- * - State = data jo component ke andar store hota hai aur TIME KE SAATH CHANGE hota hai.
- * - State change = React component ko RE-RENDER karta hai.
- * - State React ka most important concept hai.
- *
- * useState RULES:
- * - const [value, setValue] = useState(initialValue);
- * - setValue se state update hota hai aur re-render trigger hota hai.
- * - State update ASYNCHRONOUS hai (batched).
- * - State directly mutate NAHI karna: arr.push() ❌, setArr([...arr, new]) ✅.
- * - Hooks (useState, etc.) sirf top level pe call karo, conditionals/loops me nahi.
- *
- * STALE STATE:
- * - Agar new state purani state pe depend kare, toh callback form use karo:
- *   setCount(prev => prev + 1) ✅
- *   setCount(count + 1)        ⚠️ (stale ho sakta hai batching me)
- */
 
 // import { useState } from 'react';
 
@@ -219,21 +115,6 @@ function Counter() {
 }
 
 
-/**
- * ========================================================================
- * 6. EVENTS
- * ========================================================================
- * NOTES:
- * - React me events camelCase hain: onClick, onChange, onSubmit.
- * - Handler function pass karo, CALL mat karo:
- *   onClick={handleClick} ✅
- *   onClick={handleClick()} ❌ (ye immediately call ho jayega!)
- *
- * - Inline handler: onClick={() => setCount(count + 1)}
- * - Event object automatically milta hai: onClick={(e) => { ... }}
- * - Form submit: onSubmit handler me e.preventDefault() lagao.
- */
-
 function Form() {
     const [description, setDescription] = useState('');
 
@@ -258,22 +139,6 @@ function Form() {
 }
 
 
-/**
- * ========================================================================
- * 7. CONDITIONAL RENDERING
- * ========================================================================
- * NOTES:
- * - JSX me if-else nahi chal sakta (statement hai). Alternatives:
- *   1. && operator: condition && <Component />
- *   2. Ternary: condition ? <A /> : <B />
- *   3. Early return: if (!data) return <p>No data</p>;
- *   4. Element variable: JSX ko variable me store karo.
- *
- * && TRAP:
- * - 0 && <Component /> -> renders "0" on screen! (0 is falsy but renderable)
- * - Fix: (count > 0) && <Component />  ya  !!count && <Component />
- */
-
 function Footer() {
     const hour = new Date().getHours();
     const isOpen = hour >= 10 && hour <= 22;
@@ -293,22 +158,6 @@ function Footer() {
     );
 }
 
-
-/**
- * ========================================================================
- * 8. RENDERING LISTS
- * ========================================================================
- * NOTES:
- * - Array.map() se list render karo.
- * - Har list item ko UNIQUE key prop dena ZAROORI hai.
- * - Key React ko batata hai kaunsa item change hua, add hua, ya remove hua.
- *
- * KEY RULES:
- * - Key unique honi chahiye (siblings ke beech).
- * - Key stable honi chahiye: index as key AVOID karo (reorder pe issues).
- * - Database ID best key hai.
- * - Key prop component ke andar accessible nahi hoti.
- */
 
 const pizzaDataArr = [
     { name: 'Focaccia', price: 6, soldOut: false },
@@ -332,17 +181,6 @@ function MenuList() {
 }
 
 
-/**
- * ========================================================================
- * 9. FRAGMENTS
- * ========================================================================
- * NOTES:
- * - JSX me sirf ek root element return ho sakta hai.
- * - Extra <div> nahi add karna -> React.Fragment use karo.
- * - Short syntax: <> ... </>
- * - Agar key chahiye Fragment pe toh: <React.Fragment key={id}> ... </React.Fragment>
- */
-
 function FragmentExample() {
     return (
         <>
@@ -352,43 +190,6 @@ function FragmentExample() {
     );
 }
 
-
-/**
- * ========================================================================
- * 10. COMPONENT TREE AND DATA FLOW
- * ========================================================================
- * NOTES:
- * - React app = component tree. App root pe, baaki sab nest hote hain.
- * - DATA FLOWS DOWN: parent -> child via props (one-way).
- * - EVENTS FLOW UP: child -> parent via callback functions.
- * - Re-render: state change -> component + ALL its children re-render.
- *
- * IMPORTANT:
- * - React re-render ≠ DOM update. React diff karta hai (reconciliation).
- * - Sirf changed parts DOM me update hote hain (efficient).
- *
- * RENDER vs COMMIT:
- * 1. TRIGGER: state update ya initial render.
- * 2. RENDER: React components call karta hai, virtual DOM banata hai.
- * 3. COMMIT: changed parts real DOM me apply (ReactDOM ka kaam).
- * 4. BROWSER PAINT: screen pe dikhata hai.
- */
-
-
-/**
- * ========================================================================
- * 11. CONTROLLED ELEMENTS
- * ========================================================================
- * NOTES:
- * - By default form elements apna state DOM me rakhte hain.
- * - Controlled element: React state ko single source of truth banao.
- * - value prop + onChange handler = controlled.
- *
- * PATTERN:
- * 1. State create karo for each input.
- * 2. value={state} set karo.
- * 3. onChange={e => setState(e.target.value)} lagao.
- */
 
 function ControlledForm() {
     const [name, setName] = useState('');
@@ -410,45 +211,3 @@ function ControlledForm() {
         </form>
     );
 }
-
-/**
- * ========================================================================
- * 12. NAMASTE REACT ARCHITECTURE: FIBER & RECONCILIATION
- * ========================================================================
- * SOURCE: Akshay Saini (Namaste React Deep Dive)
- *
- * WHAT IS VIRTUAL DOM?
- * - Virtual DOM is simply a JavaScript representation of the actual DOM.
- * - Created via React.createElement() which returns a plain JS object.
- *
- * RECONCILIATION (DIFFING ALGORITHM):
- * - React uses a heuristic O(n) diffing algorithm.
- * - Compares current Fiber tree with workInProgress Fiber tree.
- * - Two phases:
- *   1. Render Phase (diffing, interruptible in React 18 Concurrent mode)
- *   2. Commit Phase (synchronous Real DOM updates)
- *
- * WHY KEYS MATTER IN LISTS:
- * - Keys identify which items have changed, been added, or removed.
- * - Never use array index or Math.random() as key for dynamic/filterable lists!
- */
-
-/**
- * ========================================================================
- * 13. JSX UNDER THE HOOD (BABEL TRANSPILATION)
- * ========================================================================
- * JSX ──► Babel (AST Transpilation) ──► React.createElement() ──► JS Object ──► Real DOM
- *
- * - JSX is NOT HTML inside JavaScript!
- * - JSX sanitizes user input to prevent XSS attacks automatically.
- */
-
-/**
- * ========================================================================
- * 14. HOOKS UNDER THE HOOD (RULES OF HOOKS)
- * ========================================================================
- * - React tracks hooks using an INTERNAL SINGLY-LINKED LIST stored on the Fiber's memoizedState.
- * - Why hooks must be called at the top level:
- *   Conditional hooks alter the traversal order of the linked list between renders,
- *   causing state pointers to read the wrong state nodes!
- */

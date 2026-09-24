@@ -1,192 +1,50 @@
 /**
- * ========================================================================
- * 03. ADVANCE JAVA (EXCEPTIONS, COLLECTIONS, THREADS, LAMBDAS, STREAMS)
- * ========================================================================
- * NOTES:
- * - Ye topics har enterprise application ka backbone hain. Inke bina proper app nahi banti.
- * 
- * ========================================================================
- * 1. EXCEPTION HANDLING (DETAILED)
- * ========================================================================
- * - Errors jo program crash kar sakte hain unko gracefully handle karna.
- * - Hierarchy: Throwable -> Error (Out of memory, stack overflow - we don't handle) & Exception (We handle).
- * - Checked Exceptions: Compile-time pe pata chal jata hai (e.g., IOException, SQLException). Inko handle karna must hai (try-catch ya throws).
- * - Unchecked Exceptions: Run-time pe aate hain (e.g., NullPointerException, ArithmeticException). Inko explicitly handle karna zaroori nahi hota, par best practice hai code safe likho.
- * - Blocks: try (risky code), catch (handle error), finally (hamesha execute hoga, resource closing ke liye).
- * 
- * throw vs throws:
- * - throw: Manually ek exception OBJECT create karke fenkna. Method ke ANDAR use hota hai.
- *   Syntax: throw new ArithmeticException("Cannot divide by zero");
- * - throws: Method SIGNATURE me declare karna ki "ye method ye exception fenk SAKTA hai, caller handle kare."
- *   Syntax: public void readFile() throws IOException { ... }
- * 
- * try-with-resources (Java 7+):
- * - Problem: finally block me resources (file, connection) close karna bhool sakte ho -> Resource Leak!
- * - Solution: try(Resource r = new Resource()) { ... } -> Java AUTOMATICALLY close karega (finally ki zaroorat nahi).
- * - Rule: Resource must implement `AutoCloseable` interface.
- * - Example: try (BufferedReader br = new BufferedReader(new FileReader("test.txt"))) { ... }
- * 
- * Exception Chaining:
- * - Ek exception ko dusre exception me wrap karna taaki root cause bhi pata chale.
- * - Syntax: throw new ServiceException("DB failed", originalException);
- * - Original cause access: e.getCause()
- * 
- * ========================================================================
- * 2. MULTITHREADING (DETAILED)
- * ========================================================================
- * - Process: Ek program jo run ho raha hai.
- * - Thread: Process ke andar ek chota execution unit. Multithreading matlab multiple threads parallel (concurrently) kaam kar rahe hain.
- * - Thread create karne ke 2 ways:
- *   a) Extend `Thread` class.
- *   b) Implement `Runnable` interface (Best practice kyunki Java me multiple inheritance nahi hoti, so aap dusri class ko extend karne ke liye free rehte ho).
- * - Synchronization: Jab do threads same resource (e.g., ek variable) ko ek sath access karein toh data corrupt (Race Condition) ho sakta hai. `synchronized` keyword ek baar me ek hi thread ko allow karta hai.
- * 
- * THREAD LIFECYCLE (States):
- * ┌─────────┐    start()    ┌──────────┐   scheduler   ┌─────────┐
- * │   NEW   │ ────────────> │ RUNNABLE │ ────────────> │ RUNNING │
- * └─────────┘               └──────────┘               └────┬────┘
- *                                                           │
- *                  ┌────────────────────────────────────────┤
- *                  │              │              │          │
- *           sleep()/wait()   synchronized    I/O block   run() ends
- *                  │              │              │          │
- *           ┌──────▼───┐  ┌──────▼───┐  ┌──────▼───┐  ┌───▼────────┐
- *           │ WAITING/  │  │ BLOCKED  │  │ BLOCKED  │  │ TERMINATED │
- *           │ TIMED_WAIT│  │(for lock)│  │ (for I/O)│  │  (DEAD)    │
- *           └───────────┘  └──────────┘  └──────────┘  └────────────┘
- * 
- * IMPORTANT THREAD METHODS:
- * - Thread.sleep(ms): Current thread ko specified milliseconds ke liye pause (TIMED_WAITING state).
- * - t.join(): Current thread WAIT karega jab tak thread `t` complete na ho jaye. Sequential execution force karne ke liye.
- * - Thread.yield(): Current thread apna turn chhod deta hai (hint to scheduler). Guaranteed nahi hai ki switch hoga.
- * - t.setPriority(1-10): Thread priority set karna (MIN=1, NORM=5, MAX=10). OS scheduler decide karta hai.
- * - t.setDaemon(true): Background thread (like GC). Main thread khatam hote hi daemon bhi mar jata hai.
- * 
- * ========================================================================
- * 3. COLLECTIONS FRAMEWORK (DETAILED)
- * ========================================================================
- * - Arrays fix size ke hote hain. Collections dynamic size aur readymade data structures provide karte hain.
- * - Iterable -> Collection
- * 
- * a) List Interface (Ordered, allows duplicates):
- *    - ArrayList: Fast for searching/reading (O(1) get). Slow insertion/deletion middle me (O(n) shift). Dynamic array under the hood.
- *    - LinkedList: Fast for insertion/deletion (O(1)). Slow for searching (O(n)). Doubly linked list under the hood.
- *    - Vector: Like ArrayList but thread-safe (synchronized). Slow due to locking. Legacy class.
- * 
- * b) Set Interface (Unordered, NO duplicates):
- *    - HashSet: Sabse fast, order maintain nahi karta (uses HashMap internally).
- *    - LinkedHashSet: Insertion order maintain karta hai.
- *    - TreeSet: Sorted (ascending order) rakhta hai. Uses Red-Black tree.
- * 
- * c) Map Interface (Key-Value pairs. Keys must be unique):
- *    - HashMap: Fast key lookup (O(1) average), unordered.
- *    - LinkedHashMap: Insertion order maintain karta hai.
- *    - TreeMap: Keys sorted order me rehti hain.
- *    - Hashtable: Like HashMap but thread-safe. Legacy class.
- * 
- * d) Queue Interface (FIFO — First In, First Out):
- *    - PriorityQueue: Elements natural ordering ya Comparator ke hisaab se sorted rehte hain.
- *    - LinkedList (as Queue): Queue/Deque dono ki tarah kaam karta hai.
- * 
- * ITERATOR:
- * - Collections pe manually iterate karne ka tarika.
- * - Iterator<String> it = list.iterator();
- * - while(it.hasNext()) { String s = it.next(); }
- * - it.remove() -> Safe way to remove elements during iteration (for-each me ConcurrentModificationException aata hai).
- * 
- * COMPARABLE vs COMPARATOR (⭐ INTERVIEW FAVOURITE):
- * - Comparable (java.lang): Class KHUD define karti hai apni natural ordering.
- *   - Interface: implements Comparable<T>, method: compareTo(T o)
- *   - Ek hi tarike se sort ho sakti hai (e.g., Student by roll number).
- *   - Example: Collections.sort(list); // uses compareTo()
- * 
- * - Comparator (java.util): BAHAR se custom sorting logic dena.
- *   - Interface: implements Comparator<T>, method: compare(T o1, T o2)
- *   - Multiple sorting strategies (by name, by age, by marks).
- *   - Example: Collections.sort(list, new NameComparator());
- *   - Lambda: Collections.sort(list, (a, b) -> a.getName().compareTo(b.getName()));
- * 
- * ========================================================================
- * 4. LAMBDA EXPRESSIONS (Java 8+) — DETAILED
- * ========================================================================
- * - Lambda = Anonymous function. Functional Interface ka short implementation.
- * - Syntax: (parameters) -> expression   OR   (parameters) -> { statements; }
- * - No parameters: () -> System.out.println("Hello")
- * - One parameter: x -> x * x   (parentheses optional for single param)
- * - Multiple params: (a, b) -> a + b
- * - Multi-line: (a, b) -> { int sum = a + b; return sum; }
- * 
- * FUNCTIONAL INTERFACES (Java 8 — java.util.function):
- * ┌────────────────┬─────────────────┬─────────────────┬────────────────────────┐
- * │   Interface    │   Method        │  Input -> Output│  Use Case              │
- * ├────────────────┼─────────────────┼─────────────────┼────────────────────────┤
- * │ Predicate<T>   │ test(T t)       │ T -> boolean    │ Filtering, conditions  │
- * │ Function<T,R>  │ apply(T t)      │ T -> R          │ Transforming data      │
- * │ Consumer<T>    │ accept(T t)     │ T -> void       │ Performing actions     │
- * │ Supplier<T>    │ get()           │ () -> T         │ Providing/generating   │
- * │ BiFunction<T,U,R>│ apply(T,U)    │ (T,U) -> R      │ Two input transform    │
- * │ UnaryOperator<T>│ apply(T t)     │ T -> T          │ Same type transform    │
- * │ BinaryOperator<T>│ apply(T,T)    │ (T,T) -> T      │ Two same type -> one   │
- * └────────────────┴─────────────────┴─────────────────┴────────────────────────┘
- * 
- * METHOD REFERENCES (Java 8+):
- * - Lambda ka aur bhi chhota form jab sirf ek method call kar rahe ho.
- * - 4 Types:
- *   a) Static method: ClassName::staticMethod     (e.g., Math::max)
- *   b) Instance method (specific): obj::instanceMethod  (e.g., System.out::println)
- *   c) Instance method (arbitrary): ClassName::instanceMethod (e.g., String::toUpperCase)
- *   d) Constructor: ClassName::new                 (e.g., ArrayList::new)
- * 
- * ========================================================================
- * 5. STREAMS API (Java 8+) — DETAILED
- * ========================================================================
- * - Collections par declarative operations (filter, map, reduce) run karne ke liye. SQL jaisi queries lists pe lagane ke liye.
- * - Stream = data ka pipeline. Source -> Intermediate ops -> Terminal op.
- * - LAZY evaluation: Intermediate operations tab tak execute nahi hote jab tak terminal operation na aaye.
- * - Streams reusable NAHI hain. Ek baar terminal op ke baad naya stream banana padta hai.
- * 
- * INTERMEDIATE OPERATIONS (return Stream, lazy):
- * - filter(Predicate)  : Elements filter karna (jo condition pass kare wahi rakho)
- * - map(Function)      : Har element ko transform karna (e.g., string -> uppercase)
- * - flatMap(Function)  : Nested collections ko flat karna [[1,2],[3,4]] -> [1,2,3,4]
- * - sorted()           : Natural order ya custom Comparator se sort
- * - distinct()         : Duplicate remove karo
- * - limit(n)           : Pehle n elements lo
- * - skip(n)            : Pehle n elements skip karo
- * - peek(Consumer)     : Debugging ke liye — har element pe action karo but stream modify mat karo
- * 
- * TERMINAL OPERATIONS (trigger execution, return result):
- * - forEach(Consumer)  : Har element pe action (print etc.)
- * - collect(Collector) : Stream ko Collection me convert (toList, toSet, toMap, joining)
- * - count()            : Kitne elements hain
- * - reduce(identity, BinaryOperator): Sab elements ko ek value me fold karna (sum, max)
- * - findFirst()        : Pehla element (returns Optional)
- * - findAny()          : Koi bhi ek element (parallel streams me useful)
- * - anyMatch(Predicate): Koi bhi ek element condition match karta hai? (boolean)
- * - allMatch(Predicate): SAB elements condition match karte hain?
- * - noneMatch(Predicate): KONO BHI element match nahi karta?
- * - min(Comparator)    : Minimum element
- * - max(Comparator)    : Maximum element
- * - toArray()          : Stream to array
- * 
- * ========================================================================
- * 6. OPTIONAL CLASS (Java 8+)
- * ========================================================================
- * - Problem: NullPointerException Java ka sabse common error hai.
- * - Optional = ek container jo value hold KARTA HAI ya EMPTY hai. Null check ka elegant replacement.
- * - Factory methods:
- *   - Optional.of(value)        -> value null nahi honi chahiye (throws NPE if null)
- *   - Optional.ofNullable(value)-> null bhi ho sakti hai (safe)
- *   - Optional.empty()          -> Empty Optional
- * - Key methods:
- *   - isPresent()     -> true if value exists
- *   - isEmpty()       -> true if no value (Java 11+)
- *   - get()           -> value lo (throws NoSuchElementException if empty!)
- *   - orElse(default) -> value lo, nahi hai toh default value
- *   - orElseThrow()   -> value lo, nahi hai toh exception fenko
- *   - ifPresent(Consumer) -> agar value hai toh action karo
- *   - map(Function)   -> value transform karo (returns Optional)
- *   - filter(Predicate) -> condition check karo
+ * ## Quick revision
+ *
+ * - Checked exception — catch ya declare; unchecked — runtime contract failure ho sakti hai.
+ * - `throw` — exception bhejo; `throws` — method contract mein declare karo.
+ * - Try-with-resources — AutoCloseable resources reliably close karo.
+ * - `finally` — cleanup; return/throw se original result mask mat karo.
+ * - I/O — bytes ke liye streams; text ke liye charset-aware reader/writer.
+ * - Path/Files — filesystem operations; missing file aur permission errors handle karo.
+ * - `Instant` — timestamp; `LocalDate` — date; `ZonedDateTime` — timezone ke saath date/time.
+ * - Exception handling — useful context do, secrets log mat karo, failure silently swallow mat karo.
+ * - Lambda — functional interface ki implementation.
+ * - Functional interface — ek abstract method wala contract.
+ * - Stream — lazy data pipeline; terminal operation se execute hoti hai.
+ * - `map` — transform; `filter` — select; `flatMap` — nested results flatten.
+ * - `reduce` — associative accumulation; valid identity choose karo.
+ * - `collect` — results ko collection/grouping mein jama karo.
+ * - Stream reuse — terminal operation ke baad same stream reuse nahi.
+ * - Side effects — pipeline mein shared mutable state avoid karo.
+ * - Parallel stream — workload, thread pool aur merge cost dekho; always faster nahi.
+ * - Optional — missing result model karo; unchecked `get()` se bacho.
+ * - JVM stack — per-thread frames/local state; heap — objects ka managed area.
+ * - Reachability — unreachable objects GC ke liye eligible; immediate collection guaranteed nahi.
+ * - Memory leak — unused objects ab bhi reachable reh jaate hain.
+ * - GC roots — thread stacks/static references jaise roots se reachability trace hoti hai.
+ * - Heap dump — retained objects dekho; thread dump — blocked/waiting execution dekho.
+ * - `OutOfMemoryError` — heap ke alawa native/metaspace limits bhi check karo.
+ * - GC tuning — allocation, pause aur live-set evidence se start karo.
+ * - Thread — concurrent execution; shared mutable state par coordination chahiye.
+ * - Race condition — result scheduling par depend karta hai.
+ * - `synchronized` — same monitor par mutual exclusion + visibility.
+ * - `volatile` — visibility/order guarantee; `count++` atomic nahi.
+ * - AtomicInteger — single-variable atomic updates; multi-field rule alag handle karo.
+ * - Happens-before — writes ki visibility/order ka formal relation.
+ * - Deadlock — locks cyclic order mein wait; consistent lock order rakho.
+ * - Executor — tasks submit karo; lifecycle aur shutdown manage karo.
+ * - Interrupt — cooperative cancellation signal; catch karke blindly swallow mat karo.
+ * - Enum — fixed named values aur associated behavior.
+ * - Annotation — metadata; behavior framework/tool interpret karta hai.
+ * - Retention — SOURCE, CLASS, RUNTIME se metadata availability decide hoti hai.
+ * - Reflection — runtime types/members inspect; access aur maintenance cost socho.
+ * - Type erasure — most generic type arguments runtime objects par directly available nahi.
+ * - Sealed type — permitted subtypes restrict karta hai.
+ * - Pattern matching — type test aur extraction ko readable banata hai.
+ * - Suppressed exception — try-with-resources cleanup failure main exception ke saath attach ho sakti hai.
+ * - Charset — byte/text conversion mein explicit encoding; platform default par blind depend mat karo.
+ * - Duration/Period — elapsed time-based amount / calendar date-based amount.
  */
 
 import java.util.ArrayList;
@@ -258,8 +116,6 @@ public class Advance_Java_Concepts {
     }
 
     public static void main(String[] args) {
-        
-        // ===== 1. EXCEPTION HANDLING =====
         System.out.println("===== Exception Handling =====");
         
         // --- try-catch-finally ---
@@ -301,8 +157,6 @@ public class Advance_Java_Concepts {
             System.out.println("\nChained Exception: " + e.getMessage());
             System.out.println("Root Cause: " + e.getCause().getMessage());
         }
-
-        // ===== 2. THREADS =====
         System.out.println("\n===== Threads =====");
 
         // --- Creating threads ---
@@ -325,8 +179,6 @@ public class Advance_Java_Concepts {
         // --- Thread states ---
         System.out.println("\nThread States: NEW -> RUNNABLE -> RUNNING -> (BLOCKED/WAITING) -> TERMINATED");
         System.out.println("t1 state now: " + t1.getState()); // TERMINATED
-
-        // ===== 3. COLLECTIONS =====
         System.out.println("\n===== Collections =====");
 
         // --- ArrayList ---
@@ -379,8 +231,6 @@ public class Advance_Java_Concepts {
         // Reverse order
         students.sort(Comparator.comparingInt((StudentRecord s) -> s.marks).reversed());
         System.out.println("Sorted by marks DESC:         " + students);
-
-        // ===== 4. LAMBDA EXPRESSIONS =====
         System.out.println("\n===== Lambda Expressions =====");
 
         // --- Predicate<T>: T -> boolean (test) ---
@@ -419,8 +269,6 @@ public class Advance_Java_Concepts {
         names.stream()
              .map(String::toUpperCase)       // Instance method ref (arbitrary object)
              .forEach(System.out::println);   // Instance method ref (specific object)
-
-        // ===== 5. STREAMS API =====
         System.out.println("\n===== Streams API =====");
 
         List<Integer> numbers = Arrays.asList(5, 12, 3, 8, 21, 14, 7, 19, 2, 16);
@@ -478,8 +326,6 @@ public class Advance_Java_Concepts {
             .skip(1)          // Skip first 1
             .forEach(n -> System.out.print(n + " ")); // 12 3 8 21
         System.out.println();
-
-        // ===== 6. OPTIONAL =====
         System.out.println("\n===== Optional =====");
 
         // --- Creating Optional ---
@@ -514,4 +360,3 @@ public class Advance_Java_Concepts {
         System.out.println("\n✅ Advanced Java complete! Next: Maven -> Spring -> Spring Boot");
     }
 }
-

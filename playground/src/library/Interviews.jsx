@@ -39,7 +39,7 @@ export function QuestionCard({ item, number }) {
       </div>
       {revealed && (
         <div className="question-answer" id={`answer-${item.id}`}>
-          <span className="card-overline">ANSWER KA REASON SAMJHO</span>
+          <span className="card-overline">QUICK ANSWER</span>
           <Markdown>{item.answer}</Markdown>
           <div className="follow-up">
             <Icon name="messages" size={18} />
@@ -219,6 +219,22 @@ export default function Interviews() {
   const { progress } = useProgress();
   const track = params.get('track') || 'all';
   const topic = params.get('topic') || 'all';
+  const updateFilter = (key, value) => {
+    setParams((previous) => {
+      const next = new URLSearchParams(previous);
+      if (value === 'all') next.delete(key);
+      else next.set(key, value);
+      return next;
+    });
+    setLimit(12);
+  };
+  const resetFilters = () => {
+    setParams({});
+    setQuery('');
+    setLevel('all');
+    setUnreviewed(false);
+    setLimit(12);
+  };
   const filtered = interviewQuestions
     .filter(
       (item) =>
@@ -269,8 +285,8 @@ export default function Interviews() {
             <Icon name="messages" size={27} />
           </span>
           <div>
-            <h3>Reason samjho, phir khud answer do.</h3>
-            <p>Pehle apne words mein answer do. Phir compare karo.</p>
+            <h3>Recall karo. Confidence badhao.</h3>
+            <p>Short answers · follow-ups · 5-question mock</p>
           </div>
         </div>
         <div className="interview-score">
@@ -295,7 +311,7 @@ export default function Interviews() {
           aria-label="Interview topic"
           value={topic}
           onChange={(event) => {
-            setParams(event.target.value === 'all' ? {} : { topic: event.target.value });
+            updateFilter('topic', event.target.value);
             setLimit(12);
           }}
         >
@@ -325,22 +341,32 @@ export default function Interviews() {
           Still practicing
         </label>
       </div>
-      <div className="filter-chips">
-        <button className={track === 'all' ? 'active' : ''} onClick={() => setParams({})}>
+      <div className="filter-chips" aria-label="Interview subjects">
+        <button
+          aria-pressed={track === 'all'}
+          className={track === 'all' ? 'active' : ''}
+          onClick={() => updateFilter('track', 'all')}
+        >
           Saare subjects
         </button>
         {TRACKS.filter((item) => item.id !== 'interview').map((item) => (
           <button
             className={track === item.id ? 'active' : ''}
             key={item.id}
-            onClick={() => setParams({ track: item.id })}
+            aria-pressed={track === item.id}
+            onClick={() => updateFilter('track', item.id)}
           >
             {item.shortName || item.name}
           </button>
         ))}
       </div>
       <div className="results-heading">
-        <span>{filtered.length} questions</span>
+        <span role="status">{filtered.length} questions</span>
+        {(query || track !== 'all' || topic !== 'all' || level !== 'all' || unreviewed) && (
+          <button className="text-button" onClick={resetFilters}>
+            <Icon name="reset" size={14} /> Reset filters
+          </button>
+        )}
         <button
           className="primary-button"
           disabled={!filtered.length}

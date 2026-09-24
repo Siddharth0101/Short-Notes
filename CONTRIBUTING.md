@@ -11,6 +11,7 @@
 - Navigation — `notes/curriculum.json` canonical hai; generated README manually edit mat karo.
 - Interviews — canonical question data `playground/src/data/*Questions.js`; answers mein short fact bullets.
 - Practice — code, outputs, runtime assumptions aur acceptance checks preserve karo.
-- Source folders — runnable/reference code hai; explanation ke liye short chapter link use karo.
+- Source folders — har mapped JS/JSX/Java file mein short Quick revision bullets; code examples preserve karo.
+- Audit — `node scripts/check-revision.mjs` chapters, sources aur interview answer length verify karta hai.
 - Generation — root se `node scripts/sync-curriculum.mjs`, `node scripts/sync-interviews.mjs`, `node scripts/sync-priority-interviews.mjs`, `node scripts/sync-machine-coding.mjs`.
 - Verify — `cd playground` phir `npm run check`; IDs, links, examples aur app checks pass hone chahiye.

@@ -17,6 +17,9 @@ tags: spring, boot, startup
 - Component scan — main class ke package/subpackages mein default scan.
 - Auto-configuration — classpath/properties/beans ke hisaab se conditional setup.
 - Startup failure — root cause padho: missing bean, port conflict ya invalid config.
+- Application context — bean definitions, creation aur dependency wiring ka container.
+- Embedded server — Boot web app apne process mein HTTP server run kar sakti hai.
+- Condition report — auto-configuration kyun match/back off hui, startup diagnosis mein dekho.
 
 ## Sources — aur padhne ke liye
 

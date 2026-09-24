@@ -4,7 +4,7 @@ title: Graph traversal and shortest paths
 track: dsa
 order: 11
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Graph — vertices + edges; direction/weights clarify karo.
 tags: graph, bfs, dfs, dijkstra, topological-sort
 visual: bfs
@@ -23,6 +23,9 @@ visual: bfs
 - 0–1 BFS — weights 0/1; deque front/back se O(V + E).
 - Union-Find — connectivity; path compression + rank/size useful.
 - Path reconstruction — parent pointers se target se source wapas chalo.
+- Connected components — har unvisited vertex se traversal start; single BFS disconnected nodes miss karega.
+- Kahn algorithm — indegree-zero queue; processed count < V ho toh directed cycle hai.
+- MST — all vertices minimum total edge cost se connect; source shortest paths se different problem.
 
 ## Research notes: Negative edges in a DAG
 

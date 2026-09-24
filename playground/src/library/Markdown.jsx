@@ -16,7 +16,10 @@ function ExampleLink({ href, children }) {
   const load = exampleFiles[`../../../${href.replace(/^\.\.\/\.\.\//, '')}`];
   if (!load) return <a href={href}>{children}</a>;
   async function toggle() {
-    if (content) { setOpen(!open); return; }
+    if (content) {
+      setOpen(!open);
+      return;
+    }
     setLoading(true);
     setError(false);
     try {
@@ -30,7 +33,13 @@ function ExampleLink({ href, children }) {
   }
   return (
     <>
-      <button type="button" onClick={toggle} disabled={loading} aria-expanded={open}>
+      <button
+        className="example-disclosure"
+        type="button"
+        onClick={toggle}
+        disabled={loading}
+        aria-expanded={open}
+      >
         {children}
       </button>
       {error && <span role="status"> Load nahi hua; dobara try karo.</span>}
@@ -86,13 +95,14 @@ const components = {
       <table>{children}</table>
     </div>
   ),
-  a: ({ href, children }) => href?.startsWith('../../examples/') ? (
-    <ExampleLink href={href}>{children}</ExampleLink>
-  ) : (
-    <a href={href} target={href?.startsWith('https://') ? '_blank' : undefined} rel="noreferrer">
-      {children}
-    </a>
-  ),
+  a: ({ href, children }) =>
+    href?.startsWith('../../examples/') ? (
+      <ExampleLink href={href}>{children}</ExampleLink>
+    ) : (
+      <a href={href} target={href?.startsWith('https://') ? '_blank' : undefined} rel="noreferrer">
+        {children}
+      </a>
+    ),
 };
 export default function Markdown({ children, idPrefix = '' }) {
   return (

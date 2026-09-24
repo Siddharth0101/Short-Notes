@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { TRACKS } from '../lib/content.js';
-import { notes } from '../data/catalog.js';
+import { notes, noteById } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import Icon from './Icons.jsx';
 import { normalizeTheme, readTheme, resolveTheme, THEME_KEY } from '../lib/theme.js';
@@ -65,7 +65,7 @@ export default function Shell({ children }) {
     document.documentElement.style.colorScheme = theme;
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', theme === 'dark' ? '#101c18' : '#f6f8f7');
+      ?.setAttribute('content', theme === 'dark' ? '#10121b' : '#f7f7fb');
     try {
       localStorage.setItem(THEME_KEY, preference);
     } catch {
@@ -89,6 +89,21 @@ export default function Shell({ children }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+  useEffect(() => {
+    setQuery(new URLSearchParams(location.search).get('q') || '');
+    setMobile(false);
+  }, [location.pathname, location.search]);
+  useEffect(() => {
+    const desktop = window.matchMedia?.('(min-width: 721px)');
+    const closeOnDesktop = (event) => {
+      if (event.matches) setMobile(false);
+    };
+    desktop?.addEventListener('change', closeOnDesktop);
+    return () => desktop?.removeEventListener('change', closeOnDesktop);
+  }, []);
+  const selectedTrack =
+    new URLSearchParams(location.search).get('track') ||
+    noteById[location.pathname.split('/notes/')[1]]?.track;
   const navItems = [
     ['/', 'dashboard', 'Overview'],
     ['/library', 'book', 'All notes'],
@@ -125,9 +140,14 @@ export default function Shell({ children }) {
             shortnotes<span className="brand-dot">.</span>
           </span>
         </Link>
-        <div className="workspace-label">
-          TUMHARA STUDY SPACE <span>PERSONAL</span>
-        </div>
+        <button
+          className="icon-button sidebar-close"
+          aria-label="Close menu"
+          onClick={() => setMobile(false)}
+        >
+          <Icon name="close" />
+        </button>
+        <div className="workspace-label">REVISION WORKSPACE</div>
         <nav aria-label="Main navigation" className="main-nav">
           {navItems.map(([to, icon, label]) => (
             <NavLink
@@ -147,7 +167,7 @@ export default function Shell({ children }) {
           ))}
         </nav>
         <div className="sidebar-section-label">
-          TUMHARE SUBJECTS <span>{TRACKS.length - 1}</span>
+          SUBJECTS <span>{TRACKS.length - 1}</span>
         </div>
         <nav aria-label="Subject navigation" className="subject-nav">
           {TRACKS.filter((t) => t.id !== 'interview').map((track) => (
@@ -155,7 +175,7 @@ export default function Shell({ children }) {
               key={track.id}
               to={`/library?track=${track.id}`}
               onClick={() => setMobile(false)}
-              className={`subject-link ${new URLSearchParams(location.search).get('track') === track.id ? 'selected' : ''}`}
+              className={`subject-link ${selectedTrack === track.id ? 'selected' : ''}`}
             >
               <span className="subject-dot" style={{ background: track.color }} />
               {track.shortName || track.name}
@@ -175,7 +195,7 @@ export default function Shell({ children }) {
             <div className="progress-track">
               <div style={{ width: `${notes.length ? (done / notes.length) * 100 : 0}%` }} />
             </div>
-            <Link to="/paths">
+            <Link to="/paths" onClick={() => setMobile(false)}>
               Padhai jaari rakho <Icon name="arrow" size={14} />
             </Link>
           </div>
@@ -196,7 +216,7 @@ export default function Shell({ children }) {
           </div>
         </div>
       </aside>
-      <div className="workspace-main">
+      <div className="workspace-main" inert={mobile ? true : undefined}>
         <header className="topbar">
           <div className="topbar-title">
             <button
@@ -228,6 +248,9 @@ export default function Shell({ children }) {
               onChange={(event) => setQuery(event.target.value)}
             />
             <kbd>⌘ K</kbd>
+            <button className="search-submit" type="submit" aria-label="Submit search">
+              <Icon name="arrow" size={16} />
+            </button>
           </form>
           <label className="appearance-control">
             <Icon name={theme === 'dark' ? 'moon' : 'sun'} size={17} />

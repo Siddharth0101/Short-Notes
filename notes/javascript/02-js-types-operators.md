@@ -4,7 +4,7 @@ title: Value types operators and explicit conversion
 track: javascript
 order: 2
 level: Foundation
-minutes: 1
+minutes: 2
 summary: Primitive types — string, number, boolean, undefined, null, bigint aur symbol.
 tags: fundamentals, js, types, operators
 ---
@@ -21,6 +21,9 @@ tags: fundamentals, js, types, operators
 - Falsy — `false`, `0`, `-0`, `0n`, `""`, `null`, `undefined`, `NaN`; `[]` aur `{}` truthy.
 - `??` — sirf null/undefined par fallback; `||` har falsy value par fallback.
 - `NaN` — `Number.isNaN(value)` se check karo; `NaN === NaN` false hai.
+- `Object.is` — NaN ko itself equal, lekin +0 aur -0 ko different maanta hai.
+- Boolean conversion — `Boolean("false")` true; non-empty string truthy hoti hai.
+- Operator precedence — multiply pehle, add baad mein; doubt ho toh parentheses lagao.
 
 ## Sources — aur padhne ke liye
 

@@ -1,44 +1,29 @@
+/**
+ * ## Quick revision
+ *
+ * - Component — props se UI return karne wala function.
+ * - JSX — JS mein UI syntax; expressions `{}` ke andar.
+ * - Props — parent se input; child mutate nahi karta.
+ * - Children — nested content ko composition ke liye pass karo.
+ * - Render — pure calculation; network/DOM side effects render mein mat chalao.
+ * - Capital name — custom component `<Card />`; lowercase tag native element.
+ * - Fragment — extra DOM wrapper bina elements group karo.
+ * - Key — siblings ki stable identity; array position se bachna jab list badalti ho.
+ * - Render — next UI calculate; commit — DOM updates apply.
+ * - Reconciliation — type, position aur key se identity match hoti hai.
+ * - Stable key — item ID use karo; random key har render remount kar sakti hai.
+ * - State reset — component type/key badalne se local state reset ho sakti hai.
+ * - Conditional UI — `0 && <Item />` zero dikha sakta hai.
+ * - Strict Mode — development mein extra checks; render/effect ko safe rakho.
+ * - Class lifecycle — mount/update/unmount; Hooks mein responsibilities ke hisaab se socho.
+ * - Error boundary — descendant render errors ke fallback; har async/event error nahi pakadti.
+ * - Event prop — handler pass karo: `onClick={save}`; `save()` render ke time call hota hai.
+ * - JSX attributes — className aur htmlFor use; inline style JS object hota hai.
+ * - Key prop — React identity ke liye; child ko ID chahiye toh separate prop do.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 01. REACT CORE ARCHITECTURE & BEHIND THE SCENES [⚡ NAMASTE REACT]
- * ========================================================================
- * SOURCE: Akshay Saini (Namaste React - Ep 1 to 4)
- *
- * CORE PHILOSOPHY:
- * - React is a lightweight JavaScript library focused purely on the View layer.
- * - At its core, React is just JavaScript manipulating the DOM declaratively.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                     THE REACT PIPELINE                              │
- * │                                                                     │
- * │   JSX Syntax              Babel Transpiler         React Element    │
- * │  <h1 id="t">Hi</h1>  ───► React.createElement ───►  Plain JS Object │
- * │                                                          │          │
- * │                                                          ▼          │
- * │   Real Browser DOM   ◄─── ReactDOM.createRoot  ◄─── Fiber Tree      │
- * │   <h1>Hi</h1>             (DOM Commit Phase)       (Virtual DOM)    │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. REACT WITHOUT ANY BUNDLER OR JSX (EP 1: INCEPTION)
- * ========================================================================
- * - React can run with just 2 CDN script tags in an index.html:
- *   1. react.production.min.js (core react algorithms & createElement)
- *   2. react-dom.production.min.js (browser DOM renderer)
- * - React.createElement takes 3 parameters:
- *   1. Tag Name ('div', 'h1', 'span', or Component)
- *   2. Props Object ({ id: 'header', className: 'title' })
- *   3. Children (string, number, or nested React elements)
- *
- * WHAT IS A REACT ELEMENT?
- * - It is NOT an HTML node!
- * - It is a plain JavaScript Object with $$typeof: Symbol(react.element),
- *   type, key, ref, and props.
- */
 
 // Simulation of React.createElement under the hood
 function simulateCreateElement(type, props, ...children) {
@@ -59,57 +44,6 @@ console.log('--- React Element Simulation ---');
 console.log('Type of element:', typeof headingElement);
 console.log('Element Object:', headingElement);
 
-/**
- * ========================================================================
- * 2. WHAT DOES A BUNDLER (PARCEL / VITE) ACTUALLY DO? (EP 2)
- * ========================================================================
- * Production applications require a bundler. Parcel / Vite / Webpack do:
- * 1. Dev Server & HMR (Hot Module Replacement) via WebSocket
- * 2. File Watching Algorithm (C++ based in Parcel)
- * 3. Minification & Dead Code Elimination (Tree Shaking)
- * 4. Image Optimization & Asset Hashing (cache busting)
- * 5. Differential Bundling (modern bundles for Chrome/Safari, polyfills for legacy)
- * 6. HTTPS local testing & Zero Config bundling
- * 7. Transpilation via Babel / esbuild (JSX to JS)
- */
-
-/**
- * ========================================================================
- * 3. JSX IS NOT HTML! (EP 3: LAYING THE FOUNDATION)
- * ========================================================================
- * - JSX is NOT HTML inside JavaScript!
- * - JSX is an XML-like syntax extension for JavaScript.
- * - Browsers DO NOT understand JSX natively!
- * - Babel transpiles JSX before it reaches the browser JS engine:
- *
- *   <div className="card"><h1>Hello</h1></div>
- *                     │
- *                     ▼ (Babel AST Transpilation)
- *   React.createElement('div', { className: 'card' },
- *       React.createElement('h1', null, 'Hello')
- *   )
- *                     │
- *                     ▼
- *   JavaScript Object (Virtual DOM node)
- *                     │
- *                     ▼
- *   ReactDOM renders to real HTML DOM node
- *
- * SANITIZATION:
- * - JSX escapes any values embedded in {} before rendering.
- * - Prevents Cross-Site Scripting (XSS) attacks by default!
- */
-
-/**
- * ========================================================================
- * 4. REACT ELEMENT VS FUNCTIONAL COMPONENT
- * ========================================================================
- * - React Element: Plain JS Object (e.g. const title = <h1>Namaste</h1>)
- * - React Component: A JS function that returns JSX/React Element.
- *   - Name MUST start with capital letter.
- *   - Called as <Header /> or Header().
- *   - Component Composition: Composing components inside components.
- */
 
 // Pure JS demonstration of Component Composition
 function Title() {

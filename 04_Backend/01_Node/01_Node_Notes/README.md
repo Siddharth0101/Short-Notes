@@ -1,30 +1,16 @@
 # Node.js Short Notes
 
-Jonas Schmedtmann Node.js, Express bootcamp style notes.
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../../../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-These files follow the same style as the JavaScript/Frontend notes in this repo:
-short Hinglish explanations, important rules, and compact JavaScript examples.
+## Topics
 
-## Padhne ka suggested order
-
-1. `01_COURSE_OVERVIEW/Jonas_Node_Course_Map.js`
-2. `02_NODE_FOUNDATIONS/Node_NPM_Core_Modules.js`
-3. `03_BACKEND_FOUNDATIONS/Web_Backend_Fundamentals.js`
-4. `04_NODE_INTERNALS/Node_Internals_Event_Loop_Streams.js`
-5. `05_ASYNC/Promises_Async_Await_Node.js`
-6. `06_EXPRESS/Express_REST_API_Natours.js`
-7. `07_DEPLOYMENT/Git_Deployment_Production.js`
-8. `08_CHEATSHEETS/Node_Backend_Cheat_Sheet.js`
-9. `09_SQL/README.md`
-10. `10_NO_SQL/README.md`
-
-## Yahan kya cover hai
-
-- Node.js, NPM, core modules, file system, web server
-- Backend web basics, HTTP, APIs, static/dynamic websites
-- Node architecture, V8, libuv, thread pool, event loop, streams, modules
-- Promises, async/await, Promise.all, async error handling
-- Express routing, middleware, REST, MVC structure, environment variables
-- Production deployment, config, logging, Git basics, Heroku-style deploy flow
-- SQL with PostgreSQL (Stephen Grider course)
-- NoSQL with MongoDB and Mongoose (Jonas course)
+- [Course Overview](01_COURSE_OVERVIEW/) — topic files kholo.
+- [Node Foundations](02_NODE_FOUNDATIONS/) — topic files kholo.
+- [Backend Foundations](03_BACKEND_FOUNDATIONS/) — topic files kholo.
+- [Node Internals](04_NODE_INTERNALS/) — topic files kholo.
+- [Async](05_ASYNC/) — topic files kholo.
+- [Express](06_EXPRESS/) — topic files kholo.
+- [Deployment](07_DEPLOYMENT/) — topic files kholo.
+- [Cheatsheets](08_CHEATSHEETS/) — topic files kholo.

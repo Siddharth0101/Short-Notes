@@ -20,6 +20,9 @@ tags: linked-list, stack, queue, pointers, monotonic-stack
 - Reverse list — previous/current/next pointers se links palto.
 - Cycle detection — slow/fast pointers; meet karein toh cycle.
 - Edge cases — empty, one node, head/tail update.
+- Sentinel node — dummy head se insert/delete ke special cases kam hote hain.
+- Deque — dono ends par add/remove; BFS aur sliding-window patterns mein useful.
+- Fast/slow gap — kth-from-end ke liye fixed pointer gap; invalid k define karo.
 
 ## Sources — aur padhne ke liye
 

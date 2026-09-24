@@ -21,6 +21,9 @@ tags: modules, tooling, http, debugging, testing, npm
 - Debugging — reproduce → breakpoint → state inspect → smallest fix.
 - Environment — browser bundle mein bheja secret public samjho.
 - Deployment — hashed assets long-cache; HTML update/revalidation sochkar karo.
+- Circular import — initialization order matter; module load ke dauran uninitialized binding read fail kar sakti hai.
+- Dependency audit — direct aur transitive packages alag; lockfile diff review karo.
+- Polyfill/transpile — missing runtime API provide / syntax transform; dono same kaam nahi.
 
 ## Research notes: Imports are live read-only bindings
 

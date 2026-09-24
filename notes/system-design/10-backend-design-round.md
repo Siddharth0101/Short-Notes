@@ -19,6 +19,9 @@ visual: transaction-race
 - Payment uncertainty — timeout ko failure ka proof mat maano; reconcile karo.
 - Concurrency — conflict/lock strategy workload aur contention se choose.
 - Evidence — duplicate, concurrent, timeout aur retry cases walkthrough karo.
+- Unique claim — conditional write/constraint winner decide kare; loser ko deterministic conflict response.
+- Reservation token — release exact active claim match kare; old retry new reservation na hataaye.
+- Clock boundary — expiry ke authoritative clock aur delayed worker behavior define.
 
 ## Sources — aur padhne ke liye
 

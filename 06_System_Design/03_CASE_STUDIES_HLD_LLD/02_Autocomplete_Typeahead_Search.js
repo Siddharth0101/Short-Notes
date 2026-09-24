@@ -1,41 +1,25 @@
+/**
+ * ## Quick revision
+ *
+ * - Frontend round — requirements → components/state → data flow → performance → failures.
+ * - API contract — request shape, pagination, errors aur cancellation clear karo.
+ * - Search — debounce + request identity + empty/loading/error states.
+ * - State — URL shareable data; local transient interaction; server cache remote data.
+ * - Performance — measure likely bottleneck; list/image/network budget do.
+ * - Accessibility — keyboard/focus behavior design ka part hai.
+ * - Tradeoff — choice ke saath rejected alternative ka concrete cost bolo.
+ * - Debounce — typing rukne par fetch; query/request ID se old response ignore.
+ * - Abort — obsolete request cancel; latest-result guard phir bhi rakho.
+ * - Combobox — arrow navigation, Enter select, Escape close aur labeled list.
+ * - Cache — normalized query + auth scope; bounded size/freshness.
+ * - Empty/error — blank query, no result aur failure ke separate states.
+ * - Composition input — IME typing ke intermediate text par premature search/selection avoid.
+ * - Active option — result change ho toh highlighted index clamp/reset.
+ * - Submit race — Enter press par currently intended option/query use; stale result ko select mat karo.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * CASE STUDY 02: AUTOCOMPLETE / TYPEAHEAD SEARCH [⚡ SYSTEM DESIGN]
- * ========================================================================
- * SOURCE: Chirag Goel (Frontend System Design)
- *
- * REQUIREMENTS:
- * - User types query into input. Suggestions appear in dropdown within 100ms.
- * - Minimum network requests (do not fire request on every keystroke).
- * - Avoid race conditions (stale response overwriting fresh response).
- * - Client-side caching (LRU Cache).
- * - Full Keyboard accessibility (ArrowUp/ArrowDown/Enter/Escape).
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                   TYPEAHEAD SEARCH ARCHITECTURE                     │
- * │                                                                     │
- * │  [Keypress] ──► [Debounce 300ms] ──► [Check LRU Cache]              │
- * │                                            │                        │
- * │                                    Cache Hit?                       │
- * │                                     ├── YES ──► Display Suggestions │
- * │                                     └── NO  ──► Abort Previous Req  │
- * │                                                  │                  │
- * │                                                  ▼                  │
- * │                                             [Fetch API]             │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. DEBOUNCING VS THROTTLING
- * ========================================================================
- * - Debounce: Wait for a pause in user activity before firing function.
- *   - Perfect for search input, auto-save drafts, window resize.
- * - Throttle: Guarantee function executes at most once every X milliseconds.
- *   - Perfect for scroll listeners, mousemove, infinite scroll sentinels.
- */
 
 // Production Debounce with cancellation
 function debounce(fn, delayMs) {
@@ -49,19 +33,6 @@ function debounce(fn, delayMs) {
   };
 }
 
-/**
- * ========================================================================
- * 2. RACE CONDITIONS & ABORTCONTROLLER
- * ========================================================================
- * SCENARIO:
- * - User types 're' ──► Request 1 fired (takes 400ms due to network jitter).
- * - User types 'react' ──► Request 2 fired (takes 100ms).
- * - Request 2 returns first and renders suggestions for 'react'.
- * - Request 1 returns 300ms LATER and overwrites UI with stale 're' suggestions! (BUG!)
- *
- * FIX: AbortController!
- * Whenever a new fetch is initiated, call `previousController.abort()`.
- */
 
 // LRU Cache implementation for Client-side search caching
 class LRUCache {

@@ -20,6 +20,9 @@ visual: react-identity
 - OTP — paste, deletion, arrow keys aur labels handle karo.
 - Tree UI — node IDs, recursive rendering aur expansion state separate rakho.
 - Acceptance — happy path ke saath keyboard, slow request aur failure check karo.
+- Undo state — action se pehle needed snapshot/delta rakho; history bounded rakho.
+- Empty dataset — zero results par pagination, selection aur totals valid rehne chahiye.
+- Async unmount — pending work ka late result removed view ko update na kare.
 
 ## Sources — aur padhne ke liye
 

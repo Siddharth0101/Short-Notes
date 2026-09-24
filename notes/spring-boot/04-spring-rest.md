@@ -19,6 +19,9 @@ visual: request-flow
 - Status — create 201, missing 404, invalid input 400 jaise contract clear rakho.
 - Idempotency — repeated request ka side effect contract define karo.
 - Pagination — bounded size aur stable ordering do.
+- Content negotiation — Accept expected response type; Content-Type sent body ka type.
+- Path/query/body — resource identity / filters / structured payload ko suitable binding se lo.
+- Entity exposure — internal fields, lazy relations aur schema changes API contract leak kar sakte hain.
 
 ## Sources — aur padhne ke liye
 

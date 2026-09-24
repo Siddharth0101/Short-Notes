@@ -20,6 +20,9 @@ tags: spring-ai, rag, retrieval, evaluation
 - Grounding — answer ke claims ko retrieved evidence se support karo.
 - Evaluation — correct, unknown aur unauthorized questions ka test set.
 - Cost/latency — token budget, timeout aur fallback define karo.
+- Retrieval quality — correct document na mile toh better prompt alone missing evidence fix nahi karta.
+- Embedding version — model/dimension change par stored vectors compatibility aur re-indexing plan.
+- No evidence — supported answer na ho toh uncertainty bolo; fabricated citation mat banao.
 
 ## Sources — aur padhne ke liye
 

@@ -19,6 +19,9 @@ tags: jdbc, sql, transactions, indexes
 - JOIN — related rows jodo; one-to-many se result rows multiply ho sakti hain.
 - Index — reads fast kar sakta hai; writes/storage ka cost badhta hai.
 - Resources — connection, statement aur result set close karo.
+- Batch update — repeated statements group; batch size aur partial failure handle karo.
+- Generated keys — inserted ID driver/database supported API se lo; SELECT MAX(id) concurrency-safe nahi.
+- Connection lifetime — transaction ke statements same connection par; finally mein pool ko release.
 
 ## Sources — aur padhne ke liye
 

@@ -1,5 +1,6 @@
 # Revision format
 
+- Source notes — 142 original files bhi short Hinglish revision format mein hain.
 - Chapters — 108 chapters ko short Hinglish points mein rewrite kiya hai.
 - Style — `term — meaning / zaroori catch`; long explanations hata di hain.
 - Code — optional [examples](../examples/README.md) mein preserved hai.

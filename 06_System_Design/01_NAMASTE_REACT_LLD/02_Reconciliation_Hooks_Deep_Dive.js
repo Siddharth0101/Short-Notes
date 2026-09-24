@@ -1,56 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Render — next UI calculate; commit — DOM updates apply.
+ * - Reconciliation — type, position aur key se identity match hoti hai.
+ * - Stable key — item ID use karo; random key har render remount kar sakti hai.
+ * - State reset — component type/key badalne se local state reset ho sakti hai.
+ * - Conditional UI — `0 && <Item />` zero dikha sakta hai.
+ * - Strict Mode — development mein extra checks; render/effect ko safe rakho.
+ * - Class lifecycle — mount/update/unmount; Hooks mein responsibilities ke hisaab se socho.
+ * - Error boundary — descendant render errors ke fallback; har async/event error nahi pakadti.
+ * - Nested component definition — parent render ke andar component type define karna state reset kara sakta hai.
+ * - Same-value update — React Object.is comparison se redundant state update skip kar sakta hai.
+ * - Portal — DOM location badalti hai; context aur React event propagation parent tree follow karte hain.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 02. RECONCILIATION, REACT FIBER & HOOKS INTERNALS [⚡ NAMASTE REACT]
- * ========================================================================
- * SOURCE: Akshay Saini (Namaste React - Ep 5 to 7)
- *
- * THE CORE PROBLEM REACT SOLVED:
- * - Direct DOM manipulation (document.getElementById, innerHTML) is SLOW
- *   and causes frequent browser reflows and repaints.
- * - React uses Virtual DOM + Reconciliation to find the MINIMUM mutations
- *   needed and batches DOM updates.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                   REACT RECONCILIATION LIFECYCLE                    │
- * │                                                                     │
- * │   [State / Prop Change]                                             │
- * │            │                                                        │
- * │            ▼                                                        │
- * │   1. RENDER PHASE (Virtual DOM Diffing)                             │
- * │      - Builds workInProgress Fiber tree                             │
- * │      - Compares with current Fiber tree (diffing)                   │
- * │      - Pure, no DOM mutations, interruptible in React 18 Concurrent  │
- * │            │                                                        │
- * │            ▼                                                        │
- * │   2. COMMIT PHASE (Real DOM Mutation)                               │
- * │      - Synchronously applies patches to real Browser DOM            │
- * │      - Cannot be interrupted                                        │
- * │      - Runs useLayoutEffect -> DOM Update -> useEffect              │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. REACT FIBER ARCHITECTURE (REACT 16+)
- * ========================================================================
- * - Prior to React 16, the reconciler was "Stack Reconciler" (recursive,
- *   blocking the main thread until the entire tree finished rendering).
- * - React Fiber rewrote the reconciler as a linked-list work-loop.
- * - Fiber Node Structure:
- *   - child: pointer to first child
- *   - sibling: pointer to next sibling
- *   - return: pointer to parent Fiber node
- *   - memoizedState: singly-linked list of hooks for this component!
- *   - alternate: pointer to current/workInProgress counterpart (Double Buffering)
- *
- * DOUBLE BUFFERING IN FIBER:
- * - React maintains two trees:
- *   1. 'current' tree: currently rendered on screen
- *   2. 'workInProgress' tree: being computed in memory during render phase
- * - Once render phase completes, React simply swaps pointers! (Fast!)
- */
 
 // Simulated Fiber node representation
 class FiberNode {
@@ -74,43 +39,6 @@ childFiber.return = rootFiber;
 console.log('--- Fiber Linked List Structure ---');
 console.log('Root tag:', rootFiber.tag, 'Child type:', rootFiber.child.type);
 
-/**
- * ========================================================================
- * 2. THE DIFFING ALGORITHM & WHY KEYS MATTER (O(n) HEURISTIC)
- * ========================================================================
- * - General tree diffing is O(n^3). React achieves O(n) using 2 assumptions:
- *   1. Elements of different types produce completely different trees.
- *      <div><Counter /></div> -> <span><Counter /></span> destroys Counter!
- *   2. Keys identify which children are stable across re-renders.
- *
- * ⚠️ WHY NOT USE INDEX AS KEY?
- * - If items are filtered, sorted, prepended, or deleted:
- *   - Item 0 becomes Item 1, but its key was 0!
- *   - React thinks the existing component just received new props,
- *     leading to state corruption, input focus bugs, and unnecessary re-renders.
- * - BEST PRACTICE: Always use unique, stable IDs from database (e.g. res.id).
- * - NEVER use Math.random() as key! (Generates new key every render, destroying component).
- */
-
-/**
- * ========================================================================
- * 3. HOOKS UNDER THE HOOD — WHY RULES OF HOOKS EXIST
- * ========================================================================
- * Rule 1: Only call hooks at the TOP level (never in if/for/nested functions).
- * Rule 2: Only call hooks from React function components or custom hooks.
- *
- * WHY?
- * React does NOT know hooks by name. React tracks hooks using an INTERNAL
- * SINGLY-LINKED LIST stored on the Fiber's memoizedState!
- *
- * Render 1:
- *   Hook 1: useState(0)      ──► Hook Node A { memoizedState: 0, next: B }
- *   Hook 2: useEffect(fn)    ──► Hook Node B { memoizedState: fn, next: C }
- *   Hook 3: useState('John') ──► Hook Node C { memoizedState: 'John', next: null }
- *
- * Render 2 (if you put Hook 1 inside `if (condition)` and it skipped):
- *   Hook 2 would read Hook Node A's memory! State gets completely shifted & corrupted!
- */
 
 // Simulated Hook Linked List
 class HookNode {
@@ -136,19 +64,3 @@ function simulateComponentHooks() {
 }
 
 simulateComponentHooks();
-
-/**
- * ========================================================================
- * 4. USEEFFECT & SHIMMER UI PATTERN
- * ========================================================================
- * - Never block page rendering while fetching data from APIs.
- * - Pattern: Render Page Skeleton (Shimmer UI) ──► Fetch API ──► Re-render with Data.
- *
- * Dependency Array Rules:
- * - No dependency array: useEffect runs on initial mount + EVERY re-render.
- * - Empty array []: runs ONLY ONCE after initial render.
- * - [stateVar]: runs on mount + whenever stateVar changes (Object.is comparison).
- * - Cleanup function (return () => { ... }):
- *   - Runs when component unmounts.
- *   - Runs BEFORE re-running the effect on dependency change (cancelling stale timers/fetch).
- */

@@ -1,39 +1,26 @@
+/**
+ * ## Quick revision
+ *
+ * - Realtime — WebSocket/SSE choose interaction direction aur infra se.
+ * - Message ID — stable client/server identity; reconnect duplicates dedupe karo.
+ * - Ack — accepted, persisted aur delivered ka meaning alag define karo.
+ * - Reconnect — last cursor/sequence se missed events replay.
+ * - Ordering — conversation/document scope; global order zaroori nahi hota.
+ * - Presence — temporary state; heartbeat/TTL se stale users expire.
+ * - Collaboration — OT/CRDT ya server serialization ka conflict contract choose.
+ * - Snapshot — compact durable state + later operations replay.
+ * - Permissions — subscription aur every write par access validate.
+ * - Optimistic message — temp ID se show; ack par reconcile, failure par retry.
+ * - Typing — throttled temporary signal; expiry se stale indicator hatao.
+ * - History — prepend par scroll anchor preserve; new message auto-scroll only when appropriate.
+ * - Delivery state — sent/persisted/delivered/read ka clear meaning.
+ * - Unread cursor — last-read position server record se; temporary view count alone reliable nahi.
+ * - Offline send — queued message ID retry par same; duplicate optimistic bubbles reconcile.
+ * - Edit/delete event — referenced message unloaded ho toh later history fetch mein consistent state mile.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * CASE STUDY 04: REALTIME CHAT APPLICATION (WHATSAPP / SLACK) [⚡ SYSTEM DESIGN]
- * ========================================================================
- * SOURCE: Chirag Goel (Frontend System Design)
- *
- * REQUIREMENTS:
- * - Real-time 1:1 and Group chats.
- * - Message lifecycle: Pending ──► Sent ──► Delivered ──► Read.
- * - Optimistic UI updates (message appears immediately before server ACK).
- * - Offline message store (IndexedDB).
- * - Typing indicators with throttling.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                   MESSAGE LIFECYCLE & OPTIMISTIC UI                 │
- * │                                                                     │
- * │  [User hits Send] ──► Inject temporary optimistic message (Pending) │
- * │         │                                                           │
- * │         ├── WebSocket Connected?                                    │
- * │         │    ├── YES ──► Emit `chat:send` ──► Receive ACK (Sent)    │
- * │         │    └── NO  ──► Push to IndexedDB Outbox Queue             │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. OPTIMISTIC UI PATTERN
- * ========================================================================
- * - Generate a temporary client-side ID: `temp-178901923-xyz`.
- * - Immediately insert message into React state with status `PENDING` (clock icon).
- * - Once WebSocket receives server ACK with permanent database ID:
- *   Replace temp ID with permanent ID and update status to `SENT` (single tick).
- * - If request fails or times out: Mark status as `FAILED` (red exclamation with Retry button).
- */
 
 // Simulated Optimistic Message Dispatcher
 class ChatStateStore {
@@ -73,21 +60,3 @@ const tempMsgId = chatStore.sendOptimisticMessage('Hey Sidd, system design notes
 setTimeout(() => {
   chatStore.handleServerAck(tempMsgId, 'msg_db_998124');
 }, 50);
-
-/**
- * ========================================================================
- * 2. TYPING INDICATOR PROTOCOL (THROTTLING)
- * ========================================================================
- * - DO NOT emit WebSocket event on every keystroke!
- * - Throttle `typing:start` event to once every 3 seconds.
- * - If user stops typing for 2 seconds, send `typing:stop`.
- *
- * 3. INVERTED SCROLL FOR CHAT HISTORY:
- * - Default list starts pinned at the BOTTOM.
- * - Scrolling UP loads older messages.
- * - Preserving scroll position:
- *   `previousScrollHeight = element.scrollHeight;`
- *   Prepend 50 older messages to state;
- *   `element.scrollTop = element.scrollHeight - previousScrollHeight;`
- *   (Prevents the list from jumping to the very top!)
- */

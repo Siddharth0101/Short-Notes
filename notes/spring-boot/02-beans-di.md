@@ -18,6 +18,9 @@ tags: spring, beans, dependency-injection
 - `@Qualifier`/`@Primary` — multiple matching beans mein selection clear karo.
 - Lifecycle — initialization aur destruction callbacks resource ownership se match karo.
 - Circular dependency — responsibilities/design split karo.
+- `@Bean` — factory method ka returned object container manage karta hai.
+- Prototype scope — har container lookup par naya instance; injected singleton automatically har call par refresh nahi karta.
+- Optional dependency — absence valid ho tab explicit optional/provider contract; required bean ko silently hide mat karo.
 
 ## Sources — aur padhne ke liye
 

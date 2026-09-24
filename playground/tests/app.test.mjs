@@ -84,7 +84,7 @@ after(async () => {
 test('Dashboard displays actual chapter/reference/visual totals and subject navigation', async () => {
   localStorage.clear();
   await mount('/');
-  assert.match(text(), /Har din thoda aur clear/);
+  assert.match(text(), /Chhote notes. Clear concepts/);
   assert.equal(document.querySelectorAll('.track-card').length, 7);
   assert.equal(document.querySelectorAll('.stat strong')[0].textContent, `${notes.length}↗`);
   assert.equal(document.querySelectorAll('.stat strong')[1].textContent, String(archive.length));
@@ -171,18 +171,21 @@ test('Deep-linked search and track filters show relevant content and empty state
   assert.match(text(), /Koi note nahi mila/);
 });
 
-test('Library and paths share staged course order and keep lesson numbers stable in search', async () => {
+test('Library stays compact while paths show stages; both keep lesson numbers stable', async () => {
   for (const route of ['/library?track=javascript', '/paths?track=javascript']) {
     await mount(route);
-    assert.equal(document.querySelectorAll('.course-outline').length, 1);
+    assert.equal(
+      document.querySelectorAll('.course-outline').length,
+      route.startsWith('/paths') ? 1 : 0,
+    );
     assert.equal(
       document.querySelectorAll('.course-stage').length,
-      courses.javascript.stages.length,
+      route.startsWith('/paths') ? courses.javascript.stages.length : 0,
     );
     assert.match(document.querySelector('.note-row h3').textContent, /Variables and assignment/);
     assert.equal(
       document.querySelectorAll('.stage-checkpoint').length,
-      courses.javascript.stages.length,
+      route.startsWith('/paths') ? courses.javascript.stages.length : 0,
     );
   }
   await mount('/library?track=javascript&q=closures');
@@ -198,12 +201,12 @@ test('Library and paths share staged course order and keep lesson numbers stable
 
 test('Readers follow the new syllabus across stage boundaries while retaining original IDs', async () => {
   await mount('/notes/js-arrays-objects');
-  assert.match(document.querySelector('.reader-course-context').textContent, /Stage 1/);
-  assert.match(document.querySelector('.reader-course-context').textContent, /Lesson 6/);
+  assert.match(document.querySelector('.reader-quick-actions').textContent, /Stage 1/);
+  assert.match(document.querySelector('.reader-quick-actions').textContent, /Lesson 6/);
   assert(document.querySelector('.chapter-navigation a[href="/notes/js-modern-data-collections"]'));
   assert(document.querySelector('.stage-checkpoint'));
   await mount('/notes/js-language-foundations');
-  assert.match(document.querySelector('.reader-course-context').textContent, /Stage 2/);
+  assert.match(document.querySelector('.reader-quick-actions').textContent, /Stage 2/);
   assert.match(document.querySelector('.reader h1').textContent, /Foundations checkpoint/);
   await mount('/notes/java-jpa-transactions');
   assert(document.querySelector('.chapter-navigation a[href="/notes/spring-validation-errors"]'));
@@ -523,11 +526,91 @@ test('Java and Spring Boot expose independent courses with stable reader links',
   await mount('/paths?track=spring-boot');
   assert(document.querySelector('.course-readiness a[href="/notes/java-maven-testing"]'));
   await mount('/notes/java-jpa-transactions');
-  assert(document.querySelector('.reader-course-context a[href="/paths?track=spring-boot"]'));
+  assert(document.querySelector('.reader-quick-actions a[href="/paths?track=spring-boot"]'));
   assert.match(
-    document.querySelector('.reader-course-context').textContent,
-    new RegExp(`Lesson 6 of ${notes.filter((n) => n.track === 'spring-boot').length}\\b`),
+    document.querySelector('.reader-quick-actions').textContent,
+    new RegExp(`Lesson 6 / ${notes.filter((n) => n.track === 'spring-boot').length}\\b`),
   );
   await mount('/interview?track=spring-boot');
   assert(document.querySelector('.question-card'));
+});
+
+test('Progress filters narrow notes and reset restores the collection', async () => {
+  localStorage.setItem(
+    'shortnotes.progress.v1',
+    JSON.stringify({ saved: [], completed: [notes[0].id], recent: [], known: [] }),
+  );
+  await mount('/library?status=completed');
+  assert.equal(document.querySelectorAll('.note-row').length, 1);
+  assert(document.querySelector(`.note-row-body[href="/notes/${notes[0].id}"]`));
+  await select(document.querySelector('[aria-label="Filter progress"]'), 'pending');
+  assert.equal(document.querySelectorAll('.note-row').length, notes.length - 1);
+  await click(button('Reset filters'));
+  assert.equal(document.querySelectorAll('.note-row').length, notes.length);
+  assert.equal(document.querySelector('[aria-label="Filter progress"]').value, 'all');
+  localStorage.clear();
+});
+
+test('Continue revision reopens the recent unfinished chapter', async () => {
+  const recent = notes.find((note) => note.track === 'javascript' && note.order === 5);
+  localStorage.setItem(
+    'shortnotes.progress.v1',
+    JSON.stringify({ saved: [], completed: [], recent: [recent.id], known: [] }),
+  );
+  await mount('/');
+  assert.equal(
+    document.querySelector('.revision-launch .primary-button').getAttribute('href'),
+    `/notes/${recent.id}`,
+  );
+  localStorage.clear();
+});
+
+test('Mobile navigation blocks background interaction and closes on Escape and navigation', async () => {
+  await mount('/');
+  const opener = button('Open navigation');
+  opener.focus();
+  await click(opener);
+  assert(document.querySelector('.sidebar.is-open'));
+  assert(document.querySelector('.workspace-main').hasAttribute('inert'));
+  assert.equal(document.body.style.overflow, 'hidden');
+  await React.act(async () =>
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })),
+  );
+  assert(!document.querySelector('.sidebar.is-open'));
+  assert(!document.querySelector('.workspace-main').hasAttribute('inert'));
+  assert.equal(document.activeElement, opener);
+  await click(opener);
+  await click(document.querySelector('.subject-nav a'));
+  assert(!document.querySelector('.sidebar.is-open'));
+  assert.equal(document.body.style.overflow, '');
+});
+
+test('Global search reflects deep-linked queries and selected subject buttons expose their state', async () => {
+  await mount('/library?track=react&q=hooks');
+  assert.equal(document.querySelector('[aria-label="Search all notes"]').value, 'hooks');
+  assert.equal(
+    document.querySelector('.filter-chips button.active').getAttribute('aria-pressed'),
+    'true',
+  );
+  await click(button('Clear search'));
+  assert.equal(document.querySelector('[aria-label="Search all notes"]').value, '');
+});
+
+test('Interview subject and topic filters combine without silently clearing each other', async () => {
+  await mount('/interview?track=react');
+  await select(document.querySelector('[aria-label="Interview topic"]'), 'redux');
+  assert.equal(document.querySelector('.filter-chips .active').textContent.trim(), 'React');
+  const expected = interviewQuestions.filter(
+    (item) => item.track === 'react' && questionTopic(item) === 'redux',
+  );
+  assert.match(
+    document.querySelector('.results-heading').textContent,
+    new RegExp(`${expected.length} questions`),
+  );
+  await click(button('Reset filters'));
+  assert.equal(document.querySelector('[aria-label="Interview topic"]').value, 'all');
+  assert.equal(
+    document.querySelector('.filter-chips .active').textContent.trim(),
+    'Saare subjects',
+  );
 });

@@ -19,6 +19,9 @@ tags: api, graphql, grpc, rest, batching
 - Contract evolution — backward-compatible fields/status/schema changes.
 - Deadline — client budget downstream propagate; cancellation cooperative hai.
 - Idempotency — write retries ka duplicate-effect contract har protocol mein chahiye.
+- API version — additive field bhi strict clients ko affect kar sakta hai; compatibility test karo.
+- Retry signal — overload par appropriate status + retry timing; client retry budget respect kare.
+- Pagination token — opaque cursor validate/sign as needed; user-supplied cursor authorization bypass na kare.
 
 ## Sources — aur padhne ke liye
 

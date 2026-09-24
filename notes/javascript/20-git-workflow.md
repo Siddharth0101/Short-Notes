@@ -21,6 +21,9 @@ tags: git, tooling, collaboration, debugging
 - `reset` — branch/index/worktree badal sakta hai; mode samajhkar use karo.
 - `.gitignore` — already tracked file ko untrack nahi karta.
 - Review — commit se pehle `git diff` aur staged diff padho.
+- `stash` — temporary local changes side mein; long-term backup ka replacement nahi.
+- `cherry-pick` — selected commit ka change current branch par apply.
+- `reflog` — local ref movement history; misplaced commit locate karne mein useful.
 
 ## Sources — aur padhne ke liye
 

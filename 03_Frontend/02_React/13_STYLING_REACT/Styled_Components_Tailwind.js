@@ -1,34 +1,21 @@
+/**
+ * ## Quick revision
+ *
+ * - Composition — small components ko `children`/props se jodo.
+ * - Container — data/control sambhalo; presentational component UI dikhaye.
+ * - Compound components — related parts shared contract/state ke saath kaam karein.
+ * - Controlled API — parent state own kare; uncontrolled API — component own kare.
+ * - CSS Modules — class names scoped; global styles ka accidental clash kam.
+ * - Tailwind — utility classes se style; repeated pattern ko readable rakho.
+ * - Styled components — component ke saath styles; runtime/build tradeoff dekho.
+ * - Accessibility — reusable component mein label, keyboard aur focus contract rakho.
+ * - Style specificity — generated class aur global override ke conflict mein cascade inspect karo.
+ * - Theme token — colors/spacing semantic names se; every component mein magic values repeat mat karo.
+ * - Dynamic classes — build-time class discovery ke saath runtime-generated names ka compatibility verify.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * STYLING IN REACT - STYLED COMPONENTS, CSS MODULES & TAILWIND [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - Jonas covers CSS Modules, Styled Components, and Tailwind CSS in the React course.
- *
- * STYLING OPTIONS COMPARISON:
- * ┌──────────────────────┬───────────────────────────────┬────────────────────────┐
- * │ Option               │ Syntax                        │ Scope                  │
- * ├──────────────────────┼───────────────────────────────┼────────────────────────┤
- * │ Inline Styles        │ style={{ color: 'red' }}      │ Local element          │
- * │ Global CSS           │ import './index.css'          │ Global (can collide)   │
- * │ CSS Modules          │ import styles from '.module'  │ Scoped to component    │
- * │ Styled Components    │ styled.button`color: red;`     │ Component + Dynamic JS │
- * │ Tailwind CSS         │ className="p-4 bg-blue-500"   │ Utility classes        │
- * └──────────────────────┴───────────────────────────────┴────────────────────────┘
- */
-
-
-/**
- * ========================================================================
- * 1. STYLED COMPONENTS (CSS-in-JS)
- * ========================================================================
- * NOTES:
- * - Write actual CSS inside JS using tagged template literals.
- * - Dynamic styling based on component props.
- * - Used in Jonas's "The Wild Oasis" project.
- */
 
 // import styled, { css } from 'styled-components';
 
@@ -52,29 +39,12 @@
 // // Usage: <Button variation="danger">Delete</Button>
 
 
-/**
- * ========================================================================
- * 2. CSS MODULES
- * ========================================================================
- * NOTES:
- * - CSS file named `Button.module.css`.
- * - Styles are scoped automatically with unique generated class names.
- */
-
 // import styles from './Button.module.css';
 //
 // function Button({ children }) {
 //     return <button className={styles.btn}>{children}</button>;
 // }
 
-
-/**
- * ========================================================================
- * 3. TAILWIND CSS IN REACT
- * ========================================================================
- * NOTES:
- * - Utility-first CSS framework used in Jonas's "Fast React Pizza" project.
- */
 
 // function PizzaCard({ name, price }) {
 //     return (

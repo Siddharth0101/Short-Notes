@@ -20,6 +20,9 @@ tags: storage, indexeddb, offline, versioning
 - Quota — writes fail ho sakti hain; fallback aur error handling rakho.
 - `storage` event — doosre matching documents ko change pata chalta hai; writer ko nahi.
 - Offline conflict — version/merge rule rakho; last write blindly accept mat karo.
+- Schema version — stored data ka version rakho; old format migrate ya safe fallback.
+- Atomic browser data — related IndexedDB changes same transaction mein group karo.
+- Storage scope — origin badla toh storage alag; private mode/blocked storage failure handle karo.
 
 ## Sources — aur padhne ke liye
 

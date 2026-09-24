@@ -19,6 +19,9 @@ tags: fundamentals, js, loops
 - Index — array mein `0` se `length - 1` tak; condition `i < length`.
 - Infinite loop — condition kabhi false na ho; counter/update check karo.
 - Nested loop — cost iterations ke total se nikalo; hamesha O(n²) assume mat karo.
+- Accumulator — total/count ko loop se pehle initialize, andar update karo.
+- Reverse traversal — end se delete karne par remaining earlier indices shift nahi hote.
+- Iterable — `for...of` plain object par direct nahi; `Object.entries(obj)` use kar sakte ho.
 
 ## Sources — aur padhne ke liye
 

@@ -19,6 +19,9 @@ tags: servlet, mvc, jsp, request-lifecycle
 - Forward — server-side dispatch; redirect — client ki nayi request.
 - JSP — server-side view rendering; output escape karo.
 - MVC — controller input, model data, view presentation.
+- Request attribute — same request dispatch mein data; redirect ki nayi request mein automatically nahi.
+- Session state — multiple tabs/requests share kar sakti hain; mutable data concurrency-safe rakho.
+- Filter/interceptor — servlet chain boundary / MVC handler boundary; responsibilities alag.
 
 ## Sources — aur padhne ke liye
 

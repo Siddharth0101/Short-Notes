@@ -19,8 +19,13 @@ tags: testing, accessibility, forms, react
 - Accessibility — semantic HTML, labels, contrast aur keyboard flow.
 - Focus — modal/route/error ke baad focus meaningful jagah par rahe.
 - Coverage — line percentage se zyada important user journeys aur failure cases.
+- `useId` — accessible label/description IDs banane ke liye; list keys ke liye data ID use karo.
+- Accessible name — visible label aur control name match; icon-only button ko label do.
+- Test cleanup — mounted UI, mocks aur fake timers next test mein leak na hon.
 
 ## Sources — aur padhne ke liye
+
+- [React useId](https://react.dev/reference/react/useId)
 
 - [Testing Library principles](https://testing-library.com/docs/guiding-principles/)
 - [queries](https://testing-library.com/docs/queries/about/)

@@ -1,11 +1,9 @@
 # SQL Short Notes
 
-## Padhne ka suggested order
+- Style — `term — short Hinglish meaning / important catch`.
+- Revision — [saare subjects](../../../notes/README.md).
+- Code — examples ke liye relevant source file kholo.
 
-1. `01_POSTGRES/README.md`
+## Topics
 
-## Yahan kya cover hai
-
-- SQL relational database concepts
-- PostgreSQL fundamentals and advanced features
-- Stephen Grider's SQL and PostgreSQL course topics
+- [Postgres](01_POSTGRES/README.md) — topic files kholo.

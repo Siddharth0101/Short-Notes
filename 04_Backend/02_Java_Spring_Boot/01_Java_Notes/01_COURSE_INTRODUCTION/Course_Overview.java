@@ -1,33 +1,16 @@
 /**
- * ========================================================================
- * 01. COURSE INTRODUCTION & OVERVIEW
- * ========================================================================
- * NOTES:
- * - Telusko ka Java + Spring Boot + Microservices ecosystem Masterclass.
- * - Ye course completely beginner to advanced hai, production-level backend development sikhane ke liye.
- * - Java market me bohot demand me hai (Enterprise level applications).
- * 
- * WHY LEARN JAVA & SPRING BOOT?
- * - Stability: Java 25+ years se industry standard hai.
- * - Ecosystem: JVM (Java Virtual Machine) ek bohot powerful execution engine hai.
- * - Spring Boot: Ye Java development ko itna fast aur aasan bana deta hai ki Node.js/Python ke barabar speed milati hai but with Java's raw performance.
- * - Microservices: Badi applications (Netflix, Uber, Amazon) microservices pe chalti hain, aur Spring Cloud iska best solution hai.
- * 
- * THE COMPLETE ROADMAP:
- * 1. Core Java: Basics, variables, loops, arrays, OOPs (Class, Object, Inheritance, Polymorphism).
- * 2. Advance Java: Exception handling, Collections (List, Set, Map), Multithreading, Streams API.
- * 3. Build Tools (Maven): External JAR files aur dependencies manage karne ka tarika.
- * 4. Databases (JDBC & Hibernate ORM): SQL queries se lekar Java Objects ko directly DB me save karna.
- * 5. Spring Core (IoC & DI): Objects ka control aur injection container ko dena.
- * 6. Spring Boot: REST APIs banana bina lambi XML configurations ke.
- * 7. Spring Security & JWT: Apni API ko secure karna taaki unauthorized log access na kar payein.
- * 8. Spring AI: LLM (OpenAI, local models) ko apni application me integrate karna.
- * 9. Docker & Microservices: App ko containerize karna taaki kisi bhi environment me smoothly chale.
- * 
- * LEARNING MINDSET:
- * - Code type karo, sirf dekho mat (Muscle memory is real).
- * - Errors se daro mat, read the stack trace.
- * - Concepts samjho (Why?) syntax apne aap yaad ho jayega.
+ * ## Quick revision
+ *
+ * - JDK — Java develop karne ke tools; JVM — bytecode chalane ka runtime.
+ * - Compile/run — `javac Main.java` → `java Main`.
+ * - `main` — standard entry point `public static void main(String[] args)`.
+ * - Class/file — public top-level class ka naam filename se match karo.
+ * - Primitive — direct primitive value; reference — object ka reference ya null.
+ * - Variable — declared type compatible value hi assign karo.
+ * - `println` — output ke baad newline; `print` — same line.
+ * - Bytecode — compiled class instructions; compatible JVM execute karti hai.
+ * - Local variable — use se pehle assign karna zaroori; fields ko default values milti hain.
+ * - Command-line args — main ka String array; numeric input explicitly parse/validate karo.
  */
 
 public class Course_Overview {

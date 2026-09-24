@@ -19,12 +19,17 @@ tags: mongodb, crud, bson, modeling, embedding, references
 - Reference — shared, independently changing ya unbounded relation.
 - Atomicity — single-document write atomic; multiple documents ke liye boundary plan karo.
 - Schema design — query/access pattern se start karo.
+- `$inc` — atomic numeric increment; application read-then-write race se bacho.
+- Projection — needed fields hi return; network payload aur sensitive-field exposure kam.
+- `$elemMatch` — array ke ek hi element ko saari supplied conditions satisfy karni hoti hain.
 
 ## Research notes: Model bounded growth and data ownership
 
 - Embedding related data ko reads/atomic updates ke liye saath rakhti hai.
 
 ## Sources — aur padhne ke liye
+
+- [MongoDB elemMatch](https://www.mongodb.com/docs/manual/reference/operator/query/elemmatch/)
 
 - [Source yahan padho — MongoDB](https://www.mongodb.com/docs/manual/data-modeling/)
 - [MongoDB CRUD operations](https://www.mongodb.com/docs/manual/crud/)

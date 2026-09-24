@@ -20,6 +20,9 @@ tags: oop, encapsulation, inheritance, polymorphism, abstraction, classes, closu
 - Private state — `#field`/closure se direct outside mutation roko.
 - Mini-project — model mein rules, UI mein display aur handlers rakho.
 - Serialization — JSON methods/prototypes preserve nahi karta; restore par validate karo.
+- Dependency injection — storage/network collaborator bahar se do; testing aur swapping easier.
+- Method contract — mutation hoti hai ya naya object milta hai, caller ko clear rakho.
+- Deep freeze — `Object.freeze` shallow hai; nested objects separately freeze karne padte hain.
 
 ## Sources — aur padhne ke liye
 

@@ -1,39 +1,30 @@
+/**
+ * ## Quick revision
+ *
+ * - Composition — small components ko `children`/props se jodo.
+ * - Container — data/control sambhalo; presentational component UI dikhaye.
+ * - Compound components — related parts shared contract/state ke saath kaam karein.
+ * - Controlled API — parent state own kare; uncontrolled API — component own kare.
+ * - CSS Modules — class names scoped; global styles ka accidental clash kam.
+ * - Tailwind — utility classes se style; repeated pattern ko readable rakho.
+ * - Styled components — component ke saath styles; runtime/build tradeoff dekho.
+ * - Accessibility — reusable component mein label, keyboard aur focus contract rakho.
+ * - Profiler — pehle slow render/interaction measure karo.
+ * - `memo` — same props par render skip kar sakta hai; state/context updates phir bhi aa sakti hain.
+ * - `useMemo` — expensive calculation cache; correctness ispar depend mat karao.
+ * - `useCallback` — function identity cache; har callback ko wrap karna zaroori nahi.
+ * - Lazy loading — route/component code zaroorat par load karo.
+ * - Suspense — supported suspending work ka fallback; normal effect fetch auto-handle nahi hota.
+ * - Transition — non-urgent update mark; computation magically cheap nahi hoti.
+ * - Virtualization — visible list window render; stable identity/accessibility preserve karo.
+ * - Production — bundle, errors, accessibility aur real-user performance verify karo.
+ * - Render prop — function prop se caller ko rendering customize karne do.
+ * - Prop spreading — internal/private props blindly DOM par forward mat karo.
+ * - Component boundary — reusable API small rakho; har styling detail ko configuration prop mat banao.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * 04. PRODUCTION PATTERNS & CODE SPLITTING OPTIMIZATIONS [⚡ NAMASTE REACT]
- * ========================================================================
- * SOURCE: Akshay Saini (Namaste React - Ep 9 to 11)
- *
- * GOAL:
- * - Scalable production React patterns that prevent bloat, improve Core Web Vitals,
- *   and adhere to SOLID principles.
- *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │                   PRODUCTION CHUNKING & LAZY LOADING                │
- * │                                                                     │
- * │  Single Monolith Bundle (BAD)   ──► 6 MB JS on initial load!        │
- * │                                      Slow TTFB, high bounce rate.   │
- * │                                                                     │
- * │  Chunked On-Demand (GOOD)       ──► Core App: 120 KB                │
- * │                                     Cart Feature: 40 KB (on click)  │
- * │                                     Grocery Module: 180 KB (lazy)   │
- * └─────────────────────────────────────────────────────────────────────┘
- */
-
-/**
- * ========================================================================
- * 1. CUSTOM HOOKS & SINGLE RESPONSIBILITY PRINCIPLE (EP 9)
- * ========================================================================
- * - A custom hook is simply a JavaScript utility function whose name starts
- *   with 'use' and which can call other React hooks.
- * - Decouples Business/Data logic from UI/Presentation layer.
- *
- * Example: useOnlineStatus
- * - Detects navigator.onLine changes.
- * - Shows an offline banner if user internet disconnects.
- */
 
 // Simulated custom hook logic
 function createUseOnlineStatusSimulator() {
@@ -67,51 +58,6 @@ networkTracker.setNetworkStatus(false);
 networkTracker.setNetworkStatus(true);
 unsubscribe();
 
-/**
- * ========================================================================
- * 2. CHUNKING / CODE SPLITTING / LAZY LOADING (EP 10)
- * ========================================================================
- * Other Names:
- * - Dynamic Bundling
- * - Code Splitting
- * - Chunking
- * - On-Demand Loading
- *
- * HOW TO IMPLEMENT IN REACT:
- * ```javascript
- * import { lazy, Suspense } from 'react';
- *
- * // Bundler creates a separate JS chunk (e.g. Grocery.chunk.js)
- * const Grocery = lazy(() => import('./components/Grocery'));
- *
- * function App() {
- *   return (
- *     <Routes>
- *       <Route
- *         path="/grocery"
- *         element={
- *           <Suspense fallback={<ShimmerUI />}>
- *             <Grocery />
- *           </Suspense>
- *         }
- *       />
- *     </Routes>
- *   );
- * }
- * ```
- * ⚠️ GOTCHA: If you use React.lazy WITHOUT <Suspense>, React throws a runtime
- * error because rendering suspends while the JS bundle is in transit over the network!
- */
-
-/**
- * ========================================================================
- * 3. HIGHER ORDER COMPONENTS (HOC) — EP 11
- * ========================================================================
- * - An HOC is a pure function that takes an existing component and returns
- *   an enhanced component with extra props or UI wrappers.
- * - Pattern: Input Component ──► Enhance ──► Output Component.
- * - Does NOT modify original component; wraps it cleanly.
- */
 
 // HOC pattern simulation in plain JS
 function withPromotedBadge(CardComponent) {
@@ -137,20 +83,3 @@ const renderedCard = PromotedRestaurantCard({ name: 'Meghana Foods', rating: 4.6
 
 console.log('--- Higher Order Component Output ---');
 console.log(renderedCard);
-
-/**
- * ========================================================================
- * 4. CONTROLLED VS UNCONTROLLED COMPONENTS & LIFTING STATE UP
- * ========================================================================
- * - Controlled Component:
- *   - The component's state is controlled entirely by its parent via props.
- *   - Example: AccordionItem receives `isOpen={activeIndex === index}` and `onToggle={() => setActiveIndex(index)}`.
- *
- * - Uncontrolled Component:
- *   - The component maintains its own local state (e.g. `const [isOpen, setIsOpen] = useState(false)`).
- *   - The parent has NO control over whether it opens or closes.
- *
- * - Lifting State Up:
- *   - Moving state from sibling components up to their common parent so siblings
- *     stay in sync (e.g., only one accordion tab open at a time).
- */

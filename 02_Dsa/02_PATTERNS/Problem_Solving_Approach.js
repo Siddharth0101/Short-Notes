@@ -1,64 +1,22 @@
+/**
+ * ## Quick revision
+ *
+ * - Big-O — input badhne par upper-bound growth; exact milliseconds nahi.
+ * - O(1) — constant; O(log n) — range shrink; O(n) — single scan.
+ * - O(n log n) — efficient comparison sorts; O(n²) — many pairwise scans.
+ * - Space — auxiliary memory aur recursion stack count karo.
+ * - Worst/average/amortized — alag guarantees; interchangeable nahi.
+ * - Amortized — operations ki sequence ka total cost average karo.
+ * - Recursion — calls × per-call work; stack depth bhi count karo.
+ * - Solve — constraints → brute force → bottleneck → invariant → optimize.
+ * - JS trap — `shift`, `slice`, spread aur string copies ka cost mat bhoolo.
+ * - Independent inputs — two lists sizes n,m hon toh O(n+m); blindly O(n) mat bolo.
+ * - Log base — constant bases Big-O mein equivalent; repeated halving logarithmic growth deta hai.
+ * - Output space — result materialize karna required ho toh minimum output-size cost bhi batao.
+ */
+
 'use strict';
 
-/**
- * ========================================================================
- * PROBLEM SOLVING APPROACH - HOW TO THINK IN DSA [⚡ VISUAL]
- * ========================================================================
- * NOTES:
- * - DSA me sabse pehle coding nahi, thinking hoti hai.
- * - Agar problem clear nahi hai to code messy ho jaata hai.
- * - Ye approach Colt Steele style interviews ke liye very useful hai.
- */
-
-
-/**
- * ========================================================================
- * 1. UNDERSTAND THE PROBLEM
- * ========================================================================
- * QUESTIONS:
- * - Inputs kya hain?
- * - Output kya chahiye?
- * - Input size kitna ho sakta hai?
- * - Invalid input handle karna hai kya?
- * - Kya order matter karta hai?
- * - Kya duplicates allowed hain?
- * - Time/space constraints kya hain?
- *
- * INTERVIEW LINE:
- * - "Can I clarify the input and expected output first?"
- */
-
-
-/**
- * ========================================================================
- * 2. EXPLORE EXAMPLES
- * ========================================================================
- * NOTES:
- * - Simple examples lo.
- * - Edge cases lo.
- * - Empty input, one item, duplicates, negative numbers, sorted/unsorted.
- *
- * Problem: Write function that returns char count for a string.
- * Examples:
- * Input:  'hello'  -> Output: { h: 1, e: 1, l: 2, o: 1 }
- * Input:  ''       -> Output: {}
- * Input:  'Hi hi!' -> should case matter? Should symbols count?
- */
-
-
-/**
- * ========================================================================
- * 3. BREAK IT DOWN
- * ========================================================================
- * NOTES:
- * - Code likhne se pehle steps comments me likho.
- * - Ye half battle jeet leta hai.
- *
- * EXAMPLE - charCount:
- * Input:  'Hello World'
- * Output: { h: 1, e: 1, l: 3, o: 2, w: 1, r: 1, d: 1 }
- *         (lowercase, only alphanumeric, spaces ignored)
- */
 
 function charCount(str) {
     // 1. Empty object banao.
@@ -95,39 +53,6 @@ console.log(charCount('')); // {}
 console.log(charCount('abc123')); // { a: 1, b: 1, c: 1, '1': 1, '2': 1, '3': 1 }
 
 
-/**
- * ========================================================================
- * 4. SOLVE OR SIMPLIFY
- * ========================================================================
- * NOTES:
- * - Agar full problem hard lag rahi hai, easy part pehle solve karo.
- * - Hard part ko temporarily ignore karke working version banao.
- * - Phir missing complexity add karo.
- *
- * EXAMPLE:
- * - Pehle char count without validation.
- * - Phir lowercase.
- * - Phir only alphanumeric filter.
- */
-
-
-/**
- * ========================================================================
- * 5. LOOK BACK AND REFACTOR
- * ========================================================================
- * QUESTIONS:
- * - Kya result correct hai?
- * - Kya code readable hai?
- * - Kya time complexity improve ho sakti hai?
- * - Kya space complexity improve ho sakti hai?
- * - Kya edge cases pass ho rahe hain?
- * - Kya variable names meaningful hain?
- *
- * EXAMPLE - charCountRefactored:
- * Input:  'Hello World'
- * Output: { h: 1, e: 1, l: 3, o: 2, w: 1, r: 1, d: 1 }
- */
-
 function charCountRefactored(str) {
     const result = {};
 
@@ -158,21 +83,3 @@ console.log(charCountRefactored('Hello World')); // { h: 1, e: 1, l: 3, o: 2, w:
 // Sample Input:  '2fast2furious'
 // Expected Output: { 2: 2, f: 2, a: 1, s: 1, t: 1, u: 2, r: 1, i: 1, o: 1 }
 console.log(charCountRefactored('2fast2furious')); // { '2': 2, f: 2, a: 1, s: 1, t: 1, u: 2, r: 1, i: 1, o: 1 }
-
-
-/**
- * ========================================================================
- * 6. PROBLEM SOLVING CHECKLIST
- * ========================================================================
- *
- * 1. Restate problem in your own words.
- * 2. Identify inputs.
- * 3. Identify output.
- * 4. Ask about edge cases.
- * 5. Write examples.
- * 6. Write step-by-step comments.
- * 7. Code the simple version.
- * 8. Test manually.
- * 9. Refactor.
- * 10. State Big O.
- */

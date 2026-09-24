@@ -17,6 +17,9 @@ tags: spring, configuration, profiles
 - Profile — environment-specific configuration group; secret storage nahi.
 - Precedence — same key multiple sources mein ho toh winning source inspect karo.
 - Secrets — source control/logs se door, approved secret store/environment se lo.
+- Config binding — string value se typed conversion fail ho toh actual property name/value source inspect karo.
+- Feature flag — behavior enable/disable; authorization policy ka substitute nahi.
+- Default value — harmless config mein useful; missing critical secret ko fake default se mask mat karo.
 
 ## Sources — aur padhne ke liye
 
