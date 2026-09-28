@@ -25,6 +25,11 @@ tags: tree, bst, dfs, traversal, balancing
 - Subtree size — child sizes + 1; order-statistics queries mein useful augmentation.
 - Serialization — null markers/shape preserve; values alone tree uniquely reconstruct nahi karte.
 
+### Traversal order
+
+- DFS orders — preorder root-left-right; inorder left-root-right; postorder left-right-root.
+- Tree traversal cost — n nodes visit O(n); DFS stack O(height), BFS queue O(max width).
+
 ## Research notes: Balance the height that controls lookup
 
 - Sorted values insert karne par ordinary BST ek chain ban sakta hai.

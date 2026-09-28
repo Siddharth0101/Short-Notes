@@ -23,6 +23,13 @@ tags: oop, records, equality, interfaces
 - Final class — subclass nahi ban sakti; existing instance data automatically immutable nahi.
 - Object copy — shallow clone/copy ke nested references shared ho sakte hain.
 
+### Type relationships
+
+- Upcast — child ko parent reference; overridden method runtime type se.
+- Downcast — actual compatible subtype chahiye; warna ClassCastException.
+- Anonymous class — inline unnamed implementation; lambda sirf functional interface ke liye.
+- Nested class — static nested ko outer instance nahi; inner class outer instance se linked.
+
 ## Sources — aur padhne ke liye
 
 - [Object API contracts](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html)

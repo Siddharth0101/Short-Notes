@@ -1,3 +1,4 @@
+import { NoteLink } from './Navigation.jsx';
 import { Link } from 'react-router-dom';
 import { courses } from '../data/curriculum.js';
 import { noteById } from '../data/catalog.js';
@@ -25,10 +26,10 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
               : 'Lesson 01 se start karo. Stage checkpoint complete karke aage badho.'}
           </p>
         </div>
-        <Link className="primary-button" to={`/notes/${(next || sequence[0]).id}`}>
+        <NoteLink className="primary-button" to={`/notes/${(next || sequence[0]).id}`}>
           <Icon name={next ? 'play' : 'reset'} size={16} />
           {next ? (completed ? 'Course continue karo' : 'Course shuru karo') : 'Course revise karo'}
-        </Link>
+        </NoteLink>
       </header>
       <div className="course-readiness">
         <span>
@@ -47,7 +48,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
             {course.prerequisites.map((id, i) => (
               <span key={id}>
                 {i > 0 && ' · '}
-                <Link to={`/notes/${id}`}>{noteById[id].title}</Link>
+                <NoteLink to={`/notes/${id}`}>{noteById[id].title}</NoteLink>
               </span>
             ))}
           </div>

@@ -22,6 +22,14 @@ tags: spring, deployment, capstone
 - Image tag — immutable version/digest se exact deployed artifact identify karo.
 - Smoke check — release ke baad critical route + persistence + dependency path verify karo.
 
+### Docker basics
+
+- Image/container — packaged filesystem/runtime template aur uska running instance.
+- Dockerfile — build recipe; smaller trusted base aur layered cache useful.
+- Network — containers service names se communicate; localhost current container hai.
+- Volume — container lifecycle se alag persistent data.
+- Compose — related services/config/network local stack mein define.
+
 ## Sources — aur padhne ke liye
 
 - [Official reference yahan padho](https://docs.spring.io/spring-boot/reference/packaging/container-images/dockerfiles.html)

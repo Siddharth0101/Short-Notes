@@ -25,6 +25,26 @@ tags: html, css, accessibility, browser, layout
 - `async` script — ready hote hi execute; sibling scripts ka order guaranteed nahi.
 - Form labels — label ko input ID se jodo; placeholder label ka replacement nahi.
 
+### HTML essentials
+
+- Tag/element — tag markup boundary; element content/attributes wala parsed node.
+- Void element — img/input jaise elements ke child content aur closing tag nahi.
+- Lists — ul unordered, ol ordered, dl term/description pairs.
+- Class/id — class reuse hoti hai; id document mein unique rakho.
+- strong/em — importance/emphasis; b/i ka semantic purpose alag, sirf visual equivalent mat samjho.
+- head/body — metadata/resources head mein; page content body mein.
+- iframe — doosra document embed; sandbox, permissions aur framing policy check.
+- Target — _self current, _blank new context; rel=noopener opener relationship control karta hai.
+- link/a — link external resource relationship; a user navigation hyperlink.
+- Scripts — classic defer parse ke baad ordered; async ready hote hi; modules default deferred.
+- Audio/video — native controls, formats, captions aur autoplay restrictions handle.
+- Semantics — nav/main/article/section ka meaningful use; styling ke liye random semantic tag nahi.
+- header/h1 — header container hai; heading rank document hierarchy se choose.
+- Disabled field — normal form submission mein value include nahi hoti; readonly control ka behavior alag.
+- Button default — form ke andar button ka default submit ho sakta hai; non-submit action par type=button.
+- Native form — name wale enabled controls submit; label aur correct button type rakho.
+- Flex axes — justify-content main axis; align-items cross axis; direction badle toh axes bhi badalti hain.
+
 ## Research notes: Semantic HTML before custom interaction
 
 - Navigation ke liye anchor, action ke liye button lo.

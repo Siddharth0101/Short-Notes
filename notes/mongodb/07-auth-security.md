@@ -4,7 +4,7 @@ title: Authentication authorization and secure boundaries
 track: mongodb
 order: 7
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Authentication — identity verify; authorization — action/resource access verify.
 tags: authentication, authorization, jwt, sessions, security, passwords
 visual: request-flow
@@ -24,11 +24,20 @@ visual: request-flow
 - Session fixation — login/privilege change par suitable session identity rotation.
 - Reset token — short-lived, single-use aur securely stored verification data.
 
+### Server-side URL safety
+
+- SSRF — user-controlled URL se server ko unintended internal/external destination par request karwa dena.
+- Destination allowlist — expected hosts/protocols allow; resolved IPv4/IPv6 aur private/loopback/metadata targets validate karo.
+- SSRF redirects — automatic redirect following disable karo, warna validated URL se blocked destination tak bypass ho sakta hai.
+- Egress control — server ke outbound network access ko required destinations tak restrict; URL validation ke saath defense lagao.
+
 ## Research notes: Authorize both the action and its object
 
 - Authentication caller identify karti hai.
 
 ## Sources — aur padhne ke liye
+
+- [OWASP — SSRF prevention](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html)
 
 - [Source yahan padho — OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html)
 - [Express production security](https://expressjs.com/en/advanced/best-practice-security/)

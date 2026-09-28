@@ -22,6 +22,15 @@ tags: fundamentals, java, classes, constructors
 - Object alias — same reference share ho toh mutation dono callers ko dikh sakti hai.
 - Static counter — all instances share karte hain; concurrent updates coordinate karo.
 
+### Constructor behavior
+
+- `super` — superclass member/constructor access; overridden method ko explicit call.
+- Initializer — field/block initialization constructor lifecycle ka part.
+
+### Class members
+
+- Static dispatch — static method class/reference type se select; instance overriding jaisa dispatch nahi.
+
 ## Sources — aur padhne ke liye
 
 - [Dev.java classes and objects](https://dev.java/learn/classes-objects/)

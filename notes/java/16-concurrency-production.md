@@ -4,7 +4,7 @@ title: Java concurrency under real resource limits
 track: java
 order: 16
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Bounded pool — workers aur queue ki limit; overload par rejection/backpressure.
 tags: java, concurrency, virtual-threads, executors, backpressure
 ---
@@ -23,11 +23,21 @@ tags: java, concurrency, virtual-threads, executors, backpressure
 - CPU work — more threads se cores magically nahi badhte; oversubscription slow kar sakti hai.
 - Queue latency — service time ke saath waiting time include; throughput alone overload hide kar sakta hai.
 
+### Task coordination
+
+- BlockingQueue — producer/consumer handoff; put/take wait kar sakte hain, bounded capacity overload control karti hai.
+- CountDownLatch — count zero hone tak await; one-shot coordination, reset nahi hota.
+- CyclicBarrier — fixed group sab pahunchne tak wait; next round mein reuse ho sakta hai.
+- Phaser — multiple phases aur changing participant count ke liye flexible barrier.
+- ForkJoinPool — divide-and-conquer tasks ke liye work stealing; chhote independent subtasks useful.
+
 ## Research notes: Virtual threads still need task ownership
 
 - Virtual threads har blocking task ke liye dedicated platform thread ke bina many tasks support karti hain.
 
 ## Sources — aur padhne ke liye
+
+- [Oracle — concurrent utilities](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/package-summary.html)
 
 - [Source yahan padho — Dev.java](https://dev.java/learn/new-features/virtual-threads/)
 - [Oracle virtual threads guide](https://docs.oracle.com/en/java/javase/26/core/virtual-threads.html)

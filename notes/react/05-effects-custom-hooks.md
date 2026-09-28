@@ -24,11 +24,28 @@ tags: effects, useEffect, useRef, custom-hooks, races
 - Ref DOM access — node commit ke baad available; unmount par null handle karo.
 - Dependency identity — fresh object/function reference effect repeat kara sakti hai.
 
+### Hook rules
+
+- Hook order — ordinary Hooks ko loops/conditions mein call mat karo; each render ka order stable rakho.
+- Imperative handle — parent ko narrow operations expose; component internals ka poora control mat do.
+
+### External subscriptions
+
+- useSyncExternalStore — external store ka subscribe + stable snapshot contract; SSR par compatible server snapshot do.
+
+### Effect Events
+
+- `useEffectEvent` — Effect ke event logic mein latest committed props/state padho, bina us logic se resubscription trigger kiye.
+- Effect Event boundary — Effects/Effect Events se call karo; render ya child props ke through use mat karo.
+- Effect Event dependencies — event function dependency mein nahi; actual reactive dependencies hatane ka shortcut bhi nahi.
+
 ## Research notes: Effect timing depends on the trigger
 
 - useEffect unconditional after-paint hook nahi.
 
 ## Sources — aur padhne ke liye
+
+- [React — useEffectEvent](https://react.dev/reference/react/useEffectEvent)
 
 - [Source yahan padho — React](https://react.dev/reference/react/useEffect)
 - [Effect synchronization](https://react.dev/learn/synchronizing-with-effects)

@@ -20,6 +20,8 @@
  * - Escaped literal — user text ko regex pattern banate waqt metacharacters ka intended meaning decide karo.
  * - Capture names — named groups result ko numbered positions se zyada readable bana sakte hain.
  * - Zero-length match — manual global exec loop mein progress ensure; empty match infinite loop kara sakta hai.
+ * - `matchAll` — global regex ke matches ka iterator; captures bhi milte hain.
+ * - Lookahead — (?=x) positive, (?!x) negative; lookbehind — (?<=x)/(?<!x).
  */
 
 // EXAMPLE 1: Literal Notation

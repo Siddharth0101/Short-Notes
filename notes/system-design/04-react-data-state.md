@@ -24,6 +24,14 @@ visual: caching
 - Cache identity — same endpoint but different locale/currency/permissions ho toh key bhi accordingly.
 - Cross-tab state — logout/preferences coordination; local copy ko universal truth mat samjho.
 
+### AI search UI
+
+- AI search — prompt → server model call → validated results → catalog lookup → UI.
+- Model output — recommended titles ko real catalog IDs se resolve; hallucinated item handle.
+- Usage budget — per-user request/token limits; repeated clicks duplicate paid calls na karein.
+- Prompt history — sensitive user data minimum rakho; retention policy explicit.
+- Provider secret — browser bundle/environment mein public ho sakta hai; model key server par rakho.
+
 ## Research notes: Client caches do not enforce database access
 
 - RLS React UI bypass karne par bhi access constrain karti hai.

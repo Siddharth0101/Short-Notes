@@ -4,7 +4,7 @@ title: React and Java system design interview playbook
 track: interview
 order: 6
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Design round — requirements → estimate → APIs/data → architecture → bottlenecks → failure.
 tags: system-design, interview, react, java, architecture
 visual: outbox-pattern
@@ -24,11 +24,25 @@ visual: outbox-pattern
 - Design alternatives — do options compare using given constraints; tool popularity se decision nahi.
 - Recovery story — failure detect → isolate → repair → reconcile → verify.
 
+### Quick answer checks
+
+- Design numbers — units/assumptions label karo; rough QPS, storage aur peak multiplier calculate karo.
+- Recovery answer — source of truth, replay/deduplication aur RTO/RPO ko failure scenario se connect karo.
+
+### Project aur behavioral answers
+
+- STAR — Situation → Task → Action → Result; context short, apna action aur outcome clear.
+- Story bank — 3–5 real projects se impact, conflict, ambiguity aur learning examples ready rakho.
+- Ownership answer — team ne kya kiya ke saath tumhara specific decision/action bolo; invented impact numbers mat do.
+- Reflection — result ke baad kya seekha aur next time kya badloge, ek short point mein bolo.
+
 ## Research notes: Expose assumptions and failure recovery
 
 - Linked Microsoft technical guidance mein testing aur problem-solving bhi assessment ka part hain.
 
 ## Sources — aur padhne ke liye
+
+- [Yangshun Tay — behavioral preparation](https://www.techinterviewhandbook.org/behavioral-interview/)
 
 - [Source yahan padho — Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing)
 - [AWS safe retries and idempotency](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/)

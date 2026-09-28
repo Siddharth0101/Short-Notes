@@ -1,9 +1,10 @@
-import { lazy, Suspense, Component } from 'react';
+import { lazy, Suspense, Component, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import { ProgressProvider } from './lib/progress.jsx';
 import Shell from './library/Shell.jsx';
 import Dashboard from './library/Dashboard.jsx';
 import Library from './library/Library.jsx';
+import { RouteViewport } from './library/Navigation.jsx';
 const Reader = lazy(() => import('./library/Reader.jsx'));
 const VisualLab = lazy(() => import('./library/VisualLab.jsx'));
 const Interviews = lazy(() => import('./library/Interviews.jsx'));
@@ -29,38 +30,53 @@ class PageBoundary extends Component {
 }
 export default function App() {
   const location = useLocation();
+  const positions = useRef(new Map());
+  useEffect(() => {
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
   return (
     <ProgressProvider>
       <Shell>
         <PageBoundary key={location.pathname}>
           <Suspense
             fallback={
-              <div className="loading-state" role="status">
-                Opening your notebook…
+              <div className="loading-state page-skeleton" role="status" aria-busy="true">
+                <span>Notebook khul rahi hai…</span>
+                <div aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </div>
               </div>
             }
           >
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/paths" element={<Library paths />} />
-              <Route path="/saved" element={<Library saved />} />
-              <Route path="/notes/:noteId" element={<Reader />} />
-              <Route path="/visuals" element={<VisualLab />} />
-              <Route path="/interview" element={<Interviews />} />
-              <Route path="/domain/:domainId/*" element={<LegacyRoute />} />
-              <Route
-                path="*"
-                element={
-                  <div className="empty-state">
-                    <h1>That page isn’t in the notebook.</h1>
-                    <Link className="primary-button" to="/library">
-                      Explore the library
-                    </Link>
-                  </div>
-                }
-              />
-            </Routes>
+            <RouteViewport positions={positions}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/paths" element={<Library paths />} />
+                <Route path="/saved" element={<Library saved />} />
+                <Route path="/notes/:noteId" element={<Reader />} />
+                <Route path="/visuals" element={<VisualLab />} />
+                <Route path="/interview" element={<Interviews />} />
+                <Route path="/domain/:domainId/*" element={<LegacyRoute />} />
+                <Route
+                  path="*"
+                  element={
+                    <div className="empty-state">
+                      <h1>That page isn’t in the notebook.</h1>
+                      <Link className="primary-button" to="/library">
+                        Explore the library
+                      </Link>
+                    </div>
+                  }
+                />
+              </Routes>
+            </RouteViewport>
           </Suspense>
         </PageBoundary>
       </Shell>

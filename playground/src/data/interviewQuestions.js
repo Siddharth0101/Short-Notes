@@ -7,6 +7,7 @@ import { questionTopic } from './interviewTopics.js';
 import { requestedQuestions, answerAdditions } from './requestedQuestions.js';
 import { scenarioQuestions } from './scenarioQuestions.js';
 import { advancedQuestions } from './advancedQuestions.js';
+import { reactNativeQuestions } from './reactNativeQuestions.js';
 
 // Original practice questions. Explanations use Hinglish; technical terms remain English.
 export const interviewQuestions = [
@@ -1218,6 +1219,7 @@ export const interviewQuestions = [
   ...scenarioQuestions,
   ...requestedQuestions,
   ...machineCodingQuestions,
+  ...reactNativeQuestions,
 ]
   .map((item) =>
     item.track === 'java' &&

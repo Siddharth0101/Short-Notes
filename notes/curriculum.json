@@ -142,6 +142,57 @@
       }
     ]
   },
+  "react-native": {
+    "prerequisites": [
+      "react-state-forms",
+      "react-effects-custom-hooks",
+      "js-async-event-loop"
+    ],
+    "stages": [
+      {
+        "id": "react-native-1",
+        "title": "Native UI ki foundation",
+        "goal": "Expo workflow, core components aur mobile layout samjho.",
+        "checkpoint": "Safe-area-aware screen ko Android/iOS par inspect karo.",
+        "chapters": [
+          "rn-foundations-expo",
+          "rn-components-layout"
+        ]
+      },
+      {
+        "id": "react-native-2",
+        "title": "Lists aur screen navigation",
+        "goal": "Virtualized data aur route lifecycle jodo.",
+        "checkpoint": "List se detail deep link aur back behavior verify karo.",
+        "chapters": [
+          "rn-lists-images",
+          "rn-navigation-links"
+        ]
+      },
+      {
+        "id": "react-native-3",
+        "title": "Forms, data aur device features",
+        "goal": "Input, offline state, storage aur permissions handle karo.",
+        "checkpoint": "Denied permission aur failed request mein usable recovery dikhao.",
+        "chapters": [
+          "rn-forms-state",
+          "rn-network-storage",
+          "rn-device-permissions"
+        ]
+      },
+      {
+        "id": "react-native-4",
+        "title": "Measure, test aur release",
+        "goal": "Performance, accessibility aur compatible releases samjho.",
+        "checkpoint": "Release checklist aur OTA/native-build boundary explain karo.",
+        "chapters": [
+          "rn-performance-native",
+          "rn-testing-accessibility",
+          "rn-build-release"
+        ]
+      }
+    ]
+  },
   "java": {
     "prerequisites": [],
     "stages": [

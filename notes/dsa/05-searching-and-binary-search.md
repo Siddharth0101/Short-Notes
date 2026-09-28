@@ -25,6 +25,12 @@ visual: binary-search
 - Rotated search — sorted half identify; duplicates decision ambiguous karke worst cost badha sakte hain.
 - Predicate cost — answer search O(log range × feasibility-check cost).
 
+### String search
+
+- Naive substring search — har start par pattern compare; worst O(nm).
+- KMP — prefix table se repeated comparison bachta hai; O(n + m).
+- KMP fallback — mismatch par matched prefix reuse; text pointer unnecessarily reset nahi.
+
 ## Sources — aur padhne ke liye
 
 - [PostgreSQL index types](https://www.postgresql.org/docs/current/indexes-types.html)

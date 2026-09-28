@@ -2,7 +2,7 @@
 
 Har subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se number order follow karo; stage checkpoint khud complete karke aage badho. App, filenames aur index ka order same hai. Numbered source folders related examples/reference hain.
 
-**Apna route chuno:** JavaScript → React → frontend system design; Java → Spring → backend system design. JS functions/arrays ke baad DSA start karo. Async/modules ke baad Node/MongoDB. Related subject padhkar interview playbook karo.
+**Apna route chuno:** JavaScript → React → frontend system design ya React Native mobile apps; Java → Spring → backend system design. JS functions/arrays ke baad DSA start karo. Async/modules ke baad Node/MongoDB. Related subject padhkar interview playbook karo.
 
 Instructor context aur lecture mapping ki limits [course coverage](COURSE_COVERAGE.md) mein padho.
 
@@ -135,6 +135,50 @@ Forms, async screens aur accessibility ke observable contracts check karo.
 12. [React testing — user behavior aur accessibility verify karo](react/12-testing-accessibility.md)
 
 **Stage checkpoint — khud karke dikhao:** Accessible queries se form test likho aur browser-only checks separately identify karo.
+
+## React Native
+
+[Is course ka syllabus kholo](react-native/README.md)
+
+Shuru karne se pehle: [State snapshots forms and immutable updates](react/02-state-forms.md) · [Effects refs and reusable synchronization](react/05-effects-custom-hooks.md) · [Event loop promises and resilient fetching](javascript/15-async-event-loop.md).
+
+### Stage 1: Native UI ki foundation
+
+Expo workflow, core components aur mobile layout samjho.
+
+1. [React Native basics aur Expo workflow](react-native/01-foundations-expo.md)
+2. [Native components styling aur safe areas](react-native/02-components-layout.md)
+
+**Stage checkpoint — khud karke dikhao:** Safe-area-aware screen ko Android/iOS par inspect karo.
+
+### Stage 2: Lists aur screen navigation
+
+Virtualized data aur route lifecycle jodo.
+
+3. [Lists images aur pagination](react-native/03-lists-images.md)
+4. [Navigation Expo Router aur deep links](react-native/04-navigation-links.md)
+
+**Stage checkpoint — khud karke dikhao:** List se detail deep link aur back behavior verify karo.
+
+### Stage 3: Forms, data aur device features
+
+Input, offline state, storage aur permissions handle karo.
+
+5. [Forms keyboard aur shared state](react-native/05-forms-state.md)
+6. [Networking offline storage aur auth](react-native/06-network-storage.md)
+7. [Permissions device APIs aur app lifecycle](react-native/07-device-permissions.md)
+
+**Stage checkpoint — khud karke dikhao:** Denied permission aur failed request mein usable recovery dikhao.
+
+### Stage 4: Measure, test aur release
+
+Performance, accessibility aur compatible releases samjho.
+
+8. [Performance animations aur native architecture](react-native/08-performance-native.md)
+9. [Testing debugging aur mobile accessibility](react-native/09-testing-accessibility.md)
+10. [Build signing OTA updates aur revision traps](react-native/10-build-release.md)
+
+**Stage checkpoint — khud karke dikhao:** Release checklist aur OTA/native-build boundary explain karo.
 
 ## Java
 

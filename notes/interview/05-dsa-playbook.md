@@ -23,6 +23,11 @@ visual: dynamic-programming
 - Counterexample — proposed pattern ko negative/duplicate/extreme input se challenge.
 - Incomplete solution — working part, remaining bug aur next step honestly batao.
 
+### Quick answer checks
+
+- Pattern selection — sorted data, monotonicity, negative values aur required output se pattern choose karo.
+- Code review — bounds, duplicates, visited timing, overflow aur auxiliary space check karo.
+
 ## Research notes: Prove before optimizing
 
 - Linked Amazon guidance fundamentals ko problems par apply karne par focus karti hai; sirf details ratna learning goal nahi hai.

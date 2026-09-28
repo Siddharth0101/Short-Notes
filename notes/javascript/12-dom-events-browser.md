@@ -4,7 +4,7 @@ title: DOM events and browser interaction
 track: javascript
 order: 12
 level: Foundation
-minutes: 1
+minutes: 2
 summary: DOM — browser ka document tree; selector se node pakdo.
 tags: dom, events, delegation, browser, accessibility
 ---
@@ -24,6 +24,20 @@ tags: dom, events, delegation, browser, accessibility
 - `target`/`currentTarget` — event ka original target / current listener wala element.
 - `classList` — add/remove/toggle se classes manage; poora className overwrite zaroori nahi.
 - `once` listener — pehli invocation ke baad automatically remove ho jaata hai.
+
+### DOM aur native events
+
+- Attributes — element ki extra settings; DOM properties live state represent kar sakti hain.
+- Events — addEventListener; target clicked node, currentTarget current listener ka node.
+- Drag/drop — drag data transfer; keyboard/touch alternative bhi do.
+- data-* — custom attributes; dataset se string values access.
+
+### DOM updates
+
+- `querySelector` — first match ya null; querySelectorAll static NodeList deta hai.
+- Node update — createElement/append/remove se tree badlo; text ke liye textContent use karo.
+- `dataset` — data-* values strings hoti hain; numeric/boolean conversion validate karo.
+- `DOMContentLoaded`/`load` — DOM parsing/deferred scripts ready / dependent load resources complete.
 
 ## Research notes: Own a listener lifecycle
 

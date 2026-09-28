@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { notes, noteById, trackById } from '../data/catalog.js';
 import { extractHeadings } from '../lib/content.js';
 import { useProgress } from '../lib/progressContext.js';
@@ -7,6 +7,7 @@ import Markdown from './Markdown.jsx';
 import Icon from './Icons.jsx';
 import { QuestionCard } from './Interviews.jsx';
 import SourceExamples from './SourceExamples.jsx';
+import { NoteLink } from './Navigation.jsx';
 const VisualLab = lazy(() => import('./VisualLab.jsx'));
 
 // Reading position ko section list mein highlight karo.
@@ -35,6 +36,8 @@ function useActiveHeading(headings) {
 }
 
 function Chapter({ note }) {
+  const location = useLocation();
+  const from = location.state?.from;
   const [params, setParams] = useSearchParams();
   const body = note.body;
   const { progress, toggle, visit } = useProgress();
@@ -65,6 +68,11 @@ function Chapter({ note }) {
   const complete = progress.completed.includes(note.id);
   return (
     <div className="reader page-enter">
+      {from?.url?.startsWith('/') && !from.url.startsWith('//') && (
+        <Link className="text-button reader-return" to={from.url} state={{ restoreKey: from.key }}>
+          <Icon name="previous" size={16} /> {from.label || 'Wapas jao'}
+        </Link>
+      )}
       <div className="reader-breadcrumb">
         <Link to={`/library?track=${note.track}`}>{track.name}</Link>
         <Icon name="chevron" size={14} />
@@ -111,7 +119,7 @@ function Chapter({ note }) {
         <button
           className={tab === 'notes' ? 'active' : ''}
           aria-pressed={tab === 'notes'}
-          onClick={() => setParams({})}
+          onClick={() => setParams({}, { state: location.state })}
         >
           <Icon name="book" size={16} /> Quick notes
         </button>
@@ -119,7 +127,7 @@ function Chapter({ note }) {
           <button
             className={tab === 'visual' ? 'active' : ''}
             aria-pressed={tab === 'visual'}
-            onClick={() => setParams({ tab: 'visual' })}
+            onClick={() => setParams({ tab: 'visual' }, { state: location.state })}
           >
             <Icon name="play" size={16} /> Visual example
           </button>
@@ -130,104 +138,132 @@ function Chapter({ note }) {
           <VisualLab embedded topic={note.visual} />
         </Suspense>
       ) : (
-        <div className="reader-layout">
-          <article className="reader-article">
-            <Markdown>{body}</Markdown>
-            <SourceExamples references={note.references || []} />
-            {!!note.questions?.length && (
-              <section className="chapter-practice" aria-labelledby="chapter-practice">
-                <h2 id="chapter-practice">Interview practice</h2>
-                <p>Pehle khud answer do, phir check karo.</p>
-                {note.questions.map((item, index) => (
-                  <QuestionCard key={item.id} item={item} number={index + 1} />
-                ))}
-              </section>
-            )}
-            <div className="chapter-complete">
-              <div>
-                <Icon name="complete" size={27} />
+        <>
+          <details className="mobile-toc">
+            <summary>
+              <Icon name="book" size={16} /> Is chapter mein · {headings.length} sections{' '}
+              <Icon name="down" size={16} />
+            </summary>
+            <nav aria-label="Chapter sections">
+              {headings.map((heading) => (
+                <a
+                  key={heading.id}
+                  href={`#${heading.id}`}
+                  onClick={(event) => {
+                    event.currentTarget.closest('details').open = false;
+                    const target = document.getElementById(heading.id);
+                    if (target) {
+                      target.tabIndex = -1;
+                      target.focus({ preventScroll: true });
+                    }
+                  }}
+                >
+                  {heading.title}
+                </a>
+              ))}
+            </nav>
+          </details>
+          <div className="reader-layout">
+            <article className="reader-article">
+              <Markdown>{body}</Markdown>
+              <SourceExamples references={note.references || []} />
+              {!!note.questions?.length && (
+                <section className="chapter-practice" aria-labelledby="chapter-practice">
+                  <h2 id="chapter-practice">Interview practice</h2>
+                  <p>Pehle khud answer do, phir check karo.</p>
+                  {note.questions.map((item, index) => (
+                    <QuestionCard key={item.id} item={item} number={index + 1} />
+                  ))}
+                </section>
+              )}
+              <div className="chapter-complete">
                 <div>
-                  <h3>
-                    {complete ? 'Ek aur concept clear hua.' : 'Aage badhne se pehle khud samjhao.'}
-                  </h3>
-                  <p>Notes band karo. Concept samjhao. Exercise attempt karo.</p>
+                  <Icon name="complete" size={27} />
+                  <div>
+                    <h3>
+                      {complete
+                        ? 'Ek aur concept clear hua.'
+                        : 'Aage badhne se pehle khud samjhao.'}
+                    </h3>
+                    <p>Notes band karo. Concept samjhao. Exercise attempt karo.</p>
+                  </div>
+                </div>
+                <button
+                  className={complete ? 'subtle-button' : 'primary-button'}
+                  aria-pressed={complete}
+                  onClick={() => toggle('completed', note.id)}
+                >
+                  <Icon name={complete ? 'check' : 'circle'} size={17} />
+                  {complete ? 'Completed' : 'Complete mark karo'}
+                </button>
+              </div>
+              <div className="chapter-navigation">
+                {previous ? (
+                  <NoteLink to={`/notes/${previous.id}`}>
+                    <span>← PREVIOUS CHAPTER</span>
+                    <strong>{previous.title}</strong>
+                  </NoteLink>
+                ) : (
+                  <span />
+                )}
+                {next && (
+                  <NoteLink to={`/notes/${next.id}`}>
+                    <span>NEXT CHAPTER →</span>
+                    <strong>{next.title}</strong>
+                  </NoteLink>
+                )}
+              </div>
+              {note.stage && note.stage.chapters.at(-1) === note.id && (
+                <div className="stage-checkpoint">
+                  <Icon name="check" size={20} />
+                  <p>
+                    <strong>Stage checkpoint:</strong> {note.stage.checkpoint}
+                  </p>
+                </div>
+              )}
+              {!next && note.kind === 'chapter' && (
+                <Link
+                  className="primary-button"
+                  to={`/interview?track=${note.track === 'interview' ? 'all' : note.track}`}
+                >
+                  Course complete? Try the interview questions <Icon name="arrow" size={16} />
+                </Link>
+              )}
+            </article>
+            <aside className="reader-toc">
+              <div className="toc-sticky">
+                <span className="card-overline">ON THIS PAGE</span>
+                <nav aria-label="Table of contents">
+                  {headings.map((heading, i) => (
+                    <a
+                      key={`${heading.id}-${i}`}
+                      href={`#${heading.id}`}
+                      className={activeHeading === heading.id ? 'active' : ''}
+                      aria-current={activeHeading === heading.id ? 'location' : undefined}
+                    >
+                      {heading.title}
+                    </a>
+                  ))}
+                </nav>
+                <div className="toc-tip">
+                  <Icon name="sparkles" size={18} />
+                  <strong>A quick learning tip</strong>
+                  <p>Samajh aaya? Ab ek example khud banao. That’s where it sticks.</p>
+                </div>
+                <Link
+                  to={`/interview?track=${note.track === 'interview' ? 'all' : note.track}`}
+                  className="text-button"
+                >
+                  Practice questions <Icon name="arrow" size={15} />
+                </Link>
+                <div className="source-path">
+                  <span>NOTE SOURCE</span>
+                  <code>{note.source}</code>
                 </div>
               </div>
-              <button
-                className={complete ? 'subtle-button' : 'primary-button'}
-                aria-pressed={complete}
-                onClick={() => toggle('completed', note.id)}
-              >
-                <Icon name={complete ? 'check' : 'circle'} size={17} />
-                {complete ? 'Completed' : 'Complete mark karo'}
-              </button>
-            </div>
-            <div className="chapter-navigation">
-              {previous ? (
-                <Link to={`/notes/${previous.id}`}>
-                  <span>← PREVIOUS CHAPTER</span>
-                  <strong>{previous.title}</strong>
-                </Link>
-              ) : (
-                <span />
-              )}
-              {next && (
-                <Link to={`/notes/${next.id}`}>
-                  <span>NEXT CHAPTER →</span>
-                  <strong>{next.title}</strong>
-                </Link>
-              )}
-            </div>
-            {note.stage && note.stage.chapters.at(-1) === note.id && (
-              <div className="stage-checkpoint">
-                <Icon name="check" size={20} />
-                <p>
-                  <strong>Stage checkpoint:</strong> {note.stage.checkpoint}
-                </p>
-              </div>
-            )}
-            {!next && note.kind === 'chapter' && (
-              <Link
-                className="primary-button"
-                to={`/interview?track=${note.track === 'interview' ? 'all' : note.track}`}
-              >
-                Course complete? Try the interview questions <Icon name="arrow" size={16} />
-              </Link>
-            )}
-          </article>
-          <aside className="reader-toc">
-            <div className="toc-sticky">
-              <span className="card-overline">ON THIS PAGE</span>
-              <nav aria-label="Table of contents">
-                {headings.map((heading, i) => (
-                  <a
-                    key={`${heading.id}-${i}`}
-                    href={`#${heading.id}`}
-                    className={activeHeading === heading.id ? 'active' : ''}
-                    aria-current={activeHeading === heading.id ? 'location' : undefined}
-                  >
-                    {heading.title}
-                  </a>
-                ))}
-              </nav>
-              <div className="toc-tip">
-                <Icon name="sparkles" size={18} />
-                <strong>A quick learning tip</strong>
-                <p>Samajh aaya? Ab ek example khud banao. That’s where it sticks.</p>
-              </div>
-              <Link
-                to={`/interview?track=${note.track === 'interview' ? 'all' : note.track}`}
-                className="text-button"
-              >
-                Practice questions <Icon name="arrow" size={15} />
-              </Link>
-              <div className="source-path">
-                <span>NOTE SOURCE</span>
-                <code>{note.source}</code>
-              </div>
-            </div>
-          </aside>
-        </div>
+            </aside>
+          </div>
+        </>
       )}
     </div>
   );

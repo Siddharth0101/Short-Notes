@@ -14,6 +14,10 @@
  * - `target`/`currentTarget` — event ka original target / current listener wala element.
  * - `classList` — add/remove/toggle se classes manage; poora className overwrite zaroori nahi.
  * - `once` listener — pehli invocation ke baad automatically remove ho jaata hai.
+ * - `querySelector` — first match ya null; querySelectorAll static NodeList deta hai.
+ * - Node update — createElement/append/remove se tree badlo; text ke liye textContent use karo.
+ * - `dataset` — data-* values strings hoti hain; numeric/boolean conversion validate karo.
+ * - `DOMContentLoaded`/`load` — DOM parsing/deferred scripts ready / dependent load resources complete.
  */
 
 'use strict';

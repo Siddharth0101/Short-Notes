@@ -21,6 +21,9 @@ for (const track of TRACKS) {
     });
   }
 }
+const drillTopics = INTERVIEW_TOPICS.filter((topic) =>
+  machineCodingQuestions.some((question) => question.topic === topic.id),
+);
 const top = machineCodingQuestions.filter((q) => q.priority === "P1");
 const seen = new Set();
 for (const q of machineCodingQuestions) {
@@ -57,7 +60,7 @@ const orderedFor = (topic) =>
     .sort((a, b) => a.priority.localeCompare(b.priority));
 let out = `# Machine coding practice — har subject ke liye build rounds
 
-${machineCodingQuestions.length} original drills · ${INTERVIEW_TOPICS.length} subjects · ${top.length} P1 practice-first questions · ${machineCodingQuestions.length} interviewer follow-ups.
+${machineCodingQuestions.length} original drills · ${drillTopics.length} subjects · ${top.length} P1 practice-first questions · ${machineCodingQuestions.length} interviewer follow-ups.
 
 [Home](../README.md) · [Study guide](STUDY_GUIDE.md) · [Concept interview priorities](INTERVIEW_PRIORITY_GUIDE.md)
 
@@ -89,7 +92,7 @@ ${machineCodingQuestions.length} original drills · ${INTERVIEW_TOPICS.length} s
 | Subject | Build rounds | P1 | Follow-ups | Coding time |
 | --- | ---: | ---: | ---: | ---: |
 `;
-for (const topic of INTERVIEW_TOPICS) {
+for (const topic of drillTopics) {
   const questions = orderedFor(topic.id);
   if (questions.length < 11)
     throw new Error(`Incomplete subject coverage: ${topic.id}`);
@@ -102,13 +105,13 @@ out += `
 | Subject | Pehle yeh four rounds karo |
 | --- | --- |
 `;
-for (const topic of INTERVIEW_TOPICS) {
+for (const topic of drillTopics) {
   const questions = top.filter((q) => q.topic === topic.id);
   if (!questions.length)
     throw new Error(`Missing machine coding shortlist: ${topic.id}`);
   out += `| ${topic.name} | ${questions.map((q) => `[${q.question.replace("Machine coding: ", "")}](#${q.id})`).join(" · ")} |\n`;
 }
-for (const topic of INTERVIEW_TOPICS) {
+for (const topic of drillTopics) {
   out += `\n## ${topic.name} — build rounds\n`;
   const questions = orderedFor(topic.id);
   out +=
@@ -127,5 +130,5 @@ if (process.argv.includes("--check")) {
     throw new Error("Run node scripts/sync-machine-coding.mjs");
 } else await writeFile(file, out);
 console.log(
-  `Verified ${machineCodingQuestions.length} machine coding drills across ${INTERVIEW_TOPICS.length} subjects.`,
+  `Verified ${machineCodingQuestions.length} machine coding drills across ${drillTopics.length} subjects.`,
 );

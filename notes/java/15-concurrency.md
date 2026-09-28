@@ -4,7 +4,7 @@ title: Concurrency synchronization and virtual threads
 track: java
 order: 15
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Thread — concurrent execution; shared mutable state par coordination chahiye.
 tags: concurrency, threads, virtual-threads, locks
 visual: thread-sync
@@ -25,7 +25,23 @@ visual: thread-sync
 - Wait condition — wait ke baad condition loop mein recheck; spurious wakeups possible.
 - Join — thread completion wait; timeout/interrupt behavior define karo.
 
+### Thread execution
+
+- Runnable — run ka result void; Callable value return aur checked exception throw kar sakta hai.
+- Thread start — start nayi thread schedule; run directly call karo toh current thread mein execute.
+- Thread states — NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED; RUNNING separate enum state nahi.
+- Sleep/wait — sleep monitor release nahi karta; wait owned monitor release karke notification/condition ka wait karta hai.
+
+### Explicit locks
+
+- ReentrantLock — same thread dobara acquire kar sakta hai; successful lock ke baad finally mein unlock karo.
+- tryLock — turant ya timeout tak acquisition try; false par lock-owning code mat chalao.
+- Interruptible lock — `lockInterruptibly()` waiting thread ke interrupt par acquisition chhod sakta hai.
+- Fair lock — longest waiter ko preference; throughput cost ho sakti hai, untimed tryLock fairness follow nahi karta.
+
 ## Sources — aur padhne ke liye
+
+- [Oracle — ReentrantLock](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html)
 
 - [Virtual thread guide](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html)
 - [JDK 24 virtual-thread changes](https://docs.oracle.com/en/java/javase/24/migrate/significant-changes-jdk-24.html)

@@ -24,6 +24,12 @@ visual: context-flow
 - Normalized store — entities ID se rakho; repeated nested copies ka update cost kam.
 - Dispatch/context — value objects ki identity stable rakhna unnecessary notifications kam kar sakta hai.
 
+### Redux flow
+
+- Redux flow — dispatch action → reducer next state → subscribed UI render; reducer mein async side effect nahi.
+- RTK draft — createSlice reducer mein mutation-looking syntax Immer draft par; arbitrary external object mutate mat karo.
+- Thunk — async work coordinate karke pending/success/failure actions; stale result/cancellation handle karo.
+
 ## Sources — aur padhne ke liye
 
 - [React scaling with reducer and context](https://react.dev/learn/scaling-up-with-reducer-and-context)

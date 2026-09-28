@@ -24,6 +24,11 @@ visual: request-flow
 - Method security — service entry par authorization; object ownership check phir bhi explicit.
 - Credential rotation — old/new key overlap, expiry aur revocation ka rollout plan rakho.
 
+### Service communication
+
+- Gateway/discovery — routing aur service location; failure behavior design karo.
+- Feign/client — remote call phir bhi timeout/retry/error boundary maangti hai.
+
 ## Sources — aur padhne ke liye
 
 - [JWT resource server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html)

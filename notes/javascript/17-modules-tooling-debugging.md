@@ -25,6 +25,11 @@ tags: modules, tooling, http, debugging, testing, npm
 - Dependency audit — direct aur transitive packages alag; lockfile diff review karo.
 - Polyfill/transpile — missing runtime API provide / syntax transform; dono same kaam nahi.
 
+### Module loading
+
+- Named/default — named export ka imported naam match; default ka local naam choose kar sakte ho.
+- Top-level await — ES module mein allowed; dependent module execution wait kar sakti hai.
+
 ## Research notes: Imports are live read-only bindings
 
 - Imported binding exporter ke updates reflect karti hai; importer binding reassign nahi kar sakta.

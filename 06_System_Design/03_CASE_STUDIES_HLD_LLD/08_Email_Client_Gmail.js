@@ -12,6 +12,8 @@
  * - Draft conflict — multiple tabs/devices edit karein toh version/conflict warning.
  * - Thread identity — message ID aur conversation ID separate; actions ka scope clear.
  * - Attachment retry — already uploaded object reuse; duplicate upload cleanup/expiry define.
+ * - Rich-text composer — stored/rendered HTML sanitize; attachments aur draft body ke separate lifecycle.
+ * - Keyboard shortcut — editable field/IME mein typing hijack mat karo; discoverable shortcut aur focus return rakho.
  */
 
 'use strict';

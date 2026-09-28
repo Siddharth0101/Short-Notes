@@ -25,6 +25,17 @@ visual: request-flow
 - Backup restore — backup file hona enough nahi; restore path regularly verify.
 - Error budget burn — allowable failure kitni fast consume ho rahi hai, alert severity usse align.
 
+### Browser defenses
+
+- CSP — script sources/execution restrict; encoding ka replacement nahi.
+- Clickjacking — frame-ancestors policy se unauthorized embedding roko.
+
+### Browser security
+
+- XSS — untrusted HTML/script injection; context-aware escaping, sanitization aur CSP layers lagao.
+- CSRF — auto-sent credentials ka misuse; suitable token, SameSite aur origin checks.
+- CORS policy — allowed browser origins/read access; server authorization phir bhi mandatory.
+
 ## Research notes: Turn an SLO into a concrete budget
 
 - Target se pehle user-visible indicator choose karo.

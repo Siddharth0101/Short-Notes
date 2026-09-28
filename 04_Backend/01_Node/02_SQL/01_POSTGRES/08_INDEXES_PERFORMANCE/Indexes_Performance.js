@@ -13,6 +13,9 @@
  * - Write amplification — extra indexes har write par maintenance badhate hain; unused indexes review karo.
  * - Sort support — index ordering tabhi useful jab query predicates/direction compatible hon.
  * - Plan evidence — rows estimated vs actual ka large mismatch statistics/data-skew issue signal kar sakta hai.
+ * - BRIN — block-range summaries; physical order se correlated huge tables mein useful, exact row lookup nahi.
+ * - Hash index — PostgreSQL equality queries ke liye; range/order ke liye B-tree consider.
+ * - INCLUDE — non-key payload columns index mein; index-only execution ki visibility conditions phir bhi matter.
  */
 
 'use strict';

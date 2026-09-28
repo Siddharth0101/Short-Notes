@@ -23,6 +23,11 @@ tags: testing, accessibility, forms, react
 - Accessible name — visible label aur control name match; icon-only button ko label do.
 - Test cleanup — mounted UI, mocks aur fake timers next test mein leak na hon.
 
+### Keyboard aur dialogs
+
+- Dialog focus — open par andar focus, modal mein Tab trap, Escape close aur trigger par focus return.
+- Live region — status changes announce; alert sirf urgent update, noisy repeated announcements avoid.
+
 ## Sources — aur padhne ke liye
 
 - [React useId](https://react.dev/reference/react/useId)

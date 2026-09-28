@@ -40,6 +40,7 @@ test('Both theme palettes keep core reading, code, buttons and subject labels at
       ...[
         'javascript',
         'react',
+        'react-native',
         'java',
         'spring-boot',
         'mongodb',

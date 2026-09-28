@@ -23,6 +23,12 @@ tags: router, url, loaders, navigation, routing
 - 404 handling — unknown route aur resource-not-found ko useful fallback do.
 - URL encoding — user values encode karo; raw text ko path/query mein concatenate mat karo.
 
+### Deep-link modal
+
+- Modal identity — query mein ticket ID; page reload par selected entity server se resolve karo.
+- Deleted ticket — deep link valid syntax ho sakta hai but resource missing; useful error/close action.
+- Close history — push/replace/back choice define; unrelated query filters preserve karo.
+
 ## Sources — aur padhne ke liye
 
 - [React Router Data Mode routing](https://reactrouter.com/start/data/routing)

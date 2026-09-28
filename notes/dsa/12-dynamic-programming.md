@@ -27,6 +27,12 @@ visual: dynamic-programming
 - Impossible state — infinity/negative sentinel safely choose; overflow aur invalid transitions avoid.
 - DAG view — DP states dependencies ka graph; valid evaluation order pehle dependencies solve kare.
 
+### Common DP states
+
+- Grid traveler — state row/column; blocked/boundary cells ke base cases clear karo.
+- Coin change — minimum coins aur combination count alag transitions maangte hain.
+- LCS — two-prefix state; matching chars par diagonal + 1, warna neighboring maximum.
+
 ## Research notes: Numeric magnitude can dominate DP
 
 - O(nW) knapsack numeric capacity W par depend karta hai.

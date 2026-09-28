@@ -12,6 +12,10 @@
  * - Natural/surrogate key — business identity / generated ID; both ki uniqueness aur change policy clear.
  * - Delete model — hard delete ya soft delete; unique constraints, filtering aur retention accordingly.
  * - Data grain — ek row exactly kya represent karti hai, schema se pehle define.
+ * - ALTER TABLE — columns/constraints evolve; lock duration aur deployed clients ka compatibility check.
+ * - Relational normal forms — 1NF scalar fields, 2NF no partial-key dependency, 3NF no transitive non-key dependency.
+ * - JSONB — PostgreSQL structured JSON; query/index useful, relational constraints ka automatic substitute nahi.
+ * - Polymorphic relation — type + ID se multiple tables reference karna foreign-key integrity complicate karta hai; explicit tables/constraints consider.
  */
 
 'use strict';

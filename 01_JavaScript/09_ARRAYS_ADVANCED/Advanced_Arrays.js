@@ -22,6 +22,11 @@
  * - `flatMap` — transform ke baad result ek level flatten karta hai.
  * - Empty reduce — initial value bina empty array par reduce error deta hai.
  * - Mutation trap — map naya array banata hai, par callback shared nested object mutate kar sakta hai.
+ * - `at` — negative index end se count; arr.at(-1) last item deta hai.
+ * - `fill` — original array ke slots replace; same object fill karo toh references shared rehte hain.
+ * - `includes`/`indexOf` — boolean membership / first index; missing index -1, includes NaN ko recognize karta hai.
+ * - Sparse array — empty slots aur explicit undefined same nahi; map/forEach holes skip karte hain.
+ * - Array mutation — push/pop/shift/unshift/splice/sort/reverse/fill original badalte hain; copy chahiye toh non-mutating approach lo.
  */
 
 'use strict';

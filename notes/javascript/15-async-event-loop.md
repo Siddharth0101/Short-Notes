@@ -4,7 +4,7 @@ title: Event loop promises and resilient fetching
 track: javascript
 order: 15
 level: Advanced
-minutes: 2
+minutes: 1
 summary: Call stack — synchronous functions yahin execute hote hain.
 tags: async, promises, event-loop, fetch, cancellation
 visual: event-loop
@@ -25,6 +25,10 @@ visual: event-loop
 - Promise executor — `new Promise` ka executor synchronously run hota hai.
 - Rejected chain — catch se normal value return karo toh chain fulfilled ho sakti hai.
 - Finally — cleanup ke liye; throw/rejected Promise original outcome replace kar sakti hai.
+
+### Browser scheduling
+
+- Animation — `requestAnimationFrame` repaint se pehle work schedule karta hai.
 
 ## Sources — aur padhne ke liye
 

@@ -22,6 +22,17 @@ export const TRACKS = [
     icon: 'react',
   },
   {
+    id: 'react-native',
+    name: 'React Native',
+    symbol: 'RN',
+    color: 'var(--track-react-native)',
+    tint: 'var(--tint-react-native)',
+    description: 'React se Android aur iOS apps ke concepts samjho.',
+    mentor: 'React Native + Expo · official docs companion',
+    topics: 'Mobile UI · navigation · device APIs · releases',
+    icon: 'phone',
+  },
+  {
     id: 'java',
     name: 'Java',
     symbol: 'J',

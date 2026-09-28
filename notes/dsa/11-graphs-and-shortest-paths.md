@@ -27,6 +27,20 @@ visual: bfs
 - Kahn algorithm — indegree-zero queue; processed count < V ho toh directed cycle hai.
 - MST — all vertices minimum total edge cost se connect; source shortest paths se different problem.
 
+### Graph representation
+
+- Directed/undirected — edge one-way/two-way; weighted edge ka cost hota hai.
+- Adjacency matrix — O(V²) space; edge existence O(1).
+- Prim/Kruskal — minimum spanning tree; shortest-path problem se alag.
+
+### Traversal checks
+
+- Visited timing — BFS enqueue par mark; same node repeated queue mein bharne se bacho.
+- Directed cycle — recursion-path/three-color state use; visited alone cycle ka proof nahi.
+- Undirected cycle — DFS mein parent edge skip; doosra visited neighbor cycle signal de sakta hai.
+- Bipartite — BFS/DFS se two-color; same-color edge conflict ho toh possible nahi.
+- Shortest-path cost — BFS O(V+E); binary-heap Dijkstra typically O((V+E) log V), nonnegative weights ke liye.
+
 ## Research notes: Negative edges in a DAG
 
 - DAG mein negative edges ho sakti hain, negative cycles nahi.

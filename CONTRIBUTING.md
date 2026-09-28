@@ -2,7 +2,7 @@
 
 - Language — simple Roman Hinglish; technical names/code English mein.
 - Format — `term — seedha meaning / zaroori catch`; ek bullet mein ek concept.
-- Length — usually 5–15 short bullets per chapter; long paragraph/walkthrough mat add karo.
+- Length — usually 5–15 bullets per topic group; wider chapters mein small headings use karo, long paragraphs nahi.
 - Accuracy — short karte waqt scope, condition, complexity ya failure caveat mat hatao.
 - Example — `var — function-scoped; reassign aur redeclare ho sakta hai.`
 - Code — optional snippets `examples/<track>/` mein; chapter se relative link do.
@@ -12,6 +12,8 @@
 - Interviews — canonical question data `playground/src/data/*Questions.js`; answers mein short fact bullets.
 - Practice — code, outputs, runtime assumptions aur acceptance checks preserve karo.
 - Source folders — har mapped JS/JSX/Java file mein short Quick revision bullets; code examples preserve karo.
-- Audit — `node scripts/check-revision.mjs` chapters, sources aur interview answer length verify karta hai.
+- Audit — `node scripts/check-revision.mjs` format, duplicate labels, source-topic presence aur interview answer length verify karta hai.
 - Generation — root se `node scripts/sync-curriculum.mjs`, `node scripts/sync-interviews.mjs`, `node scripts/sync-priority-interviews.mjs`, `node scripts/sync-machine-coding.mjs`.
 - Verify — `cd playground` phir `npm run check`; IDs, links, examples aur app checks pass hone chahiye.
+
+- Topic coverage — equivalent source labels `scripts/revision-topic-aliases.json` mein map hain; naya alias sirf manually verified equivalent concept ke liye.

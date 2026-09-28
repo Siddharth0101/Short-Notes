@@ -22,6 +22,10 @@ tags: fundamentals, java, methods, arrays
 - Bounds — invalid index par ArrayIndexOutOfBoundsException; negative/empty cases check karo.
 - Return contract — non-void method ke har normally completing path ko value chahiye.
 
+### Method calls
+
+- Varargs overload — ambiguity avoid; explicit method contracts rakho.
+
 ## Sources — aur padhne ke liye
 
 - [Dev.java arrays](https://dev.java/learn/arrays/)

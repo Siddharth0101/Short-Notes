@@ -24,6 +24,11 @@ visual: event-loop
 - Unknown API — behavior invent mat karo; assumption bolo aur minimal experiment suggest.
 - Answer length — definition, one example, one caveat; follow-up par detail kholo.
 
+### Quick answer checks
+
+- Output trace — sync, microtask aur task ko alag mark; await ke pehle ka code synchronous ho sakta hai.
+- Polyfill answer — native contract pehle: this, holes, callback args, mutation aur error cases.
+
 ## Research notes: Explain the contract before coding
 
 - Linked Amazon guidance fundamentals ko problems par apply karne par focus karti hai; sirf details ratna learning goal nahi hai.

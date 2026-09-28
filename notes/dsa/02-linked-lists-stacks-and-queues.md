@@ -24,6 +24,15 @@ tags: linked-list, stack, queue, pointers, monotonic-stack
 - Deque — dono ends par add/remove; BFS aur sliding-window patterns mein useful.
 - Fast/slow gap — kth-from-end ke liye fixed pointer gap; invalid k define karo.
 
+### Linked-list pointers
+
+- Middle node — slow pointer one step, fast two steps.
+- Doubly linked delete — dono neighbors ke links aur head/tail update karo.
+
+### Stack checks
+
+- Parentheses — opening stack mein; closing ko matching top chahiye.
+
 ## Sources — aur padhne ke liye
 
 - [Princeton stacks and queues](https://algs4.cs.princeton.edu/13stacks/)

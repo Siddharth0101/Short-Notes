@@ -20,7 +20,9 @@
  * - Exception handling — useful context do, secrets log mat karo, failure silently swallow mat karo.
  * - Iterator remove — supported iterator ka remove safe traversal deletion ke liye use karo.
  * - Unmodifiable view — writes block, underlying collection ke external changes phir bhi dikh sakte hain.
- * - Generic invariance — List<Integer> ko List<Number> assign nahi kar sakte.
+ * - Generic invariance — `List<Integer>` ko `List<Number>` assign nahi kar sakte.
+ * - Comparable — type ka natural order compareTo; Comparator external/custom ordering deta hai.
+ * - Generic bound — `<T extends Number>` accepted type constrain; wildcard ? unknown compatible type represent karta hai.
  */
 
 import java.io.BufferedReader;

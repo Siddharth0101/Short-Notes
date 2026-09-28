@@ -4,7 +4,7 @@ title: JPA Hibernate and Spring transactions
 track: spring-boot
 order: 6
 level: Advanced
-minutes: 1
+minutes: 2
 summary: JPA — persistence specification; Hibernate — implementation.
 tags: jpa, hibernate, transactions, n-plus-one
 ---
@@ -25,11 +25,29 @@ tags: jpa, hibernate, transactions, n-plus-one
 - Read-only hint — optimization hint hai; write prevention ka universal guarantee nahi.
 - Propagation — caller ki transaction join ya separate boundary; chosen mode ka resource/rollback effect samjho.
 
+### Hibernate sessions
+
+- SessionFactory — heavyweight thread-safe factory; Session shared concurrent object nahi.
+- Session — persistence context aur unit-of-work operations.
+- Entity state — transient, managed, detached, removed.
+- First-level cache — session context; second-level cache optional shared layer.
+- HQL — entity-oriented query; SQL table query se distinction.
+
+### Propagation modes
+
+- REQUIRED — existing transaction join; nahi ho toh nayi transaction, joined scopes same physical transaction share karte hain.
+- Rollback-only — inner REQUIRED scope rollback mark kare toh outer commit UnexpectedRollbackException de sakta hai, catch karna marker clear nahi karta.
+- REQUIRES_NEW — outer suspend karke independent transaction; commit/rollback alag, extra connection ki capacity chahiye.
+- NESTED — same physical transaction mein savepoints; JDBC/transaction-manager support chahiye, independent commit nahi.
+- Joined isolation — default REQUIRED join par outer isolation/timeout apply; inner annotation automatically naya isolation nahi banati.
+
 ## Research notes: Trace the actual transaction entry point
 
 - Default proxy transaction advice proxy-crossing calls intercept karti hai.
 
 ## Sources — aur padhne ke liye
+
+- [Spring — propagation source](https://github.com/spring-projects/spring-framework/blob/main/framework-docs/modules/ROOT/pages/data-access/transaction/declarative/tx-propagation.adoc)
 
 - [Spring transaction read-only hints](https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html)
 

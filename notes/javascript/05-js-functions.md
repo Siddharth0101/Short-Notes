@@ -24,6 +24,14 @@ tags: fundamentals, js, functions
 - Higher-order function — function ko input le ya function return kare.
 - Early return — `return` ke baad same function ka remaining code skip hota hai.
 
+### Function style
+
+- Declarative — desired transformation bolo; unnecessary mutation se bacho.
+- Function expression — initialization se pehle call nahi; const/let TDZ aur var undefined ka behavior alag.
+- IIFE — function define karke turant call; isolated setup/scope ke liye.
+- Currying — f(a, b) ko f(a)(b) jaise staged calls mein badlo.
+- Callback — function ko baad mein invoke karne ke liye pass karo; fn aur fn() alag.
+
 ## Sources — aur padhne ke liye
 
 - [MDN functions guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)

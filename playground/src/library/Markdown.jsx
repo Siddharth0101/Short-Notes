@@ -1,4 +1,4 @@
-import { Children, isValidElement, useState } from 'react';
+import { Children, isValidElement, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { headingId } from '../lib/content.js';
@@ -40,7 +40,7 @@ function ExampleLink({ href, children }) {
         disabled={loading}
         aria-expanded={open}
       >
-        {children}
+        {loading ? 'Example khul raha hai…' : children}
       </button>
       {error && <span role="status"> Load nahi hua; dobara try karo.</span>}
       {open && <Markdown idPrefix="code-example">{content}</Markdown>}
@@ -60,6 +60,11 @@ function textContent(children) {
 }
 function CodeBlock({ children }) {
   const [status, setStatus] = useState('Copy');
+  useEffect(() => {
+    if (status === 'Copy') return;
+    const timer = setTimeout(() => setStatus('Copy'), 3000);
+    return () => clearTimeout(timer);
+  }, [status]);
   const code = textContent(children);
   const element = Children.toArray(children)[0];
   const language = element?.props?.className?.replace('language-', '') || 'text';
@@ -80,7 +85,7 @@ function CodeBlock({ children }) {
         </span>
         <button onClick={copy} aria-label="Copy code">
           <Icon name={status === 'Copied' ? 'check' : 'copy'} size={13} />
-          {status}
+          <span role="status">{status}</span>
         </button>
       </div>
       <pre>{children}</pre>

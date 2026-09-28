@@ -5,6 +5,7 @@ import { notes, trackById, resources } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import Icon from './Icons.jsx';
 import CourseOutline from './CourseOutline.jsx';
+import { NoteLink } from './Navigation.jsx';
 
 export function NoteRow({ note, index }) {
   const { progress, toggle } = useProgress();
@@ -18,7 +19,7 @@ export function NoteRow({ note, index }) {
           String(note.kind === 'chapter' ? note.order : index + 1).padStart(2, '0')
         )}
       </span>
-      <Link className="note-row-body" to={`/notes/${note.id}`}>
+      <NoteLink className="note-row-body" to={`/notes/${note.id}`}>
         <div className="note-row-title">
           <h3>{note.title}</h3>
           {note.visual && (
@@ -39,7 +40,7 @@ export function NoteRow({ note, index }) {
             </>
           )}
         </div>
-      </Link>
+      </NoteLink>
       <button
         className={`icon-button save-button ${progress.saved.includes(note.id) ? 'is-saved' : ''}`}
         aria-label={`${progress.saved.includes(note.id) ? 'Remove bookmark for' : 'Bookmark'} ${note.title}`}
@@ -48,13 +49,13 @@ export function NoteRow({ note, index }) {
       >
         <Icon name="bookmark" size={18} />
       </button>
-      <Link
+      <NoteLink
         to={`/notes/${note.id}`}
         className="icon-button row-open"
         aria-label={`Read ${note.title}`}
       >
         <Icon name="arrow" size={18} />
-      </Link>
+      </NoteLink>
     </article>
   );
 }
@@ -136,9 +137,11 @@ function ProgressBackup() {
 export default function Library({ saved = false, paths = false }) {
   const [params, setParams] = useSearchParams();
   const { progress } = useProgress();
-  const track = params.get('track') || 'all';
+  const track = trackById[params.get('track')] ? params.get('track') : 'all';
   const query = params.get('q') || '';
-  const level = params.get('level') === 'Reference' ? 'all' : params.get('level') || 'all';
+  const level = ['Foundation', 'Intermediate', 'Advanced'].includes(params.get('level'))
+    ? params.get('level')
+    : 'all';
   const source = saved
     ? notes.filter(
         (note) =>
@@ -146,7 +149,9 @@ export default function Library({ saved = false, paths = false }) {
           note.references.some((item) => progress.saved.includes(item.id)),
       )
     : notes;
-  const status = params.get('status') || 'all';
+  const status = ['completed', 'pending'].includes(params.get('status'))
+    ? params.get('status')
+    : 'all';
   const filtered = filterNotes(source, { query, track, level }).filter((note) =>
     status === 'completed'
       ? progress.completed.includes(note.id)
@@ -261,13 +266,13 @@ export default function Library({ saved = false, paths = false }) {
           <Icon name="path" />
           <p>
             <strong>Padhne ka suggested route:</strong> JavaScript → React → frontend design. Java →
-            Spring → backend design. Dono mein se kisi route ke saath DSA padho. Har chapter ke baad
-            bina notes dekhe concept explain karo.
+            Spring → backend design. Mobile ke liye React → React Native. Saath mein DSA padho. Har
+            chapter ke baad bina notes dekhe concept explain karo.
           </p>
         </div>
       )}
-      <div className="results-heading" role="status">
-        <span>
+      <div className="results-heading">
+        <span role="status">
           {filtered.length} results
           {query && (
             <>
@@ -277,7 +282,7 @@ export default function Library({ saved = false, paths = false }) {
           )}
         </span>
         {hasFilters ? (
-          <button className="text-button" onClick={() => setParams({})}>
+          <button className="text-button" onClick={() => setParams({}, { replace: true })}>
             <Icon name="reset" size={14} /> Reset filters
           </button>
         ) : (
@@ -288,18 +293,22 @@ export default function Library({ saved = false, paths = false }) {
         <div className="empty-state">
           <Icon name={saved ? 'bookmark' : 'search'} size={32} />
           <h2>
-            {saved && !query && track === 'all'
-              ? 'Apne important chapters save karo.'
-              : 'Koi note nahi mila.'}
+            {saved && !source.length ? 'Apne important chapters save karo.' : 'Koi note nahi mila.'}
           </h2>
           <p>
-            {saved
+            {saved && !source.length
               ? 'Chapter bookmark karo, woh yahan mil jaega.'
               : 'Search thoda broad karo ya doosra subject chuno.'}
           </p>
-          <Link className="subtle-button" to="/library">
-            Saare notes kholo <Icon name="arrow" size={16} />
-          </Link>
+          {hasFilters && source.length > 0 ? (
+            <button className="subtle-button" onClick={() => setParams({}, { replace: true })}>
+              Filters hatao <Icon name="reset" size={16} />
+            </button>
+          ) : (
+            <Link className="subtle-button" to="/library">
+              Saare notes kholo <Icon name="arrow" size={16} />
+            </Link>
+          )}
         </div>
       ) : paths ? (
         <div className="learning-paths">

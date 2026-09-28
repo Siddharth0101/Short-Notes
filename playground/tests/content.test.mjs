@@ -272,6 +272,9 @@ test('Interview bank and visual catalog remain complete and internally consisten
     assert(interviewQuestions.filter((item) => item.track === track.id).length >= 12);
   for (const item of interviewQuestions) {
     assert(item.answer.length > 70 && item.followUp.length > 20 && item.tags.length > 0, item.id);
+    for (const source of item.sources || []) {
+      assert(source.title && new URL(source.url).protocol === 'https:', `${item.id}: invalid source link`);
+    }
     assert(['Foundation', 'Intermediate', 'Advanced'].includes(item.level), item.id);
     if (item.noteId)
       assert(

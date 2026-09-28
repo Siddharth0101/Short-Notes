@@ -1,6 +1,6 @@
 # Interview workbook — Hinglish mein practice aur answers
 
-- Bank — 444 questions; neeche supplied checklist ke mapped answers.
+- Bank — 456 questions; neeche supplied checklist ke mapped answers.
 - Practice — subject filter karo; pehle khud answer, phir bullets compare.
 - Code — snippets ki runtime/setup assumptions check karo.
 - Scope — original practice; employer-frequency ranking nahi.

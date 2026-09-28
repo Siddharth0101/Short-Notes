@@ -4,7 +4,7 @@ title: Tries, bitmasks aur range queries — advanced structures ka practical br
 track: dsa
 order: 14
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Trie — characters/prefixes ka tree; lookup O(word length).
 tags: trie, bitmask, fenwick, segment-tree
 ---
@@ -24,7 +24,20 @@ tags: trie, bitmask, fenwick, segment-tree
 - Prefix trie terminal — word ending marker chahiye; path exist hona complete word ka proof nahi.
 - Segment merge — associative operation required; empty-range identity compatible honi chahiye.
 
+### Advanced patterns
+
+- Sweep line — sorted event boundaries process; same-coordinate tie policy define karo.
+- Rolling hash — sliding substring fingerprint; collision possible, zaroorat par equality verify.
+
+### Bit tricks
+
+- Kth bit toggle — zero-based k par `mask ^ (1 << k)` bit flip karta hai; integer width ka dhyaan rakho.
+- Power of two — positive n ke liye `(n & (n - 1)) === 0`; zero ko pehle exclude karo.
+- Bitwise precedence — bit test `(n & (1 << k)) !== 0` likho; parentheses hataane se comparison pehle evaluate ho sakta hai.
+
 ## Sources — aur padhne ke liye
+
+- [Yangshun Tay — binary cheatsheet](https://www.techinterviewhandbook.org/algorithms/binary/)
 
 - [Princeton tries](https://algs4.cs.princeton.edu/52trie/)
 - [CMU Fenwick problem](https://www.cs.cmu.edu/~eugene/teach/acm10b/prob/101013.pdf)

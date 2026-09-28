@@ -1,3 +1,4 @@
+import { NoteLink } from './Navigation.jsx';
 import { Link } from 'react-router-dom';
 import { TRACKS } from '../lib/content.js';
 import { notes, archive, noteById } from '../data/catalog.js';
@@ -72,11 +73,11 @@ export default function Dashboard() {
           </span>
           <h2>{recent.length ? 'Jahan chhoda tha, wahin se.' : 'Aaj kya revise karein?'}</h2>
           <p>{next.title}</p>
-          <Link className="primary-button" to={`/notes/${next.id}`}>
+          <NoteLink className="primary-button" to={`/notes/${next.id}`}>
             <Icon name="play" size={16} />{' '}
             {recent.length ? 'Continue revision' : 'Revision shuru karo'}{' '}
             <Icon name="arrow" size={17} />
-          </Link>
+          </NoteLink>
         </div>
         <div className="revision-preview" aria-label="One-line notes preview">
           <div>
@@ -129,11 +130,11 @@ export default function Dashboard() {
             <span className="muted">Ek click mein wapas</span>
           </div>
           {recent.map((note) => (
-            <Link className="recent-row" key={note.id} to={`/notes/${note.id}`}>
+            <NoteLink className="recent-row" key={note.id} to={`/notes/${note.id}`}>
               <Icon name="book" />
               <span>{note.title}</span>
               <Icon name="arrow" size={17} />
-            </Link>
+            </NoteLink>
           ))}
         </section>
       )}
@@ -227,9 +228,9 @@ export default function Dashboard() {
               <span className="card-overline">PRACTICE ROUTE {number}</span>
               <h3>{title}</h3>
               <p>{description}</p>
-              <Link className="text-button" to={`/notes/${id}`}>
+              <NoteLink className="text-button" to={`/notes/${id}`}>
                 Practical notes kholo <Icon name="arrow" size={15} />
-              </Link>
+              </NoteLink>
               <Link className="text-button" to={`/interview?track=${track}`}>
                 Is subject ki practice karo <Icon name="messages" size={15} />
               </Link>

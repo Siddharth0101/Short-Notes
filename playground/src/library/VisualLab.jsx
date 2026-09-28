@@ -1,5 +1,6 @@
+import { NoteLink } from './Navigation.jsx';
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { VISUALS } from '../data/visuals.js';
 import { notes, trackById } from '../data/catalog.js';
 import {
@@ -370,9 +371,12 @@ function Simulator({ visual }) {
 
 export default function VisualLab({ embedded = false, topic }) {
   const [params, setParams] = useSearchParams();
-  const track = params.get('track') || 'all';
+  const track = VISUALS.some((item) => item.track === params.get('track'))
+    ? params.get('track')
+    : 'all';
+  const choices = VISUALS.filter((item) => embedded || track === 'all' || item.track === track);
   const requested = topic || params.get('topic') || 'event-loop';
-  const visual = VISUALS.find((item) => item.id === requested) || VISUALS[0];
+  const visual = choices.find((item) => item.id === requested) || choices[0];
   const related = notes.filter((note) => note.visual === visual.id).slice(0, 3);
   return (
     <div className={`visual-lab page-enter ${embedded ? 'embedded' : ''}`}>
@@ -413,8 +417,22 @@ export default function VisualLab({ embedded = false, topic }) {
                 ))}
             </select>
           </label>
+          <label className="mobile-visual-picker">
+            Concept chuno
+            <select
+              aria-label="Visualization concept"
+              value={visual.id}
+              onChange={(event) => setParams({ topic: event.target.value, track })}
+            >
+              {choices.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </label>
           <div className="visual-picker">
-            {VISUALS.filter((item) => track === 'all' || item.track === track).map((item) => (
+            {choices.map((item) => (
               <button
                 key={item.id}
                 className={visual.id === item.id ? 'active' : ''}
@@ -436,11 +454,11 @@ export default function VisualLab({ embedded = false, topic }) {
             <span className="muted">{trackById[visual.track].name}</span>
           </div>
           {related.map((note) => (
-            <Link key={note.id} to={`/notes/${note.id}`} className="recent-row">
+            <NoteLink key={note.id} to={`/notes/${note.id}`} className="recent-row">
               <Icon name="book" size={18} />
               <span>{note.title}</span>
               <Icon name="arrow" size={17} />
-            </Link>
+            </NoteLink>
           ))}
         </section>
       )}

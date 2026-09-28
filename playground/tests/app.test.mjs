@@ -34,7 +34,12 @@ const server = await createServer({
 });
 const React = await import('react');
 const { createRoot } = await import('react-dom/client');
-const { MemoryRouter } = await import('react-router-dom');
+const { MemoryRouter, useNavigate } = await import('react-router-dom');
+let navigate;
+function HistoryProbe() {
+  navigate = useNavigate();
+  return React.createElement(App);
+}
 const { default: App } = await server.ssrLoadModule('/src/App.jsx');
 const { courses } = await server.ssrLoadModule('/src/data/curriculum.js');
 const { notes, archive } = await server.ssrLoadModule('/src/data/catalog.js');
@@ -52,7 +57,11 @@ async function mount(route) {
   root = createRoot(document.getElementById('root'));
   await React.act(async () => {
     root.render(
-      React.createElement(MemoryRouter, { initialEntries: [route] }, React.createElement(App)),
+      React.createElement(
+        MemoryRouter,
+        { initialEntries: [route] },
+        React.createElement(HistoryProbe),
+      ),
     );
   });
   await React.act(async () => {
@@ -85,7 +94,7 @@ test('Dashboard displays actual chapter/reference/visual totals and subject navi
   localStorage.clear();
   await mount('/');
   assert.match(text(), /Chhote notes. Clear concepts/);
-  assert.equal(document.querySelectorAll('.track-card').length, 7);
+  assert.equal(document.querySelectorAll('.track-card').length, Object.keys(courses).length - 1);
   assert.equal(document.querySelectorAll('.stat strong')[0].textContent, `${notes.length}↗`);
   assert.equal(document.querySelectorAll('.stat strong')[1].textContent, String(archive.length));
   assert.equal(document.querySelectorAll('.stat strong')[2].textContent, String(VISUAL_IDS.length));
@@ -535,6 +544,31 @@ test('Java and Spring Boot expose independent courses with stable reader links',
   assert(document.querySelector('.question-card'));
 });
 
+test('React Native has its own syllabus, searchable notes, reader and interview filter', async () => {
+  await mount('/');
+  assert(document.querySelector('.track-card[href="/library?track=react-native"]'));
+  await mount('/library?track=react-native');
+  assert.equal(document.querySelectorAll('.note-row').length, 10);
+  assert(!document.querySelector('.note-row a[href="/notes/react-state-forms"]'));
+  await mount('/library?track=react-native&q=FlatList');
+  assert(document.querySelector('a[href="/notes/rn-lists-images"]'));
+  await mount('/paths?track=react-native');
+  assert(document.querySelector('.course-readiness a[href="/notes/react-effects-custom-hooks"]'));
+  await mount('/notes/rn-build-release');
+  assert.match(text(), /Runtime version/);
+  assert(document.querySelector('.reader-quick-actions a[href="/paths?track=react-native"]'));
+  await mount('/interview?track=react-native');
+  assert.equal(document.querySelectorAll('.question-card').length, 12);
+  await click(document.querySelector('.question-card .question-actions button'));
+  assert(document.querySelector('.answer-reading[href="/notes/rn-foundations-expo"]'));
+  assert.match(
+    document.querySelector(
+      '.answer-reading[href="https://reactnative.dev/docs/components-and-apis"]',
+    ).textContent,
+    /React Native official docs/,
+  );
+});
+
 test('Progress filters narrow notes and reset restores the collection', async () => {
   localStorage.setItem(
     'shortnotes.progress.v1',
@@ -613,4 +647,112 @@ test('Interview subject and topic filters combine without silently clearing each
     document.querySelector('.filter-chips .active').textContent.trim(),
     'Saare subjects',
   );
+});
+
+test('Chapter round trips retain collection filters, origin through tabs and scroll position', async () => {
+  const oldScroll = window.scrollTo;
+  window.scrollTo = ({ top }) => {
+    window.scrollY = top;
+  };
+  try {
+    await mount('/library?track=javascript&q=event&status=pending');
+    window.scrollY = 640;
+    window.dispatchEvent(new Event('scroll'));
+    const row = [...document.querySelectorAll('.note-row')].find((item) =>
+      item.querySelector('.visual-tag'),
+    );
+    const title = row.querySelector('h3').textContent;
+    await click(row.querySelector('.note-row-body'));
+    assert.equal(window.scrollY, 0);
+    assert.equal(document.activeElement, document.querySelector('h1'));
+    await click(button('Visual example'));
+    await click(button('Quick notes'));
+    assert.equal(
+      document.querySelector('.reader-return').getAttribute('href'),
+      '/library?track=javascript&q=event&status=pending',
+    );
+    await click(document.querySelector('.reader-return'));
+    assert.equal(window.scrollY, 640);
+    assert.equal(document.querySelector('[aria-label="Search this collection"]').value, 'event');
+    assert.match(text(), new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    window.scrollY = 820;
+    window.dispatchEvent(new Event('scroll'));
+    await click(document.querySelector('.note-row-body'));
+    await React.act(async () => navigate(-1));
+    assert.equal(window.scrollY, 820, 'Browser Back restores the collection position');
+  } finally {
+    window.scrollTo = oldScroll;
+    window.scrollY = 0;
+  }
+});
+
+test('Filtered bookmarks have a recovery action and removed bookmarks can be undone', async () => {
+  localStorage.clear();
+  const note = notes[0];
+  localStorage.setItem(
+    'shortnotes.progress.v1',
+    JSON.stringify({ saved: [note.id], completed: [], known: [], recent: [] }),
+  );
+  await mount('/saved?status=completed');
+  assert.match(text(), /Koi note nahi mila/);
+  assert.doesNotMatch(text(), /Apne important chapters save karo/);
+  await click(button('Filters hatao'));
+  assert.equal(document.querySelectorAll('.note-row').length, 1);
+  await click(document.querySelector('.save-button'));
+  assert.equal(document.querySelectorAll('.note-row').length, 0);
+  assert.match(
+    document.querySelector('.progress-toast [role="status"]').textContent,
+    /Bookmark hata diya/,
+  );
+  await click(button('Undo'));
+  assert.equal(document.querySelectorAll('.note-row').length, 1);
+  assert(JSON.parse(localStorage.getItem('shortnotes.progress.v1')).saved.includes(note.id));
+  localStorage.clear();
+});
+
+test('Interview URL preserves search, difficulty, practice state and loaded questions on return', async () => {
+  await mount('/interview?track=javascript&level=Foundation&status=practicing&q=');
+  assert.equal(document.querySelector('[aria-label="Interview difficulty"]').value, 'Foundation');
+  assert(document.querySelector('.checkbox-label input').checked);
+  await click(document.querySelector('.load-more'));
+  const count = document.querySelectorAll('.question-list .question-card').length;
+  assert(count > 12);
+  assert.equal(document.activeElement, document.querySelectorAll('.question-list h2')[12]);
+  await click(button('Answer dekho'));
+  await click(document.querySelector('a.answer-reading'));
+  await click(document.querySelector('.reader-return'));
+  assert.equal(document.querySelectorAll('.question-list .question-card').length, count);
+  assert.equal(document.querySelector('[aria-label="Interview difficulty"]').value, 'Foundation');
+  assert(document.querySelector('.checkbox-label input').checked);
+  await mount('/interview?track=react-native&q=FlatList');
+  assert.equal(
+    document.querySelector('[aria-label="Search interview questions"]').value,
+    'FlatList',
+  );
+  assert(document.querySelectorAll('.question-card').length > 0);
+  await click(button('Clear interview search'));
+  assert.equal(document.querySelector('[aria-label="Search interview questions"]').value, '');
+  assert.equal(document.querySelector('.filter-chips .active').textContent.trim(), 'React Native');
+});
+
+test('Mobile chapter navigation targets real headings and visual selection respects the subject', async () => {
+  await mount('/notes/rn-foundations-expo');
+  const toc = document.querySelector('.mobile-toc');
+  assert(toc);
+  for (const link of toc.querySelectorAll('a')) assert(document.getElementById(link.hash.slice(1)));
+  toc.open = true;
+  const link = toc.querySelector('a');
+  await click(link);
+  assert.equal(toc.open, false);
+  assert.equal(document.activeElement.id, link.hash.slice(1));
+  await mount('/visuals?track=java');
+  const picker = document.querySelector('[aria-label="Visualization concept"]');
+  const options = [...picker.options];
+  assert.equal(options.length, 3);
+  assert.equal(
+    picker.value,
+    document.querySelector('.visual-picker .active').getAttribute('class') ? options[0].value : '',
+  );
+  await select(picker, options[1].value);
+  assert.equal(document.querySelector('.simulator h2').textContent, options[1].textContent);
 });

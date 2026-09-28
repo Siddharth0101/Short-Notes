@@ -23,6 +23,10 @@ tags: mongodb, crud, bson, modeling, embedding, references
 - Projection — needed fields hi return; network payload aur sensitive-field exposure kam.
 - `$elemMatch` — array ke ek hi element ko saari supplied conditions satisfy karni hoti hain.
 
+### Document identity
+
+- ObjectId — identifier; timestamp ko authorization proof mat samjho.
+
 ## Research notes: Model bounded growth and data ownership
 
 - Embedding related data ko reads/atomic updates ke liye saath rakhti hai.

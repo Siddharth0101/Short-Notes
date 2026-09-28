@@ -3,7 +3,7 @@
 - Use — exact API behavior/caveat ke liye original source kholo.
 - Notes — short Hinglish revision; full articles publisher ki site par.
 - Version — framework upgrade par current docs dobara check karo.
-- Source review — original selection 13 September 2026 ki hai.
+- Source review — original selection 13 September 2026; [external recheck](EXTERNAL_REVIEW.md) 28 September 2026 ka hai.
 
 ## javascript
 
@@ -88,4 +88,18 @@ Employer guidance se assessment expectations samjho. Exercises original hain; sp
 | Prove before optimizing | [Chapter mein samjho](interview/05-dsa-playbook.md#research-notes-prove-before-optimizing) | [Amazon Careers](https://amazon.jobs/content/en/how-we-hire/interview-prep/software-development-topics) |
 | Expose assumptions and failure recovery | [Chapter mein samjho](interview/06-system-design-playbook.md#research-notes-expose-assumptions-and-failure-recovery) | [Microsoft Careers](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing) |
 
-Links aur coverage checks ke liye yahi mapping [research-sources.json](research-sources.json) mein bhi hai.
+Upar ki original selection ke links aur coverage checks ke liye mapping [research-sources.json](research-sources.json) mein bhi hai.
+
+External recheck ke 26 references aur added chapters ki mapping [EXTERNAL_REVIEW.md](EXTERNAL_REVIEW.md) mein hai; har changed chapter mein direct links bhi hain.
+
+## react-native
+
+React Native aur Expo ki official docs se mobile behavior verify kiya; har chapter ke end mein exact references hain.
+
+| Topic | Yahan padho | Primary source |
+| --- | --- | --- |
+| Native build aur update compatibility | [Release notes](react-native/10-build-release.md#quick-revision) | [Expo runtime versions](https://docs.expo.dev/eas-update/runtime-versions/) |
+
+[Poora React Native syllabus](react-native/README.md) — 10 chapters, 198 short points aur 12 app interview questions.
+
+[React Native recheck](REACT_NATIVE_REVIEW.md) — missing topics, source mapping aur shared React foundations.

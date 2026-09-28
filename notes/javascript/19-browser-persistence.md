@@ -24,6 +24,17 @@ tags: storage, indexeddb, offline, versioning
 - Atomic browser data — related IndexedDB changes same transaction mein group karo.
 - Storage scope — origin badla toh storage alag; private mode/blocked storage failure handle karo.
 
+### Offline browser
+
+- Manifest — app install metadata; offline caching service worker ka separate kaam.
+
+### Offline aur cookies
+
+- Service worker — network requests intercept/cache; lifecycle/version updates handle.
+- Cache-first — speed/offline; network-first — freshness; stale-while-revalidate — cached then refresh.
+- HttpOnly cookie — JS reads block; Secure — HTTPS-only send; SameSite — cross-site send policy; server auth/CSRF checks phir bhi chahiye.
+- XSS — unsafe script injection; output encoding, sanitization aur CSP defense.
+
 ## Sources — aur padhne ke liye
 
 - [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB)

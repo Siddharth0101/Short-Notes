@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { interviewQuestions } from '../data/interviewQuestions.js';
 import { TRACKS } from '../lib/content.js';
 import { notes, trackById } from '../data/catalog.js';
@@ -7,6 +7,7 @@ import { useProgress } from '../lib/progressContext.js';
 import Icon from './Icons.jsx';
 import Markdown from './Markdown.jsx';
 import { INTERVIEW_TOPICS, questionTopic } from '../data/interviewTopics.js';
+import { NoteLink } from './Navigation.jsx';
 
 export function QuestionCard({ item, number }) {
   const [revealed, setRevealed] = useState(false);
@@ -60,9 +61,9 @@ export function QuestionCard({ item, number }) {
             </a>
           ))}
           {related && (
-            <Link className="text-button answer-reading" to={`/notes/${related.id}`}>
+            <NoteLink className="text-button answer-reading" to={`/notes/${related.id}`}>
               <Icon name="book" size={16} /> Study: {related.title} <Icon name="arrow" size={16} />
-            </Link>
+            </NoteLink>
           )}
         </div>
       )}
@@ -209,31 +210,51 @@ function MockSession({ questions, onClose }) {
 }
 export default function Interviews() {
   const [params, setParams] = useSearchParams();
-  const [query, setQuery] = useState('');
-  const [level, setLevel] = useState('all');
-  const [unreviewed, setUnreviewed] = useState(false);
+  const query = params.get('q') || '';
+  const level = ['Foundation', 'Intermediate', 'Advanced'].includes(params.get('level'))
+    ? params.get('level')
+    : 'all';
+  const unreviewed = params.get('status') === 'practicing';
   const [order, setOrder] = useState(interviewQuestions.map((item) => item.id));
   const [session, setSession] = useState(0);
-  const [limit, setLimit] = useState(12);
+  const limit = Math.max(
+    12,
+    Math.min(interviewQuestions.length, Number(params.get('limit')) || 12),
+  );
   const [mock, setMock] = useState(null);
+  const nextQuestion = useRef(null);
+  useEffect(() => {
+    if (nextQuestion.current === null) return;
+    const heading = document.querySelectorAll('.question-list .question-card h2')[
+      nextQuestion.current
+    ];
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus();
+    }
+    nextQuestion.current = null;
+  }, [limit]);
   const { progress } = useProgress();
-  const track = params.get('track') || 'all';
-  const topic = params.get('topic') || 'all';
+  const track = TRACKS.some((item) => item.id === params.get('track') && item.id !== 'interview')
+    ? params.get('track')
+    : 'all';
+  const topic = INTERVIEW_TOPICS.some((item) => item.id === params.get('topic'))
+    ? params.get('topic')
+    : 'all';
   const updateFilter = (key, value) => {
-    setParams((previous) => {
-      const next = new URLSearchParams(previous);
-      if (value === 'all') next.delete(key);
-      else next.set(key, value);
-      return next;
-    });
-    setLimit(12);
+    setParams(
+      (previous) => {
+        const next = new URLSearchParams(previous);
+        if (!value || value === 'all') next.delete(key);
+        else next.set(key, value);
+        next.delete('limit');
+        return next;
+      },
+      { replace: true },
+    );
   };
   const resetFilters = () => {
-    setParams({});
-    setQuery('');
-    setLevel('all');
-    setUnreviewed(false);
-    setLimit(12);
+    setParams({}, { replace: true });
   };
   const filtered = interviewQuestions
     .filter(
@@ -244,7 +265,7 @@ export default function Interviews() {
         (!unreviewed || !progress.known.includes(item.id)) &&
         `${item.question} ${item.promptCode || ''} ${item.answer} ${item.tags.join(' ')}`
           .toLowerCase()
-          .includes(query.toLowerCase()),
+          .includes(query.trim().toLowerCase()),
     )
     .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   function shuffle() {
@@ -304,15 +325,23 @@ export default function Interviews() {
             aria-label="Search interview questions"
             placeholder="Search interview questions…"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => updateFilter('q', event.target.value)}
           />
+          {query && (
+            <button
+              className="icon-button"
+              aria-label="Clear interview search"
+              onClick={() => updateFilter('q', '')}
+            >
+              <Icon name="close" size={16} />
+            </button>
+          )}
         </label>
         <select
           aria-label="Interview topic"
           value={topic}
           onChange={(event) => {
             updateFilter('topic', event.target.value);
-            setLimit(12);
           }}
         >
           <option value="all">All topics</option>
@@ -325,7 +354,7 @@ export default function Interviews() {
         <select
           aria-label="Interview difficulty"
           value={level}
-          onChange={(event) => setLevel(event.target.value)}
+          onChange={(event) => updateFilter('level', event.target.value)}
         >
           <option value="all">All levels</option>
           <option>Foundation</option>
@@ -336,7 +365,9 @@ export default function Interviews() {
           <input
             type="checkbox"
             checked={unreviewed}
-            onChange={(event) => setUnreviewed(event.target.checked)}
+            onChange={(event) =>
+              updateFilter('status', event.target.checked ? 'practicing' : 'all')
+            }
           />{' '}
           Still practicing
         </label>
@@ -361,7 +392,9 @@ export default function Interviews() {
         ))}
       </div>
       <div className="results-heading">
-        <span role="status">{filtered.length} questions</span>
+        <span role="status">
+          {filtered.length} questions · {Math.min(limit, filtered.length)} dikh rahe hain
+        </span>
         {(query || track !== 'all' || topic !== 'all' || level !== 'all' || unreviewed) && (
           <button className="text-button" onClick={resetFilters}>
             <Icon name="reset" size={14} /> Reset filters
@@ -386,11 +419,27 @@ export default function Interviews() {
           <Icon name="messages" size={32} />
           <h2>Is filter mein questions nahi mile.</h2>
           <p>Doosra filter lo ya practiced questions revise karo.</p>
+          <button className="subtle-button" onClick={resetFilters}>
+            Filters hatao <Icon name="reset" size={16} />
+          </button>
         </div>
       )}
       {filtered.length > limit && (
-        <button className="subtle-button load-more" onClick={() => setLimit(limit + 12)}>
-          Load 12 more questions <Icon name="down" size={16} />
+        <button
+          className="subtle-button load-more"
+          onClick={() => {
+            nextQuestion.current = limit;
+            setParams(
+              (previous) => {
+                const next = new URLSearchParams(previous);
+                next.set('limit', String(limit + 12));
+                return next;
+              },
+              { replace: true },
+            );
+          }}
+        >
+          Load {Math.min(12, filtered.length - limit)} more questions <Icon name="down" size={16} />
         </button>
       )}
     </div>

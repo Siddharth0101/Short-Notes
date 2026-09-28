@@ -24,6 +24,11 @@ visual: thread-sync
 - Concurrency trace — do callers ke interleaving se race demonstrate karo.
 - Pool debugging — active, idle, waiting aur query timings se bottleneck separate.
 
+### Quick answer checks
+
+- Java answer — value/reference, thread visibility aur transaction boundary ko code example se distinguish karo.
+- SQL answer — nulls, duplicates, ties aur concurrent updates pehle clarify; result shape verify karo.
+
 ## Research notes: Defend a failure boundary
 
 - Linked Microsoft technical guidance mein testing aur problem-solving bhi assessment ka part hain.

@@ -38,6 +38,7 @@ import {
   Terminal,
   FileText,
   Settings2,
+  Smartphone,
 } from 'lucide-react';
 const icons = {
   book: BookOpen,
@@ -79,6 +80,7 @@ const icons = {
   terminal: Terminal,
   file: FileText,
   settings: Settings2,
+  phone: Smartphone,
 };
 export default function Icon({ name, size = 20, ...props }) {
   const Element = icons[name] || BookOpen;

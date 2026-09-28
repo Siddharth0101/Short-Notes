@@ -24,6 +24,16 @@ visual: request-flow
 - Provider timeout — external effect ho chuka ho sakta hai; retry se pehle idempotency/reconciliation.
 - Outbox job — business write aur pending notification same durable boundary mein record.
 
+### Pug templates
+
+- Pug — indentation-based server template syntax.
+- Extends/block — shared layout; include/mixin — reusable template parts.
+
+### Upload aur webhook
+
+- Signed upload — allowed size/type/object key control; uploaded file scan/validate.
+- Webhook ack — durable receipt/process contract; retries aur duplicates expected.
+
 ## Sources — aur padhne ke liye
 
 - [Stripe webhooks](https://docs.stripe.com/webhooks)

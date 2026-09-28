@@ -24,6 +24,10 @@ tags: heap, priority-queue, top-k, heapify
 - Streaming median — lower half max-heap, upper half min-heap; sizes/order balanced rakho.
 - Arbitrary delete — item locate karne ke liye index map ya lazy deletion chahiye.
 
+### Heap costs
+
+- Heap operations — push/pop O(log n); arbitrary lookup O(n); bottom-up heap build O(n).
+
 ## Sources — aur padhne ke liye
 
 - [Princeton's priority queues chapter](https://algs4.cs.princeton.edu/24pq/)

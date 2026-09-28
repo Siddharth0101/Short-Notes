@@ -23,6 +23,10 @@ tags: fundamentals, js, conditionals
 - Optional value — `user?.age ?? 0` missing user/age handle karta hai, valid zero bachata hai.
 - Assignment trap — `if (x = 5)` assign karta hai; comparison ke liye `===`.
 
+### Short-circuit assignment
+
+- Logical assignment — `||=`, `&&=`, `??=` condition meet hone par hi assign.
+
 ## Sources — aur padhne ke liye
 
 - [MDN control flow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)

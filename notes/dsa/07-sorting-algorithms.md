@@ -28,6 +28,11 @@ visual: sorting
 - Stable merge — equal keys par left item pehle lo toh original order preserve kar sakte ho.
 - Pivot choice — randomized pivot adversarial pattern risk kam; worst-case bound automatically remove nahi hota.
 
+### Selection aur memory
+
+- Quickselect cost — expected O(n), worst O(n²); pivot strategy matter karti hai.
+- Sort memory — merge sort usually O(n) auxiliary; quicksort recursion depth balanced O(log n), worst O(n).
+
 ## Sources — aur padhne ke liye
 
 - [Princeton sorting reference](https://algs4.cs.princeton.edu/cheatsheet/)

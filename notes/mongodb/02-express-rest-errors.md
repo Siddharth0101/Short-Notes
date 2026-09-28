@@ -4,7 +4,7 @@ title: Express REST APIs middleware and errors
 track: mongodb
 order: 2
 level: Intermediate
-minutes: 1
+minutes: 2
 summary: Express — routing aur middleware ka HTTP framework.
 tags: express, rest, middleware, errors, validation, pagination
 visual: request-flow
@@ -23,6 +23,22 @@ visual: request-flow
 - 404 handler — unmatched route response; thrown exception se alag flow.
 - Body limit — parser/upload payload bound karo; unlimited request memory risk.
 - Middleware continuation — next() ke baad current JS execution automatically return nahi hoti.
+
+### Data-access boundary
+
+- Repository — SQL/data access encapsulate; controller HTTP contract own kare.
+- Error mapping — unique conflict/missing row ko stable HTTP response mein map.
+- Test — real database constraints aur rollback behavior verify.
+- Affected rows — update count zero ho toh missing/stale version distinguish karne ka contract.
+- Error after commit — response fail hone par write already durable; retry identity same rakho.
+- Pool timeout — connection wait ko request deadline ke andar bound karo.
+
+### PostgreSQL integration
+
+- pg pool — bounded PostgreSQL connections reuse; acquired client finally mein release.
+- pg values — $1/$2 placeholders values bind karte; dynamic identifiers allowlist karo.
+- pg transaction — BEGIN, queries, COMMIT same checked-out client par; error par ROLLBACK.
+- Tenant pagination — bounded limit, stable order aur server-verified tenant predicate saath rakho.
 
 ## Research notes: Return the promise that owns the request
 

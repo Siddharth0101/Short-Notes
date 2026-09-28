@@ -24,6 +24,11 @@ visual: java-memory
 - BigDecimal — decimal arithmetic; precision/scale/rounding explicit rakho.
 - Char — UTF-16 code unit; emoji ek char mein fit hona guaranteed nahi.
 
+### String behavior
+
+- String pool — literals reuse ho sakte hain; content equality ke liye `.equals()`.
+- StringBuffer — synchronized mutable buffer; StringBuilder unsynchronized.
+
 ## Sources — aur padhne ke liye
 
 - [Java conversion specification](https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html)

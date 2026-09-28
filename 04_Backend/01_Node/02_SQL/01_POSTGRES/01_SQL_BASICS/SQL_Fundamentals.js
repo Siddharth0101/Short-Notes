@@ -13,6 +13,9 @@
  * - DDL/DML — schema define/alter karna aur rows read/write karna alag operations.
  * - Alias — query mein column/table ka readable local naam; underlying schema rename nahi hota.
  * - Parameter type — driver/database conversion ka contract; raw user string ko valid number assume mat karo.
+ * - RETURNING — supported write ke affected row/ID same statement se lo.
+ * - DELETE/TRUNCATE/DROP — rows by condition / all rows without WHERE / table object hataana; constraints aur transaction rules verify karo.
+ * - SQL strings — CONCAT ya || join; UPPER/LOWER case, LENGTH length; NULL behavior chosen function se check.
  */
 
 'use strict';

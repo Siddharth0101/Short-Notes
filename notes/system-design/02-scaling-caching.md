@@ -4,7 +4,7 @@ title: Scaling caching replication and partitioning
 track: system-design
 order: 2
 level: Advanced
-minutes: 1
+minutes: 2
 summary: Vertical scaling — ek machine bigger; horizontal — more instances.
 tags: caching, scaling, replication, sharding
 visual: caching
@@ -25,11 +25,25 @@ visual: caching
 - Negative cache — not-found result briefly cache; creation ke baad staleness rule chahiye.
 - Consistent hashing — membership change par limited keys remap; balancing replicas/virtual nodes se improve.
 
+### Cache write policies
+
+- Write-through — cache layer DB write synchronously complete karti hai; write latency badhti hai.
+- Write-behind — cache write pehle, DB later; flush se pehle crash ho toh data loss ka risk.
+- Refresh-ahead — expiry se pehle likely-needed entries refresh; galat prediction extra backend work karati hai.
+
+### Traffic aur failover
+
+- Active-passive — ek instance traffic serve, standby failure par takeover; detection/startup se recovery delay.
+- Active-active — multiple instances traffic serve; shared state aur concurrent-write conflicts handle karo.
+- L4/L7 balancer — transport IP/port se route / HTTP path/header jaise application details se route.
+
 ## Research notes: Define behavior beyond capacity
 
 - Requests ki cost different ho toh sirf count capacity achhe se describe nahi karti.
 
 ## Sources — aur padhne ke liye
+
+- [Donne Martin — System Design Primer](https://github.com/donnemartin/system-design-primer)
 
 - [HTTP caching guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)
 - [Source yahan padho — Google SRE](https://sre.google/sre-book/handling-overload/)

@@ -218,7 +218,7 @@
   {
     "chapter": "design-messaging-reliability",
     "title": "Budget retries across the call graph",
-    "publisher": "AWS Builders\u2019 Library",
+    "publisher": "AWS Builders’ Library",
     "url": "https://d1.awsstatic.com/builderslibrary/pdfs/timeouts-retries-and-backoff-with-jitter.pdf",
     "file": "notes/system-design/08-messaging-reliability.md",
     "anchor": "research-notes-budget-retries-across-the-call-graph",
@@ -304,5 +304,14 @@
     "file": "notes/interview/06-system-design-playbook.md",
     "anchor": "research-notes-expose-assumptions-and-failure-recovery",
     "reviewed": "2026-09-13"
+  },
+  {
+    "chapter": "rn-build-release",
+    "title": "Native build aur update compatibility",
+    "publisher": "Expo",
+    "url": "https://docs.expo.dev/eas-update/runtime-versions/",
+    "file": "notes/react-native/10-build-release.md",
+    "anchor": "quick-revision",
+    "reviewed": "2026-09-28"
   }
 ]

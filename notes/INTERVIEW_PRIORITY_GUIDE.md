@@ -56,7 +56,7 @@
 - Retry — unresolved correctness error wale topic ko revisit karo.
 - Sync — answers canonical app bank se generate hote hain.
 
-Review date: 2026-09-15. Full bank: 444 questions. Priority set: 52.
+Review date: 2026-09-15. Full bank: 456 questions. Priority set: 52.
 
 ## Selected questions — seedha topic par jao
 

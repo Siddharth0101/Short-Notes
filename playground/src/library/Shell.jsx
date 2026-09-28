@@ -76,7 +76,11 @@ export default function Shell({ children }) {
     function shortcut(event) {
       if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
         event.preventDefault();
-        search.current?.focus();
+        setMobile(false);
+        window.requestAnimationFrame(() => {
+          search.current?.focus();
+          search.current?.select();
+        });
       }
       if (event.key === 'Escape') {
         setMobile(false);
@@ -86,9 +90,6 @@ export default function Shell({ children }) {
     window.addEventListener('keydown', shortcut);
     return () => window.removeEventListener('keydown', shortcut);
   }, []);
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
   useEffect(() => {
     setQuery(new URLSearchParams(location.search).get('q') || '');
     setMobile(false);
@@ -128,7 +129,10 @@ export default function Shell({ children }) {
         />
       )}
       <aside
+        id="notebook-navigation"
         ref={sidebar}
+        role={mobile ? 'dialog' : undefined}
+        aria-modal={mobile ? true : undefined}
         className={`sidebar ${mobile ? 'is-open' : ''}`}
         aria-label="Notebook navigation"
       >
@@ -176,6 +180,7 @@ export default function Shell({ children }) {
               to={`/library?track=${track.id}`}
               onClick={() => setMobile(false)}
               className={`subject-link ${selectedTrack === track.id ? 'selected' : ''}`}
+              aria-current={selectedTrack === track.id ? 'true' : undefined}
             >
               <span className="subject-dot" style={{ background: track.color }} />
               {track.shortName || track.name}
@@ -223,6 +228,7 @@ export default function Shell({ children }) {
               className="icon-button mobile-menu"
               aria-label="Open navigation"
               aria-expanded={mobile}
+              aria-controls="notebook-navigation"
               onClick={() => setMobile(true)}
             >
               <Icon name="menu" />
@@ -236,14 +242,17 @@ export default function Shell({ children }) {
             role="search"
             onSubmit={(event) => {
               event.preventDefault();
-              navigate(`/library?q=${encodeURIComponent(query)}`);
+              navigate(
+                query.trim() ? `/library?q=${encodeURIComponent(query.trim())}` : '/library',
+              );
+              search.current?.blur();
             }}
           >
             <Icon name="search" size={16} />
             <input
               ref={search}
               aria-label="Search all notes"
-              placeholder="Concept ya question dhundo…"
+              placeholder="Saare notes mein dhundo…"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -272,7 +281,7 @@ export default function Shell({ children }) {
             karke rakho.
           </div>
         )}
-        <main id="main-content" className="page-content">
+        <main id="main-content" className="page-content" tabIndex={-1}>
           {children}
         </main>
         <footer className="app-footer">

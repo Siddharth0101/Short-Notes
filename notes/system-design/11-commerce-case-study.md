@@ -25,6 +25,13 @@ visual: request-flow
 - Refund workflow — duplicate refund request ki identity aur reconciliation.
 - Inventory release — failed/expired order ka stock once release; retry double increment na kare.
 
+### Product-page flow
+
+- Faceted filters — URL mein filter/sort state; AND/OR semantics aur counts ka API contract clear.
+- Product variant — color/size ko stable SKU se map; image, price aur availability selected variant se.
+- Commerce SEO — crawlable product content, canonical URLs aur valid structured data; private cart data public cache nahi.
+- Cart sync — anonymous/login carts ka merge rule; server price/stock final authority.
+
 ## Sources — aur padhne ke liye
 
 - [Stripe idempotent requests](https://docs.stripe.com/api/idempotent_requests)

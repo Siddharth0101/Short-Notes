@@ -45,6 +45,16 @@
  * - Suppressed exception — try-with-resources cleanup failure main exception ke saath attach ho sakti hai.
  * - Charset — byte/text conversion mein explicit encoding; platform default par blind depend mat karo.
  * - Duration/Period — elapsed time-based amount / calendar date-based amount.
+ * - Predicate — T → boolean; test se check, and/or/negate se combine.
+ * - Function interface — T → R; apply transform, andThen next function chalata hai.
+ * - Consumer — T → void; accept se side effect; Supplier — no input → T, get se value.
+ * - Collectors — joining strings jodta; groupingBy keys ke groups; downstream collector grouped result summarize karta hai.
+ * - Stream matching — anyMatch/sab allMatch/noneMatch short-circuit; empty stream par false/true/true.
+ * - Optional creation — of(null) error; nullable value ke liye ofNullable; absence ke liye empty.
+ * - Runnable — run ka result void; Callable value return aur checked exception throw kar sakta hai.
+ * - Thread start — start nayi thread schedule; run directly call karo toh current thread mein execute.
+ * - Thread states — NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED; RUNNING separate enum state nahi.
+ * - Sleep/wait — sleep monitor release nahi karta; wait owned monitor release karke notification/condition ka wait karta hai.
  */
 
 import java.util.ArrayList;
@@ -177,7 +187,7 @@ public class Advance_Java_Concepts {
         try { t2.join(); } catch (InterruptedException e) {} // Wait for t2
 
         // --- Thread states ---
-        System.out.println("\nThread States: NEW -> RUNNABLE -> RUNNING -> (BLOCKED/WAITING) -> TERMINATED");
+        System.out.println("\nThread states: NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED");
         System.out.println("t1 state now: " + t1.getState()); // TERMINATED
         System.out.println("\n===== Collections =====");
 

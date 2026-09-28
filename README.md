@@ -3,7 +3,7 @@
 - Format — `term — short meaning / important catch`.
 - Revision — concept padho, recall karo, weak point repeat karo.
 
-**108 chapters · 43 course stages · 142 linked source examples · 444 interview questions · 20 interactive visuals.**
+**118 chapters · 47 course stages · 142 linked source examples · 456 interview questions · 20 interactive visuals.**
 
 Shuru karne ke liye [poora syllabus](notes/README.md) kholo. Padhai ka tareeka [study guide](notes/STUDY_GUIDE.md) mein aur difficult terms ke easy meanings [Hinglish glossary](notes/GLOSSARY_HINGLISH.md) mein milenge.
 
@@ -11,7 +11,7 @@ Interview ke liye [52 priority questions aur preparation plan](notes/INTERVIEW_P
 
 **Machine coding practice:** [121 build rounds aur 44 top-priority questions](notes/MACHINE_CODING_PRACTICE.md) — har subject ke 11 rounds, 121 follow-ups, timeboxes, acceptance checks aur answer guides. App mein `machine-coding` search karo.
 
-Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho.
+Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho. React Native ke [198 short points ka concept recheck](notes/REACT_NATIVE_REVIEW.md) bhi available hai.
 
 ## Kya aur kis order mein padhna hai?
 
@@ -19,6 +19,7 @@ Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT
 | --- | ---: | --- |
 | JavaScript | 20 | Variables → types/operators → decisions/loops → functions → arrays/objects → scope → browser → OOP → async/tooling → testing → storage/Git |
 | React | 12 | JSX/props → state → rendering/identity → composition → effects → routing/shared state → server data/types → performance/practice → behavior testing |
+| [React Native](notes/react-native/README.md) | 10 | Expo → native UI/layout → lists → navigation → forms → networking/storage → permissions → performance → testing → release |
 | Java | 19 | First program → control flow → classes → packages/interfaces → collections/JVM → builds/tests → SQL → concurrency → type metadata/schema migrations → LLD |
 | Spring Boot | 13 | First app → beans/DI → configuration → REST/validation → JPA/security → testing → observability → deployment → jobs/cache → Servlet/MVC → optional AI/RAG |
 | Node & MongoDB | 9 | Node/HTTP → Express → documents/CRUD → Mongoose → indexes/query plans → security → production → testing/shutdown |
@@ -26,7 +27,7 @@ Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT
 | System design | 15 | Requirements/scaling → React frontend → Java backend → complete case studies → consistency/limiting → API contracts → OS/network debugging |
 | Interview playbooks | 6 | Related course ke baad language, application, algorithm aur design rounds |
 
-Frontend ke liye JavaScript → React → frontend design follow karo. Backend ke liye Java → Spring Boot → backend design, ya JavaScript → Node/MongoDB route lo. DSA ko apne main track ke saath padh sakte ho. Syllabus mein har stage ke prerequisites aur checkpoint diye hain; beginner ho toh unhe skip mat karo.
+Frontend ke liye JavaScript → React → frontend design; mobile ke liye React → React Native follow karo. Backend ke liye Java → Spring Boot → backend design, ya JavaScript → Node/MongoDB route lo. DSA ko apne main track ke saath padh sakte ho. Syllabus mein har stage ke prerequisites aur checkpoint diye hain; beginner ho toh unhe skip mat karo.
 
 ## Revision ka format
 
@@ -88,7 +89,7 @@ Numbered folders ke original source files aur PDF slides reference material hain
 
 ## References aur coverage
 
-[Primary source map](notes/RESEARCH_SOURCES.md) mein 30 sources aur 34 chapters ki research mapping hai, reviewed 13 September 2026. Sources mein MDN, React, TypeScript, Java, Spring, PostgreSQL, Node, MongoDB aur doosri primary documentation hai. Exact links chapters mein diye hain.
+[Primary source map](notes/RESEARCH_SOURCES.md) mein official references hain; September 2026 ke external comparison aur React Native additions bhi linked hain. Sources mein MDN, React, TypeScript, Java, Spring, PostgreSQL, Node, MongoDB aur doosri primary documentation hai. Exact links chapters mein diye hain.
 
 Course routes Jonas Schmedtmann ke JavaScript/React/Node-MongoDB, Telusko ke Java aur Colt Steele ke DSA topics ke original companions hain. Instructor names reference context hain; affiliation ka claim nahi. Exact enrolled editions aur complete lecture lists available nahi the, isliye broad topic coverage ko verified every-lecture reproduction mat samjho. [Coverage guide](notes/COURSE_COVERAGE.md) mein mapping aur lecture audit ki limits hain.
 

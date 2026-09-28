@@ -26,6 +26,12 @@ visual: closures
 - Captured reference — object reachable rahe toh closure se uske latest mutations dikh sakte hain.
 - Shadowing trap — inner same-name binding TDZ mein ho toh outer value fallback nahi milti.
 
+### Execution context
+
+- Execution context — function call ka local execution state; stack active calls track karta hai.
+- Call-stack overflow — unbounded synchronous recursion stack exhaust kar sakti hai; base/progress verify karo.
+- Engine pipeline — source parse → execute → hot code optimize; engine internals language guarantees se alag.
+
 ## Research notes: Live bindings versus snapshots
 
 - Closure binding read karta hai; pehle calculate ki hui string khud update nahi hoti.

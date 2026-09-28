@@ -23,6 +23,11 @@ visual: react-render
 - Effect review — setup resource, reactive dependencies aur exact cleanup identify.
 - Demo — mouse ke saath keyboard, empty state aur failed network bhi dikhao.
 
+### Quick answer checks
+
+- UI answer — state owner, identity, loading/error aur keyboard flow chhote example se explain karo.
+- CSS answer — box, containing block, stacking context aur overflow inspect; random z-index guess mat karo.
+
 ## Research notes: Demonstrate component behavior
 
 - Linked Amazon guidance fundamentals ko problems par apply karne par focus karti hai; sirf details ratna learning goal nahi hai.

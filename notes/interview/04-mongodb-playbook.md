@@ -23,6 +23,11 @@ visual: mongo-index
 - Webhook scenario — signature, durable receipt, dedupe aur repeated delivery trace.
 - Failure scope — client retry, app rollback aur provider side effect alag identify.
 
+### Quick answer checks
+
+- Query plan answer — filter + index + examined/returned counts; sirf index name bolna enough nahi.
+- API retry answer — timeout ke baad write ho chuki ho sakti hai; idempotency key/reconciliation explain karo.
+
 ## Research notes: Justify the query from its workload
 
 - Linked Microsoft technical guidance mein testing aur problem-solving bhi assessment ka part hain.
