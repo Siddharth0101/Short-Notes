@@ -45,12 +45,6 @@ function Chapter({ note }) {
   useEffect(() => {
     visit(note.id);
   }, [note, visit]);
-  useEffect(() => {
-    document.title = `${note.title} · Shortnotes`;
-    return () => {
-      document.title = 'Shortnotes — Your developer notebook';
-    };
-  }, [note.title]);
   const track = trackById[note.track];
   const sequence = notes.filter((item) => item.track === note.track);
   const index = sequence.findIndex((item) => item.id === note.id);

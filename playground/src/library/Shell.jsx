@@ -244,6 +244,7 @@ export default function Shell({ children }) {
               event.preventDefault();
               navigate(
                 query.trim() ? `/library?q=${encodeURIComponent(query.trim())}` : '/library',
+                { state: { scrollToTop: true } },
               );
               search.current?.blur();
             }}

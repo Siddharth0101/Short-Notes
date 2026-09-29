@@ -35,12 +35,16 @@ export function RouteViewport({ children, positions }) {
   useLayoutEffect(() => {
     const samePage = previous.current?.pathname === location.pathname;
     const restoreKey = action === 'POP' ? location.key : location.state?.restoreKey;
+    const newCollection =
+      action === 'PUSH' &&
+      samePage &&
+      ['/library', '/paths', '/saved', '/interview'].includes(location.pathname);
     if (restoreKey && positions.current.has(restoreKey)) {
       window.scrollTo({ top: positions.current.get(restoreKey), behavior: 'instant' });
-    } else if (!samePage && !location.hash) {
+    } else if ((!samePage || newCollection || location.state?.scrollToTop) && !location.hash) {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
-    if (!samePage) {
+    if (!samePage || newCollection || location.state?.scrollToTop) {
       const heading = document.querySelector('#main-content h1');
       if (heading) {
         heading.tabIndex = -1;

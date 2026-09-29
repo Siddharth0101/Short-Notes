@@ -16,6 +16,7 @@ for (const name of [
   'HTMLInputElement',
   'HTMLSelectElement',
   'Event',
+  'FormData',
   'MouseEvent',
   'KeyboardEvent',
   'localStorage',
@@ -44,6 +45,7 @@ const { default: App } = await server.ssrLoadModule('/src/App.jsx');
 const { courses } = await server.ssrLoadModule('/src/data/curriculum.js');
 const { notes, archive } = await server.ssrLoadModule('/src/data/catalog.js');
 const { VISUAL_IDS } = await server.ssrLoadModule('/src/lib/visualIds.js');
+const { VISUALS } = await server.ssrLoadModule('/src/data/visuals.js');
 const { interviewQuestions } = await server.ssrLoadModule('/src/data/interviewQuestions.js');
 // Preload lazy pages so tests cover their resolved UI rather than Suspense fallbacks.
 await Promise.all(
@@ -76,7 +78,9 @@ const button = (label) =>
   );
 async function click(element) {
   assert(element, 'Expected interactive element');
-  await React.act(async () => element.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  await React.act(async () =>
+    element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })),
+  );
 }
 async function select(element, value) {
   await React.act(async () => {
@@ -673,13 +677,30 @@ test('Chapter round trips retain collection filters, origin through tabs and scr
     );
     await click(document.querySelector('.reader-return'));
     assert.equal(window.scrollY, 640);
+    assert.equal(document.title, `${document.querySelector('h1').textContent.trim()} · Shortnotes`);
     assert.equal(document.querySelector('[aria-label="Search this collection"]').value, 'event');
-    assert.match(text(), new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    assert(
+      [...document.querySelectorAll('.note-row h3')].some(
+        (heading) => heading.textContent === title,
+      ),
+    );
     window.scrollY = 820;
     window.dispatchEvent(new Event('scroll'));
     await click(document.querySelector('.note-row-body'));
     await React.act(async () => navigate(-1));
     assert.equal(window.scrollY, 820, 'Browser Back restores the collection position');
+    await click(document.querySelector('.subject-nav a[href="/library?track=react"]'));
+    assert.equal(window.scrollY, 0, 'A new subject starts at its filters');
+    window.scrollY = 360;
+    window.dispatchEvent(new Event('scroll'));
+    await select(document.querySelector('[aria-label="Filter difficulty"]'), 'Intermediate');
+    assert.equal(window.scrollY, 360, 'Refining current results does not jump the page');
+    await React.act(async () =>
+      document
+        .querySelector('.global-search')
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })),
+    );
+    assert.equal(window.scrollY, 0, 'Global search exposes results even from the same page');
   } finally {
     window.scrollTo = oldScroll;
     window.scrollY = 0;
@@ -748,11 +769,12 @@ test('Mobile chapter navigation targets real headings and visual selection respe
   await mount('/visuals?track=java');
   const picker = document.querySelector('[aria-label="Visualization concept"]');
   const options = [...picker.options];
-  assert.equal(options.length, 3);
-  assert.equal(
-    picker.value,
-    document.querySelector('.visual-picker .active').getAttribute('class') ? options[0].value : '',
+  assert.deepEqual(
+    options.map((option) => option.value),
+    VISUALS.filter((visual) => visual.track === 'java').map((visual) => visual.id),
   );
+  assert.equal(picker.value, options[0].value);
+  assert.equal(document.querySelector('.simulator h2').textContent, options[0].textContent);
   await select(picker, options[1].value);
   assert.equal(document.querySelector('.simulator h2').textContent, options[1].textContent);
 });

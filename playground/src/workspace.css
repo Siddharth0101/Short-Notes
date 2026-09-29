@@ -959,6 +959,12 @@
 .reader-return {
   margin-bottom: 16px;
 }
+.markdown h2,
+#source-examples,
+.source-example,
+#chapter-practice {
+  scroll-margin-top: 16px;
+}
 .mobile-toc,
 .mobile-visual-picker {
   display: none;
@@ -1085,7 +1091,7 @@
   .source-examples,
   .source-example,
   #chapter-practice {
-    scroll-margin-top: 140px;
+    scroll-margin-top: 16px;
   }
   .progress-toast {
     left: 16px;
