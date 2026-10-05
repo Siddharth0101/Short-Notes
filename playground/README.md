@@ -19,6 +19,20 @@ npm run format    # App modules aur tests format karo
 
 Lockfile reproducible install ke liye hai. Build parent `notes/`, `examples/` aur source directories bhi use karta hai; sirf app folder copy karna enough nahi.
 
+## Live interviewer setup
+
+Repository root `.env` mein `GEMINI_API_KEY` set karo; `.env.example` mein defaults hain. Key frontend ya `VITE_*` variable mein mat rakho. Code defaults `GEMINI_MODEL=gemini-3.5-flash-lite` aur `INTERVIEW_PORT=8787` hain. Current `.env` mein primary `gemini-3.8-flash` hai; `GEMINI_FALLBACK_MODELS=gemini-3.7-flash,gemini-3.5-flash-lite` quota ya temporary provider overload (502/503/504) par ordered backups use karta hai. Available backup ho toh overloaded model ko turant skip karta hai. Exhausted models cooldown mein rehte hain; same interview/memory continue hoti hai. Speech models ke limits separate hain. Automatic voice default on hai: mic permission do, interviewer ke baad bolo, live text dekho; pause par answer send hota hai. Coding mein Send & review code explicit hai. Live captions ke liye `GEMINI_LIVE_TRANSCRIPTION_MODEL=gemini-3.5-transcribe-live` use hota hai. Voice ke liye same key se `GEMINI_TRANSCRIPTION_MODEL=gemini-3.5-transcribe` aur `GEMINI_SPEECH_MODEL=gemini-3.8-flash-lite-tts` use hote hain. Recordings transcription ke liye Gemini ko jaati hain; raw audio app save nahi karta.
+
+```sh
+npm run dev:agent   # API + frontend together
+npm run server      # API only
+npm run test:agent  # Interview behavior tests
+```
+
+Open `http://127.0.0.1:5173/interview/live`. Microphone permission available ho toh Gemini transcription aur speech-generation tools ke saath spoken interview use karo; typed fallback bhi hai. One-hour session mein intro, theory, coding aur review rounds hain. Pause, reload recovery, hints, and final review available hain; code execution included nahi hai.
+
+Backend Gemini Interactions API use karta hai. Local hub four specialists ko separate memories aur scoped tools ke saath coordinate karta hai. Root `.env` mein `MONGODB_URI` configured ho toh sessions aur long-term memory MongoDB mein save hoti hain; otherwise root `.interviews/` mein JSON. Root se `npm ci --prefix server` bhi chalao. Existing JSON history ko server stop karke `npm run db:migrate` se import karo; source files preserve rehti hain. `npm run db:check` synthetic data ke saath real database integration verify karta hai. [Detailed architecture and limits](../docs/INTERVIEWER_ARCHITECTURE.md) dekho. Yeh local single-user backend hai; public hosting ke liye authentication, ownership checks, aur database required honge.
+
 ## Kaunsa code kahan hai?
 
 | File/folder | Kaam |
@@ -47,6 +61,7 @@ Lockfile reproducible install ke liye hai. Build parent `notes/`, `examples/` au
 | `/notes/:id?tab=visual` | Chapter ka linked visual |
 | `/visuals?topic=binary-search` | Visual lab |
 | `/interview?track=java` | Filtered interview practice |
+| `/interview/live` | Voice or typed AI interview with subject selection |
 | `/saved` | Bookmarks aur progress import/export |
 | `/domain/:domainId/dir/*` | Compatible old folder route |
 | `/domain/:domainId/file/*` | Existing playground; Java notes reader par jaate hain |
@@ -69,7 +84,7 @@ Visual lab teaching simulation hai. Browser, JVM, database ya Spring runtime act
 
 Top bar se System, Light aur Dark theme choose hoti hai. Preference local save hoti hai aur tabs mein sync hoti hai. System mode OS changes follow karta hai. `public/theme-init.js` React se pehle theme apply karta hai; shared styles `src/theme.css` mein hain.
 
-Root `netlify.toml` app build karke `playground/dist/` publish karta hai. Doosre hosts par SPA routes ke liye `index.html` fallback aur actual assets ke liye normal serving rakho. PDFs static assets hain aur open karne par load hote hain. Google Fonts ke saath local font fallbacks hain. API key/backend nahi chahiye; offline service-worker cache aur automatic cross-device sync implemented nahi hain.
+Root `netlify.toml` app build karke `playground/dist/` publish karta hai. Doosre hosts par SPA routes ke liye `index.html` fallback aur actual assets ke liye normal serving rakho. PDFs static assets hain aur open karne par load hote hain. Google Fonts ke saath local font fallbacks hain. Reading aur self-review features ko API key/backend nahi chahiye. Live interviewer ke liye separately running Node API aur Gemini key chahiye; static Netlify deployment us backend ko deploy nahi karti. Offline service-worker cache aur automatic cross-device sync implemented nahi hain.
 
 ## Validation ki scope
 

@@ -55,6 +55,21 @@ npm run preview
 
 App mein search, numbered syllabus, learning paths, chapter ke previous/next links, bookmarks aur progress milti hai. Source examples related chapter ke andar expand hote hain; kuch examples ke apne interactive playground hain. Search chapter text, source titles/paths aur interview questions mein bhi dhundta hai.
 
+## Live AI interviewer
+
+Subject choose karke one-hour interview practice karo: self-introduction, project follow-ups, theory, machine coding, hints, aur final review. Gemini speech-recognition aur text-to-speech tools ke saath voice aur typed answers dono available hain. Browser sirf mic capture aur audio playback karta hai.
+
+Root se `npm ci --prefix server` chalao. MongoDB ke liye root `.env` mein `MONGODB_URI` aur `MONGODB_DB=shortnotes` set karo; purani sessions import karne ke liye server stop karke `playground/` se `npm run db:migrate` chalao. Root `.env` mein server-only `GEMINI_API_KEY` set karo (`.env.example` dekho; existing `.env` overwrite mat karo). Default model `gemini-3.5-flash-lite` hai. Phir:
+
+```sh
+cd playground
+npm run dev:agent
+```
+
+Open `http://127.0.0.1:5173/interview/live`. Session configured MongoDB mein save hoti hai (URI absent ho toh local JSON); pause karke baad mein continue kar sakte ho. Submitted code execute nahi hota. Yeh local single-user setup hai; public deployment ke liye backend authentication aur durable shared storage add karna hoga.
+
+[Setup, hub/specialist architecture, tools, memory, aur limitations](docs/INTERVIEWER_ARCHITECTURE.md) padho. Existing notes aur self-review practice AI ke bina bhi chalti hain.
+
 Progress isi browser ke local storage mein rehti hai. **Bookmarks** se JSON export karke backup rakho; doosre device par import karke merge kar sakte ho. Account ya automatic server sync nahi hai. Site data clear karne se local progress delete ho jaati hai. Purane source links owning chapter par redirect hote hain; source bookmarks migrate hote hain. Sirf source complete karne se poora chapter complete mark nahi hota.
 
 ## Interview practice aur visuals

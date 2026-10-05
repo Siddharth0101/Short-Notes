@@ -5,6 +5,7 @@ import Shell from './library/Shell.jsx';
 import Dashboard from './library/Dashboard.jsx';
 import Library from './library/Library.jsx';
 import { RouteViewport } from './library/Navigation.jsx';
+const InterviewAgent = lazy(() => import('./interviewer/InterviewAgent.jsx'));
 const Reader = lazy(() => import('./library/Reader.jsx'));
 const VisualLab = lazy(() => import('./library/VisualLab.jsx'));
 const Interviews = lazy(() => import('./library/Interviews.jsx'));
@@ -63,6 +64,7 @@ export default function App() {
                 <Route path="/notes/:noteId" element={<Reader />} />
                 <Route path="/visuals" element={<VisualLab />} />
                 <Route path="/interview" element={<Interviews />} />
+                <Route path="/interview/live" element={<InterviewAgent />} />
                 <Route path="/domain/:domainId/*" element={<LegacyRoute />} />
                 <Route
                   path="*"

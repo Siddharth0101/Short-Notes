@@ -111,6 +111,7 @@ export default function Shell({ children }) {
     ['/paths', 'path', 'Learning paths'],
     ['/visuals', 'play', 'Visual lab'],
     ['/interview', 'messages', 'Interview prep'],
+    ['/interview/live', 'play', 'AI interview'],
     ['/saved', 'bookmark', 'Bookmarks'],
   ];
   const pageName = location.pathname.startsWith('/notes')
@@ -156,7 +157,7 @@ export default function Shell({ children }) {
           {navItems.map(([to, icon, label]) => (
             <NavLink
               key={to}
-              end={to === '/'}
+              end={to === '/' || to === '/interview'}
               to={to}
               onClick={() => setMobile(false)}
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}

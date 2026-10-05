@@ -1,2 +1,11 @@
 .DS_Store
 **/.DS_Store
+
+# Local credentials
+.env
+.env.*
+!.env.example
+
+# Local interview transcripts and assessment history
+.interviews/
+server/node_modules/

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "oxlint",
+    "lint": "oxlint && npm run lint:agent",
     "preview": "vite preview",
     "test": "node --test tests/*.test.mjs",
     "check": "npm run revision:check && npm run curriculum:check && npm run interviews:check && npm run priority:check && npm run machine:check && npm run test && npm run lint && npm run build",
@@ -15,7 +15,13 @@
     "interviews:check": "node ../scripts/sync-interviews.mjs --check",
     "priority:check": "node ../scripts/sync-priority-interviews.mjs --check",
     "machine:check": "node ../scripts/sync-machine-coding.mjs --check",
-    "revision:check": "node ../scripts/check-revision.mjs"
+    "revision:check": "node ../scripts/check-revision.mjs",
+    "dev:agent": "node ../server/dev.mjs",
+    "server": "node ../server/index.mjs",
+    "test:agent": "node --test tests/interviewer*.test.mjs",
+    "lint:agent": "cd .. && playground/node_modules/.bin/oxlint --config playground/.oxlintrc.json server",
+    "db:migrate": "node ../server/migrate.mjs",
+    "db:check": "node ../server/verify-mongo.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.44.0",
