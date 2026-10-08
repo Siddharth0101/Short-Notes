@@ -4,7 +4,7 @@ title: React testing — user behavior aur accessibility verify karo
 track: react
 order: 12
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Testing Library — user ke visible behavior se tests likho.
 tags: testing, accessibility, forms, react
 ---
@@ -27,6 +27,18 @@ tags: testing, accessibility, forms, react
 
 - Dialog focus — open par andar focus, modal mein Tab trap, Escape close aur trigger par focus return.
 - Live region — status changes announce; alert sirf urgent update, noisy repeated announcements avoid.
+
+### Edge cases aur reasoning
+
+- Browser test boundary — jsdom actual layout, paint aur complete browser accessibility behavior prove nahi; real-browser checks separately rakho.
+- Async absence — immediate queryBy absence future disappearance prove nahi; transition complete hone ka suitable wait use karo.
+- Test user ownership — label/name se control choose karo; duplicate labels ho toh related region within query se scope karo.
+
+## Recall aur practice
+
+- Sawal — Snapshot test pass hone se modal keyboard accessibility prove hoti hai?
+- Jawaab — Nahi; focus movement, Tab boundary, Escape aur restoration ko interaction se check karna hoga.
+- Khud try karo — Form journey test karo; role/name query, invalid submit message, failed retry aur successful submit; browser mein focus/zoom manually verify karo.
 
 ## Sources — aur padhne ke liye
 

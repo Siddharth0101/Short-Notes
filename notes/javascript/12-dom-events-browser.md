@@ -4,7 +4,7 @@ title: DOM events and browser interaction
 track: javascript
 order: 12
 level: Foundation
-minutes: 2
+minutes: 4
 summary: DOM — browser ka document tree; selector se node pakdo.
 tags: dom, events, delegation, browser, accessibility
 ---
@@ -39,9 +39,21 @@ tags: dom, events, delegation, browser, accessibility
 - `dataset` — data-* values strings hoti hain; numeric/boolean conversion validate karo.
 - `DOMContentLoaded`/`load` — DOM parsing/deferred scripts ready / dependent load resources complete.
 
+### Edge cases aur reasoning
+
+- Delegation containment — closest match milne ke baad intended parent ke andar hona check; nested widgets ke actions mix mat karo.
+- Passive listener — passive:true ke saath preventDefault effective nahi; cancelable interaction ka listener contract choose karo.
+- Stop immediate — stopImmediatePropagation current target ke remaining listeners bhi rokta hai; stopPropagation unhe necessarily nahi rokta.
+
 ## Research notes: Own a listener lifecycle
 
 - Related listeners same abort signal share karke together dispose ho sakte hain.
+
+## Recall aur practice
+
+- Sawal — Parent listener mein clicked button ke andar icon ho toh event.target kya ho sakta hai?
+- Jawaab — Icon node; target.closest("button") se button resolve karo aur delegation boundary verify karo.
+- Khud try karo — Dynamic todo list ka single parent listener banao; icon click, new item, outside target aur dispose ke baad no action verify karo.
 
 ## Sources — aur padhne ke liye
 

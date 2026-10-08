@@ -4,7 +4,7 @@ title: First React component JSX and props
 track: react
 order: 1
 level: Foundation
-minutes: 1
+minutes: 3
 summary: Component — props se UI return karne wala function.
 tags: fundamentals, react, jsx, props
 ---
@@ -22,6 +22,18 @@ tags: fundamentals, react, jsx, props
 - Event prop — handler pass karo: `onClick={save}`; `save()` render ke time call hota hai.
 - JSX attributes — className aur htmlFor use; inline style JS object hota hai.
 - Key prop — React identity ke liye; child ko ID chahiye toh separate prop do.
+
+### Edge cases aur reasoning
+
+- Renderable children — strings/numbers/elements/arrays render ho sakte; plain object ko directly child banana error, fields explicitly render karo.
+- Prop default — destructured default undefined/missing par lagta, null par nahi; nullable input ka separate contract define karo.
+- Expression boundary — JSX braces expression leti hain; statements ko render se pehle calculate ya component mein extract karo.
+
+## Recall aur practice
+
+- Sawal — Greeting({name}) mein props destructuring parent object mutate karti hai?
+- Jawaab — Nahi; local binding padhti hai. Nested object mutate karo toh shared data badal sakta hai, jo avoid karna chahiye.
+- Khud try karo — ProductCard banao; required title, optional description, children action aur two independent instances ka output verify karo.
 
 ## Sources — aur padhne ke liye
 

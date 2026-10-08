@@ -4,7 +4,7 @@ title: Messaging outbox retries and distributed workflows
 track: system-design
 order: 8
 level: Advanced
-minutes: 2
+minutes: 3
 summary: Dual write — DB success + message failure se inconsistent state ban sakti hai.
 tags: messaging, outbox, idempotency, sagas
 visual: outbox-pattern
@@ -27,9 +27,21 @@ visual: outbox-pattern
 - Fencing token — newer lease owner ke token se stale worker writes reject.
 - Replay — consumer schema, idempotency aur event retention safe reprocessing support kare.
 
+### Edge cases aur reasoning
+
+- Dedup retention — receipt cleanup ke baad delayed/replayed event duplicate effect kar sakta; replay horizon aur business identity align karo.
+- Ack ordering — effect+dedupe commit ke baad broker ack; ack pehle ho aur crash aaye toh event lose ho sakta.
+- Outbox ordering — multiple relay workers same aggregate events reorder kar sakte; sequence/version aur publish partition contract chahiye.
+
 ## Research notes: Budget retries across the call graph
 
 - Dependency already struggle kar rahi ho tab retries aur capacity leti hain.
+
+## Recall aur practice
+
+- Sawal — Consumer commit ke baad ack se pehle crash kare toh expected behavior?
+- Jawaab — Redelivery possible; same event ki durable dedupe check duplicate business effect roke, phir ack safely kare.
+- Khud try karo — Outbox/consumer crash timeline likho; before commit, after publish, after effect commit aur delayed replay par invariants verify karo.
 
 ## Sources — aur padhne ke liye
 

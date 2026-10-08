@@ -4,7 +4,7 @@ title: Security observability and production operations
 track: system-design
 order: 9
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Trust boundary — har hop par identity, input aur permissions verify karo.
 tags: security, observability, deployment, reliability
 visual: request-flow
@@ -36,9 +36,21 @@ visual: request-flow
 - CSRF — auto-sent credentials ka misuse; suitable token, SameSite aur origin checks.
 - CORS policy — allowed browser origins/read access; server authorization phir bhi mandatory.
 
+### Edge cases aur reasoning
+
+- Backup versus replica — replica logical delete/corruption replicate kar sakti; independently retained restorable backups aur tested recovery chahiye.
+- SLO denominator — successful valid user events ka population define; excluded requests aur measurement window transparent rakho.
+- Audit integrity — access-restricted append/retention policies; operational logs mein sensitive payload dump karna useful audit ka replacement nahi.
+
 ## Research notes: Turn an SLO into a concrete budget
 
 - Target se pehle user-visible indicator choose karo.
+
+## Recall aur practice
+
+- Sawal — 99.9% successful requests across1M eligible requests ka error allowance?
+- Jawaab — 1000 bad requests; time-based SLO ka downtime allowance different denominator se calculate hoga.
+- Khud try karo — Restore exercise plan likho; deleted record, corrupt primary, unavailable region aur stolen credential cases ke detection/RTO/RPO evidence do.
 
 ## Sources — aur padhne ke liye
 

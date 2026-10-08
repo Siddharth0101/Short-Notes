@@ -17,8 +17,9 @@ const chapterTopics = new Set();
 const sourceTopics = new Map();
 const aliases = JSON.parse(await readFile(path.join(root, 'scripts/revision-topic-aliases.json'), 'utf8'));
 let pointCount = 0;
-function checkPoints(lines, file) {
-  assert(lines.length >= 5, `${file}: missing revision concepts`);
+let recallCount = 0;
+function checkPoints(lines, file, minimum = 5) {
+  assert(lines.length >= minimum, `${file}: missing revision concepts`);
   for (const line of lines) {
     assert(line.includes(' — '), `${file}: use term — meaning`);
     assert(line.split(/\s+/).length <= 40, `${file}: explanation is too long: ${line}`);
@@ -36,6 +37,16 @@ for (const track of TRACKS) {
     const localTopics = points.map(topicKey);
     const labels = points.map((line) => line.slice(2).split(' — ')[0].replaceAll('`', '').trim());
     assert.equal(new Set(labels).size, labels.length, `${name}: repeated concept label; merge the points`);
+    const recallSections = note.body.split(/^## /m).filter(section => section.startsWith('Recall aur practice\n'));
+    assert.equal(recallSections.length, 1, `${name}: include one recall and practice section`);
+    const recallPoints = recallSections[0].split('\n').filter(line => line.startsWith('- '));
+    checkPoints(recallPoints, name, 3);
+    assert.deepEqual(
+      recallPoints.map(line => line.slice(2).split(' — ')[0]),
+      ['Sawal', 'Jawaab', 'Khud try karo'],
+      `${name}: include a recall question, answer and concrete practice checks`,
+    );
+    recallCount++;
     localTopics.forEach((topic) => chapterTopics.add(topic));
     pointCount += points.length;
     chapterIds.add(note.id);
@@ -96,3 +107,4 @@ for (const question of interviewQuestions) {
 console.log('Chapter coverage:', totals);
 console.log(`Verified ${chapterIds.size} chapters, ${found.length} source files and ${interviewQuestions.length} interview answers.`);
 console.log(`Checked ${pointCount} revision bullets and ${sourceTopics.size} distinct source-topic labels (including reviewed aliases).`);
+console.log(`Verified ${recallCount} chapter-specific recall questions, answers and practice exercises.`);

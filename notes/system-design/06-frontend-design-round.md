@@ -4,7 +4,7 @@ title: Frontend system design interview from requirements to failure
 track: system-design
 order: 6
 level: Advanced
-minutes: 2
+minutes: 5
 summary: Frontend round — requirements → components/state → data flow → performance → failures.
 tags: frontend, react, system-design, accessibility, caching
 ---
@@ -54,6 +54,18 @@ tags: frontend, react, system-design, accessibility, caching
 
 - Rich-text composer — stored/rendered HTML sanitize; attachments aur draft body ke separate lifecycle.
 - Keyboard shortcut — editable field/IME mein typing hijack mat karo; discoverable shortcut aur focus return rakho.
+
+### Edge cases aur reasoning
+
+- Product freshness — autocomplete results/feed counters/email send har feature ka distinct stale tolerance; one universal TTL blindly apply mat karo.
+- Recoverable draft — autosave loading ko empty draft mat samjho; initial restoration gate aur write version se saved text overwrite prevent karo.
+- UI failure matrix — each boundary ke loading, partial failure, timeout, permission denial aur retry outcome explicitly define karo.
+
+## Recall aur practice
+
+- Sawal — Email send timeout par Send button retry new operation ID banaye toh kya risk?
+- Jawaab — First send already accepted ho sakta; stable operation ID/status reconciliation se duplicate mail prevent karo.
+- Khud try karo — Email client design defend karo; draft restore, upload retry, failed send, keyboard shortcut aur reconnect mailbox conflict ka flow dikhao.
 
 ## Sources — aur padhne ke liye
 

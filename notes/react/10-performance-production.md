@@ -4,7 +4,7 @@ title: Performance suspense and production quality
 track: react
 order: 10
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Profiler — pehle slow render/interaction measure karo.
 tags: performance, memoization, suspense, lazy, testing, production
 visual: react-render
@@ -25,11 +25,25 @@ visual: react-render
 - Bundle split — very tiny chunks bhi request overhead badha sakte hain; loading behavior measure karo.
 - Render purity — memoization hataane par bhi component logically correct rehna chahiye.
 
+### Edge cases aur reasoning
+
+- Transition input — controlled text-input update urgent rakho; expensive result update ko transition/deferred value se separate karo.
+- Memo dependency cost — fresh object dependency calculation cache har render invalidate kar sakti hai; dependency contract pehle inspect karo.
+- Suspense error split — pending fallback aur rejected work ka error boundary different responsibilities; retry identity define karo.
+
 ## Research notes: Measure user experience as well as renders
 
 - Is source review ke Core Web Vitals targets: LCP ≤2.5s, INP ≤200ms, CLS ≤0.1.
 
+## Recall aur practice
+
+- Sawal — startTransition CPU-heavy synchronous calculation ko background thread par chala deta hai?
+- Jawaab — Nahi; marked React update scheduling change hoti hai. Heavy JS phir bhi main thread block kare toh worker/chunking consider karo.
+- Khud try karo — Large filtered list profile karo; typing latency aur render duration before/after record karo, keyboard selection aur error retry preserve karo.
+
 ## Sources — aur padhne ke liye
+
+- [React useTransition](https://react.dev/reference/react/useTransition)
 
 - [Source yahan padho — web.dev](https://web.dev/articles/vitals)
 - [React Compiler introduction](https://react.dev/learn/react-compiler/introduction)

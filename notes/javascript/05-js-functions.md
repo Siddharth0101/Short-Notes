@@ -4,7 +4,7 @@ title: Functions parameters arguments and return values
 track: javascript
 order: 5
 level: Foundation
-minutes: 1
+minutes: 3
 summary: Function — reusable kaam; inputs lo aur result return karo.
 tags: fundamentals, js, functions
 ---
@@ -31,6 +31,18 @@ tags: fundamentals, js, functions
 - IIFE — function define karke turant call; isolated setup/scope ke liye.
 - Currying — f(a, b) ko f(a)(b) jaise staged calls mein badlo.
 - Callback — function ko baad mein invoke karne ke liye pass karo; fn aur fn() alag.
+
+### Edge cases aur reasoning
+
+- Argument mutation — object property update caller ko dikhti hai; local parameter ko reassign karna caller binding nahi badalta.
+- Arrow object return — () => ({id: 1}) object return karta hai; braces bina parentheses function body samjhi jaati hain.
+- Default with null — f(x = 5) mein f(undefined) default leta hai; f(null) null rakhta hai.
+
+## Recall aur practice
+
+- Sawal — function reset(x) { x = []; } caller ki array ko empty kyun nahi karta?
+- Jawaab — Parameter local binding hai; reassign se caller reference nahi badalta. Mutation ya returned replacement ka explicit contract do.
+- Khud try karo — Pure calculateTotal(items, taxRate) likho; default tax, empty items, invalid price aur inputs unchanged check karo.
 
 ## Sources — aur padhne ke liye
 

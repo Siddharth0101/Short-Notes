@@ -4,7 +4,7 @@ title: MongoDB interview playbook
 track: interview
 order: 4
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Model — reads/writes aur growth se embedding/reference choose karo.
 tags: mongodb, interview, indexes, schema, transactions
 visual: mongo-index
@@ -28,9 +28,21 @@ visual: mongo-index
 - Query plan answer — filter + index + examined/returned counts; sirf index name bolna enough nahi.
 - API retry answer — timeout ke baad write ho chuki ho sakti hai; idempotency key/reconciliation explain karo.
 
+### Edge cases aur reasoning
+
+- Query reasoning sequence — read shape→growth bound→index→plan→write cost; index name first bolne se workload justification missing rahegi.
+- Atomicity counterexample — single write atomic hone se separate read/write safe nahi; conditional predicate aur affected-count trace do.
+- Validation boundaries — Mongoose rule, unique DB index aur API authorization different guards; each failure ka owner identify karo.
+
 ## Research notes: Justify the query from its workload
 
 - Linked Microsoft technical guidance mein testing aur problem-solving bhi assessment ka part hain.
+
+## Recall aur practice
+
+- Sawal — Mongoose unique:true duplicate user rejection ko normal validation error kyun nahi banata?
+- Jawaab — Database unique index enforce karta; duplicate-key error map karo, index readiness aur concurrent insert acceptance verify karo.
+- Khud try karo — Tenant query aur last-stock update design karo; explain metrics, $inc validator caveat, duplicate webhook aur other-tenant rejection defend karo.
 
 ## Sources — aur padhne ke liye
 

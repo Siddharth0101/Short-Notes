@@ -4,7 +4,7 @@ title: Browser persistence aur offline behavior — save ka meaning clear karo
 track: javascript
 order: 19
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: `localStorage` — origin-scoped string storage; synchronous aur browser mein persistent.
 tags: storage, indexeddb, offline, versioning
 ---
@@ -34,6 +34,18 @@ tags: storage, indexeddb, offline, versioning
 - Cache-first — speed/offline; network-first — freshness; stale-while-revalidate — cached then refresh.
 - HttpOnly cookie — JS reads block; Secure — HTTPS-only send; SameSite — cross-site send policy; server auth/CSRF checks phir bhi chahiye.
 - XSS — unsafe script injection; output encoding, sanitization aur CSP defense.
+
+### Edge cases aur reasoning
+
+- Read-modify-write race — localStorage get/set sequence cross-tab atomic transaction nahi; concurrent edits overwrite ho sakti hain.
+- Private cache partition — user/tenant identity cache keys mein rakho; logout par previous private entries clear karo.
+- Durability limit — browser data eviction/user clearing possible; important unsynced work ke liye export aur recovery contract do.
+
+## Recall aur practice
+
+- Sawal — Do tabs same counter read karke +1 save karein toh dono increments guaranteed hain?
+- Jawaab — Nahi; dono same previous value likh sakte hain. Transactional storage ya explicit coordination/merge strategy chahiye.
+- Khud try karo — Versioned draft loader banao; malformed JSON, old schema, quota error aur two-tab conflict par current typed answer preserve karo.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: SQL joins windows and transaction races
 track: java
 order: 14
 level: Advanced
-minutes: 3
+minutes: 5
 summary: WHERE — grouping se pehle rows filter; HAVING — groups filter.
 tags: sql, postgres, joins, windows, transactions
 visual: transaction-race
@@ -57,9 +57,21 @@ visual: transaction-race
 - NOT IN + NULL — unexpected unknown result; null behavior verify.
 - ANY/ALL — comparison kisi / sab returned values se.
 
+### Edge cases aur reasoning
+
+- Keyset tie-breaker — cursor complete order tuple rakhe, jaise created_at+id; timestamp alone equal-time rows skip/repeat kara sakta hai.
+- Top per group — ROW_NUMBER partition+deterministic order se one row; RANK/DENSE_RANK ties ke contract ke liye choose karo.
+- Write plan caution — EXPLAIN ANALYZE INSERT/UPDATE/DELETE actual writes karta hai; isolated data aur transaction boundaries ke saath inspect karo.
+
 ## Research notes: Read estimates alongside actual query work
 
 - EXPLAIN plan batata hai; EXPLAIN ANALYZE query execute bhi karta hai.
+
+## Recall aur practice
+
+- Sawal — LEFT JOIN ke baad WHERE child.active=true unmatched parents kyun remove karta hai?
+- Jawaab — Unmatched child value NULL hai; WHERE only true retain karta. Parent preservation chahiye toh intended child condition ON mein rakho.
+- Khud try karo — Customers including zero orders ka total query likho; no child, multiple children, NULL amount aur equal-time cursor cases verify karo.
 
 ## Sources — aur padhne ke liye
 

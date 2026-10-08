@@ -4,7 +4,7 @@ title: Variables and assignment with let and const
 track: javascript
 order: 1
 level: Foundation
-minutes: 1
+minutes: 3
 summary: Variable — value ko diya hua naam.
 tags: fundamentals, js, variables
 ---
@@ -24,6 +24,18 @@ tags: fundamentals, js, variables
 - Shadowing — inner scope ka same naam outer variable ko hide karta hai.
 - Redeclaration — same scope mein `let`/`const` dobara declare karna error hai.
 - Initialization — `let x;` ke baad undefined; `const` ko declaration par value chahiye.
+
+### Edge cases aur reasoning
+
+- Top-level binding — browser classic script ka var window property ban sakta; let/const aur module bindings automatically window properties nahi.
+- Block lifetime — block se bahar lexical naam unavailable; reachable closure us binding ko phir bhi retain kar sakta hai.
+- Undeclared assignment — strict mode mein missing declaration par ReferenceError; accidental globals se bacho.
+
+## Recall aur practice
+
+- Sawal — const cart = []; cart.push(1) aur cart = [] mein kya farq hai?
+- Jawaab — push same array mutate karta hai; reassignment const binding badalne ki koshish hai, isliye TypeError.
+- Khud try karo — Ek block mein outer score shadow karo; andar/bahar output predict karo aur same-scope redeclaration ko separate snippet mein check karo.
 
 ## Sources — aur padhne ke liye
 

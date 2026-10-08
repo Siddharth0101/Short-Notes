@@ -4,7 +4,7 @@ title: Execution contexts scope and closures
 track: javascript
 order: 9
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: Scope — variable kahan accessible hai; lexical scope code ki location se decide hota hai.
 tags: scope, closures, hoisting, execution-context, memory
 visual: closures
@@ -32,9 +32,21 @@ visual: closures
 - Call-stack overflow — unbounded synchronous recursion stack exhaust kar sakti hai; base/progress verify karo.
 - Engine pipeline — source parse → execute → hot code optimize; engine internals language guarantees se alag.
 
+### Edge cases aur reasoning
+
+- Retained environment — closure poora call stack preserve nahi karta; needed reachable lexical environment function lifetime se survive kar sakta hai.
+- Stale derived text — captured binding latest ho sakti hai, par pehle calculated message string automatic recompute nahi hoti.
+- Explicit dispose — long-lived subscriptions captured large data retain kar sakti hain; unsubscribe aur cache bounds define karo.
+
 ## Research notes: Live bindings versus snapshots
 
 - Closure binding read karta hai; pehle calculate ki hui string khud update nahi hoti.
+
+## Recall aur practice
+
+- Sawal — Factory ki do calls se bane counters same count share karenge?
+- Jawaab — Har factory call apni local count binding banaye toh independent; module/global binding ho toh shared.
+- Khud try karo — Do counters banao; pehle ko twice aur doosre ko once increment karke 2/1 verify karo, captured message versus live count compare karo.
 
 ## Sources — aur padhne ke liye
 

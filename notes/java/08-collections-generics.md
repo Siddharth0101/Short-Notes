@@ -4,7 +4,7 @@ title: Collections generics and choosing data structures
 track: java
 order: 8
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: List — ordered, duplicates allowed; Set — unique; Map — key/value pairs.
 tags: collections, generics, hashmap, pecs
 ---
@@ -35,11 +35,25 @@ tags: collections, generics, hashmap, pecs
 - CopyOnWriteArrayList — updates array copy karte hain; reads bahut zyada aur writes rare hon tab useful.
 - Weakly consistent iterator — concurrent changes tolerate; exact point-in-time snapshot assume mat karo.
 
+### Edge cases aur reasoning
+
+- List.copyOf boundary — unmodifiable snapshot structure deta hai, null elements reject; contained mutable elements deep-copy nahi hote.
+- Removal overload — List<Integer>.remove(1) index remove; remove(Integer.valueOf(1)) value remove karta hai.
+- Ordering equality — sorted sets/maps comparator zero ko same key maante; equals se inconsistent ordering surprise de sakti hai.
+
 ## Research notes: A read-only view is not an immutable snapshot
 
 - Wrapper apne interface se changes rokta hai, lekin backing list change hogi toh view mein woh change dikhega.
 
+## Recall aur practice
+
+- Sawal — List<Integer> [1,2,3] par remove(1) ke baad kya bachega?
+- Jawaab — [1,3]; primitive int argument index overload select karta hai, value 1 remove karne ko Integer object do.
+- Khud try karo — Original list, unmodifiable view aur copyOf compare karo; backing add aur element mutation ke visible effects predict karo.
+
 ## Sources — aur padhne ke liye
+
+- [Oracle unmodifiable collections](https://docs.oracle.com/en/java/javase/21/core/creating-immutable-lists-sets-and-maps.html)
 
 - [Oracle — concurrent utilities](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/package-summary.html)
 

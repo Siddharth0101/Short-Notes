@@ -4,7 +4,7 @@ title: Spring Security and reliable service boundaries
 track: spring-boot
 order: 7
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Authentication — user kaun; authorization — kya access allowed.
 tags: security, jwt, csrf, microservices
 visual: request-flow
@@ -28,6 +28,18 @@ visual: request-flow
 
 - Gateway/discovery — routing aur service location; failure behavior design karo.
 - Feign/client — remote call phir bhi timeout/retry/error boundary maangti hai.
+
+### Edge cases aur reasoning
+
+- Authorization layers — endpoint role check ke saath resource ownership; authenticated user ko arbitrary ID access automatically allowed nahi.
+- Token revocation — stateless signed token expiry tak valid reh sakta; logout/revocation requirements ke liye explicit strategy chahiye.
+- Security context async — executor/task boundaries par principal context propagation inspect; arbitrary background work ko request auth blindly inherit na karao.
+
+## Recall aur practice
+
+- Sawal — CORS restricted ho toh unauthorized curl request automatically blocked hogi?
+- Jawaab — Nahi; CORS browser policy hai. Server authentication, authorization aur resource ownership independently enforce kare.
+- Khud try karo — Two-user API security cases likho; missing token, expired token, wrong tenant, insufficient role aur valid own-resource access verify karo.
 
 ## Sources — aur padhne ke liye
 

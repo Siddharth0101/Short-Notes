@@ -4,7 +4,7 @@
 
 Shuru karne se pehle: [State snapshots forms and immutable updates](../react/02-state-forms.md) · [Effects refs and reusable synchronization](../react/05-effects-custom-hooks.md) · [Event loop promises and resilient fetching](../javascript/15-async-event-loop.md).
 
-Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish concepts, edge cases aur recall/practice checks hain. Pehle sawal khud answer karo, phir jawaab compare aur exercise verify karo; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Native UI ki foundation
 

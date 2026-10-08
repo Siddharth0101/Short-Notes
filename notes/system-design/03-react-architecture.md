@@ -4,7 +4,7 @@ title: React architecture rendering and delivery
 track: system-design
 order: 3
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: CSR — browser UI render; initial JS/data cost.
 tags: react, architecture, ssr, hydration, cdn
 visual: react-render
@@ -44,7 +44,21 @@ visual: react-render
 - `use client` — client module boundary declare; interactive component ko server-rendered content ke saath compose karo.
 - `use server` — Server Functions ka directive; Server Components ko mark karne ka directive nahi.
 
+### Edge cases aur reasoning
+
+- Server Function trust — callable server function ki args untrusted; authentication/authorization aur input validation every invocation par enforce karo.
+- RSC versus SSR — Server Components code/data boundary, SSR initial HTML delivery; dono same feature nahi, combine ho sakte hain.
+- Personalized CDN key — cookie presence alone correct isolation prove nahi; public/private response policy aur permitted Vary/cache key explicitly define karo.
+
+## Recall aur practice
+
+- Sawal — use server directive kisi function ko callable bana de toh auth checks optional hain?
+- Jawaab — Nahi; function remote entry ho sakti hai. Identity, resource ownership aur input rules server par verify karo.
+- Khud try karo — Product route ki server/client boundary draw karo; public catalog cache, private cart, hydration output aur route error fallback justify karo.
+
 ## Sources — aur padhne ke liye
+
+- [React Server Functions security](https://react.dev/reference/rsc/use-server)
 
 - [React — Server Components](https://react.dev/reference/rsc/server-components)
 

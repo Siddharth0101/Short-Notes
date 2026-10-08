@@ -4,7 +4,7 @@ title: Effects refs and reusable synchronization
 track: react
 order: 5
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: `useEffect` — external system ke saath sync; render calculation ke liye nahi.
 tags: effects, useEffect, useRef, custom-hooks, races
 ---
@@ -39,9 +39,21 @@ tags: effects, useEffect, useRef, custom-hooks, races
 - Effect Event boundary — Effects/Effect Events se call karo; render ya child props ke through use mat karo.
 - Effect Event dependencies — event function dependency mein nahi; actual reactive dependencies hatane ka shortcut bhi nahi.
 
+### Edge cases aur reasoning
+
+- Subscription symmetry — setup ne jo resource own kiya cleanup usi instance ko dispose kare; latest global handle par depend mat karo.
+- Event versus effect — user ke explicit purchase/submit ko event/action mein rakho; render-derived effect se duplicate write ho sakti hai.
+- Snapshot stability — useSyncExternalStore getSnapshot unchanged data par same value/reference de; every read fresh object loop kara sakta hai.
+
 ## Research notes: Effect timing depends on the trigger
 
 - useEffect unconditional after-paint hook nahi.
+
+## Recall aur practice
+
+- Sawal — Dependency badalte hi old fetch cleanup ka useful guarantee kya hai?
+- Jawaab — Previous effect ka cleanup next setup se pehle run; abort/ignore guard purane result ko current UI par commit hone se rokta hai.
+- Khud try karo — Rapid user-ID switch simulate karo; slow old response ignored, old subscription disposed aur unmount par remaining resources released verify karo.
 
 ## Sources — aur padhne ke liye
 

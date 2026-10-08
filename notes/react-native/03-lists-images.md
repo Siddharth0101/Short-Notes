@@ -4,7 +4,7 @@ title: Lists images aur pagination
 track: react-native
 order: 3
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: ScrollView — children ek saath render; short static content ke liye useful.
 tags: react-native, mobile, expo, lists-images
 ---
@@ -38,7 +38,21 @@ tags: react-native, mobile, expo, lists-images
 - Image placeholder — loading ke waqt placeholder/transition; error image bhi meaningful rakho.
 - Recycling key — reused expo-image view ko reset karke previous item ki image flash hone se roko.
 
+### Edge cases aur reasoning
+
+- Nested list orientation — same-direction plain ScrollView mein virtualized list windowing problems de sakti; single list with header/footer prefer karo.
+- Scroll-to-index failure — unmeasured distant row par jump fail; known getItemLayout ya measured bounded retry/failure fallback define karo.
+- Item draft lifetime — virtual row unmount par local state disappear; item-ID keyed draft store mein needed edits preserve karo.
+
+## Recall aur practice
+
+- Sawal — Virtualized row offscreen unmount ho toh uske TextInput ka local draft guaranteed bachega?
+- Jawaab — Nahi; important draft row instance se bahar stable item ID ke under store karo.
+- Khud try karo — Paginated list edit-scroll-return flow test karo; offscreen draft preserved, repeated end trigger deduped aur image placeholder correct item ka ho.
+
 ## Sources — aur padhne ke liye
+
+- [React Native FlatList contracts](https://reactnative.dev/docs/flatlist)
 
 - [Expo — image caching/recycling](https://docs.expo.dev/versions/latest/sdk/image/)
 

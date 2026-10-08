@@ -6,6 +6,7 @@
 - References — Callstack optimization overview/testing docs, Software Mansion Reanimated/Gesture Handler, React Navigation, TanStack Query, React Native aur Expo.
 - Reading depth — Callstack ka public overview aur linked public docs/articles review kiye; full downloadable ebook padhne ka claim nahi.
 - Versions — Gesture Handler 2/3 syntax distinguish ki; deprecated input behavior ko current API se connect kiya.
+- Later pass — 8 October 2026 mein har chapter ke 3 aur concepts plus recall/practice add; current total 228 points. Neeche September snapshot retained hai.
 
 | Chapter | Gaps filled | Added | Total points | Public reference |
 | --- | --- | ---: | ---: | --- |

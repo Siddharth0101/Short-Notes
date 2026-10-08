@@ -4,7 +4,7 @@ title: Composition reusable patterns and styling
 track: react
 order: 4
 level: Intermediate
-minutes: 3
+minutes: 6
 summary: Composition — small components ko `children`/props se jodo.
 tags: composition, patterns, css, accessibility, components
 ---
@@ -69,6 +69,18 @@ tags: composition, patterns, css, accessibility, components
 - Container query — component styling ancestor container ke size par; viewport media query se alag.
 - `container-type: inline-size` — ancestor ko inline-size query container banao; `@container` se descendants style karo.
 - Named container — `container-name` se correct ancestor target karo, jab nested containers hon.
+
+### Edge cases aur reasoning
+
+- Interaction semantics — clickable div par role alone keyboard behavior nahi deta; native button ka built-in contract prefer karo.
+- Disabled contract — disabled, busy aur read-only alag behaviors; reusable API mein focus/submit effect clearly define karo.
+- Reduced motion — prefers-reduced-motion par nonessential motion reduce; meaning sirf animation/color par depend na kare.
+
+## Recall aur practice
+
+- Sawal — Reusable button form ke andar unwanted submit kaise rokega?
+- Jawaab — Action button ka explicit type="button"; actual submit button type="submit" rakho aur caller contract document karo.
+- Khud try karo — Button aur dialog compose karo; disabled action, keyboard open/close, focus restoration, reduced motion aur light/dark contrast verify karo.
 
 ## Sources — aur padhne ke liye
 

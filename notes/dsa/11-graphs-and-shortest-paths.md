@@ -4,7 +4,7 @@ title: Graph traversal and shortest paths
 track: dsa
 order: 11
 level: Advanced
-minutes: 2
+minutes: 5
 summary: Graph — vertices + edges; direction/weights clarify karo.
 tags: graph, bfs, dfs, dijkstra, topological-sort
 visual: bfs
@@ -41,11 +41,29 @@ visual: bfs
 - Bipartite — BFS/DFS se two-color; same-color edge conflict ho toh possible nahi.
 - Shortest-path cost — BFS O(V+E); binary-heap Dijkstra typically O((V+E) log V), nonnegative weights ke liye.
 
+### Edge cases aur reasoning
+
+- SCC — directed graph mein mutual reachability groups; Kosaraju/Tarjan adjacency-list algorithms O(V+E), condensation graph DAG hota hai.
+- Bridge low-link — undirected DFS edge (u,v) bridge when low[v]>tin[u]; multigraph parallel edges ke liye parent edge ID track karo.
+- Union-Find bound — path compression+rank/size amortized O(alpha(n)) per operation; arbitrary edge deletion ordinary DSU efficiently support nahi.
+- Negative-cycle scope — source-reachable negative cycle se reachable targets ka finite shortest distance undefined; unrelated components ko blindly invalid mat bolo.
+- Lazy Dijkstra heap — old distance entries skip; queue O(E) grow ho sakti, multigraph mein log E cost qualifier track karo.
+- MST connectivity — disconnected undirected graph par spanning forest milega; n-1 chosen edges ka connected-tree contract verify karo.
+
 ## Research notes: Negative edges in a DAG
 
 - DAG mein negative edges ho sakti hain, negative cycles nahi.
 
+## Recall aur practice
+
+- Sawal — A→B→C→A aur C→D graph ke SCC groups kya hain?
+- Jawaab — {A,B,C} ek SCC, {D} doosra; reverse path D se cycle tak nahi.
+- Khud try karo — BFS/Dijkstra/DSU choose karke justify karo; disconnected node, zero edge, negative edge, parallel edge aur reachable negative cycle outcomes verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [Princeton directed graph/SCC reference](https://algs4.cs.princeton.edu/42digraph/)
+- [Princeton bridge implementation](https://algs4.cs.princeton.edu/41graph/Bridge.java.html)
 
 - [Source yahan padho — MIT 6.006](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/6277a1f06100c26a7ff21031af6757b5_MIT6_006F11_lec16.pdf)
 - [Princeton's graph chapter](https://algs4.cs.princeton.edu/41graph/)

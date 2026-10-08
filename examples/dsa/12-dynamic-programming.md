@@ -160,3 +160,38 @@ function editDistance(a, b) {
   return dp[n][m];
 }
 ```
+
+## Edit distance — rolling row aur Unicode boundary
+
+- Previous sample — string indexes UTF-16 code units compare karte; emoji ko multiple units count kar sakte hain.
+- Yeh sample — Unicode code points compare; grapheme clusters aur canonical Unicode normalization automatically handle nahi karta.
+- State — current row overwrite se pehle previous diagonal/above save; shorter input columns banakar DP row O(min(n,m)) rakho.
+- Cost — O(nm) DP work plus input decoding; code-point arrays O(n+m), DP row O(min(n,m)) additional memory. Total helper space O(n+m).
+
+```js
+function editDistanceCompact(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') {
+    throw new TypeError('Both inputs must be strings');
+  }
+  let rows = Array.from(a);
+  let columns = Array.from(b);
+  if (columns.length > rows.length) [rows, columns] = [columns, rows];
+  const distance = Array.from({ length: columns.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= rows.length; i++) {
+    let diagonal = distance[0];
+    distance[0] = i;
+    for (let j = 1; j <= columns.length; j++) {
+      const above = distance[j];
+      distance[j] = rows[i - 1] === columns[j - 1]
+        ? diagonal
+        : 1 + Math.min(diagonal, above, distance[j - 1]);
+      diagonal = above;
+    }
+  }
+  return distance[columns.length];
+}
+```
+
+- Trace — `kitten → sitting` needs 3 edits; `"😀" → ""` needs 1 code-point deletion.
+- Acceptance — empty/equal strings, repeated symbols, long-versus-short input, symmetry aur Unicode code-point cases verify karo.
+- Limit — combining sequences visually same ho sakti hain but code points different; product ko normalization/grapheme-level edits chahiye toh contract aur tokenizer change karo.

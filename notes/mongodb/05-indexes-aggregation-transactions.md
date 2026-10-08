@@ -4,7 +4,7 @@ title: Indexes aggregation geospatial queries and transactions
 track: mongodb
 order: 5
 level: Advanced
-minutes: 2
+minutes: 4
 summary: Index — query fast kar sakta hai; storage aur write cost badhta hai.
 tags: indexes, aggregation, transactions, geospatial, explain, performance
 visual: aggregation-pipeline
@@ -39,11 +39,25 @@ visual: aggregation-pipeline
 - Compound multikey — ek document mein indexed fields mein maximum ek array-valued field allowed.
 - Unique multikey — uniqueness documents ke beech; same document ke repeated array elements automatically reject nahi hote.
 
+### Edge cases aur reasoning
+
+- Transaction retry side effect — driver callback rerun ho sakta; email/payment ko callback mein non-idempotently execute mat karo, durable outbox use karo.
+- Transaction parallelism — same session transaction ke operations sequential rakho; Promise.all ko supported parallel transaction workflow assume mat karo.
+- TTL business check — expired token/lease query mein expiry enforce; background deletion lag ko validity guarantee mat banao.
+
 ## Research notes: Match the version you actually read
 
 - Atomic update separate read-then-replace workflow ko race-free nahi banati.
 
+## Recall aur practice
+
+- Sawal — Transaction callback retry par payment request dobara kyun dangerous hai?
+- Jawaab — Database attempt rollback/retry external provider effect undo nahi karta; payment identity aur durable workflow alag enforce karo.
+- Khud try karo — Two-document transfer plan banao; transient retry, unknown commit, duplicate external notification aur delayed TTL deletion ka correct outcome verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [MongoDB transaction application retries](https://www.mongodb.com/docs/manual/core/transactions-in-applications/)
 
 - [MongoDB — isolation and consistency](https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/)
 - [MongoDB — read preference](https://www.mongodb.com/docs/manual/core/read-preference/)

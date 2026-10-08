@@ -4,7 +4,7 @@ title: Forms keyboard aur shared state
 track: react-native
 order: 5
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: TextInput — controlled value aur onChangeText se draft state update karo.
 tags: react-native, mobile, expo, forms-state
 ---
@@ -37,6 +37,18 @@ tags: react-native, mobile, expo, forms-state
 - Submit behavior — multiline/newline aur submitBehavior explicitly choose; deprecated blurOnSubmit ko blindly copy mat karo.
 - Autofill — autoComplete/textContentType field meaning bataye; password/OTP flow physical device par verify karo.
 - Length limits — maxLength input-side cap; complete business validation phir bhi submit/server par karo.
+
+### Edge cases aur reasoning
+
+- Validation parsing — numeric keyboard paste/locale text prevent nahi; whitespace, decimals, sign aur range policy explicitly parse karo.
+- Submit identity — disabled button visual guard hai; same-render rapid taps/ref-based in-flight check aur backend operation ID duplicate write rokein.
+- Persistence write order — async draft writes out-of-order settle ho sakti; serialized writes/version contract se latest text preserve karo.
+
+## Recall aur practice
+
+- Sawal — Keyboard numeric ho toh server amount field ko without validation accept kar sakta hai?
+- Jawaab — Nahi; pasted/manipulated input possible, keyboard input aid hai. Client/server full numeric domain validate kare.
+- Khud try karo — Amount form build karo; rapid tap, failure draft retention, keyboard covering last field aur reversed autosave completions verify karo.
 
 ## Sources — aur padhne ke liye
 

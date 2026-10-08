@@ -4,7 +4,7 @@ title: Native components styling aur safe areas
 track: react-native
 order: 2
 level: Foundation
-minutes: 2
+minutes: 5
 summary: View — layout container; visible text ko Text ke andar rakho.
 tags: react-native, mobile, expo, components-layout
 ---
@@ -44,6 +44,18 @@ tags: react-native, mobile, expo, components-layout
 - Density-independent size — layout units ko physical pixels assume mat karo; PixelRatio image-resolution calculations mein useful.
 - RTL layout — start/end spacing prefer; directional icons, gestures aur mixed-language text manually verify karo.
 - RTL configuration — allowRTL/forceRTL ka effect next app start par ho sakta hai; instant toggle assume mat karo.
+
+### Edge cases aur reasoning
+
+- Safe-area ownership — navigator aur screen dono same inset apply karein toh double padding; each edge ka responsible layer define karo.
+- Text clipping — dynamic font scaling with fixed height text cut kar sakti; flexible layout aur accessible large-text variants test karo.
+- Touch versus visibility — transparent view touch block kar sakti; overlay pointerEvents/z-order contract ke against actual device interaction verify karo.
+
+## Recall aur practice
+
+- Sawal — Notch gap double ho toh padding increase/decrease guess karne se pehle kya inspect karoge?
+- Jawaab — Navigator aur screen safe-area providers/insets ka ownership; same top edge twice apply toh duplicate inset remove karo.
+- Khud try karo — Responsive modal/form banao; rotation, large fonts, safe area, disabled press aur transparent-overlay touches Android/iOS par verify karo.
 
 ## Sources — aur padhne ke liye
 

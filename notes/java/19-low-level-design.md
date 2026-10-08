@@ -4,7 +4,7 @@ title: Low-level design — requirements se classes aur invariants tak
 track: java
 order: 19
 level: Advanced
-minutes: 1
+minutes: 3
 summary: LLD — requirements ko objects, responsibilities aur contracts mein badlo.
 tags: lld, oop, design, concurrency, contracts
 ---
@@ -23,6 +23,18 @@ tags: lld, oop, design, concurrency, contracts
 - Interface segregation — client ko unnecessary methods implement/use karne par force mat karo.
 - State machine — allowed transitions explicit; invalid order of operations reject karo.
 - Composition root — dependencies ek clear assembly point par wire karo.
+
+### Edge cases aur reasoning
+
+- Dependency direction — high-level rule low-level provider contract par directly tightly coupled na ho; narrow ports/adapters se ownership clear rakho.
+- Pattern fit — strategy/factory actual variation solve kare; interview mein pattern name se pehle requirement/invariant explain karo.
+- Atomic model boundary — several object methods separately safe hon tab bhi combined booking operation ka invariant transaction/lock se protect karo.
+
+## Recall aur practice
+
+- Sawal — Library checkout ke liye synchronized getters/setters separately enough kyun nahi?
+- Jawaab — Availability check aur loan creation beech interleave ho sakte hain; whole claim ko shared atomic boundary chahiye.
+- Khud try karo — Library lending LLD banao; one-copy/two-users race, repeated request, overdue policy aur persistence failure ka exact contract do.
 
 ## Sources — aur padhne ke liye
 

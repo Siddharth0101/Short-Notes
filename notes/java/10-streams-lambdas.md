@@ -4,7 +4,7 @@ title: Lambdas streams and Optional
 track: java
 order: 10
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: Lambda — functional interface ki implementation.
 tags: streams, lambdas, optional, collectors
 ---
@@ -34,9 +34,21 @@ tags: streams, lambdas, optional, collectors
 - Stream matching — anyMatch/sab allMatch/noneMatch short-circuit; empty stream par false/true/true.
 - Optional creation — of(null) error; nullable value ke liye ofNullable; absence ke liye empty.
 
+### Edge cases aur reasoning
+
+- Stream.toList result — unmodifiable list deta hai; modification chahiye toh explicitly suitable mutable collection collect karo.
+- Duplicate map key — Collectors.toMap duplicate keys par merge policy bina fail; sum/first/last contract consciously choose karo.
+- Reduction identity — parallel reduce mein identity har partition par apply ho sakti hai; non-neutral identity wrong total bana sakti hai.
+
 ## Research notes: Keep the source when traversing twice
 
 - Stream processing describe karti hai aur terminal operation se consume hoti hai.
+
+## Recall aur practice
+
+- Sawal — Optional present ho tab orElse(expensive()) expensive function run karega?
+- Jawaab — Haan; argument eagerly evaluate hota hai. Lazy fallback ke liye orElseGet supplier use karo.
+- Khud try karo — Orders customer-wise sum karo; duplicate key merge, empty input aur sequential/parallel equivalent totals verify karo.
 
 ## Sources — aur padhne ke liye
 

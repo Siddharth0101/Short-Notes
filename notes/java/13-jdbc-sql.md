@@ -4,7 +4,7 @@ title: JDBC SQL and transaction boundaries
 track: java
 order: 13
 level: Intermediate
-minutes: 3
+minutes: 6
 summary: JDBC — Java se database connection, statement aur result handling.
 tags: jdbc, sql, transactions, indexes
 ---
@@ -63,6 +63,18 @@ tags: jdbc, sql, transactions, indexes
 - Serializable — committed outcome serial execution jaisa; serialization failure par poori transaction retry karo.
 - Read Uncommitted in PG — PostgreSQL mein Read Committed jaisa behave; dirty reads enable nahi hote.
 - Sequence gaps — nextval ka increment rollback se undo nahi; IDs contiguous hone ka assumption mat rakho.
+
+### Edge cases aur reasoning
+
+- SQL identifiers — placeholders values bind karte hain; table/column/sort direction ko trusted allowlist se choose karo.
+- Pool state reset — auto-commit/isolation/read-only changes release se pehle reset/provider contract verify; next borrower ko stale settings na milen.
+- Unknown commit — connection loss ke waqt commit succeed hua ya nahi unclear; blind write retry ke bajay operation identity/reconciliation chahiye.
+
+## Recall aur practice
+
+- Sawal — PreparedStatement mein ORDER BY ? user-chosen column ko safely replace karega?
+- Jawaab — Parameter value bind hoti hai, SQL identifier nahi; allowed column names ko fixed query fragments se map karo.
+- Khud try karo — Account transfer same connection/transaction par likho; insufficient funds, second-write failure aur duplicate operation ID par invariant verify karo.
 
 ## Sources — aur padhne ke liye
 

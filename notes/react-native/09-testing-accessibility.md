@@ -4,7 +4,7 @@ title: Testing debugging aur mobile accessibility
 track: react-native
 order: 9
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: Unit test — validation/reducer jaise pure logic fast check; device integration ka replacement nahi.
 tags: react-native, mobile, expo, testing-accessibility
 ---
@@ -41,6 +41,18 @@ tags: react-native, mobile, expo, testing-accessibility
 
 - Repeated-flow test — screen open/close cycles ke baad memory trend dekho; single snapshot leak prove nahi karta.
 - Allocation evidence — retained allocations aur release path trace; har memory spike ko leak label mat karo.
+
+### Edge cases aur reasoning
+
+- Accessible focus — modal/error/navigation ke baad screen reader focus meaningful element par; visual focus alone full accessibility proof nahi.
+- E2E synchronization — stable UI/state conditions await; arbitrary sleeps slow device par flaky aur fast device par wasted time.
+- Upgrade testing — fresh-install happy path stored-schema upgrade test nahi; previous-version data se boot/auth/draft recovery verify karo.
+
+## Recall aur practice
+
+- Sawal — Mocked permission test pass ho toh Android/iOS usage-description wiring prove hoti hai?
+- Jawaab — Nahi; mock JS branch check karta. Native configuration, actual prompt aur device denial path separately verify karo.
+- Khud try karo — Login→detail→saved draft journey run karo; TalkBack/VoiceOver, large fonts, offline resume aur previous-version state migration acceptance do.
 
 ## Sources — aur padhne ke liye
 

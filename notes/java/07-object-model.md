@@ -4,7 +4,7 @@ title: Objects OOP records and equality
 track: java
 order: 7
 level: Foundation
-minutes: 1
+minutes: 3
 summary: Inheritance — subclass superclass ka behavior extend karti hai.
 tags: oop, records, equality, interfaces
 ---
@@ -29,6 +29,18 @@ tags: oop, records, equality, interfaces
 - Downcast — actual compatible subtype chahiye; warna ClassCastException.
 - Anonymous class — inline unnamed implementation; lambda sirf functional interface ke liye.
 - Nested class — static nested ko outer instance nahi; inner class outer instance se linked.
+
+### Edge cases aur reasoning
+
+- Record snapshot — record component list mutable ho sakti hai; compact constructor mein List.copyOf ownership protect kar sakta hai.
+- Hash contract direction — equal implies same hash; same hash se equal prove nahi, collisions expected hain.
+- Override restrictions — overriding method visibility reduce nahi; checked exceptions superclass contract se broader nahi kar sakta.
+
+## Recall aur practice
+
+- Sawal — Do unequal objects ka hashCode same aaye toh contract violated hai?
+- Jawaab — Nahi; collision allowed. Equal objects ke hash codes different hon toh contract break hota hai.
+- Khud try karo — Immutable UserId equality implement karo; HashSet dedupe, HashMap lookup aur mutable-field key failure ka separate trace dikhao.
 
 ## Sources — aur padhne ke liye
 

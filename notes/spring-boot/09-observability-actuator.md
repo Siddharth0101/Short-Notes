@@ -4,7 +4,7 @@ title: Observability with Actuator, metrics and tracing
 track: spring-boot
 order: 9
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Actuator — health/metrics jaise operational endpoints.
 tags: actuator, observability, metrics, tracing, logging
 ---
@@ -22,6 +22,18 @@ tags: actuator, observability, metrics, tracing, logging
 - Histogram — latency distribution/percentiles; average slow tail hide kar sakta hai.
 - Trace sampling — overhead/storage control; rare failures ki visibility plan karo.
 - Health dependency — optional dependency down hone se unnecessarily poora instance restart mat karao.
+
+### Edge cases aur reasoning
+
+- Probe storm — shared downstream outage ko every instance liveness failure banaana restart storm de sakta; process health ko dependency readiness se distinguish karo.
+- Latency scope — server processing aur pool/queue wait include; end-user latency sirf controller duration nahi.
+- Trace context trust — external correlation headers validate/bound; user-supplied IDs ko unrestricted logs/metric labels mat banao.
+
+## Recall aur practice
+
+- Sawal — Average 50ms ho toh p99 users ko fast experience guaranteed hai?
+- Jawaab — Nahi; slow tail average mein hide ho sakti. Histogram/percentiles, errors aur saturation together inspect karo.
+- Khud try karo — DB slow incident ka dashboard outline banao; pool wait, error rate, request latency aur readiness identify, secret-free trace example do.
 
 ## Sources — aur padhne ke liye
 

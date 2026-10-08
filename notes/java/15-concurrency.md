@@ -4,7 +4,7 @@ title: Concurrency synchronization and virtual threads
 track: java
 order: 15
 level: Advanced
-minutes: 2
+minutes: 4
 summary: Thread — concurrent execution; shared mutable state par coordination chahiye.
 tags: concurrency, threads, virtual-threads, locks
 visual: thread-sync
@@ -38,6 +38,18 @@ visual: thread-sync
 - tryLock — turant ya timeout tak acquisition try; false par lock-owning code mat chalao.
 - Interruptible lock — `lockInterruptibly()` waiting thread ke interrupt par acquisition chhod sakta hai.
 - Fair lock — longest waiter ko preference; throughput cost ho sakti hai, untimed tryLock fairness follow nahi karta.
+
+### Edge cases aur reasoning
+
+- Atomic compound rule — available>=n check aur decrement same protected boundary mein; separate atomic reads/writes whole invariant safe nahi banate.
+- Interrupt recovery — InterruptedException catch karke propagate ya interrupt status restore; cancellation contract silently discard mat karo.
+- Condition notification — notifyAll waiters ko wake karta hai, condition true prove nahi; lock reacquire karke while mein predicate recheck karo.
+
+## Recall aur practice
+
+- Sawal — AtomicInteger stock.get()>0 phir decrementAndGet oversell ko automatically rokta hai?
+- Jawaab — Nahi; check/decrement separate operations race kar sakti hain. CAS loop ya shared atomic boundary mein condition enforce karo.
+- Khud try karo — Concurrent last-ticket claim banao; two callers mein exactly one success, stock nonnegative aur interrupt/shutdown outcome verify karo.
 
 ## Sources — aur padhne ke liye
 

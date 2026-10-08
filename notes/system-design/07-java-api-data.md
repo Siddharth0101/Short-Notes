@@ -4,7 +4,7 @@ title: Java backend API and data architecture
 track: system-design
 order: 7
 level: Intermediate
-minutes: 3
+minutes: 6
 summary: Layers — controller contract, service rules, repository persistence.
 tags: java, api, data-modeling, consistency
 visual: request-flow
@@ -72,6 +72,18 @@ visual: request-flow
 - BRIN — block-range summaries; physical order se correlated huge tables mein useful, exact row lookup nahi.
 - Hash index — PostgreSQL equality queries ke liye; range/order ke liye B-tree consider.
 - INCLUDE — non-key payload columns index mein; index-only execution ki visibility conditions phir bhi matter.
+
+### Edge cases aur reasoning
+
+- Idempotency payload binding — key ko tenant+operation scope aur request fingerprint se bind; same key/different payload conflict reject karo.
+- Receipt atomicity — dedupe receipt aur business mutation same durable transaction mein; receipt-only success se missing effect hide mat karo.
+- Pool multiplication — replicas×per-instance pool size total DB connections; autoscale application ko DB admission budget se align karo.
+
+## Recall aur practice
+
+- Sawal — Same idempotency key par different transfer amount aaye toh cached success return karna valid?
+- Jawaab — Contract violation/conflict reject; key original operation payload se bound honi chahiye, unrelated request ko success mat do.
+- Khud try karo — Transfer receipt schema/API banao; concurrent same key, changed payload, lost response aur expiry/replay retention ke outcomes verify karo.
 
 ## Sources — aur padhne ke liye
 

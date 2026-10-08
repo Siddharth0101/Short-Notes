@@ -4,7 +4,7 @@ title: Performance animations aur native architecture
 track: react-native
 order: 8
 level: Advanced
-minutes: 3
+minutes: 5
 summary: JS thread — expensive JS work event handling/renders delay kar sakta hai.
 tags: react-native, mobile, expo, performance-native
 ---
@@ -45,6 +45,18 @@ tags: react-native, mobile, expo, performance-native
 - Bundle cost — dependency size aur module initialization profile; library add karne ka startup effect measure karo.
 - Retention leak — repeated navigation ke baad live objects/resources grow hon toh listener, closure aur native allocations inspect karo.
 - Native profiling — JS heap alone native image/buffer allocations nahi dikhata; platform/native profiler bhi inspect karo.
+
+### Edge cases aur reasoning
+
+- Image memory budget — decoded width×height×bytes-per-pixel estimate compressed file size se different; thumbnail/source dimensions right-size karo.
+- Cross-runtime payload — worklet/native/JS boundaries par large captured data transfer cost; narrow values/events pass karo.
+- Animation lifecycle — unmounted/blurred view ki ongoing animation/subscription cancel; background scheduling aur battery cost measure karo.
+
+## Recall aur practice
+
+- Sawal — 100KB compressed image decoded memory bhi exactly100KB hogi?
+- Jawaab — Nahi; dimensions/pixel format se decoded allocation much larger ho sakti, JS heap native allocation bhi miss kar sakta.
+- Khud try karo — Image list release build profile karo; oversized versus thumbnail assets, repeated navigation retention aur gesture frame drops compare karo.
 
 ## Sources — aur padhne ke liye
 

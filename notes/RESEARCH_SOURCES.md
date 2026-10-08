@@ -100,6 +100,37 @@ React Native aur Expo ki official docs se mobile behavior verify kiya; har chapt
 | --- | --- | --- |
 | Native build aur update compatibility | [Release notes](react-native/10-build-release.md#quick-revision) | [Expo runtime versions](https://docs.expo.dev/eas-update/runtime-versions/) |
 
-[Poora React Native syllabus](react-native/README.md) — 10 chapters, 198 short points aur 12 app interview questions.
+[Poora React Native syllabus](react-native/README.md) — 10 chapters, 228 short points aur 12 app interview questions.
 
 [React Native recheck](REACT_NATIVE_REVIEW.md) — missing topics, source mapping aur shared React foundations.
+
+## 8 October 2026 — depth aur practice references
+
+Selected new technical claims ke primary sources neeche hain; har chapter ke existing further-reading links bhi retained hain. Counts aur complete changed-track map [coverage audit](COVERAGE_AUDIT.md) mein padho.
+
+| Topic | Chapter | Verified primary reference |
+| --- | --- | --- |
+| Optional chain/call boundaries | [Conditions](javascript/03-js-conditionals.md) | [MDN optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) |
+| Cloneable values/cycles | [Arrays/objects](javascript/06-js-arrays-objects.md) | [MDN structuredClone](https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone) |
+| Empty any/all/race outcomes | [Async patterns](javascript/16-async-patterns.md) | [MDN Promise.any](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any) |
+| Hydration input/output | [Rendering](react/03-components-rendering.md) | [React hydrateRoot](https://react.dev/reference/react-dom/client/hydrateRoot) |
+| Transition/input ownership | [Performance](react/10-performance-production.md) | [React useTransition](https://react.dev/reference/react/useTransition) |
+| Decimal equality/scale | [Java foundations](java/05-language-foundations.md) | [Oracle BigDecimal](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/math/BigDecimal.html) |
+| Unmodifiable copy boundaries | [Collections](java/08-collections-generics.md) | [Oracle collections guide](https://docs.oracle.com/en/java/javase/21/core/creating-immutable-lists-sets-and-maps.html) |
+| Concurrent index transaction limits | [Migrations](java/18-schema-migrations.md) | [PostgreSQL CREATE INDEX](https://www.postgresql.org/docs/current/sql-createindex.html) |
+| JPA query/fetch graph contract | [JPA transactions](spring-boot/06-jpa-transactions.md) | [Spring Data JPA](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html) |
+| Stream errors/backpressure | [Node runtime](mongodb/01-node-runtime-http.md) | [Node stream API](https://nodejs.org/api/stream.html) |
+| Update operators/query reuse | [Mongoose](mongodb/04-mongoose-validation-relations.md) | [Mongoose validation](https://mongoosejs.com/docs/validation.html), [query contracts](https://mongoosejs.com/docs/queries.html) |
+| Transaction retries | [Mongo transactions](mongodb/05-indexes-aggregation-transactions.md) | [MongoDB driver/application guide](https://www.mongodb.com/docs/manual/core/transactions-in-applications/) |
+| Explain versus plan cache | [Query plans](mongodb/06-query-production-lab.md) | [MongoDB explain](https://www.mongodb.com/docs/manual/reference/explain-results/) |
+| SCC and bridges | [Graphs](dsa/11-graphs-and-shortest-paths.md) | [Princeton directed graphs](https://algs4.cs.princeton.edu/42digraph/), [bridge example and limitations](https://algs4.cs.princeton.edu/41graph/Bridge.java.html) |
+| Server Function authorization | [React architecture](system-design/03-react-architecture.md) | [React use server](https://react.dev/reference/rsc/use-server) |
+| Majority replicated log | [Consistency](system-design/13-consistency-limits.md) | [Original Raft paper](https://raft.github.io/raft.pdf) |
+| Partial responses/schema evolution | [API contracts](system-design/14-api-contracts.md) | [GraphQL responses](https://graphql.org/learn/response/), [HTTP transport](https://graphql.org/learn/serving-over-http/), [Protobuf proto3](https://protobuf.dev/programming-guides/proto3/) |
+| Virtualized scrolling | [Native lists](react-native/03-lists-images.md) | [React Native FlatList](https://reactnative.dev/docs/flatlist) |
+| Reinstall persistence limits | [Mobile auth/storage](react-native/06-network-storage.md) | [Expo SecureStore](https://docs.expo.dev/versions/latest/sdk/securestore/) |
+| Native/update compatibility | [Mobile release](react-native/10-build-release.md) | [Expo runtime versions](https://docs.expo.dev/eas-update/runtime-versions/) |
+
+- Version scope — links with latest/current future mein badal sakte; installed major/JDK/SDK ke docs se exact contract match karo.
+- Algorithm scope — Princeton bridge sample parallel edges assume nahi karta; multigraph implementation mein edge-ID handling ki note retained hai.
+- Exercises — original teaching drills hain; kisi employer ke exact questions ya frequency ka claim nahi.

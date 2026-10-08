@@ -4,7 +4,7 @@ title: Exceptions resources files and time
 track: java
 order: 9
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Checked exception — catch ya declare; unchecked — runtime contract failure ho sakti hai.
 tags: exceptions, io, time, resources
 ---
@@ -22,6 +22,18 @@ tags: exceptions, io, time, resources
 - Suppressed exception — try-with-resources cleanup failure main exception ke saath attach ho sakti hai.
 - Charset — byte/text conversion mein explicit encoding; platform default par blind depend mat karo.
 - Duration/Period — elapsed time-based amount / calendar date-based amount.
+
+### Edge cases aur reasoning
+
+- Resource close order — try-with-resources declarations ke reverse order mein close; primary error ke saath suppressed cleanup errors inspect karo.
+- Filesystem containment — user filename normalize karke approved directory boundary verify; string concatenation path traversal rokne ke liye enough nahi.
+- Injected clock — Clock dependency se date/expiry tests deterministic; timezone explicit rakho.
+
+## Recall aur practice
+
+- Sawal — Body aur close dono throw karein toh try-with-resources kis error ko primary rakhega?
+- Jawaab — Body exception primary; close exception suppressed list mein attach ho sakti hai, diagnostic mein dono inspect karo.
+- Khud try karo — UTF-8 file reader banao; missing file, invalid path aur parse failure par resource cleanup; fixed Clock se expiry boundary verify karo.
 
 ## Sources — aur padhne ke liye
 

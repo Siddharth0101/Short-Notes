@@ -4,7 +4,7 @@ title: HTML CSS and browser rendering essentials
 track: javascript
 order: 11
 level: Foundation
-minutes: 2
+minutes: 5
 summary: HTML — structure; CSS — styling/layout; JS — behavior.
 tags: html, css, accessibility, browser, layout
 ---
@@ -45,9 +45,21 @@ tags: html, css, accessibility, browser, layout
 - Native form — name wale enabled controls submit; label aur correct button type rakho.
 - Flex axes — justify-content main axis; align-items cross axis; direction badle toh axes bhi badalti hain.
 
+### Edge cases aur reasoning
+
+- Viewport metadata — mobile layout ke liye width=device-width use; user zoom ko disable karke accessibility mat todo.
+- Image dimensions — width/height ya aspect-ratio se space reserve; image load ke baad layout shift kam hota hai.
+- Constraint validation — required/type/min helpful browser checks; untrusted input server par dobara validate karo.
+
 ## Research notes: Semantic HTML before custom interaction
 
 - Navigation ke liye anchor, action ke liye button lo.
+
+## Recall aur practice
+
+- Sawal — Placeholder ke saath input par label kyun chahiye?
+- Jawaab — Typing se placeholder gayab; persistent visible label aur accessible name control ka purpose clear rakhte hain.
+- Khud try karo — Semantic signup form banao; Tab order, Enter submit, explicit labels, invalid email aur 320px layout verify karo.
 
 ## Sources — aur padhne ke liye
 

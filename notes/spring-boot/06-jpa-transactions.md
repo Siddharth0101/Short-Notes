@@ -4,7 +4,7 @@ title: JPA Hibernate and Spring transactions
 track: spring-boot
 order: 6
 level: Advanced
-minutes: 2
+minutes: 4
 summary: JPA — persistence specification; Hibernate — implementation.
 tags: jpa, hibernate, transactions, n-plus-one
 ---
@@ -41,11 +41,25 @@ tags: jpa, hibernate, transactions, n-plus-one
 - NESTED — same physical transaction mein savepoints; JDBC/transaction-manager support chahiye, independent commit nahi.
 - Joined isolation — default REQUIRED join par outer isolation/timeout apply; inner annotation automatically naya isolation nahi banati.
 
+### Edge cases aur reasoning
+
+- Merge result — detached entity merge managed copy return karta hai; original detached object automatically managed assume mat karo.
+- Bulk write context — JPQL bulk update managed entity state/normal lifecycle se bypass ho sakta; clear/refresh aur version contract inspect karo.
+- Collection fetch pagination — to-many fetch join rows multiply; provider in-memory pagination/query limits inspect, IDs+fetch/projection strategy consider karo.
+
 ## Research notes: Trace the actual transaction entry point
 
 - Default proxy transaction advice proxy-crossing calls intercept karti hai.
 
+## Recall aur practice
+
+- Sawal — Inner failure catch karne se joined transaction ka rollback-only marker clear ho jaata hai?
+- Jawaab — Nahi; outer commit rollback/UnexpectedRollbackException de sakta. Transaction boundaries aur failure policy explicitly redesign karo.
+- Khud try karo — Order listing ka query count measure karo; no N+1, deterministic pagination aur two concurrent @Version edits mein one conflict verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [Spring Data JPA query/fetch contracts](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
 
 - [Spring — propagation source](https://github.com/spring-projects/spring-framework/blob/main/framework-docs/modules/ROOT/pages/data-access/transaction/declarative/tx-propagation.adoc)
 

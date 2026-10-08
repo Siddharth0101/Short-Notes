@@ -4,7 +4,7 @@ title: This binding prototypes and classes
 track: javascript
 order: 13
 level: Intermediate
-minutes: 3
+minutes: 5
 summary: Regular `this` — function kaise call hua usse decide hota hai.
 tags: this, prototype, classes, oop, inheritance
 ---
@@ -16,7 +16,7 @@ tags: this, prototype, classes, oop, inheritance
 - Detached method — `const f = obj.method` receiver kho deta hai.
 - `call` — args alag; `apply` — args array-like; `bind` — naya bound function.
 - Prototype — missing property prototype chain mein search hoti hai.
-- Class — prototype-based object creation ka syntax; methods prototype par hote hain.
+- Class — prototype-based object creation ka syntax; instance methods prototype par, instance fields own aur static members class par.
 - `new` — object banata, prototype jodta aur constructor call karta hai.
 - `extends`/`super` — inheritance; derived constructor mein `this` se pehle `super()`.
 - Own property — `Object.hasOwn()` inherited property ko include nahi karta.
@@ -54,6 +54,18 @@ tags: this, prototype, classes, oop, inheritance
 - Reflect — object operation ko function form mein forward; proxy trap mein same arguments pass kar sakte ho.
 - Proxy receiver — `Reflect.get(target, key, receiver)` getter ka intended `this` preserve karta hai.
 - Proxy identity — proxy aur target alag references; equality aur Map keys mein interchangeable nahi.
+
+### Edge cases aur reasoning
+
+- Constructor return — regular constructor explicitly object return kare toh new ka result woh object ho sakta hai.
+- Private brand — proxy/wrong receiver se private-field method fail ho sakta hai; private access ordinary property forwarding nahi.
+- Bound constructor — constructable target ka bound function new se call ho sakta hai; bound this constructor receiver ko force nahi karta.
+
+## Recall aur practice
+
+- Sawal — obj.method ko timer callback directly dene par receiver kaise kho sakta hai?
+- Jawaab — Callback invocation obj.method() nahi hoti; stored bind ya wrapper se intended receiver preserve karo.
+- Khud try karo — Account method detach karo, phir bind aur wrapper compare karo; do instances ka balance independent aur cleanup callback identity stable verify karo.
 
 ## Sources — aur padhne ke liye
 

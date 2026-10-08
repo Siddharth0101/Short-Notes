@@ -4,7 +4,7 @@ title: Numbers dates strings and regular expressions
 track: javascript
 order: 10
 level: Intermediate
-minutes: 3
+minutes: 6
 summary: Numbers — JS `number` floating point hai; `0.1 + 0.2` exactly `0.3` nahi.
 tags: numbers, dates, intl, regex, strings, timers
 ---
@@ -62,6 +62,18 @@ tags: numbers, dates, intl, regex, strings, timers
 
 - `matchAll` — global regex ke matches ka iterator; captures bhi milte hain.
 - Lookahead — (?=x) positive, (?!x) negative; lookbehind — (?<=x)/(?<!x).
+
+### Edge cases aur reasoning
+
+- Elapsed clock — performance.now monotonic elapsed time ke liye; Date.now wall-clock adjustments se badal sakta hai.
+- Calendar versus instant — local date aur UTC timestamp ka purpose alag; DST ke around ek calendar day hamesha 24 hours nahi.
+- Tolerance — floating-point comparison ka tolerance domain/scale se choose; Number.EPSILON har magnitude ke liye enough nahi.
+
+## Recall aur practice
+
+- Sawal — parseInt("12px", 10) successful hone se full numeric input valid prove hota hai?
+- Jawaab — Nahi; prefix 12 parse hota hai. Poore accepted format aur finite result ki separate validation chahiye.
+- Khud try karo — Countdown ko deadline se calculate karo; delayed callback ke baad remaining time correct aur zero par timer cleanup verify karo.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: React interview playbook
 track: interview
 order: 3
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: State — snapshot hai; previous value se update ho toh functional setter.
 tags: react, interview, effects, state, performance
 visual: react-render
@@ -28,9 +28,21 @@ visual: react-render
 - UI answer — state owner, identity, loading/error aur keyboard flow chhote example se explain karo.
 - CSS answer — box, containing block, stacking context aur overflow inspect; random z-index guess mat karo.
 
+### Edge cases aur reasoning
+
+- State machine defense — loading/error/success plus draft ownership sketch; impossible boolean combinations aur stale response ka fix explain karo.
+- Optimization evidence — changed prop/context identity aur measured bottleneck separate; render-count reduction user latency improvement automatically nahi.
+- Accessible demo — label, focus aur keyboard acceptance show; screenshot visual correctness alone interaction contract prove nahi.
+
 ## Research notes: Demonstrate component behavior
 
 - Linked Amazon guidance fundamentals ko problems par apply karne par focus karti hai; sirf details ratna learning goal nahi hai.
+
+## Recall aur practice
+
+- Sawal — Search UI mein debounce ke saath stale-response question ka complete answer?
+- Jawaab — Debounce start rate reduce; abort/latest identity completion race handle; empty/error states aur draft retention separately define karo.
+- Khud try karo — 25-minute searchable list build; keyboard navigation, reordered row state, reversed fetches aur failure retry with preserved query demonstrate karo.
 
 ## Sources — aur padhne ke liye
 

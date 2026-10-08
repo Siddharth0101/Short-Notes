@@ -4,7 +4,7 @@
 
 Shuru karne se pehle: [Performance suspense and production quality](../react/10-performance-production.md) · [JPA Hibernate and Spring transactions](../spring-boot/06-jpa-transactions.md) · [Java concurrency under real resource limits](../java/16-concurrency-production.md).
 
-Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish concepts, edge cases aur recall/practice checks hain. Pehle sawal khud answer karo, phir jawaab compare aur exercise verify karo; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Design ki common foundation
 

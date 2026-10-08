@@ -4,7 +4,7 @@ title: Objects arrays and modern data transformations
 track: javascript
 order: 7
 level: Intermediate
-minutes: 3
+minutes: 5
 summary: `map` — har item transform karke naya array.
 tags: arrays, objects, map, set, destructuring, immutability
 ---
@@ -61,6 +61,18 @@ tags: arrays, objects, map, set, destructuring, immutability
 - Iterator result — `next()` se `{value, done}`; done true ho toh traversal complete.
 - Array-like — numeric indexes + length; `Symbol.iterator` bina automatically iterable nahi.
 - Independent iterators — har traversal ka separate cursor rakho; shared iterator nested loops ka progress mix kar sakta hai.
+
+### Edge cases aur reasoning
+
+- Set equality — SameValueZero se NaN deduplicate aur +0/-0 same; alag object references separate entries rehte hain.
+- Destructure safely — missing/null object ko seedha destructure karna fail; boundary par fallback aur field validation alag karo.
+- Sort comparator — negative/zero/positive ordering consistent rakho; boolean comparator total order define nahi karta.
+
+## Recall aur practice
+
+- Sawal — new Set([NaN, NaN, {}, {}]).size kitna hai?
+- Jawaab — 3; NaN values merge, dono independently created objects alag references hain.
+- Khud try karo — Orders ko customer ID se group karo; empty data, repeated customer aur missing ID policy verify karo; original orders mutate mat karo.
 
 ## Sources — aur padhne ke liye
 

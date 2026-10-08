@@ -4,7 +4,7 @@ title: Case study collaborative notes and real-time chat
 track: system-design
 order: 12
 level: Advanced
-minutes: 2
+minutes: 4
 summary: Realtime — WebSocket/SSE choose interaction direction aur infra se.
 tags: case-study, websocket, sse, collaboration, java
 visual: request-flow
@@ -40,6 +40,18 @@ visual: request-flow
 - Coordinate — viewport zoom/scroll ke saath shared document space conversion.
 - Operation base — edit kis document version par bani, protocol track kare.
 - Edit conflict — operation identity + OT/CRDT/server-order contract; blind last-write edits lose kar sakta hai.
+
+### Edge cases aur reasoning
+
+- Replay/live handoff — snapshot cursor aur live subscription ke beech events gap/double-read handle; subscribe-buffer/replay protocol clearly define karo.
+- CRDT guarantee scope — compatible operations eventual merge converge kara sakte; authorization/business invariants automatically enforce nahi hote.
+- Delivery status semantics — persisted versus device-delivered versus user-read separate durable/ephemeral evidence; socket write alone user-read proof nahi.
+
+## Recall aur practice
+
+- Sawal — Snapshot load ke baad socket subscribe karne ke gap mein message aaye toh kya risk?
+- Jawaab — Message miss ho sakta; consistent cursor-based replay/live handoff ya subscribe buffer se gap close karo.
+- Khud try karo — Reconnect protocol design karo; duplicate sequence, expired cursor, slow subscriber, deleted document aur revoked permission recovery verify karo.
 
 ## Sources — aur padhne ke liye
 

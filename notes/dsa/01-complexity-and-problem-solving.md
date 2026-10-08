@@ -4,7 +4,7 @@ title: Complexity and problem solving
 track: dsa
 order: 1
 level: Foundation
-minutes: 2
+minutes: 4
 summary: Big-O — input badhne par upper-bound growth; exact milliseconds nahi.
 tags: big-o, complexity, problem-solving, invariants
 ---
@@ -33,6 +33,18 @@ tags: big-o, complexity, problem-solving, invariants
 - LCM — positive a,b ke liye `(a/gcd(a,b))*b`; pehle divide se intermediate overflow risk kam, result phir bhi overflow kar sakta hai.
 - Prime sieve — 2..n ke prime multiples mark; O(n log log n) time, O(n) space.
 - Sieve start — prime p ke multiples p² se mark; smaller multiples pehle marked, 0/1 prime nahi.
+
+### Edge cases aur reasoning
+
+- Input encoding — O(W) numeric capacity mein linear, binary input bit-length mein exponential ho sakta; pseudo-polynomial qualifier preserve karo.
+- Nested independent costs — repeated halving outer loop aur full scan inner loop O(n log n); loop count alone square cost prove nahi.
+- Practical constraints — O(n²) at n=100 aur n=100000 ka feasibility different; input limits se algorithm choose karo.
+
+## Recall aur practice
+
+- Sawal — for i doubling till n aur each step n items scan kare toh complexity?
+- Jawaab — O(n log n): logarithmic outer iterations multiplied by linear work; auxiliary space chosen operations se separately count karo.
+- Khud try karo — Three snippets ka operation count derive karo: triangular nested scan, doubling loop aur two independent arrays; brute-force feasible bound justify karo.
 
 ## Sources — aur padhne ke liye
 

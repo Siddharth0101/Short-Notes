@@ -4,7 +4,7 @@ title: MongoDB query plans and Node streaming lab
 track: mongodb
 order: 6
 level: Advanced
-minutes: 1
+minutes: 3
 summary: `explain` — chosen plan, keys/docs examined aur returned count dekho.
 tags: mongodb, indexes, explain, streams, backpressure
 ---
@@ -22,8 +22,21 @@ tags: mongodb, indexes, explain, streams, backpressure
 - Cursor batch — batch size memory/round-trip tradeoff; total returned data limit alag.
 - Explain comparison — same representative filter/data distribution par before/after compare.
 
+### Edge cases aur reasoning
+
+- Cursor timeout scope — server maxTimeMS query work bound karta hai; full client/network operation ko separate deadline/cancellation chahiye.
+- Index ratio context — keys/docs examined versus returned workload se interpret; zero results ya low cardinality mein ratio alone misleading ho sakta.
+- Explain cache difference — explain execution normal plan-cache behavior ko exactly reproduce nahi; production telemetry ke saath validate karo.
+
+## Recall aur practice
+
+- Sawal — IXSCAN dekhna query efficient hone ka sufficient proof hai?
+- Jawaab — Nahi; huge key scan, document fetch ya blocking sort still expensive. Examined counts, latency aur representative distribution dekho.
+- Khud try karo — Tenant+createdAt+ID cursor query inspect karo; same-time records, no results, deep page aur disconnect par cursor close verify karo.
+
 ## Sources — aur padhne ke liye
 
+- [MongoDB explain and plan-cache behavior](https://www.mongodb.com/docs/manual/reference/explain-results/)
 - [MongoDB compound indexes](https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/)
 - [Node streams](https://nodejs.org/api/stream.html)
 

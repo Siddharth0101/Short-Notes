@@ -4,7 +4,7 @@ title: Java concurrency under real resource limits
 track: java
 order: 16
 level: Advanced
-minutes: 2
+minutes: 4
 summary: Bounded pool — workers aur queue ki limit; overload par rejection/backpressure.
 tags: java, concurrency, virtual-threads, executors, backpressure
 ---
@@ -31,9 +31,21 @@ tags: java, concurrency, virtual-threads, executors, backpressure
 - Phaser — multiple phases aur changing participant count ke liye flexible barrier.
 - ForkJoinPool — divide-and-conquer tasks ke liye work stealing; chhote independent subtasks useful.
 
+### Edge cases aur reasoning
+
+- Executor starvation — same bounded pool ke tasks apne queued child tasks par block karein toh workers exhaust/deadlock ho sakte hain.
+- Future error flow — CompletableFuture handle success/failure transform; exceptionally recovery de sakta, whenComplete observation khud throw karke outcome affect kar sakta.
+- Permit ownership — successful semaphore acquire ke baad finally release; timeout/rejection par unacquired permit release mat karo.
+
 ## Research notes: Virtual threads still need task ownership
 
 - Virtual threads har blocking task ke liye dedicated platform thread ke bina many tasks support karti hain.
+
+## Recall aur practice
+
+- Sawal — Virtual threads badhaane se database pool ka wait automatically kyun nahi mit-ta?
+- Jawaab — Connections aur DB capacity bounded hain; more waiting tasks throughput guarantee nahi, admission limit/deadline still chahiye.
+- Khud try karo — Remote-call semaphore wrapper likho; success, exception, timeout aur interrupted acquisition par no permit leak aur bounded active calls verify karo.
 
 ## Sources — aur padhne ke liye
 

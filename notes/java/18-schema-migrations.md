@@ -4,7 +4,7 @@ title: SQL schema design aur safe migrations — data ka contract evolve karo
 track: java
 order: 18
 level: Intermediate
-minutes: 3
+minutes: 6
 summary: Migration — schema change ko versioned file mein track karo.
 tags: sql, normalization, constraints, migrations
 ---
@@ -69,7 +69,21 @@ tags: sql, normalization, constraints, migrations
 - JSONB — PostgreSQL structured JSON; query/index useful, relational constraints ka automatic substitute nahi.
 - Polymorphic relation — type + ID se multiple tables reference karna foreign-key integrity complicate karta hai; explicit tables/constraints consider.
 
+### Edge cases aur reasoning
+
+- Unique claim — pre-insert SELECT se concurrent duplicate prevent nahi; unique constraint aur conflict handling final guard hain.
+- Online index limits — lock/load behavior database/version-specific; PostgreSQL CREATE INDEX CONCURRENTLY ordinary transaction block mein run nahi hota.
+- Backfill resumability — stable batch key/checkpoint rakho; restart par completed records safely skip aur incompatible old writes account karo.
+
+## Recall aur practice
+
+- Sawal — New NOT NULL column ko immediately add karna old app rollout ko kyun tod sakta hai?
+- Jawaab — Old writers field omit karte hain; compatible default/nullable expansion, backfill aur writers upgrade ke baad requiredness enforce karo.
+- Khud try karo — Email normalization migration plan likho; duplicate historical data, parallel old/new writers, restartable backfill aur rollback compatibility verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [PostgreSQL concurrent index caveats](https://www.postgresql.org/docs/current/sql-createindex.html)
 
 - [PostgreSQL constraints](https://www.postgresql.org/docs/current/ddl-constraints.html)
 - [ALTER TABLE](https://www.postgresql.org/docs/current/sql-altertable.html)

@@ -4,7 +4,7 @@ title: Hash tables maps and sets
 track: dsa
 order: 3
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Hash table — key ko bucket mein map; collision handling zaroori.
 tags: hashing, map, set, collisions, two-sum
 ---
@@ -23,9 +23,21 @@ tags: hashing, map, set, collisions, two-sum
 - Frequency map — presence se zyada multiplicity chahiye, toh boolean Set enough nahi.
 - Hash/equality — equal keys ko compatible hashes; collision ko unequal key ka proof mat samjho.
 
+### Edge cases aur reasoning
+
+- Probing deletion — open addressing mein deleted slot tombstone rakhe; empty karne se later collided key search prematurely ruk sakti.
+- LRU update — existing key overwrite par recency refresh; capacity zero aur eviction ke map/list consistency ka explicit contract.
+- Composite identity — delimiter-only concatenation ambiguous ho sakti; length-prefix/structured serialization se distinct tuples preserve karo.
+
 ## Research notes: Expected and amortized are different guarantees
 
 - Capacity double karne par resizing ka work bahut saare inserts mein spread hota hai.
+
+## Recall aur practice
+
+- Sawal — Set se anagram characters compare karna repeated letters ke liye kyun wrong?
+- Jawaab — Set multiplicity lose karta; aab aur abb ka same character set hai par frequencies different.
+- Khud try karo — Frequency-map anagram checker aur capacity-2 LRU banao; duplicates, overwrite refresh, zero capacity aur evicted lookup verify karo.
 
 ## Sources — aur padhne ke liye
 

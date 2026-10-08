@@ -20,7 +20,7 @@ for (const track of TRACKS) {
 }
 const assigned = new Set();
 const outputs = new Map();
-const studyRoutine = "Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](STUDY_GUIDE.md) padho.\n\n";
+const studyRoutine = "Har chapter mein short Hinglish concepts, edge cases aur recall/practice checks hain. Pehle sawal khud answer karo, phir jawaab compare aur exercise verify karo; code examples optional link par hain. Revision routine ke liye [study guide](STUDY_GUIDE.md) padho.\n\n";
 let index =
   "# Revision syllabus — subject chuno\n\nHar subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se number order follow karo; stage checkpoint khud complete karke aage badho. App, filenames aur index ka order same hai. Numbered source folders related examples/reference hain.\n\n**Apna route chuno:** JavaScript → React → frontend system design ya React Native mobile apps; Java → Spring → backend system design. JS functions/arrays ke baad DSA start karo. Async/modules ke baad Node/MongoDB. Related subject padhkar interview playbook karo.\n\nInstructor context aur lecture mapping ki limits [course coverage](COURSE_COVERAGE.md) mein padho.\n\n";
 index += studyRoutine;

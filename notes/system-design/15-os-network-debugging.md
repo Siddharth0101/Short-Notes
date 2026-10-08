@@ -4,7 +4,7 @@ title: OS aur networking interviews — slow request ko layer-wise diagnose karo
 track: system-design
 order: 15
 level: Intermediate
-minutes: 2
+minutes: 5
 summary: Process — isolated address space; thread — process ke resources share karta hai.
 tags: os, networking, tcp, dns, tls, debugging
 ---
@@ -54,6 +54,18 @@ tags: os, networking, tcp, dns, tls, debugging
 - STUN — public-facing address discover; TURN — direct path fail ho toh relay.
 - DataChannel — peer data; reliability/ordering options use case se choose.
 - Peer media — permissions, device change, bandwidth adaptation aur reconnect handle karo.
+
+### Edge cases aur reasoning
+
+- TCP byte stream — send boundaries message boundaries nahi; framing/length-prefix/delimiter protocol aur bounded payload parser chahiye.
+- TLS hostname — encryption alone intended server identity prove nahi; certificate trust/hostname verification required, insecure bypass avoid karo.
+- HTTP multiplexing limit — HTTP2 streams ek TCP loss se transport head-of-line stall; HTTP3 stream independence shared congestion limits eliminate nahi karti.
+
+## Recall aur practice
+
+- Sawal — Client ne two send calls ki toh server ko exactly two receive callbacks milenge?
+- Jawaab — Nahi; TCP ordered bytes transport karta, chunk grouping different ho sakti. Application framing reconstruct kare.
+- Khud try karo — Slow request triage tree banao; DNS, TLS failure, pool wait, connection reuse aur unknown commit ko timings/logs se distinguish karo.
 
 ## Sources — aur padhne ke liye
 

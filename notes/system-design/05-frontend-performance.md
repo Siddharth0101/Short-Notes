@@ -4,7 +4,7 @@ title: Frontend performance accessibility and resilience
 track: system-design
 order: 5
 level: Intermediate
-minutes: 3
+minutes: 6
 summary: LCP — main content kab dikha; INP — interaction responsiveness; CLS — layout shift.
 tags: performance, accessibility, web-vitals, react
 visual: react-render
@@ -70,6 +70,18 @@ visual: react-render
 - private cache — personalized response shared cache mein store na ho; browser cache allowed.
 - Vary — selected request headers ko cache key ka part banao, jaise Accept-Language.
 - Immutable asset — content-hashed URL + long max-age + immutable; content change ho toh URL bhi badlo.
+
+### Edge cases aur reasoning
+
+- Percentile aggregation — instance p99 values average karna global p99 nahi; compatible histograms/raw population aggregate karo.
+- Interaction attribution — slow INP ko handler, render, layout aur queued main-thread work trace se separate; network duration alone explanation nahi.
+- Prefetch budget — likelihood, connection/data saver aur priority consider; speculative work critical assets se bandwidth compete na kare.
+
+## Recall aur practice
+
+- Sawal — Two servers ke p99 ka arithmetic mean whole service p99 kyun nahi?
+- Jawaab — Percentiles nonlinear aur traffic weights different; merged distribution se target percentile calculate karo.
+- Khud try karo — Slow catalog trace inspect karo; hero image priority, reserved dimensions, interaction long task aur keyboard-focus behavior before/after compare karo.
 
 ## Sources — aur padhne ke liye
 

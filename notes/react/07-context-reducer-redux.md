@@ -4,7 +4,7 @@ title: Context reducers and Redux Toolkit
 track: react
 order: 7
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Local state — sirf component use kare toh paas rakho.
 tags: context, reducer, redux, redux-toolkit, state-management
 visual: context-flow
@@ -29,6 +29,18 @@ visual: context-flow
 - Redux flow — dispatch action → reducer next state → subscribed UI render; reducer mein async side effect nahi.
 - RTK draft — createSlice reducer mein mutation-looking syntax Immer draft par; arbitrary external object mutate mat karo.
 - Thunk — async work coordinate karke pending/success/failure actions; stale result/cancellation handle karo.
+
+### Edge cases aur reasoning
+
+- Context memo limit — memoized child apne consumed context change par rerender kar sakta hai; memo context subscription ko block nahi karta.
+- Serializable state — shared persisted store mein functions/DOM nodes avoid; dates ko explicit serialization contract chahiye.
+- Reducer invariant — action ke baad selection/entity relationships valid rakho; deleted item ka selected ID cleanup karo.
+
+## Recall aur practice
+
+- Sawal — Pure reducer ke andar fetch karna debugging aur replay ko kaise affect karta hai?
+- Jawaab — Same state/action ka deterministic result tootega; async effect/thunk se work karo aur result action dispatch karo.
+- Khud try karo — Todo reducer likho; add/update/delete, unknown action policy aur selected item delete par consistent state verify karo.
 
 ## Sources — aur padhne ke liye
 

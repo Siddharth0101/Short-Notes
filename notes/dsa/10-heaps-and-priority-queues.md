@@ -4,7 +4,7 @@ title: Heaps and priority queues
 track: dsa
 order: 10
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Heap — complete binary tree with parent-child priority rule.
 tags: heap, priority-queue, top-k, heapify
 ---
@@ -27,6 +27,18 @@ tags: heap, priority-queue, top-k, heapify
 ### Heap costs
 
 - Heap operations — push/pop O(log n); arbitrary lookup O(n); bottom-up heap build O(n).
+
+### Edge cases aur reasoning
+
+- Heap versus sorted array — root minimum hai, remaining array fully sorted nahi; arbitrary lookup binary search se valid nahi.
+- Top-k bound — k>n, k=0 aur duplicate-ranking contract define; result sorted chahiye toh additional O(k log k) work count karo.
+- Priority mutation — heap ke andar object priority change se invariant automatically restore nahi; update-key/reinsert plus stale guard chahiye.
+
+## Recall aur practice
+
+- Sawal — Bottom-up heap build n times O(log n) insert karne jaisa O(n log n) kyun nahi?
+- Jawaab — Most nodes low height par hain; sum of their sift-down work O(n), per-node worst bound tight total nahi.
+- Khud try karo — Top-3 stream with duplicates trace karo; heap size<=3, correct membership, sorted-output cost aur changed priority handling verify karo.
 
 ## Sources — aur padhne ke liye
 

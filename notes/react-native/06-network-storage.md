@@ -4,7 +4,7 @@ title: Networking offline storage aur auth
 track: react-native
 order: 6
 level: Intermediate
-minutes: 2
+minutes: 5
 summary: Fetch — response.ok check; HTTP 4xx/5xx automatically network exception nahi.
 tags: react-native, mobile, expo, network-storage
 ---
@@ -45,7 +45,21 @@ tags: react-native, mobile, expo, network-storage
 - OAuth redirect — app scheme/verified link provider ke registered redirect se match; auth result/cancellation dono handle karo.
 - PKCE — authorization code ko initiating client ke verifier se bind; mobile bundle mein confidential client secret mat rakho.
 
+### Edge cases aur reasoning
+
+- SecureStore reinstall — Android uninstall data remove karta; iOS Keychain same bundle reinstall par persist ho sakti, guaranteed recovery policy mat banao.
+- Refresh/logout race — old refresh response logout ke baad credentials restore na kare; auth generation/session identity check karo.
+- Offline queue ownership — pending operations user/tenant scoped; account switch par old user's writes new credentials se replay mat karo.
+
+## Recall aur practice
+
+- Sawal — Token refresh pending ho aur user logout kare toh later refresh success kaise handle karoge?
+- Jawaab — Captured auth generation compare; session obsolete ho toh response ignore, credentials/cache dobara restore mat karo.
+- Khud try karo — Offline queue plus auth flow test karo; reinstall missing state, refresh/logout race, user switch aur failed migration mein safe recovery verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [Expo SecureStore persistence limits](https://docs.expo.dev/versions/latest/sdk/securestore/)
 
 - [TanStack Query — cache keys](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys)
 

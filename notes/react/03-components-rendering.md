@@ -4,7 +4,7 @@ title: Components JSX and the render cycle
 track: react
 order: 3
 level: Foundation
-minutes: 2
+minutes: 4
 summary: Render — next UI calculate; commit — DOM updates apply.
 tags: components, jsx, props, rendering, keys
 visual: react-render
@@ -34,7 +34,21 @@ visual: react-render
 - Derived data — props se calculate ho toh extra duplicated class state avoid.
 - Snapshot lifecycle — DOM mutation se pehle measurement aur after-update adjustment ka ownership clear.
 
+### Edge cases aur reasoning
+
+- Render restart — React render work repeat/discard kar sakta hai; render mein network writes ya global mutation mat karo.
+- Key scope — key sibling list ke andar unique; same ID unrelated lists mein valid ho sakta hai.
+- Hydration contract — server/client initial markup compatible rakho; random/time/browser-only state se mismatch avoid karo.
+
+## Recall aur practice
+
+- Sawal — Editable rows mein index key aur reorder se input galat item par kyun ja sakta hai?
+- Jawaab — React position identity reuse karta hai; data item move hua, local component state purani position par reh sakti hai.
+- Khud try karo — Stable-ID rows edit/reorder karo; draft correct item par rahe aur intentional key change se state reset verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [React hydrateRoot](https://react.dev/reference/react-dom/client/hydrateRoot)
 
 - [React thinking in React](https://react.dev/learn/thinking-in-react)
 - [React preserving and resetting state](https://react.dev/learn/preserving-and-resetting-state)

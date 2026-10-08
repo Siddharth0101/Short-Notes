@@ -4,7 +4,7 @@ title: Mongoose schemas validation and relationships
 track: mongodb
 order: 4
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Mongoose — MongoDB ke liye schema/model layer.
 tags: mongoose, schemas, validation, populate, middleware, lean
 ---
@@ -24,7 +24,22 @@ tags: mongoose, schemas, validation, populate, middleware, lean
 - Virtual field — computed representation; persisted field/index automatic nahi banta.
 - Version check — stale read se overwrite avoid karne ke liye optimistic concurrency ka explicit contract.
 
+### Edge cases aur reasoning
+
+- Update validation scope — runValidators updated supported paths/operators par; $inc aur whole-document invariants automatically cover nahi.
+- Query await reuse — Mongoose Query real reusable Promise nahi; repeated execution unwanted failure/work de sakti, exec result deliberately share karo.
+- Lean feature boundary — default lean document getters/virtuals/save unavailable; plugins/options ka actual contract separately verify karo.
+
+## Recall aur practice
+
+- Sawal — Schema max validator aur runValidators:true ke saath $inc always bound enforce karega?
+- Jawaab — Nahi; Mongoose update validators $inc check nahi karte. Conditional DB update/appropriate invariant guard chahiye.
+- Khud try karo — Save versus update validation compare karo; duplicate index error, $inc bound, missing required path aur lean response shape verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [Mongoose update validation caveats](https://mongoosejs.com/docs/validation.html)
+- [Mongoose query execution contracts](https://mongoosejs.com/docs/queries.html)
 
 - [Mongoose validation](https://mongoosejs.com/docs/validation.html)
 - [Mongoose populate](https://mongoosejs.com/docs/populate.html)

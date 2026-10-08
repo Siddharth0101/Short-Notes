@@ -4,7 +4,7 @@ title: Linked lists stacks and queues
 track: dsa
 order: 2
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Linked list — nodes references se linked; random access O(n).
 tags: linked-list, stack, queue, pointers, monotonic-stack
 ---
@@ -32,6 +32,18 @@ tags: linked-list, stack, queue, pointers, monotonic-stack
 ### Stack checks
 
 - Parentheses — opening stack mein; closing ko matching top chahiye.
+
+### Edge cases aur reasoning
+
+- Queue retention — head-index queue mein consumed slots clear/compact; references retained rahen toh long-lived queue memory grow kar sakti.
+- Reverse pointer safety — current.next overwrite se pehle next save; remaining list ka reachable link warna lose ho sakta hai.
+- List invariant — empty list head/tail both null; single deletion ke baad size/head/tail consistent rakho.
+
+## Recall aur practice
+
+- Sawal — Known tail node ko singly linked list mein O(1) delete always possible hai?
+- Jawaab — Predecessor bina tail link update nahi kar sakte; next-node-copy trick tail par nahi aur identity semantics bhi change karti.
+- Khud try karo — Queue/list implementation empty→one→many→empty test karo; tail deletion, reverse twice aur consumed-reference cleanup verify karo.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: Event loop promises and resilient fetching
 track: javascript
 order: 15
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Call stack — synchronous functions yahin execute hote hain.
 tags: async, promises, event-loop, fetch, cancellation
 visual: event-loop
@@ -29,6 +29,18 @@ visual: event-loop
 ### Browser scheduling
 
 - Animation — `requestAnimationFrame` repaint se pehle work schedule karta hai.
+
+### Edge cases aur reasoning
+
+- Await continuation — already fulfilled Promise await karne par bhi following async code later microtask mein resume hota hai.
+- Response body — response.json async aur fail ho sakta hai; HTTP success se valid application schema prove nahi hota.
+- Request outcome — client abort se server-side write rollback guaranteed nahi; uncertain write ko idempotency/reconciliation se handle karo.
+
+## Recall aur practice
+
+- Sawal — Sync log, Promise.then aur setTimeout(...,0) ka simple browser snippet order kya hoga?
+- Jawaab — Current synchronous code pehle, queued promise microtask phir, timer task baad; unrelated task sources ka universal order assume mat karo.
+- Khud try karo — A/B/C log trace banao; fetch helper mein non-2xx, malformed JSON aur abort ko distinct failures ke roop mein verify karo.
 
 ## Sources — aur padhne ke liye
 

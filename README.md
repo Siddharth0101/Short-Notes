@@ -11,7 +11,7 @@ Interview ke liye [52 priority questions aur preparation plan](notes/INTERVIEW_P
 
 **Machine coding practice:** [121 build rounds aur 44 top-priority questions](notes/MACHINE_CODING_PRACTICE.md) — har subject ke 11 rounds, 121 follow-ups, timeboxes, acceptance checks aur answer guides. App mein `machine-coding` search karo.
 
-Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho. React Native ke [198 short points ka concept recheck](notes/REACT_NATIVE_REVIEW.md) bhi available hai.
+Har chapter mein recall question, answer aur practice acceptance checks hain. 8 October 2026 ke pass mein **saare 118 chapters enhance hue; 362 concept points add, ab 2,405 revision points**. Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho. React Native ka [mobile concept recheck](notes/REACT_NATIVE_REVIEW.md) bhi available hai.
 
 ## Kya aur kis order mein padhna hai?
 
@@ -32,9 +32,9 @@ Frontend ke liye JavaScript → React → frontend design; mobile ke liye React 
 ## Revision ka format
 
 - Notes — `term — short Hinglish meaning / important catch`.
-- Chapters — har subject ke concise concept bullets; long walkthroughs hata diye hain.
+- Chapters — har subject ke concise concept bullets, practical conditions aur failure cases.
 - Code — chapter ka optional examples link kholo jab implementation dekhni ho.
-- Recall — term padhkar meaning bolo; weak topic bookmark karke repeat karo.
+- Recall — chapter ka sawal khud answer karo, jawaab compare karo, phir practice ke acceptance cases verify karo.
 
 ## App chalao
 

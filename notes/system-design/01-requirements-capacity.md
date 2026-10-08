@@ -4,7 +4,7 @@ title: Requirements capacity and design interviews
 track: system-design
 order: 1
 level: Foundation
-minutes: 2
+minutes: 4
 summary: Requirements — users, core actions, scale aur constraints pehle clear karo.
 tags: requirements, capacity, interviews, tradeoffs
 visual: request-flow
@@ -43,6 +43,18 @@ visual: request-flow
 - Decision trigger — scale/freshness requirement badle toh architecture kab revisit karna hai, define.
 - RADIO — Requirements → Architecture → Data model → Interface → Optimizations.
 - Normalize — entity ID se records store; duplicate copies ka drift kam.
+
+### Edge cases aur reasoning
+
+- Little's law scope — stable system mein L=lambda×W average quantities; peak QPS×p99 ko exact concurrency law mat bolo.
+- Unit conversion — daily traffic/86400 se average QPS; bytes versus bits, decimal GB versus GiB assumptions label karo.
+- Latency budget allocation — end-to-end deadline ko network, queue aur dependency work mein split; tail dependencies correlated ho sakti hain.
+
+## Recall aur practice
+
+- Sawal — 100 requests/s aur average total latency0.2s par average in-flight work kitna?
+- Jawaab — Steady-state roughly20; queue+service time included ho aur measured population same ho. Peak/tail ke liye extra analysis chahiye.
+- Khud try karo — 1M requests/day, 5×peak aur 2KB record ka QPS/storage estimate do; retention, replica/index overhead aur assumptions explicitly show karo.
 
 ## Sources — aur padhne ke liye
 

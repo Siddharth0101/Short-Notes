@@ -4,7 +4,7 @@ title: Modules web delivery and debugging
 track: javascript
 order: 17
 level: Advanced
-minutes: 1
+minutes: 3
 summary: ES module — `import`/`export`; imports live bindings hote hain.
 tags: modules, tooling, http, debugging, testing, npm
 ---
@@ -30,9 +30,21 @@ tags: modules, tooling, http, debugging, testing, npm
 - Named/default — named export ka imported naam match; default ka local naam choose kar sakte ho.
 - Top-level await — ES module mein allowed; dependent module execution wait kar sakti hai.
 
+### Edge cases aur reasoning
+
+- Browser module URL — server ko correct JavaScript MIME type serve karna chahiye; HTML fallback ko module response mat banao.
+- Debug hypotheses — expected versus actual state record karo; breakpoint se ek hypothesis verify karke change karo.
+- Package scripts — install/build/test commands aur runtime version document; lockfile alone OS/native dependency differences eliminate nahi karta.
+
 ## Research notes: Imports are live read-only bindings
 
 - Imported binding exporter ke updates reflect karti hai; importer binding reassign nahi kar sakta.
+
+## Recall aur practice
+
+- Sawal — Production deep-link reload par app chale, lekin JS asset request ko HTML mile toh kya hoga?
+- Jawaab — SPA fallback resource request par apply hua; module MIME/parse failure hoga. Asset serving aur route fallback distinguish karo.
+- Khud try karo — Small module export/import banao; syntax error, wrong path aur circular initialization ko separate reproductions mein diagnose karo.
 
 ## Sources — aur padhne ke liye
 

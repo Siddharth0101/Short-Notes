@@ -4,7 +4,7 @@ title: State snapshots forms and immutable updates
 track: react
 order: 2
 level: Foundation
-minutes: 2
+minutes: 4
 summary: `useState` — component ki memory; setter next render schedule karta hai.
 tags: state, forms, immutability, batching, derived-state
 visual: react-render
@@ -33,9 +33,21 @@ visual: react-render
 - `useOptimistic` — Action pending ho toh temporary UI result; actual saved state separately update karo.
 - Optimistic failure — Action khatam hone par base state dikhegi; save fail ho toh clear error/retry UI do.
 
+### Edge cases aur reasoning
+
+- Queued updater trace — same snapshot se setN(n+1) repeated ek value queue karta; functional updaters previous queued result se compose hote hain.
+- Controlled lifetime — text value ko string rakho; undefined se string switch uncontrolled/controlled mismatch kara sakta hai.
+- Input reset — draft clear successful save ke baad; validation/network failure par learner/user input preserve karo.
+
 ## Research notes: Represent coherent request states
 
 - Independent loading/success booleans contradictory combination allow karti hain.
+
+## Recall aur practice
+
+- Sawal — Initial n=0 par three setN(n+1) versus three setN(v=>v+1) ka final result?
+- Jawaab — Same handler mein pehla pattern 1, functional pattern 3; updater queue previous result use karti hai.
+- Khud try karo — Submit form banao; pending double-submit guard, failed save par preserved draft aur successful save par explicit reset verify karo.
 
 ## Sources — aur padhne ke liye
 

@@ -4,7 +4,7 @@ title: React Native basics aur Expo workflow
 track: react-native
 order: 1
 level: Foundation
-minutes: 2
+minutes: 4
 summary: React Native — React components se Android/iOS native UI banao; browser DOM use nahi hota.
 tags: react-native, mobile, expo, foundations-expo
 ---
@@ -36,6 +36,18 @@ tags: react-native, mobile, expo, foundations-expo
 - Manual native project — Xcode/Gradle files khud maintain kar sakte ho; Expo services use karne ke liye CNG mandatory nahi.
 - Native vs JS dependency — native code wali package ko binary build mein include karna padta hai; JS-only changes ka workflow alag.
 - Upgrade compatibility — Expo SDK, React Native aur native library versions ko compatible set mein upgrade/test karo.
+
+### Edge cases aur reasoning
+
+- Backend boundary — Expo app tooling backend authorization/storage automatically implement nahi karta; server API aur credential ownership separately define karo.
+- Native support matrix — Android/iOS/web exports/platform behavior differ; package install se all targets supported prove nahi.
+- Build reproducibility — lockfile, SDK, config plugins aur native toolchain versions record; local Metro success CI native build proof nahi.
+
+## Recall aur practice
+
+- Sawal — Expo Go mein missing custom native module ko Fast Refresh fix karega?
+- Jawaab — Nahi; client binary module contain nahi karti. Compatible native dependency ke saath development build chahiye.
+- Khud try karo — Starter app ka JS edit aur native dependency edit compare karo; reload versus rebuild requirement aur Android/iOS smoke checks document karo.
 
 ## Sources — aur padhne ke liye
 

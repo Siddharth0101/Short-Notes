@@ -4,7 +4,7 @@
 
 Shuru karne se pehle: [Functions parameters arguments and return values](../javascript/05-js-functions.md) · [Arrays objects and simple data modeling](../javascript/06-js-arrays-objects.md).
 
-Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish concepts, edge cases aur recall/practice checks hain. Pehle sawal khud answer karo, phir jawaab compare aur exercise verify karo; code examples optional link par hain. Revision routine ke liye [study guide](../STUDY_GUIDE.md) padho.
 
 ## Stage 1: Cost aur basic structures samjho
 

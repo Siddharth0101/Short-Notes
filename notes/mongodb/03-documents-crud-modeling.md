@@ -4,7 +4,7 @@ title: Documents CRUD and access-driven modeling
 track: mongodb
 order: 3
 level: Foundation
-minutes: 1
+minutes: 3
 summary: Document — BSON fields ka record; collection related documents rakhti hai.
 tags: mongodb, crud, bson, modeling, embedding, references
 ---
@@ -27,9 +27,21 @@ tags: mongodb, crud, bson, modeling, embedding, references
 
 - ObjectId — identifier; timestamp ko authorization proof mat samjho.
 
+### Edge cases aur reasoning
+
+- Conditional decrement — {_id, stock:{$gte:n}} filter + $inc:{stock:-n} single atomic claim; matched count se success decide karo.
+- Upsert race — same logical key par concurrent upserts duplicate bana sakti hain without suitable unique index; duplicate outcome handle karo.
+- Array predicate trap — separate dot conditions different array elements match kar sakti hain; same-element contract ke liye $elemMatch.
+
 ## Research notes: Model bounded growth and data ownership
 
 - Embedding related data ko reads/atomic updates ke liye saath rakhti hai.
+
+## Recall aur practice
+
+- Sawal — Atomic $inc alone stock ko negative hone se rokta hai?
+- Jawaab — Nahi; increment atomic hai, invariant conditional filter se enforce. stock>=requested ko same update predicate mein rakho.
+- Khud try karo — Last-stock reservation query likho; two callers mein one success, no negative stock aur duplicate operation receipt verify karo.
 
 ## Sources — aur padhne ke liye
 

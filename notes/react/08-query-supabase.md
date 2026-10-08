@@ -4,7 +4,7 @@ title: Server state caching and Supabase integration
 track: react
 order: 8
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Server state — remote data; loading, freshness, retry aur invalidation sambhalni padti hai.
 tags: tanstack-query, server-state, caching, supabase, mutations
 ---
@@ -24,9 +24,21 @@ tags: tanstack-query, server-state, caching, supabase, mutations
 - Background refresh — cached data dikhate hue refresh status separately handle karo.
 - Mutation ordering — rapid writes out-of-order aa sakti hain; version/reconciliation rule chahiye.
 
+### Edge cases aur reasoning
+
+- Query function failure — HTTP non-2xx ko rejected Promise/error banao; fulfilled error payload cache ko success dikha sakta hai.
+- Optimistic concurrency — ek mutation ka rollback later successful edit erase na kare; per-operation/version reconciliation chahiye.
+- Invalidation scope — related detail/list aggregates identify; every cache clear correctness shortcut hai par avoidable refetch cost badhata hai.
+
 ## Research notes: Freshness and retention are different clocks
 
 - TanStack Query v5 mein staleTime freshness aur gcTime inactive data removal control karta hai.
+
+## Recall aur practice
+
+- Sawal — Same query key par user A/B ka private data cache karne mein kya risk hai?
+- Jawaab — Cached result identities mix hongi; auth/tenant scope key mein include aur auth switch par private cache reset karo.
+- Khud try karo — Optimistic item edit banao; rapid two edits, one failure aur logout/login ke baad correct user/version data verify karo.
 
 ## Sources — aur padhne ke liye
 

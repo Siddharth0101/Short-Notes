@@ -6,7 +6,7 @@ Har subject easy foundation se advanced concepts tak jaata hai. Lesson 01 se num
 
 Instructor context aur lecture mapping ki limits [course coverage](COURSE_COVERAGE.md) mein padho.
 
-Har chapter mein short Hinglish one-liners hain; code examples optional link par hain. Revision routine ke liye [study guide](STUDY_GUIDE.md) padho.
+Har chapter mein short Hinglish concepts, edge cases aur recall/practice checks hain. Pehle sawal khud answer karo, phir jawaab compare aur exercise verify karo; code examples optional link par hain. Revision routine ke liye [study guide](STUDY_GUIDE.md) padho.
 
 ## JavaScript
 

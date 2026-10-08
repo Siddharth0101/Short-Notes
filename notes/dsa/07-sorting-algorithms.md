@@ -4,7 +4,7 @@ title: Sorting from elementary methods to divide and conquer
 track: dsa
 order: 7
 level: Intermediate
-minutes: 2
+minutes: 3
 summary: Bubble sort — adjacent swaps; O(n²), early-exit variant best O(n).
 tags: sorting, merge-sort, quick-sort, radix-sort, stability
 visual: sorting
@@ -32,6 +32,18 @@ visual: sorting
 
 - Quickselect cost — expected O(n), worst O(n²); pivot strategy matter karti hai.
 - Sort memory — merge sort usually O(n) auxiliary; quicksort recursion depth balanced O(log n), worst O(n).
+
+### Edge cases aur reasoning
+
+- Counting sort bound — integer range k ke saath O(n+k) time/space; sparse huge values par range allocation unsuitable.
+- Quicksort partition contract — Hoare/Lomuto boundaries different; recursion intervals ko chosen partition return meaning se match karo.
+- Stable multi-key ordering — secondary order preserve karke primary stable sort composite ordering de sakta; comparator tuple contract clearer ho sakta.
+
+## Recall aur practice
+
+- Sawal — Numeric [10,2,1] par JS default sort versus numeric comparator ka output?
+- Jawaab — Default string order [1,10,2]; numeric comparator [1,2,10]. Default sort original array bhi mutate karta hai.
+- Khud try karo — Sort result verify karo; ordered output, preserved multiplicities, stability contract aur all-equal pivot case ki termination check karo.
 
 ## Sources — aur padhne ke liye
 

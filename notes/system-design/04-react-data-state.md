@@ -4,7 +4,7 @@ title: React state server data and cache consistency
 track: system-design
 order: 4
 level: Intermediate
-minutes: 1
+minutes: 4
 summary: State owner — local UI, URL, shared client aur server data alag pehchano.
 tags: react, state, caching, optimistic-ui
 visual: caching
@@ -32,9 +32,21 @@ visual: caching
 - Prompt history — sensitive user data minimum rakho; retention policy explicit.
 - Provider secret — browser bundle/environment mein public ho sakta hai; model key server par rakho.
 
+### Edge cases aur reasoning
+
+- Offline dependency — queued create ka temporary ID dependent edits ke stable server ID se reconcile; order/dependency failure policy define karo.
+- Optimistic rollback scope — old failed mutation ka snapshot newer successful state replace na kare; per-operation delta/version rebase use karo.
+- Server version authority — returned version/cache state user-visible guarantee se align; replica lag par successful mutation ko stale refetch overwrite na kare.
+
 ## Research notes: Client caches do not enforce database access
 
 - RLS React UI bypass karne par bhi access constrain karti hai.
+
+## Recall aur practice
+
+- Sawal — Offline note create aur next edit reconnect par parallel send karna kyun fail ho sakta?
+- Jawaab — Edit ko durable note ID/version nahi mila; queue dependency aur temp-ID mapping resolve karke send karo.
+- Khud try karo — Offline create→edit→retry trace likho; duplicate operation, logout, conflicting remote edit aur stale replica refetch par draft preserve verify karo.
 
 ## Sources — aur padhne ke liye
 

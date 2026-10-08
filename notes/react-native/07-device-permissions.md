@@ -4,7 +4,7 @@ title: Permissions device APIs aur app lifecycle
 track: react-native
 order: 7
 level: Intermediate
-minutes: 2
+minutes: 5
 summary: Permission request — feature use ke context mein reason batao; startup par sab permissions mat maango.
 tags: react-native, mobile, expo, device-permissions
 ---
@@ -45,6 +45,18 @@ tags: react-native, mobile, expo, device-permissions
 - Android channel — notification importance/sound ke channel settings; user ki channel preferences respect karo.
 - Foreground notification — handler se display policy decide; receipt automatically visible banner guarantee nahi.
 - Token rotation — registration token change par backend update; invalid registrations remove aur logout association clear karo.
+
+### Edge cases aur reasoning
+
+- Permission recheck — user settings mein revoke kar sakta; app resume/feature use par permission capability dobara inspect karo.
+- Capture state machine — permission pending, unavailable, capturing, stopping aur error separate; repeated taps duplicate capture/start na karein.
+- Notification payload trust — push data command authority nahi; resource ID validate aur current logged-in user's authorization se fetch karo.
+
+## Recall aur practice
+
+- Sawal — Kal granted camera permission aaj app open par automatically available assume karoge?
+- Jawaab — Nahi; settings/OS policy change ho sakti. Feature entry/resume par current permission/capability check aur usable fallback do.
+- Khud try karo — Camera flow test karo; denial, settings revoke, repeated start/stop, screen blur aur notification to forbidden resource par cleanup/access verify karo.
 
 ## Sources — aur padhne ke liye
 

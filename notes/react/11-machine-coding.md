@@ -4,7 +4,7 @@ title: React machine coding and identity bugs
 track: react
 order: 11
 level: Advanced
-minutes: 2
+minutes: 5
 summary: Machine coding — requirements → state → components → edge cases → verification.
 tags: machine-coding, identity, keys, requests, accessibility
 visual: react-identity
@@ -60,6 +60,18 @@ visual: react-identity
 - Server page — stale response ignore, stable sort aur loading/error UI.
 - Total unknown — next-cursor pagination mein fake last-page count mat dikhao.
 - Page accessibility — current page announce; first/last par unavailable controls disable.
+
+### Edge cases aur reasoning
+
+- IME input — composition ke dauran Enter/filter handling premature submit na kare; composed text ke final event ko respect karo.
+- Selection ownership — filtered-out/removed item selection ka rule define; hidden stale ID ko actionable selected state mat rakho.
+- Async acceptance — response success alone enough nahi; correct query identity aur mounted owner ke liye result commit hona chahiye.
+
+## Recall aur practice
+
+- Sawal — Debounce search ke responses reversed aayein toh debounce alone correct UI guarantee karta hai?
+- Jawaab — Nahi; debounce starts reduce karta hai, completion order control nahi. Latest request identity ya abort/ignore guard chahiye.
+- Khud try karo — Combobox banao; IME, arrows/Enter/Escape, empty results, reversed responses aur selected option removal verify karo.
 
 ## Sources — aur padhne ke liye
 

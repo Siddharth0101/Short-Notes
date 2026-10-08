@@ -4,7 +4,7 @@ title: Decisions with if else and boolean logic
 track: javascript
 order: 3
 level: Foundation
-minutes: 1
+minutes: 3
 summary: `if` — condition truthy ho toh block chalta hai.
 tags: fundamentals, js, conditionals
 ---
@@ -27,7 +27,21 @@ tags: fundamentals, js, conditionals
 
 - Logical assignment — `||=`, `&&=`, `??=` condition meet hone par hi assign.
 
+### Edge cases aur reasoning
+
+- Optional call — fn?.() missing function handle karta hai; present non-function value par TypeError phir bhi aata hai.
+- Chain boundary — (user?.address).city nullish user par throw kar sakta hai; grouping continuous optional chain todti hai.
+- Decision table — overlapping rules mein priority explicit rakho; discount/auth branches ko examples se verify karo.
+
+## Recall aur practice
+
+- Sawal — price = 0 ho toh price ? price : 100 free item ko kaise treat karega?
+- Jawaab — Zero falsy hai, result 100; missing price aur valid zero ke liye nullish check chahiye.
+- Khud try karo — Shipping rule likho: missing total reject, total >= 500 free, otherwise 40; 0, 499, 500 aur undefined verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [MDN optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
 
 - [MDN control flow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
 

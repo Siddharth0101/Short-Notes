@@ -4,7 +4,7 @@ title: Classes objects constructors and encapsulation
 track: java
 order: 4
 level: Foundation
-minutes: 1
+minutes: 3
 summary: Class — object ka type/behavior; object — actual instance.
 tags: fundamentals, java, classes, constructors
 ---
@@ -30,6 +30,18 @@ tags: fundamentals, java, classes, constructors
 ### Class members
 
 - Static dispatch — static method class/reference type se select; instance overriding jaisa dispatch nahi.
+
+### Edge cases aur reasoning
+
+- Safe construction — constructor se this publish ya overridable method call avoid; subclass/state fully initialized nahi ho sakti.
+- Defensive ownership — mutable collection constructor mein receive karo toh owned copy lo; external mutation invariant ko bypass na kare.
+- Final field limit — final reference reassign nahi hota; referenced collection ke contents ab bhi mutable ho sakte hain.
+
+## Recall aur practice
+
+- Sawal — private final List<String> field automatically immutable object banata hai?
+- Jawaab — Nahi; reference fixed hai, list mutable ho sakti hai. Defensive copy aur controlled exposure chahiye.
+- Khud try karo — Course class banao; external list modification internal students ko na badle, invalid student reject aur instances independent verify karo.
 
 ## Sources — aur padhne ke liye
 

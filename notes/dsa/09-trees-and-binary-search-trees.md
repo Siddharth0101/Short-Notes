@@ -4,7 +4,7 @@ title: Trees and binary search trees
 track: dsa
 order: 9
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Tree — hierarchical nodes; root, child aur leaf.
 tags: tree, bst, dfs, traversal, balancing
 ---
@@ -30,9 +30,21 @@ tags: tree, bst, dfs, traversal, balancing
 - DFS orders — preorder root-left-right; inorder left-root-right; postorder left-right-root.
 - Tree traversal cost — n nodes visit O(n); DFS stack O(height), BFS queue O(max width).
 
+### Edge cases aur reasoning
+
+- Diameter convention — node ka leftHeight+rightHeight path edges count de sakta with node-height base; height/answer units consistent rakho.
+- BST successor rule — two-child delete mein successor node/value movement ka identity/duplicate policy maintain; subtree link cleanup na bhoolo.
+- Deep-tree safety — skewed tree recursive traversal call stack exhaust kar sakti; iterative stack same O(height) space se avoid kara sakta.
+
 ## Research notes: Balance the height that controls lookup
 
 - Sorted values insert karne par ordinary BST ek chain ban sakta hai.
+
+## Recall aur practice
+
+- Sawal — Root10, left5, left ka right12 local child checks pass kare toh valid BST hai?
+- Jawaab — Nahi; 12 root ke left subtree mein 10 se smaller hona chahiye. Ancestor bounds carry karo.
+- Khud try karo — BST validator/delete test karo; empty, skewed, ancestor violation, duplicate policy aur two-child root deletion verify karo.
 
 ## Sources — aur padhne ke liye
 

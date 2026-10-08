@@ -4,7 +4,7 @@ title: Package deploy and defend a Spring Boot capstone
 track: spring-boot
 order: 10
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Artifact — same tested build ko environments mein promote karo.
 tags: spring, deployment, capstone
 ---
@@ -29,6 +29,18 @@ tags: spring, deployment, capstone
 - Network — containers service names se communicate; localhost current container hai.
 - Volume — container lifecycle se alag persistent data.
 - Compose — related services/config/network local stack mein define.
+
+### Edge cases aur reasoning
+
+- Shutdown ordering — readiness withdraw/traffic drain ko termination grace se align; process kill se pehle accepted work ka bounded completion plan.
+- Schema rollback boundary — app image rollback destructive migration undo nahi karta; old/new schema compatibility rollout se pehle verify karo.
+- Container JVM budget — heap ke alawa metaspace/stacks/direct memory ke liye headroom; exact budget load evidence se choose karo.
+
+## Recall aur practice
+
+- Sawal — Old container image restore karne se dropped database column automatically aa jayega?
+- Jawaab — Nahi; artifact aur data/schema independent lifecycles. Compatible migration ya separately rehearsed recovery chahiye.
+- Khud try karo — Capstone release checklist run karo; invalid config, readiness delay, in-flight shutdown aur prior image with upgraded schema acceptance define karo.
 
 ## Sources — aur padhne ke liye
 

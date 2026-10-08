@@ -4,7 +4,7 @@ title: Frequency counters and pointer patterns
 track: dsa
 order: 4
 level: Foundation
-minutes: 2
+minutes: 4
 summary: Frequency counter — repeated counts ke liye map; nested scans bach sakte hain.
 tags: frequency-counter, two-pointers, sliding-window, prefix-sum
 ---
@@ -36,6 +36,18 @@ tags: frequency-counter, two-pointers, sliding-window, prefix-sum
 - Matrix edges — empty, 1×1, single row aur single column par traversal dry-run karo.
 - Spiral traversal — top/bottom/left/right boundaries shrink karo; single remaining row/column dobara visit mat karo.
 - Square rotation — 90° clockwise ke liye transpose, phir har row reverse; rectangular output ke dimensions swap hote hain.
+
+### Edge cases aur reasoning
+
+- Prefix update order — target-sum counting mein previous-prefix match pehle count, current prefix baad insert; empty subarray accidentally count mat karo.
+- Window assumption — longest/shortest window ke shrink proof ko input constraints se justify; negative values par invariant dobara evaluate karo.
+- Difference boundary — inclusive [l,r] update ke liye diff[l]+=v, diff[r+1]-=v when valid; final array prefix se recover.
+
+## Recall aur practice
+
+- Sawal — [-1,1] target 0 mein positive-only shrinking window kyun unreliable hai?
+- Jawaab — Add/remove se sum monotonic change nahi; target prefix differences frequency-map se count karo.
+- Khud try karo — Subarray-sum count implement karo; [0,0], target0 ka result3, negatives aur starting-index-zero match verify karo.
 
 ## Sources — aur padhne ke liye
 

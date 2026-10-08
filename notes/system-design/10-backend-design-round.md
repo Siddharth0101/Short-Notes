@@ -4,7 +4,7 @@ title: Java backend design interview and reservation correctness
 track: system-design
 order: 10
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Reservation — available stock ko atomic check-and-decrement/claim karo.
 tags: backend, java, system-design, idempotency, transactions
 visual: transaction-race
@@ -22,6 +22,18 @@ visual: transaction-race
 - Unique claim — conditional write/constraint winner decide kare; loser ko deterministic conflict response.
 - Reservation token — release exact active claim match kare; old retry new reservation na hataaye.
 - Clock boundary — expiry ke authoritative clock aur delayed worker behavior define.
+
+### Edge cases aur reasoning
+
+- Payment/expiry race — payment confirmation aur expiry worker same reservation version/state par conditional transition kare; double release/late confirmation prevent karo.
+- Lease clock ownership — client countdown display aid; authoritative expiration server/database contract se, stale worker writes version/fencing guard se.
+- Fairness requirement — first successful atomic claim necessarily human first click nahi; strict queue/fairness requirement ho toh separate ordering design chahiye.
+
+## Recall aur practice
+
+- Sawal — Expiry worker aur successful payment same waqt aaye toh sirf timer clear karna enough?
+- Jawaab — Nahi; durable conditional state transition winner decide. Losing path defined refund/reconcile policy follow kare.
+- Khud try karo — Last-item reservation interleaving show karo; two callers, expiry/payment race, lost response aur duplicate release par stock invariant verify karo.
 
 ## Sources — aur padhne ke liye
 

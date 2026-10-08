@@ -4,7 +4,7 @@ title: Java foundations review and conversion edge cases
 track: java
 order: 5
 level: Foundation
-minutes: 1
+minutes: 3
 summary: Primitive types — byte, short, int, long, float, double, char, boolean.
 tags: types, casting, strings, arrays
 visual: java-memory
@@ -29,7 +29,21 @@ visual: java-memory
 - String pool — literals reuse ho sakte hain; content equality ke liye `.equals()`.
 - StringBuffer — synchronized mutable buffer; StringBuilder unsynchronized.
 
+### Edge cases aur reasoning
+
+- Decimal construction — BigDecimal("0.1") intended decimal preserve; new BigDecimal(0.1) binary floating approximation capture karta hai.
+- Decimal equality — BigDecimal equals value+scale compare; compareTo numeric ordering, isliye 2.0/2.00 ka equality behavior different.
+- Checked arithmetic — Math.addExact/multiplyExact overflow par throw; long conversion arithmetic se pehle karo jab larger range chahiye.
+
+## Recall aur practice
+
+- Sawal — `new BigDecimal("2.0").equals(new BigDecimal("2.00"))` aur numeric compareTo ka outcome?
+- Jawaab — equals false; compareTo zero. HashMap keys aur sorted collections mein chosen equality semantics matter karti hain.
+- Khud try karo — Money total string-based BigDecimal se calculate karo; scale/rounding contract aur max-int addition overflow verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [Oracle BigDecimal contract](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/math/BigDecimal.html)
 
 - [Java conversion specification](https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html)
 - [Java language basics](https://dev.java/learn/language-basics/)

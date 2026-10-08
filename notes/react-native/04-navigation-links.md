@@ -4,7 +4,7 @@ title: Navigation Expo Router aur deep links
 track: react-native
 order: 4
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: Navigation — stack detail-flow ke liye, tabs main sections ke liye; history behavior pehle decide karo.
 tags: react-native, mobile, expo, navigation-links
 ---
@@ -37,6 +37,18 @@ tags: react-native, mobile, expo, navigation-links
 - canOpenURL — platform manifest/scheme configuration result affect kar sakti hai; result ko authorization check mat samjho.
 - usePreventRemove — unsaved state par route removal guard; gestures/header back samet navigation actions cover karo.
 - Process exit — navigation guard OS kill ko stop nahi karta; important draft ko timely persist karo.
+
+### Edge cases aur reasoning
+
+- Auth restoration gate — initial secure storage read pending ko logged-out mat samjho; deep link identity hold karke auth-ready route resolve karo.
+- Deep-link replay — same initial URL/event duplicate processing possible; route/action identity se unintended repeated side effects avoid karo.
+- Screen lifetime authority — mounted screen background/blur par camera/polling active rakhna waste; focus plus app visibility ka combined ownership define karo.
+
+## Recall aur practice
+
+- Sawal — Logged-out protected deep link ke baad login success par user ko kahan bhejoge?
+- Jawaab — Validated intended destination preserve karo, authorization recheck karke route resolve; missing/forbidden resource ka recovery do.
+- Khud try karo — Cold/warm deep links test karo; auth load delay, malformed ID, deleted resource, duplicate event aur Android back history verify karo.
 
 ## Sources — aur padhne ke liye
 

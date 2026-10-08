@@ -4,7 +4,7 @@ title: Java backend interview playbook
 track: interview
 order: 2
 level: Advanced
-minutes: 1
+minutes: 3
 summary: Java equality — `==` reference; `.equals()` logical value, contract implementation par depend.
 tags: java, interview, spring, concurrency, transactions
 visual: thread-sync
@@ -29,9 +29,21 @@ visual: thread-sync
 - Java answer — value/reference, thread visibility aur transaction boundary ko code example se distinguish karo.
 - SQL answer — nulls, duplicates, ties aur concurrent updates pehle clarify; result shape verify karo.
 
+### Edge cases aur reasoning
+
+- Incident timeline — exact interleaving/query/commit chronology do; model/library blame se pehle reproduced evidence aur counterexample dikhao.
+- Production qualifier — thread-safe single operation aur transaction-wide invariant distinguish; throughput gain resource capacity se substantiate karo.
+- Failure honesty — unknown commit ko failed write mat label; retry, reconciliation aur duplicate receipt ka concrete path batao.
+
 ## Research notes: Defend a failure boundary
 
 - Linked Microsoft technical guidance mein testing aur problem-solving bhi assessment ka part hain.
+
+## Recall aur practice
+
+- Sawal — Stock check+decrement race answer mein interviewer ko kaunsa evidence doge?
+- Jawaab — Two-thread interleaving, nonnegative invariant violation, chosen conditional atomic write aur concurrent acceptance result.
+- Khud try karo — 20-minute round: equality key bug, pool-wait incident aur last-stock claim solve; normal, concurrent aur lost-response cases explain karo.
 
 ## Sources — aur padhne ke liye
 

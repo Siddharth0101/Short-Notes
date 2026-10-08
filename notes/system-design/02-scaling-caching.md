@@ -4,7 +4,7 @@ title: Scaling caching replication and partitioning
 track: system-design
 order: 2
 level: Advanced
-minutes: 2
+minutes: 4
 summary: Vertical scaling — ek machine bigger; horizontal — more instances.
 tags: caching, scaling, replication, sharding
 visual: caching
@@ -37,9 +37,21 @@ visual: caching
 - Active-active — multiple instances traffic serve; shared state aur concurrent-write conflicts handle karo.
 - L4/L7 balancer — transport IP/port se route / HTTP path/header jaise application details se route.
 
+### Edge cases aur reasoning
+
+- Cache fill race — reader old data fetch kare, writer invalidate kare, reader stale cache refill; version/fencing/fill coordination contract chahiye.
+- Hot-key fanout — sharding uniform keys distribute karta, one hot key automatically split nahi; request coalescing/replicas/domain partition evaluate karo.
+- Overload queue — arrival sustained capacity se higher ho toh queue grows; admission limits/load shedding, deadline-aware rejection define karo.
+
 ## Research notes: Define behavior beyond capacity
 
 - Requests ki cost different ho toh sirf count capacity achhe se describe nahi karti.
+
+## Recall aur practice
+
+- Sawal — Write ke baad cache delete karne se stale read impossible ho jaata hai?
+- Jawaab — Nahi; in-flight old reader stale value refill kar sakta. Versioned entries/fill coordination ya bounded staleness ka explicit guarantee chahiye.
+- Khud try karo — Cache-aside race timeline aur cache outage fallback likho; DB protected, stampede bounded aur private cache scope correct verify karo.
 
 ## Sources — aur padhne ke liye
 

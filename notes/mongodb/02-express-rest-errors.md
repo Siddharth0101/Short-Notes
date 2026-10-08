@@ -4,7 +4,7 @@ title: Express REST APIs middleware and errors
 track: mongodb
 order: 2
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: Express — routing aur middleware ka HTTP framework.
 tags: express, rest, middleware, errors, validation, pagination
 visual: request-flow
@@ -40,9 +40,21 @@ visual: request-flow
 - pg transaction — BEGIN, queries, COMMIT same checked-out client par; error par ROLLBACK.
 - Tenant pagination — bounded limit, stable order aur server-verified tenant predicate saath rakho.
 
+### Edge cases aur reasoning
+
+- Headers-sent error — response start ho chuka ho toh error middleware next(err) se delegate; second JSON response mat bhejo.
+- Proxy trust — trust proxy ko actual trusted hops/config se match; forged forwarding headers client identity/rate limit bypass kara sakte hain.
+- Body parser order — signed webhook ke raw bytes normal JSON parser se pehle preserve; parsed/reserialized payload equivalent signature input nahi.
+
 ## Research notes: Return the promise that owns the request
 
 - Express 5 returned handler promise ki rejection forward karta hai.
+
+## Recall aur practice
+
+- Sawal — Returned async route aur detached setTimeout callback error Express 5 mein same way handle honge?
+- Jawaab — Nahi; returned handler Promise reject forward hota, detached callback ko explicit error ownership/forwarding chahiye.
+- Khud try karo — API pipeline test karo; invalid body, rejected route Promise, unknown route aur headers-sent failure par one response/cleanup verify karo.
 
 ## Sources — aur padhne ke liye
 

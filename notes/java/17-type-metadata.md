@@ -4,7 +4,7 @@ title: Java type modeling — enums, sealed types aur annotations
 track: java
 order: 17
 level: Intermediate
-minutes: 1
+minutes: 3
 summary: Enum — fixed named values aur associated behavior.
 tags: enums, sealed, records, annotations, reflection
 ---
@@ -21,6 +21,18 @@ tags: enums, sealed, records, annotations, reflection
 - Enum comparison — same enum type ke constants == se safely compare kar sakte ho.
 - Annotation target — metadata kin declarations/type uses par allowed hai, Target se define.
 - Reflection failure — missing member/access error handle; string-based coupling refactor mein toot sakti hai.
+
+### Edge cases aur reasoning
+
+- Enum persistence — ordinal reorder se stored meaning badal sakta hai; stable named/code mapping aur unknown-version policy rakho.
+- Sealed evolution — new permitted subtype consumer exhaustiveness/serialization ko affect; versioned public contract ka compatibility test karo.
+- Reflection boundary — modules/access policy private member access block kar sakti hai; reflection ko unrestricted bypass assume mat karo.
+
+## Recall aur practice
+
+- Sawal — Enum ordinal database mein save karke constants reorder karne ka risk?
+- Jawaab — Purana number naya constant represent kar sakta; stable external code aur explicit migration safer contract hai.
+- Khud try karo — Order status enum ko stable code se map karo; unknown persisted code reject/recover aur allowed status transitions verify karo.
 
 ## Sources — aur padhne ke liye
 

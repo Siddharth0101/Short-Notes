@@ -196,3 +196,78 @@ function zeroOneBFS(graph, source, size) {
   return dist;
 }
 ```
+
+Deque cost — upar Array.shift/unshift simple teaching version hai; O(V+E) bound ke liye constant-amortized front/back operations wala deque chahiye.
+
+## Strongly connected components — iterative Kosaraju
+
+- Runtime — standalone JavaScript; `Map<vertex, vertex[]>`, directed edges, object/value vertex identities supported. Har neighbor collection repeatable array ho.
+- Missing sink — neighbor-only vertex bhi graph ka part; normalization uski empty adjacency banati hai.
+- Order — output groups ka order API guarantee nahi; membership compare karo.
+- Cost — two DFS passes O(V+E); normalized/reversed graph plus traversal O(V+E) space. Explicit stacks deep graph par recursive overflow avoid karte hain.
+
+```js
+function stronglyConnectedComponents(graph) {
+  const adjacency = new Map();
+  for (const [node, neighbors] of graph) {
+    adjacency.set(node, [...neighbors]);
+    for (const next of neighbors) {
+      if (!adjacency.has(next)) adjacency.set(next, []);
+    }
+  }
+  const reversed = new Map([...adjacency.keys()].map(node => [node, []]));
+  for (const [node, neighbors] of adjacency) {
+    for (const next of neighbors) reversed.get(next).push(node);
+  }
+
+  // Original graph ka postorder: frame neighbor cursor recursive call ko replace karta hai.
+  const seen = new Set();
+  const finishOrder = [];
+  for (const start of adjacency.keys()) {
+    if (seen.has(start)) continue;
+    seen.add(start);
+    const frames = [{ node: start, index: 0 }];
+    while (frames.length) {
+      const frame = frames[frames.length - 1];
+      const neighbors = adjacency.get(frame.node);
+      if (frame.index === neighbors.length) {
+        finishOrder.push(frame.node);
+        frames.pop();
+      } else {
+        const next = neighbors[frame.index++];
+        if (!seen.has(next)) {
+          seen.add(next);
+          frames.push({ node: next, index: 0 });
+        }
+      }
+    }
+  }
+
+  // Reverse graph ko decreasing finish order mein explore: har traversal ek SCC.
+  seen.clear();
+  const components = [];
+  for (let i = finishOrder.length - 1; i >= 0; i--) {
+    const start = finishOrder[i];
+    if (seen.has(start)) continue;
+    seen.add(start);
+    const stack = [start];
+    const group = [];
+    while (stack.length) {
+      const node = stack.pop();
+      group.push(node);
+      for (const next of reversed.get(node)) {
+        if (!seen.has(next)) {
+          seen.add(next);
+          stack.push(next);
+        }
+      }
+    }
+    components.push(group);
+  }
+  return components;
+}
+```
+
+- Trace — A→B→C→A aur C→D se `{A,B,C}` aur `{D}` groups; one-way edge SCCs merge nahi karta.
+- Acceptance — empty graph, isolated node, self-loop, duplicate/parallel edges, disconnected cycles aur neighbor-only sinks verify karo.
+- Input ownership — original Map/neighbor arrays unchanged; condensation mein every cross-group edge DAG ka part hona chahiye.

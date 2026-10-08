@@ -4,7 +4,7 @@ title: Beans constructor injection and lifecycle
 track: spring-boot
 order: 2
 level: Intermediate
-minutes: 2
+minutes: 4
 summary: Bean — Spring container ka managed object.
 tags: spring, beans, dependency-injection
 ---
@@ -35,6 +35,18 @@ tags: spring, beans, dependency-injection
 - Proxy identity — injected bean proxy ho sakta hai; implementation-class assumptions avoid.
 - Aspect test — external bean call aur internal self-call ka interception difference verify karo.
 - Advice ordering — multiple aspects ka order security/transaction behavior badal sakta hai; explicit rakho.
+
+### Edge cases aur reasoning
+
+- Prototype destruction — container prototype instance ka complete destruction lifecycle own nahi karta; acquired resources caller ko release karne pad sakte hain.
+- Singleton mutable state — request-specific field concurrent requests mix kar sakta hai; stateless service/local variables prefer karo.
+- Proxy entry — this.method() usual proxy AOP bypass; collaborator bean boundary ya supported weaving model se interception intentional banao.
+
+## Recall aur practice
+
+- Sawal — Singleton mein injected prototype field har HTTP request par new instance banega?
+- Jawaab — Nahi; injection time ka instance stored hai. Per-use lookup/provider aur cleanup ownership define karo.
+- Khud try karo — Two implementations with qualifier wire karo; singleton request isolation aur externally invoked versus self-invoked advice trace verify karo.
 
 ## Sources — aur padhne ke liye
 

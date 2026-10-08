@@ -4,7 +4,7 @@ title: Authentication authorization and secure boundaries
 track: mongodb
 order: 7
 level: Advanced
-minutes: 2
+minutes: 3
 summary: Authentication — identity verify; authorization — action/resource access verify.
 tags: authentication, authorization, jwt, sessions, security, passwords
 visual: request-flow
@@ -31,9 +31,21 @@ visual: request-flow
 - SSRF redirects — automatic redirect following disable karo, warna validated URL se blocked destination tak bypass ho sakta hai.
 - Egress control — server ke outbound network access ko required destinations tak restrict; URL validation ke saath defense lagao.
 
+### Edge cases aur reasoning
+
+- Credentialed CORS — browser cross-origin cookies ke liye explicit trusted origin/credential policy; wildcard origin credential access allow nahi karta.
+- Reset token secrecy — verification token logs/analytics/URLs se leak ho sakta; short expiry, single-use aur safe transport/storage contract rakho.
+- Authorization predicate — {_id,tenantId,ownerId} server-verified scope ke saath read/write; ID lookup ke baad unchecked mutation avoid karo.
+
 ## Research notes: Authorize both the action and its object
 
 - Authentication caller identify karti hai.
+
+## Recall aur practice
+
+- Sawal — User body mein ownerId bheje toh server usko ownership proof maan sakta hai?
+- Jawaab — Nahi; principal/tenant server-authenticated context se derive. Allowed input fields mein ownership change explicit authorized action ho.
+- Khud try karo — Own/other-tenant read-update-delete, injected operator, forged owner aur consumed reset token retry ke rejection cases verify karo.
 
 ## Sources — aur padhne ke liye
 

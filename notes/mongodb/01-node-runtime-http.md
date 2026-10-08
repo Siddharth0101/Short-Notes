@@ -4,7 +4,7 @@ title: Node runtime HTTP modules and streams
 track: mongodb
 order: 1
 level: Foundation
-minutes: 2
+minutes: 5
 summary: Node.js — JavaScript runtime; I/O async ho sakti hai, heavy JS event loop block karta hai.
 tags: node, http, npm, streams, event-loop, modules
 visual: request-flow
@@ -55,11 +55,25 @@ visual: request-flow
 - highWaterMark — buffering ka threshold; total memory ki hard limit nahi.
 - Object-mode buffering — highWaterMark objects count karta hai; ek huge object phir bhi bahut memory le sakta hai.
 
+### Edge cases aur reasoning
+
+- Chunk decoding — UTF-8 character chunks ke beech split ho sakta; StringDecoder/stream encoding se incremental text correctly decode karo.
+- Pipeline ownership — pipeline error par streams destroy kar sakta hai; HTTP socket already closed ho toh normal error response possible nahi.
+- Worker overhead — worker startup/data copy cost count; small I/O tasks ko worker thread par bhejna automatically faster nahi.
+
 ## Research notes: Backpressure is a producer contract
 
 - Writable.write() false de toh producer pause kare jab tak destination ready na ho.
 
+## Recall aur practice
+
+- Sawal — Readable chunk ko independent chunk.toString() karna Unicode text ko kaise corrupt kar sakta hai?
+- Jawaab — Multibyte character chunk boundary par split ho sakta; incremental decoder incomplete bytes next chunk tak retain karta hai.
+- Khud try karo — UTF-8 streamed export banao; split emoji, slow consumer, upstream error aur client disconnect par data/cleanup verify karo.
+
 ## Sources — aur padhne ke liye
+
+- [Node stream and pipeline contracts](https://nodejs.org/api/stream.html)
 
 - [Node — AsyncLocalStorage](https://nodejs.org/api/async_context.html)
 
