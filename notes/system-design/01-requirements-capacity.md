@@ -12,6 +12,8 @@ visual: request-flow
 
 ## Quick revision
 
+> Revision target — Workload ke numbers ko explicit units, average/peak aur retention assumptions se estimate karo.
+
 - Requirements — users, core actions, scale aur constraints pehle clear karo.
 - Functional — system kya kare; non-functional — latency, availability, durability jaise targets.
 - QPS — requests per second; average ke saath peak factor bhi estimate karo.
@@ -50,11 +52,89 @@ visual: request-flow
 - Unit conversion — daily traffic/86400 se average QPS; bytes versus bits, decimal GB versus GiB assumptions label karo.
 - Latency budget allocation — end-to-end deadline ko network, queue aur dependency work mein split; tail dependencies correlated ho sakti hain.
 
+## Example se samjho
+
+- Scenario — Daily 2 million events, har event 500 bytes, aur 30 din retention assume karo; index/replica overhead abhi exclude hai.
+- Reasoning — Average lagbhag 23 events/s; raw daily storage 1 billion bytes, yani decimal 1 GB. Thirty-day raw storage 30 GB hoga.
+- Catch — Average arrival burst capacity nahi batata; peak factor, payload variation, indexes aur replicas ka budget separately add karo.
+
 ## Recall aur practice
 
 - Sawal — 100 requests/s aur average total latency0.2s par average in-flight work kitna?
 - Jawaab — Steady-state roughly20; queue+service time included ho aur measured population same ho. Peak/tail ke liye extra analysis chahiye.
 - Khud try karo — 1M requests/day, 5×peak aur 2KB record ka QPS/storage estimate do; retention, replica/index overhead aur assumptions explicitly show karo.
+
+## Practice questions
+
+### Easy · QPS estimate karo
+
+10 million daily active users, har user din mein ~20 requests. Average aur peak QPS?
+
+<details>
+<summary>Answer</summary>
+
+- Daily — `10M × 20 = 200M` requests.
+- Average — `200M / 86,400 ≈ 2,300 QPS`.
+- Peak — traffic din bhar flat nahi; 3–5× factor → ~7k–12k QPS plan karo.
+- Read/write split bhi nikalo (e.g. 90/10) — design dono ke liye alag hota hai.
+
+</details>
+
+### Easy · Availability math
+
+99.9% aur 99.99% monthly downtime kitna? Do serial dependencies, dono 99.9%, toh combined?
+
+<details>
+<summary>Answer</summary>
+
+- 99.9% — ~43.8 min/month.
+- 99.99% — ~4.4 min/month.
+- Serial — `0.999 × 0.999 ≈ 0.998` → 99.8%; har critical dependency availability ghatati hai.
+- Parallel redundancy — `1 − (0.001 × 0.001)`, agar failures independent hon.
+
+</details>
+
+### Medium · Storage estimate
+
+Photo app: 1M uploads/day, average 2 MB, 3 replicas, 5 saal retention.
+
+<details>
+<summary>Answer</summary>
+
+- Daily raw — `1M × 2 MB = 2 TB/day`.
+- Yearly — `~730 TB`; 5 saal — `~3.65 PB`.
+- Replicas — `× 3` → ~11 PB (thumbnails/metadata alag add karo).
+- Takeaway — object storage + lifecycle tiers (hot → cold); DB mein sirf metadata.
+
+</details>
+
+### Medium · Little's law se concurrency
+
+Service 2,000 RPS handle karti hai, average latency 200ms. Ek time par kitni requests in-flight? Thread pool sizing par asar?
+
+<details>
+<summary>Answer</summary>
+
+- `L = λ × W = 2000 × 0.2 = 400` concurrent requests (average).
+- Blocking threads model — kam se kam ~400 threads/connections chahiye, peak aur tail latency ke liye headroom.
+- Latency badhi (DB slow → 1s) toh same RPS par 2000 in-flight → pools exhaust; isliye timeouts aur load shedding.
+
+</details>
+
+### Hard · Design round ke pehle 5 minute
+
+"URL shortener design karo." Pehle 5 minute mein kya poochoge aur kya likhoge?
+
+<details>
+<summary>Answer</summary>
+
+- Functional — shorten, redirect, custom alias? expiry? analytics?
+- Non-functional — read:write ratio (~100:1), redirect latency (p99 < 50ms?), availability, abuse prevention.
+- Scale — e.g. 100M new URLs/month → ~40 writes/s, ~4k reads/s; 5 saal storage.
+- Output — 3–4 line requirement summary + API (`POST /urls`, `GET /{code}`) + kya out of scope hai.
+- Phir — high-level diagram, data model, deep-dive (ID generation, caching, hot keys).
+
+</details>
 
 ## Sources — aur padhne ke liye
 

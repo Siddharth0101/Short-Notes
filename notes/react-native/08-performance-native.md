@@ -11,6 +11,8 @@ tags: react-native, mobile, expo, performance-native
 
 ## Quick revision
 
+> Revision target — JS, UI aur native memory ke symptoms separate measure karo; optimization same device/build par compare karo.
+
 ### Measure pehle
 
 - JS thread — expensive JS work event handling/renders delay kar sakta hai.
@@ -52,11 +54,87 @@ tags: react-native, mobile, expo, performance-native
 - Cross-runtime payload — worklet/native/JS boundaries par large captured data transfer cost; narrow values/events pass karo.
 - Animation lifecycle — unmounted/blurred view ki ongoing animation/subscription cancel; background scheduling aur battery cost measure karo.
 
+## Example se samjho
+
+- Scenario — 4,000 × 3,000 image file compressed form mein small hai, par gallery scroll par memory badh rahi hai.
+- Estimate — four bytes per pixel assume karo toh one decoded buffer roughly 48 MB hai; compressed download size decoded memory nahi batata.
+- Decision — rendered size ke suitable thumbnails use; repeated navigation ke baad retained resources inspect karo.
+- Catch — actual allocation pixel format, decoding aur extra buffers se vary karti hai; JS heap alone complete native memory nahi.
+- Check — release build ke same device/data par frame drops aur peak/retained memory before/after compare karo.
+
 ## Recall aur practice
 
 - Sawal — 100KB compressed image decoded memory bhi exactly100KB hogi?
 - Jawaab — Nahi; dimensions/pixel format se decoded allocation much larger ho sakti, JS heap native allocation bhi miss kar sakta.
 - Khud try karo — Image list release build profile karo; oversized versus thumbnail assets, repeated navigation retention aur gesture frame drops compare karo.
+
+## Practice questions
+
+### Easy · Button tap par app freeze
+
+Ek tap par 2 second ka sync JSON processing chalta hai aur UI animations/taps ruk jaate hain. Kyun?
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — JS thread busy hai; React updates aur JS-driven handlers frame budget (~16.7ms at 60Hz) miss karte hain.
+- Fix — kaam chhote chunks mein, server par, ya native/worker side; data pagination.
+- Animations — native-driven ho toh JS busy hone par bhi chal sakti hain.
+
+</details>
+
+### Easy · Dev build mein slow, release mein?
+
+<details>
+<summary>Answer</summary>
+
+- Dev mode — extra checks, warnings aur unminified JS; performance numbers misleading.
+- Rule — profiling aur perf decisions release (production) build par real device par.
+- Baseline — startup time, frame drops, memory pehle measure karo, phir fix compare karo.
+
+</details>
+
+### Medium · `useNativeDriver: true` ke saath width animate
+
+```js
+Animated.timing(width, { toValue: 300, useNativeDriver: true }).start();
+```
+
+<details>
+<summary>Answer</summary>
+
+- Result — error: native driver `width` jaisi layout props support nahi karta.
+- Supported — `transform` (translate, scale, rotate) aur `opacity`.
+- Fix — `transform: [{ scaleX }]` se visual effect, ya layout animation ke liye `useNativeDriver: false` (JS thread par chalegi) / Reanimated.
+
+</details>
+
+### Medium · Reanimated worklet se JS function call
+
+Gesture end par UI thread se `setSelected(id)` (React state) call karna hai. Seedha call kyun nahi aur kya karoge?
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — worklet UI runtime par chalta hai; React state aur normal JS functions JS runtime mein hain.
+- Fix — library ka bridge helper use karo (Reanimated mein `runOnJS(setSelected)(id)`; naye versions mein worklets ka equivalent helper).
+- Payload — runtimes ke beech sirf chhota serializable data bhejo.
+
+</details>
+
+### Hard · Screen leave karne ke baad memory badhti rehti hai
+
+Chat screen open/close karne par memory har baar badhti hai. Debug aur fix plan?
+
+<details>
+<summary>Answer</summary>
+
+- Reproduce — same flow 10 baar repeat karke memory graph dekho (Xcode Instruments / Android Studio profiler).
+- Common leaks — socket/listener/timer cleanup missing; global cache mein messages bina limit; bade images full resolution mein.
+- Fix — har subscription effect cleanup mein unsubscribe; cache LRU/bounded; images display size par.
+- Verify — repeated flow ke baad memory plateau kare, linearly na badhe.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

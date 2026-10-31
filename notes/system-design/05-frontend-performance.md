@@ -12,6 +12,8 @@ visual: react-render
 
 ## Quick revision
 
+> Revision target — User-visible delay ko network, JavaScript, layout aur rendering evidence se isolate karo.
+
 - LCP — main content kab dikha; INP — interaction responsiveness; CLS — layout shift.
 - Measure — real-user percentiles + lab traces; average alone enough nahi.
 - Budget — JS, images, network aur main-thread work ki limits.
@@ -77,11 +79,88 @@ visual: react-render
 - Interaction attribution — slow INP ko handler, render, layout aur queued main-thread work trace se separate; network duration alone explanation nahi.
 - Prefetch budget — likelihood, connection/data saver aur priority consider; speculative work critical assets se bandwidth compete na kare.
 
+## Example se samjho
+
+- Scenario — List filter ko 20 ms computation aur 280 ms DOM/layout work lagta hai; interaction lag users ko clearly dikh raha hai.
+- Reasoning — Trace rendered row count aur layout work inspect kare. Bounded rendering/virtualization relevant ho sakti hai; before/after same data aur device par compare karo.
+- Catch — Sirf calculation memoize karne se 280 ms work disappear nahi; windowing mein focused row, keyboard movement aur scroll position ka contract preserve karo.
+
 ## Recall aur practice
 
 - Sawal — Two servers ke p99 ka arithmetic mean whole service p99 kyun nahi?
 - Jawaab — Percentiles nonlinear aur traffic weights different; merged distribution se target percentile calculate karo.
 - Khud try karo — Slow catalog trace inspect karo; hero image priority, reserved dimensions, interaction long task aur keyboard-focus behavior before/after compare karo.
+
+## Practice questions
+
+### Easy · LCP image fast karo
+
+Hero image Largest Contentful Paint hai aur slow hai. Kya karoge?
+
+<details>
+<summary>Answer</summary>
+
+- Priority — `<img fetchpriority="high">`, aur hero ko lazy-load mat karo.
+- Size — `srcset`/`sizes` se screen ke hisaab se image; modern format (AVIF/WebP).
+- Discovery — image HTML mein directly ho (JS se baad mein inject nahi), ya `<link rel="preload">`.
+- CLS — `width`/`height` attributes ya aspect-ratio.
+
+</details>
+
+### Medium · Click par UI freeze (INP)
+
+Button click handler 400ms ka JS kaam karta hai. Interaction to Next Paint kharab hai. Fix options?
+
+<details>
+<summary>Answer</summary>
+
+- Pehle feedback — turant visual state update, phir heavy kaam.
+- Break up — kaam chunks mein, beech mein main thread ko yield (`await scheduler.yield()` jahan supported, warna `setTimeout`).
+- Move — CPU-heavy parsing Web Worker mein.
+- Measure — DevTools Performance long tasks aur field (RUM) INP p75.
+
+</details>
+
+### Medium · Cache headers set karo
+
+Hashed JS/CSS files, `index.html`, aur `/api/me` response — headers kya honge?
+
+<details>
+<summary>Answer</summary>
+
+- `app.3f9a1c.js` — `Cache-Control: public, max-age=31536000, immutable` (content hash = identity).
+- `index.html` — `no-cache` (har baar revalidate, ETag se 304).
+- `/api/me` — `private, no-store` (user data shared caches mein nahi).
+- `Vary` — response header-dependent ho (e.g. `Accept-Encoding`) toh batao.
+
+</details>
+
+### Medium · Infinite scroll design
+
+<details>
+<summary>Answer</summary>
+
+- Trigger — list end par sentinel + `IntersectionObserver`; scroll event polling nahi.
+- Fetch — cursor pagination, in-flight dedupe, error par retry button.
+- Memory — bahut items par virtualization.
+- Navigation — detail page se wapas aane par scroll position aur loaded pages restore.
+- A11y — "Load more" button fallback; footer reachable rehna chahiye.
+
+</details>
+
+### Hard · Performance regressions rokna
+
+Har release ke baad site thodi slow hoti jaati hai. Process design karo.
+
+<details>
+<summary>Answer</summary>
+
+- Budgets — JS bundle size, LCP/INP/CLS targets; CI mein bundle-size check aur lab test (Lighthouse) fail on regression.
+- RUM — real users ke p75 metrics device/network segment ke saath; lab data alone misleading.
+- Attribution — regression ko release/commit se jodo; feature flags se isolate.
+- Aggregation — percentiles ko average mat karo; raw histograms se compute.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

@@ -39,6 +39,15 @@ import {
   FileText,
   Settings2,
   Smartphone,
+  Target,
+  Eye,
+  EyeOff,
+  Lightbulb,
+  ListChecks,
+  ArrowLeft,
+  Brain,
+  Type,
+  Focus,
 } from 'lucide-react';
 const icons = {
   book: BookOpen,
@@ -81,6 +90,15 @@ const icons = {
   file: FileText,
   settings: Settings2,
   phone: Smartphone,
+  target: Target,
+  eye: Eye,
+  eyeOff: EyeOff,
+  idea: Lightbulb,
+  checklist: ListChecks,
+  back: ArrowLeft,
+  brain: Brain,
+  type: Type,
+  focus: Focus,
 };
 export default function Icon({ name, size = 20, ...props }) {
   const Element = icons[name] || BookOpen;

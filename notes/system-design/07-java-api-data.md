@@ -12,6 +12,8 @@ visual: request-flow
 
 ## Quick revision
 
+> Revision target — Atomic write, operation identity aur total resource budget se backend contract defend karo.
+
 - Layers — controller contract, service rules, repository persistence.
 - Transaction — business invariant ko atomic database boundary mein rakho.
 - Constraint — uniqueness/foreign-key/check se invalid state database par roko.
@@ -79,11 +81,84 @@ visual: request-flow
 - Receipt atomicity — dedupe receipt aur business mutation same durable transaction mein; receipt-only success se missing effect hide mat karo.
 - Pool multiplication — replicas×per-instance pool size total DB connections; autoscale application ko DB admission budget se align karo.
 
+## Example se samjho
+
+- Scenario — Database app traffic ke liye 120 connections allow karti hai; six replicas ka pool maximum 20 hai. Autoscaling ten replicas tak hoti hai.
+- Reasoning — Six replicas already 120 possible connections le sakti hain; ten replicas ka theoretical total 200 hai. Per-instance pool aur admission policy deployment scale ke saath budget karo.
+- Catch — Idle connections, admin/migration work aur other services ka headroom bhi chahiye; app instances badhana DB capacity automatically nahi badhata.
+
 ## Recall aur practice
 
 - Sawal — Same idempotency key par different transfer amount aaye toh cached success return karna valid?
 - Jawaab — Contract violation/conflict reject; key original operation payload se bound honi chahiye, unrelated request ko success mat do.
 - Khud try karo — Transfer receipt schema/API banao; concurrent same key, changed payload, lost response aur expiry/replay retention ke outcomes verify karo.
+
+## Practice questions
+
+### Easy · Layers ki responsibility
+
+<details>
+<summary>Answer</summary>
+
+- Controller — HTTP mapping, DTO validation, status codes.
+- Service — business rules, transactions, orchestration.
+- Repository — persistence queries.
+- Rule — dependencies andar ki taraf; controller repository ko directly business logic ke liye call na kare.
+
+</details>
+
+### Medium · Idempotency key implement karo
+
+<details>
+<summary>Answer</summary>
+
+- Table — `idempotency_keys(key, user_id, request_hash, status, response, created_at)`, unique `(user_id, key)`.
+- Flow — same transaction mein key claim + business write + response save.
+- Replay — same key + same hash → stored response; same key + different payload → `422`.
+- In-progress — doosri concurrent request ko `409`/wait; expiry policy.
+
+</details>
+
+### Medium · Sahi index choose karo
+
+Queries: (a) `WHERE status = 'pending' ORDER BY created_at` (pending rows 1%), (b) `WHERE lower(email) = ?`, (c) `SELECT id, total WHERE customer_id = ?`.
+
+<details>
+<summary>Answer</summary>
+
+- (a) Partial index — `CREATE INDEX ON orders (created_at) WHERE status = 'pending'`; chhota aur fast.
+- (b) Expression index — `CREATE INDEX ON users (lower(email))` (ya `citext` type).
+- (c) Covering — `CREATE INDEX ON orders (customer_id) INCLUDE (total)` → index-only scan possible.
+- Cost — har index writes slow karta hai; `EXPLAIN (ANALYZE, BUFFERS)` se verify.
+
+</details>
+
+### Medium · Long transaction ka asar
+
+Ek report job PostgreSQL transaction 3 ghante khula rakhta hai. Kya problems?
+
+<details>
+<summary>Answer</summary>
+
+- MVCC — purane snapshot ki wajah se VACUUM dead rows saaf nahi kar paata → table/index bloat.
+- Locks — agar job ne locks liye toh DDL/updates blocked.
+- Fix — read replica par reporting, chunked queries, `idle_in_transaction_session_timeout`, transactions short.
+
+</details>
+
+### Hard · PostgreSQL deadlock
+
+Logs: `deadlock detected`. Transfer API kabhi-kabhi fail hota hai. Kyun aur fix?
+
+<details>
+<summary>Answer</summary>
+
+- Cause — T1 row A phir B lock karta hai, T2 row B phir A; dono wait → DB ek ko abort karta hai.
+- Fix — consistent lock order (e.g. `SELECT ... WHERE id IN (a, b) ORDER BY id FOR UPDATE`).
+- Retry — deadlock/serialization failures ke liye transaction-level retry (idempotent operation).
+- Keep short — lock jitni der, deadlock window utni badi.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

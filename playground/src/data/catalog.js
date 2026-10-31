@@ -1,4 +1,4 @@
-import { parseFrontmatter, TRACKS } from '../lib/content.js';
+import { parseFrontmatter, splitPractice, TRACKS } from '../lib/content.js';
 import sourceChapters from './sourceChapters.json';
 import { interviewQuestions } from './interviewQuestions.js';
 import { chapterPlacement } from './curriculum.js';
@@ -13,6 +13,7 @@ export const notes = Object.entries(chapters)
     const note = parseFrontmatter(raw);
     return {
       ...note,
+      practiceCount: splitPractice(note.body).questions.length,
       ...chapterPlacement[note.id],
       source: source.replace('../../../', ''),
       kind: 'chapter',
@@ -127,6 +128,7 @@ for (const note of notes) {
     ...note.questions.map((item) => `${item.question} ${item.answer}`),
   ].join(' ');
 }
+export const practiceTotal = notes.reduce((total, note) => total + note.practiceCount, 0);
 export const allNotes = [...notes, ...archive];
 export const noteById = Object.fromEntries(allNotes.map((note) => [note.id, note]));
 export const trackById = Object.fromEntries(TRACKS.map((track) => [track.id, track]));

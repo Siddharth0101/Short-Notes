@@ -11,6 +11,8 @@ tags: jdbc, sql, transactions, indexes
 
 ## Quick revision
 
+> Revision target — SQL resource ownership aur multi-write transaction ko ek business invariant se jodo.
+
 - JDBC — Java se database connection, statement aur result handling.
 - PreparedStatement — values bind karo; SQL string concatenation se injection risk.
 - Connection pool — connections reuse; pool size database capacity se align karo.
@@ -70,11 +72,121 @@ tags: jdbc, sql, transactions, indexes
 - Pool state reset — auto-commit/isolation/read-only changes release se pehle reset/provider contract verify; next borrower ko stale settings na milen.
 - Unknown commit — connection loss ke waqt commit succeed hua ya nahi unclear; blind write retry ke bajay operation identity/reconciliation chahiye.
 
+## Example se samjho
+
+- Scenario — A ka balance100, B ka40; transfer30 mein A debit successful, B credit fail hota hai.
+- Reasoning — Same connection ki transaction rollback par balances100/40 rahenge; successful commit par70/70. Total140 invariant dono outcomes mein bachta hai.
+- Catch — Auto-commit ya different connections se debit independently durable ho sakta hai; timeout after commit ke liye operation identity/reconciliation alag chahiye.
+
 ## Recall aur practice
 
 - Sawal — PreparedStatement mein ORDER BY ? user-chosen column ko safely replace karega?
 - Jawaab — Parameter value bind hoti hai, SQL identifier nahi; allowed column names ko fixed query fragments se map karo.
 - Khud try karo — Account transfer same connection/transaction par likho; insufficient funds, second-write failure aur duplicate operation ID par invariant verify karo.
+
+## Practice questions
+
+### Easy · SQL injection
+
+```java
+String sql = "SELECT * FROM users WHERE email = '" + email + "'";
+ResultSet rs = statement.executeQuery(sql);
+```
+
+`email = "' OR '1'='1"` par kya hoga? Fix?
+
+<details>
+<summary>Answer</summary>
+
+- Attack — query `WHERE email = '' OR '1'='1'` ban jaati hai → saare users.
+- Fix:
+
+```java
+try (PreparedStatement ps = conn.prepareStatement("SELECT id, email FROM users WHERE email = ?")) {
+    ps.setString(1, email);
+    try (ResultSet rs = ps.executeQuery()) { /* ... */ }
+}
+```
+
+- Placeholders — values data rehti hain, SQL code nahi. Table/column names bind nahi hote; unke liye allowlist.
+
+</details>
+
+### Easy · `NULL` comparison
+
+```sql
+SELECT * FROM users WHERE phone = NULL;
+SELECT COUNT(*), COUNT(phone) FROM users;
+```
+
+<details>
+<summary>Answer</summary>
+
+- Pehli query — 0 rows; `NULL = NULL` unknown hai, true nahi. `WHERE phone IS NULL` likho.
+- `COUNT(*)` — saari rows; `COUNT(phone)` — sirf non-null phones.
+- Three-valued logic — `TRUE`, `FALSE`, `UNKNOWN`; `WHERE` sirf `TRUE` rows rakhta hai.
+
+</details>
+
+### Medium · JDBC transaction se transfer
+
+Do accounts ke beech transfer likho jo dono updates ek saath commit kare ya kuch nahi.
+
+<details>
+<summary>Answer</summary>
+
+```java
+try (Connection conn = dataSource.getConnection()) {
+    conn.setAutoCommit(false);
+    try (PreparedStatement debit = conn.prepareStatement(
+             "UPDATE accounts SET balance = balance - ? WHERE id = ? AND balance >= ?");
+         PreparedStatement credit = conn.prepareStatement(
+             "UPDATE accounts SET balance = balance + ? WHERE id = ?")) {
+        debit.setBigDecimal(1, amount); debit.setLong(2, from); debit.setBigDecimal(3, amount);
+        if (debit.executeUpdate() != 1) throw new IllegalStateException("insufficient funds");
+        credit.setBigDecimal(1, amount); credit.setLong(2, to);
+        if (credit.executeUpdate() != 1) throw new IllegalStateException("unknown account");
+        conn.commit();
+    } catch (Exception e) {
+        conn.rollback();
+        throw e;
+    }
+}
+```
+
+- Conditional debit — `balance >= ?` check aur update ek atomic statement mein; read-then-write race nahi.
+- Row count — 0 rows = rule toota → rollback.
+- Pool — connection wapas pool mein jaati hai; pool usually autocommit reset karta hai, par manually restore karna safe habit hai.
+
+</details>
+
+### Medium · Lost update
+
+Do requests ek saath stock `10` padhte hain, dono `9` likhte hain. Do fixes batao.
+
+<details>
+<summary>Answer</summary>
+
+- Atomic update — `UPDATE products SET stock = stock - 1 WHERE id = ? AND stock > 0`; row count se success check.
+- Pessimistic lock — transaction mein `SELECT stock FROM products WHERE id = ? FOR UPDATE`, phir update.
+- Optimistic — `version` column: `UPDATE ... SET stock = ?, version = version + 1 WHERE id = ? AND version = ?`; 0 rows par retry.
+- Isolation note — PostgreSQL default Read Committed is race ko apne aap nahi rokta.
+
+</details>
+
+### Hard · Connection pool exhaustion
+
+Load par requests `Connection is not available, request timed out after 30000ms` deti hain, jabki DB CPU low hai. Causes aur fixes?
+
+<details>
+<summary>Answer</summary>
+
+- Leak — error path par connection close nahi hui; try-with-resources use karo, HikariCP `leakDetectionThreshold` on karo.
+- Long transactions — transaction ke andar HTTP call/file upload connection pakad kar rakhta hai; external work transaction ke bahar.
+- Pool sizing — pool size × app instances DB `max_connections` se kam; bada pool hamesha fast nahi.
+- Commit unknown — commit timeout par result pata nahi; client retry ke liye idempotency key ya status check rakho.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

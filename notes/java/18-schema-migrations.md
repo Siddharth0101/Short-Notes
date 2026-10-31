@@ -11,6 +11,8 @@ tags: sql, normalization, constraints, migrations
 
 ## Quick revision
 
+> Revision target — Schema change ko old writers, existing rows aur recoverable rollout ke saath plan karo.
+
 - Migration — schema change ko versioned file mein track karo.
 - Flyway/Liquibase — applied changes ka history/checksum manage karte hain.
 - Applied migration — shared environment mein edit karne ke bajay nayi migration banao.
@@ -75,11 +77,90 @@ tags: sql, normalization, constraints, migrations
 - Online index limits — lock/load behavior database/version-specific; PostgreSQL CREATE INDEX CONCURRENTLY ordinary transaction block mein run nahi hota.
 - Backfill resumability — stable batch key/checkpoint rakho; restart par completed records safely skip aur incompatible old writes account karo.
 
+## Example se samjho
+
+- Scenario — Customer table mein normalized_email add karna hai; old app sirf email write karti hai aur existing rows mein duplicates hain.
+- Reasoning — Compatible field add karo, writers update karo, resumable batches se backfill, duplicates resolve, phir intended constraint enforce karo.
+- Catch — Constraint pehle enforce karna old writes ya historical rows ko tod sakta hai; deployed image rollback lost data automatically restore nahi karega.
+
 ## Recall aur practice
 
 - Sawal — New NOT NULL column ko immediately add karna old app rollout ko kyun tod sakta hai?
 - Jawaab — Old writers field omit karte hain; compatible default/nullable expansion, backfill aur writers upgrade ke baad requiredness enforce karo.
 - Khud try karo — Email normalization migration plan likho; duplicate historical data, parallel old/new writers, restartable backfill aur rollback compatibility verify karo.
+
+## Practice questions
+
+### Easy · Applied migration edit karna
+
+`V3__add_index.sql` production par chal chuki hai. Tumne usme typo fix karke dobara deploy kiya. Flyway kya karega?
+
+<details>
+<summary>Answer</summary>
+
+- Result — validation fail: checksum mismatch; app start nahi hogi.
+- Rule — applied migrations immutable; fix ke liye naya `V4__...` likho.
+- `repair` — sirf tab jab sach mein checksum metadata galat ho; schema change ke shortcut ke liye nahi.
+
+</details>
+
+### Easy · Constraints DB mein kyun, sirf app mein kyun nahi?
+
+<details>
+<summary>Answer</summary>
+
+- Multiple writers — scripts, admin tools, doosri services app validation bypass kar sakte hain.
+- Races — do concurrent requests dono app check pass karke duplicate bana sakte hain; `UNIQUE` index final guard hai.
+- Types — `NOT NULL`, `CHECK (amount >= 0)`, `FOREIGN KEY`; app validation sirf achhe error messages ke liye.
+
+</details>
+
+### Medium · Column rename bina downtime
+
+`users.fullname` ko `full_name` karna hai, rolling deploy ke saath (purana aur naya code saath chalega).
+
+<details>
+<summary>Answer</summary>
+
+- Expand — naya column `full_name` add; app dono columns mein likhe, naye se padhe (fallback purana).
+- Backfill — batches mein `full_name = fullname` jahan NULL.
+- Switch — saare instances naye code par; sirf `full_name` use.
+- Contract — baad ke release mein `fullname` drop.
+- Kyun nahi direct `RENAME` — purane instances turant toot jaayenge.
+
+</details>
+
+### Medium · Bade table par `NOT NULL` column
+
+50 million rows wale `orders` mein `source` column chahiye jo NOT NULL ho. Safe steps?
+
+<details>
+<summary>Answer</summary>
+
+- Add nullable — `ALTER TABLE orders ADD COLUMN source text;` (fast).
+- App — naye rows mein value likho.
+- Backfill — chhote batches (e.g. 10k rows) + pause; resumable (id range ya `WHERE source IS NULL`).
+- Enforce — PostgreSQL mein `CHECK (source IS NOT NULL) NOT VALID`, phir `VALIDATE CONSTRAINT`, phir `SET NOT NULL`.
+- Note — PostgreSQL 11+ mein constant `DEFAULT` ke saath add bhi table rewrite nahi karta.
+
+</details>
+
+### Hard · Production table par index bina writes block kiye
+
+<details>
+<summary>Answer</summary>
+
+```sql
+SET lock_timeout = '5s';
+CREATE INDEX CONCURRENTLY orders_customer_created_idx ON orders (customer_id, created_at DESC);
+```
+
+- `CONCURRENTLY` — writes chalte rehte hain (normal `CREATE INDEX` writes block karta hai); par slow hai aur do table scans karta hai.
+- Transaction — `CONCURRENTLY` transaction block ke andar nahi chalta; Flyway mein us migration ko non-transactional mark karo.
+- Failure — `INVALID` index bach jaata hai; `DROP INDEX CONCURRENTLY` karke retry.
+- Verify — `EXPLAIN` se plan use ho raha hai, aur write latency/locks monitor.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

@@ -11,6 +11,8 @@ tags: jpa, hibernate, transactions, n-plus-one
 
 ## Quick revision
 
+> Revision target — Managed state, SQL execution aur commit ko proxy-entered transaction se relate karo.
+
 - JPA — persistence specification; Hibernate — implementation.
 - Entity — persistence identity/state; DTO se alag responsibility.
 - Persistence context — managed entities aur dirty checking track karta hai.
@@ -51,11 +53,120 @@ tags: jpa, hibernate, transactions, n-plus-one
 
 - Default proxy transaction advice proxy-crossing calls intercept karti hai.
 
+## Example se samjho
+
+- Scenario — Two editors same entity version7 read karte hain. First edit commit se version8, second ab bhi version7 ke against save karta hai.
+- Reasoning — Optimistic version check stale second write detect kare; UI conflict dikhakar latest data se merge/retry decide kare. Blind last-write overwrite avoid hota hai.
+- Catch — Conflict ko same stale payload se endless retry mat karo; flush success bhi final commit success nahi, aur self-call proxy interception alag verify hoti hai.
+
 ## Recall aur practice
 
 - Sawal — Inner failure catch karne se joined transaction ka rollback-only marker clear ho jaata hai?
 - Jawaab — Nahi; outer commit rollback/UnexpectedRollbackException de sakta. Transaction boundaries aur failure policy explicitly redesign karo.
 - Khud try karo — Order listing ka query count measure karo; no N+1, deterministic pagination aur two concurrent @Version edits mein one conflict verify karo.
+
+## Practice questions
+
+### Easy · N+1 query
+
+```java
+List<Order> orders = orderRepo.findAll();
+orders.forEach(o -> System.out.println(o.getCustomer().getName()));
+```
+
+100 orders par kitni queries? Fix?
+
+<details>
+<summary>Answer</summary>
+
+- Queries — 1 (orders) + 100 (har lazy customer) = 101.
+- Fix — `@Query("select o from Order o join fetch o.customer")` ya `@EntityGraph(attributePaths = "customer")`.
+- Alternative — DTO projection jo sirf zaroori columns select kare; ya `hibernate.default_batch_fetch_size`.
+- Detect — SQL logging/statistics test mein query count assert karo.
+
+</details>
+
+### Easy · `LazyInitializationException`
+
+Controller mein `order.getItems().size()` par `could not initialize proxy - no Session`. Kyun?
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — `items` lazy hai aur transaction/persistence context service method ke saath band ho chuka.
+- Fix — service ke andar zaroori data load karke DTO return karo (fetch join/entity graph).
+- Avoid — `FetchType.EAGER` sab jagah (har query bhaari) aur open-in-view par dependency.
+
+</details>
+
+### Medium · `@Transactional` laga phir bhi rollback nahi
+
+```java
+@Service
+class ImportService {
+    public void importAll(List<Row> rows) { rows.forEach(this::importOne); }
+    @Transactional
+    void importOne(Row row) { ... }
+}
+```
+
+<details>
+<summary>Answer</summary>
+
+- Self-invocation — `this.importOne` proxy bypass karta hai; transaction start hi nahi hota.
+- Visibility — non-public methods par proxy-based transactions reliably apply nahi hote.
+- Fix — `@Transactional` ko public method par jo bahar se call ho, ya `importOne` alag bean mein.
+
+</details>
+
+### Medium · Checked exception par rollback nahi hua
+
+`@Transactional` method `IOException` throw karta hai aur DB changes commit ho jaate hain. Kyun?
+
+<details>
+<summary>Answer</summary>
+
+- Default rule — Spring rollback sirf `RuntimeException` aur `Error` par karta hai; checked exceptions par commit.
+- Fix — `@Transactional(rollbackFor = IOException.class)` ya checked ko domain runtime exception mein wrap.
+- Catch karke swallow kiya toh bhi rollback nahi — exception transaction boundary tak pahunchni chahiye.
+
+</details>
+
+### Medium · Concurrent edit aur `@Version`
+
+Do users same product price update karte hain. Doosra pehle ko overwrite na kare — JPA mein kaise?
+
+<details>
+<summary>Answer</summary>
+
+```java
+@Entity
+class Product {
+    @Id Long id;
+    @Version long version;
+    BigDecimal price;
+}
+```
+
+- Hibernate update — `UPDATE ... SET price=?, version=version+1 WHERE id=? AND version=?`.
+- Conflict — 0 rows → `ObjectOptimisticLockingFailureException`; API `409 Conflict` ya fresh data ke saath retry.
+- Pessimistic alternative — `@Lock(PESSIMISTIC_WRITE)` jab conflicts bahut frequent hon.
+
+</details>
+
+### Hard · `REQUIRES_NEW` aur "rollback-only"
+
+Order placement ke beech audit log save karna hai jo order fail hone par bhi bachna chahiye. Aur ek doosre case mein error aata hai: `UnexpectedRollbackException: Transaction silently rolled back because it has been marked as rollback-only`. Dono samjhao.
+
+<details>
+<summary>Answer</summary>
+
+- Audit — `@Transactional(propagation = REQUIRES_NEW)` alag bean mein; outer transaction suspend, audit apna commit karta hai, outer rollback use undo nahi karta.
+- Cost — REQUIRES_NEW doosra DB connection leta hai; pool chhota ho toh deadlock/starvation possible.
+- Rollback-only — inner `REQUIRED` method (same transaction) ne runtime exception throw kiya → poora transaction rollback-only mark hua. Outer ne catch karke commit try kiya → Spring `UnexpectedRollbackException` deta hai.
+- Fix — failure ko catch karke continue karna hai toh inner ko alag transaction (`REQUIRES_NEW`) do ya exception transactional boundary se pehle handle karo.
+
+</details>
 
 ## Sources — aur padhne ke liye
 
@@ -66,7 +177,6 @@ tags: jpa, hibernate, transactions, n-plus-one
 - [Spring transaction read-only hints](https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html)
 
 - [Spring transaction semantics](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
-- [Source yahan padho — Spring Framework](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
 - [Hibernate user guide](https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html)
 - [Spring Data JPA reference](https://docs.spring.io/spring-data/jpa/reference/)
 

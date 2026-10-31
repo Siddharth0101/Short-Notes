@@ -99,7 +99,7 @@ test('Dashboard displays actual chapter/reference/visual totals and subject navi
   await mount('/');
   assert.match(text(), /Chhote notes. Clear concepts/);
   assert.equal(document.querySelectorAll('.track-card').length, Object.keys(courses).length - 1);
-  assert.equal(document.querySelectorAll('.stat strong')[0].textContent, `${notes.length}↗`);
+  assert.equal(document.querySelectorAll('.stat strong')[0].textContent, String(notes.length));
   assert.equal(document.querySelectorAll('.stat strong')[1].textContent, String(archive.length));
   assert.equal(document.querySelectorAll('.stat strong')[2].textContent, String(VISUAL_IDS.length));
 });
@@ -148,7 +148,8 @@ test('Source title searches find the owning chapter and source links open exampl
   });
   assert(example.querySelector('.markdown'));
   assert(document.querySelector('.chapter-practice .question-card'));
-  await click(button('Answer dekho'));
+  // Chapter practice cards also say "Answer dekho"; open the question-bank card itself.
+  await click(document.querySelector('.chapter-practice .question-actions button'));
   assert(document.querySelector('.chapter-practice .question-answer'));
   assert(document.querySelector('.chapter-navigation'));
 });
@@ -230,12 +231,14 @@ test('Reader saves bookmarks and completion across mounts, renders code and sect
   await mount(`/notes/${note.id}`);
   assert.match(text(), new RegExp(note.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   assert(document.querySelector('.markdown h2#quick-revision'));
-  assert.equal(document.querySelector('.code-block pre'), null);
+  // The chapter's worked example is visible; the optional example file stays lazy.
+  assert(document.querySelector('.code-block pre'));
+  assert.equal(document.querySelector('.markdown .markdown'), null);
   await click(button('Examples — jab code revise karna ho'));
   await React.act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 60));
   });
-  assert(document.querySelector('.code-block pre'));
+  assert(document.querySelector('.markdown .markdown .code-block pre'));
   await click(button('Note save karo'));
   await click(button('Complete mark karo'));
   const persisted = JSON.parse(localStorage.getItem('shortnotes.progress.v1'));
@@ -597,10 +600,70 @@ test('Continue revision reopens the recent unfinished chapter', async () => {
   );
   await mount('/');
   assert.equal(
-    document.querySelector('.revision-launch .primary-button').getAttribute('href'),
+    document.querySelector('[aria-label="Continue revision"] .primary-button').getAttribute('href'),
     `/notes/${recent.id}`,
   );
   localStorage.clear();
+});
+
+test('Dashboard subject selection respects completed chapters without changing saved progress', async () => {
+  const chapters = notes.filter((note) => note.track === 'react');
+  const saved = { saved: [chapters[0].id], completed: [chapters[0].id], recent: [], known: [] };
+  localStorage.setItem('shortnotes.progress.v1', JSON.stringify(saved));
+  await mount('/');
+  await select(document.querySelector('[aria-label="Revision subject"]'), 'react');
+  assert.equal(
+    document.querySelector('.study-session .primary-button').getAttribute('href'),
+    `/notes/${chapters[1].id}`,
+  );
+  assert.equal(document.querySelector('.session-progress').value, 1);
+  // Loading only adds the empty practice-question list introduced by migration.
+  assert.deepEqual(JSON.parse(localStorage.getItem('shortnotes.progress.v1')), {
+    ...saved,
+    practiced: [],
+  });
+  localStorage.clear();
+});
+
+test('Duration and sorting links retain subject, status and bookmark actions', async () => {
+  const completed = notes.find((note) => note.track === 'react');
+  localStorage.setItem(
+    'shortnotes.progress.v1',
+    JSON.stringify({ saved: [], completed: [completed.id], recent: [], known: [] }),
+  );
+  await mount('/library?track=react&status=pending&minutes=10&sort=shortest');
+  const expected = notes
+    .filter((note) => note.track === 'react' && note.id !== completed.id && note.minutes <= 10)
+    .sort((a, b) => a.minutes - b.minutes || a.title.localeCompare(b.title));
+  const displayed = () =>
+    [...document.querySelectorAll('.note-row-body')].map((link) => link.getAttribute('href'));
+  assert.deepEqual(
+    displayed(),
+    expected.map((note) => `/notes/${note.id}`),
+  );
+  await select(document.querySelector('[aria-label="Sort chapters"]'), 'title');
+  assert.deepEqual(
+    displayed(),
+    [...expected].sort((a, b) => a.title.localeCompare(b.title)).map((note) => `/notes/${note.id}`),
+  );
+  assert.equal(document.querySelector('[aria-label="Filter progress"]').value, 'pending');
+  assert.equal(document.querySelector('[aria-label="Filter revision time"]').value, '10');
+  await click(document.querySelector('.save-button'));
+  assert.equal(JSON.parse(localStorage.getItem('shortnotes.progress.v1')).saved.length, 1);
+  await click(button('Reset filters'));
+  assert.equal(document.querySelectorAll('.note-row').length, notes.length);
+  assert.equal(document.querySelector('[aria-label="Filter revision time"]').value, 'all');
+  localStorage.clear();
+});
+
+test('Learning paths keep prerequisite order even with a sorting URL from the library', async () => {
+  await mount('/paths?track=javascript&sort=shortest&minutes=10');
+  const chapters = notes.filter((note) => note.track === 'javascript' && note.minutes <= 10);
+  assert.deepEqual(
+    [...document.querySelectorAll('.note-row-body')].map((link) => link.getAttribute('href')),
+    chapters.map((note) => `/notes/${note.id}`),
+  );
+  assert.equal(document.querySelector('[aria-label="Sort chapters"]'), null);
 });
 
 test('Mobile navigation blocks background interaction and closes on Escape and navigation', async () => {

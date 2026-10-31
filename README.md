@@ -3,7 +3,7 @@
 - Format — `term — short meaning / important catch`.
 - Revision — concept padho, recall karo, weak point repeat karo.
 
-**118 chapters · 47 course stages · 142 linked source examples · 456 interview questions · 20 interactive visuals.**
+**118 chapters · 598 graded practice questions · 47 course stages · 142 linked source examples · 456 interview questions · 20 interactive visuals.**
 
 Shuru karne ke liye [poora syllabus](notes/README.md) kholo. Padhai ka tareeka [study guide](notes/STUDY_GUIDE.md) mein aur difficult terms ke easy meanings [Hinglish glossary](notes/GLOSSARY_HINGLISH.md) mein milenge.
 
@@ -11,7 +11,7 @@ Interview ke liye [52 priority questions aur preparation plan](notes/INTERVIEW_P
 
 **Machine coding practice:** [121 build rounds aur 44 top-priority questions](notes/MACHINE_CODING_PRACTICE.md) — har subject ke 11 rounds, 121 follow-ups, timeboxes, acceptance checks aur answer guides. App mein `machine-coding` search karo.
 
-Har chapter mein recall question, answer aur practice acceptance checks hain. 8 October 2026 ke pass mein **saare 118 chapters enhance hue; 362 concept points add, ab 2,405 revision points**. Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho. React Native ka [mobile concept recheck](notes/REACT_NATIVE_REVIEW.md) bhi available hai.
+Har chapter mein quick revision, ek worked example, recall question aur **Easy → Medium → Hard practice questions** (output puzzles, bug-dhundo, code-likho aur design scenarios) hain. Answers pehle hidden rehte hain; app mein jo question sahi ho use "clear" mark karke progress track karo. 8 October 2026 ke pass mein **saare 118 chapters enhance hue; 362 concept points add, ab 2,405 revision points**. Naye additions aur remaining scope ka [repo coverage audit](notes/COVERAGE_AUDIT.md) padho. React Native ka [mobile concept recheck](notes/REACT_NATIVE_REVIEW.md) bhi available hai.
 
 ## Kya aur kis order mein padhna hai?
 
@@ -35,6 +35,7 @@ Frontend ke liye JavaScript → React → frontend design; mobile ke liye React 
 - Chapters — har subject ke concise concept bullets, practical conditions aur failure cases.
 - Code — chapter ka optional examples link kholo jab implementation dekhni ho.
 - Recall — chapter ka sawal khud answer karo, jawaab compare karo, phir practice ke acceptance cases verify karo.
+- Practice — `## Practice questions` mein 5–6 graded questions; answer `<details>` ke andar hai, isliye GitHub par bhi pehle hidden rehta hai.
 
 ## App chalao
 

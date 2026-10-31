@@ -41,6 +41,7 @@ export function ProgressProvider({ children }) {
       saved: wasSelected ? 'Bookmark hata diya.' : 'Bookmark save ho gaya.',
       completed: wasSelected ? 'Chapter dobara revise karna hai.' : 'Chapter revised. Nice!',
       known: wasSelected ? 'Question practice mein wapas.' : 'Concept clear mark ho gaya.',
+      practiced: wasSelected ? 'Question dobara practice list mein.' : 'Question clear mark ho gaya.',
     };
     setNotice({ type, id, wasSelected, message: messages[type] });
   };

@@ -11,6 +11,8 @@ tags: collections, generics, hashmap, pecs
 
 ## Quick revision
 
+> Revision target — Access pattern se collection choose karo aur view, copy, order ke contracts distinguish karo.
+
 - List — ordered, duplicates allowed; Set — unique; Map — key/value pairs.
 - ArrayList — indexed access fast; middle insert/delete shifting maangta hai.
 - LinkedList — node operations useful; random access O(n).
@@ -45,11 +47,108 @@ tags: collections, generics, hashmap, pecs
 
 - Wrapper apne interface se changes rokta hai, lekin backing list change hogi toh view mein woh change dikhega.
 
+## Example se samjho
+
+- Scenario — Original list `[A, B]` ki unmodifiable view aur `List.copyOf` snapshot banao; phir original mein C add karo.
+- Reasoning — View `[A, B, C]` dikhati hai; snapshot structure `[A, B]` rehta hai. Dono ke through structural mutation blocked hai.
+- Catch — Elements mutable objects hon toh snapshot bhi un objects ko deep-copy nahi karta; container immutability aur element immutability alag hain.
+
 ## Recall aur practice
 
 - Sawal — List<Integer> [1,2,3] par remove(1) ke baad kya bachega?
 - Jawaab — [1,3]; primitive int argument index overload select karta hai, value 1 remove karne ko Integer object do.
 - Khud try karo — Original list, unmodifiable view aur copyOf compare karo; backing add aur element mutation ke visible effects predict karo.
+
+## Practice questions
+
+### Easy · Sahi collection choose karo
+
+(a) Index se fast read, end mein add. (b) Unique tags, order matter nahi. (c) Username → user lookup. (d) Sorted leaderboard by score. (e) Insertion order wale unique items.
+
+<details>
+<summary>Answer</summary>
+
+- (a) `ArrayList` — `O(1)` index, amortized `O(1)` append.
+- (b) `HashSet`.
+- (c) `HashMap` — average `O(1)` lookup.
+- (d) `TreeMap` / `TreeSet` — sorted, `O(log n)`.
+- (e) `LinkedHashSet`.
+- `LinkedList` — rarely best; random access `O(n)` aur cache-unfriendly.
+
+</details>
+
+### Easy · `remove(1)` ka surprise
+
+```java
+List<Integer> nums = new ArrayList<>(List.of(5, 7, 1));
+nums.remove(1);
+System.out.println(nums);
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `[5, 1]`; `remove(int index)` choose hua, isliye index 1 wala `7` hata, value `1` nahi.
+- Value remove — `nums.remove(Integer.valueOf(1))` → `[5, 7]`.
+- Lesson — `List<Integer>` par dono overloads match karte hain; intent explicit likho.
+
+</details>
+
+### Medium · Generics invariance aur PECS
+
+`List<Integer>` ko `double sum(List<Number> nums)` mein pass nahi kar sakte. Kyun? Sahi signature kya hai, aur "add karne" wale method ka?
+
+<details>
+<summary>Answer</summary>
+
+- Invariance — `List<Integer>` `List<Number>` ka subtype nahi; warna method usme `Double` daal deta aur integer list corrupt hoti.
+- Read (producer) — `double sum(List<? extends Number> nums)`.
+- Write (consumer) — `void fill(List<? super Integer> out)`.
+- PECS — Producer Extends, Consumer Super.
+
+</details>
+
+### Medium · Multi-key sorting
+
+Employees ko department (A→Z), phir salary (high→low), phir name se sort karo.
+
+<details>
+<summary>Answer</summary>
+
+```java
+employees.sort(
+    Comparator.comparing(Employee::department)
+        .thenComparing(Employee::salary, Comparator.reverseOrder())
+        .thenComparing(Employee::name));
+```
+
+- `reverseOrder()` sirf salary key par; poore chain par `.reversed()` lagaoge toh sab ulta ho jaayega.
+- Nulls — `Comparator.nullsLast(...)` agar field null ho sakta hai.
+- `List.sort` stable hai — equal elements ka relative order same rehta hai.
+
+</details>
+
+### Hard · Unmodifiable view vs copy
+
+```java
+List<String> base = new ArrayList<>(List.of("a"));
+List<String> view = Collections.unmodifiableList(base);
+List<String> copy = List.copyOf(base);
+base.add("b");
+System.out.println(view + " " + copy);
+view.add("c");
+```
+
+<details>
+<summary>Answer</summary>
+
+- Print — `[a, b] [a]`.
+- `view` — read-only wrapper; backing list ke changes dikhte hain.
+- `copy` — independent immutable snapshot (nulls allowed nahi).
+- Last line — `UnsupportedOperationException`.
+- Use — class se internal list expose karni ho toh snapshot (`List.copyOf`) safer; live read-only window chahiye toh view.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

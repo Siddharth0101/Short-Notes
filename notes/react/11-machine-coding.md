@@ -12,6 +12,8 @@ visual: react-identity
 
 ## Quick revision
 
+> Revision target — Requirements se state aur acceptance checks nikalo; happy path ke saath identity aur race bugs demonstrate karo.
+
 - Machine coding — requirements → state → components → edge cases → verification.
 - List identity — stable IDs; reorder par wrong input state move na ho.
 - Search — debounce request, stale results ignore, empty/error states dikhao.
@@ -67,11 +69,160 @@ visual: react-identity
 - Selection ownership — filtered-out/removed item selection ka rule define; hidden stale ID ko actionable selected state mat rakho.
 - Async acceptance — response success alone enough nahi; correct query identity aur mounted owner ke liye result commit hona chahiye.
 
+## Example se samjho
+
+- Scenario — user `re` type karta hai, phir `react`; second request pehle complete hoti hai.
+- Expected result — UI latest query `react` ka result rakhe; late `re` response usse overwrite na kare.
+- Design — har request ko identity do, active identity se match par hi commit karo; supported abort cleanup se unnecessary work bhi reduce karo.
+- Catch — debounce request starts ko reduce karta hai; already-started requests ka completion order control nahi karta.
+- Check — fake delayed responses, empty query, failed request aur unmount test karo; failure par typed query preserve ho.
+
 ## Recall aur practice
 
 - Sawal — Debounce search ke responses reversed aayein toh debounce alone correct UI guarantee karta hai?
 - Jawaab — Nahi; debounce starts reduce karta hai, completion order control nahi. Latest request identity ya abort/ignore guard chahiye.
 - Khud try karo — Combobox banao; IME, arrows/Enter/Escape, empty results, reversed responses aur selected option removal verify karo.
+
+## Practice questions
+
+### Easy · Todo app ke acceptance checks
+
+Interviewer bole "Todo app banao". Code se pehle kaunse acceptance checks clarify karoge?
+
+<details>
+<summary>Answer</summary>
+
+- Add — empty/whitespace reject, Enter se submit, input clear + focus wapas.
+- Toggle/delete — stable `id` keys; delete ke baad focus kahan jaayega.
+- Filter — all/active/done; counts sahi; filter change par selection logic.
+- Persistence/edge — refresh par data chahiye? duplicate allowed? bahut lambe text ka wrap.
+- A11y — real `<button>`/`<input type="checkbox">` with labels.
+
+</details>
+
+### Medium · OTP input (6 boxes)
+
+Auto-advance, Backspace se pichla box, aur poora code paste — teeno support karo.
+
+<details>
+<summary>Answer</summary>
+
+```jsx
+function Otp({ length = 6, onComplete }) {
+  const [digits, setDigits] = useState(Array(length).fill(''));
+  const refs = useRef([]);
+  function update(index, value) {
+    const next = [...digits];
+    next[index] = value;
+    setDigits(next);
+    if (next.every(Boolean)) onComplete(next.join(''));
+  }
+  return digits.map((d, i) => (
+    <input
+      key={i}
+      ref={(el) => (refs.current[i] = el)}
+      value={d}
+      inputMode="numeric"
+      autoComplete={i === 0 ? 'one-time-code' : 'off'}
+      aria-label={`Digit ${i + 1}`}
+      maxLength={1}
+      onChange={(e) => {
+        const v = e.target.value.replace(/\D/g, '').slice(-1);
+        update(i, v);
+        if (v) refs.current[i + 1]?.focus();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Backspace' && !d) refs.current[i - 1]?.focus();
+      }}
+      onPaste={(e) => {
+        const code = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, length);
+        if (!code) return;
+        e.preventDefault();
+        const next = Array.from({ length }, (_, k) => code[k] ?? '');
+        setDigits(next);
+        refs.current[Math.min(code.length, length - 1)]?.focus();
+        if (code.length === length) onComplete(code);
+      }}
+    />
+  ));
+}
+```
+
+- Keys — boxes fixed count ke hain, isliye index key yahan safe hai.
+- Autofill — `autocomplete="one-time-code"` SMS code suggest karta hai.
+- Edge — non-digits filter, double submit rokna, aur error par boxes clear + first focus.
+
+</details>
+
+### Medium · Pagination component
+
+`total` items, `pageSize`, `page` diye hain. Page count, Prev/Next disable, aur filter change par page reset — logic likho.
+
+<details>
+<summary>Answer</summary>
+
+```jsx
+const pageCount = Math.max(1, Math.ceil(total / pageSize));
+const current = Math.min(Math.max(1, page), pageCount); // URL se galat page aaye toh clamp
+<nav aria-label="Pagination">
+  <button disabled={current === 1} onClick={() => setPage(current - 1)}>Prev</button>
+  <span aria-current="page">Page {current} of {pageCount}</span>
+  <button disabled={current === pageCount} onClick={() => setPage(current + 1)}>Next</button>
+</nav>;
+```
+
+- Filter change — page 1 par reset (same state update mein, effect se nahi).
+- Empty — `total = 0` par bhi `1 of 1` aur "No results" message.
+- Server paging — total unknown ho toh `hasNextPage` flag se Next control karo.
+
+</details>
+
+### Hard · File explorer tree
+
+Nested folders/files dikhao: expand/collapse, rename, delete subtree. State design aur render logic batao.
+
+<details>
+<summary>Answer</summary>
+
+```jsx
+function Node({ node, expanded, onToggle }) {
+  const isOpen = expanded.has(node.id);
+  return (
+    <li role="treeitem" aria-expanded={node.children ? isOpen : undefined}>
+      {node.children ? <button onClick={() => onToggle(node.id)}>{node.name}</button> : node.name}
+      {node.children && isOpen && (
+        <ul role="group">
+          {node.children.map((child) => (
+            <Node key={child.id} node={child} expanded={expanded} onToggle={onToggle} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+```
+
+- Expansion state — `Set` of ids (parent mein), node objects ke andar `open` flag nahi; rename/move se state nahi tootti.
+- Updates — recursive immutable helpers (`updateNode`, `removeNode`) jo sirf changed path copy karein.
+- Keys — stable `id`, naam nahi (rename par remount se bacho).
+- Bade trees — children lazy load karo; deep recursion par flatten + virtualization.
+
+</details>
+
+### Hard · Accessible modal
+
+Modal component ke requirements aur implementation approach batao.
+
+<details>
+<summary>Answer</summary>
+
+- Semantics — native `<dialog>` + `showModal()` se focus trap, Esc aur `inert` background browser deta hai.
+- Custom ho toh — `role="dialog"`, `aria-modal="true"`, `aria-labelledby` title par; open par pehle focusable par focus, Tab/Shift+Tab trap, Esc close.
+- Close par — focus wapas trigger button par; body scroll lock hatao.
+- Portal — `z-index`/overflow problems se bachne ke liye body level par render.
+- Tests — Esc band karta hai, Tab bahar nahi jaata, close ke baad trigger focused.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

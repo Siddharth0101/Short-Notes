@@ -11,7 +11,10 @@ export function NoteRow({ note, index }) {
   const { progress, toggle } = useProgress();
   const track = trackById[note.track];
   return (
-    <article className="note-row">
+    <article
+      className="note-row"
+      style={{ '--track-color': track.color, '--track-tint': track.tint }}
+    >
       <span className={`note-row-number ${progress.completed.includes(note.id) ? 'done' : ''}`}>
         {progress.completed.includes(note.id) ? (
           <Icon name="check" size={18} />
@@ -37,6 +40,12 @@ export function NoteRow({ note, index }) {
             <>
               <span>·</span>
               <span>{note.minutes} min revision</span>
+            </>
+          )}
+          {note.practiceCount > 0 && (
+            <>
+              <span>·</span>
+              <span>{note.practiceCount} practice Qs</span>
             </>
           )}
         </div>
@@ -83,19 +92,20 @@ function ProgressBackup() {
     try {
       if (file.size > 1000000) throw new Error('1 MB se chhota progress backup use karo.');
       const value = JSON.parse(await file.text());
+      const list = (key) =>
+        Array.isArray(value[key]) && value[key].every((item) => typeof item === 'string');
+      // `practiced` came later; older backups without it stay valid.
       if (
         value.version !== 1 ||
-        !['saved', 'completed', 'known', 'recent'].every(
-          (key) =>
-            Array.isArray(value[key]) && value[key].every((item) => typeof item === 'string'),
-        )
+        !['saved', 'completed', 'known', 'recent'].every(list) ||
+        (value.practiced !== undefined && !list('practiced'))
       )
         throw new Error('Yeh valid Shortnotes progress backup nahi hai.');
       importProgress(
         Object.fromEntries(
-          ['saved', 'completed', 'known', 'recent'].map((key) => [
+          ['saved', 'completed', 'known', 'practiced', 'recent'].map((key) => [
             key,
-            [...new Set([...progress[key], ...value[key]])],
+            [...new Set([...progress[key], ...(value[key] || [])])],
           ]),
         ),
       );
@@ -152,15 +162,35 @@ export default function Library({ saved = false, paths = false }) {
   const status = ['completed', 'pending'].includes(params.get('status'))
     ? params.get('status')
     : 'all';
-  const filtered = filterNotes(source, { query, track, level }).filter((note) =>
-    status === 'completed'
-      ? progress.completed.includes(note.id)
-      : status === 'pending'
-        ? !progress.completed.includes(note.id)
-        : true,
+  const minutes = ['10', '15', '20'].includes(params.get('minutes'))
+    ? params.get('minutes')
+    : 'all';
+  const sort =
+    ['shortest', 'title'].includes(params.get('sort')) && !paths ? params.get('sort') : 'course';
+  const filtered = filterNotes(source, { query, track, level }).filter(
+    (note) =>
+      (minutes === 'all' || note.minutes <= Number(minutes)) &&
+      (status === 'completed'
+        ? progress.completed.includes(note.id)
+        : status === 'pending'
+          ? !progress.completed.includes(note.id)
+          : true),
   );
-  const hasFilters = !!query || track !== 'all' || level !== 'all' || status !== 'all';
+  if (sort === 'shortest')
+    filtered.sort((a, b) => a.minutes - b.minutes || a.title.localeCompare(b.title));
+  if (sort === 'title') filtered.sort((a, b) => a.title.localeCompare(b.title));
+  const hasFilters =
+    !!query ||
+    track !== 'all' ||
+    level !== 'all' ||
+    status !== 'all' ||
+    minutes !== 'all' ||
+    sort !== 'course';
   const selected = trackById[track];
+  const trackNotes = selected ? notes.filter((note) => note.track === track) : [];
+  const completed = trackNotes.filter((note) => progress.completed.includes(note.id)).length;
+  const nextNote =
+    trackNotes.find((note) => !progress.completed.includes(note.id)) || trackNotes[0];
   const update = (key, value) =>
     setParams(
       (previous) => {
@@ -202,6 +232,36 @@ export default function Library({ saved = false, paths = false }) {
         <span className="count-pill">{filtered.length} chapters</span>
       </div>
       {saved && <ProgressBackup />}
+      {selected && !saved && !paths && (
+        <section
+          className="collection-overview"
+          aria-label={`${selected.name} progress`}
+          style={{ '--track-color': selected.color, '--track-tint': selected.tint }}
+        >
+          <span className="collection-icon">
+            <Icon name={selected.icon} size={28} />
+          </span>
+          <div>
+            <strong>
+              {completed} / {trackNotes.length} chapters revised
+            </strong>
+            <p>{selected.topics}</p>
+            <progress
+              aria-label="Subject revision progress"
+              value={completed}
+              max={trackNotes.length}
+            />
+          </div>
+          <NoteLink className="primary-button" to={`/notes/${nextNote.id}`}>
+            {completed === trackNotes.length
+              ? 'Dobara revise karo'
+              : completed
+                ? 'Continue subject'
+                : 'Subject shuru karo'}
+            <Icon name="arrow" size={16} />
+          </NoteLink>
+        </section>
+      )}
       <div className="filter-toolbar">
         <label className="filter-search">
           <Icon name="search" size={18} />
@@ -239,6 +299,16 @@ export default function Library({ saved = false, paths = false }) {
           <option value="all">All progress</option>
           <option value="pending">Abhi baaki hai</option>
           <option value="completed">Revised</option>
+        </select>
+        <select
+          aria-label="Filter revision time"
+          value={minutes}
+          onChange={(event) => update('minutes', event.target.value)}
+        >
+          <option value="all">Any duration</option>
+          <option value="10">Up to 10 min</option>
+          <option value="15">Up to 15 min</option>
+          <option value="20">Up to 20 min</option>
         </select>
       </div>
       <div className="filter-chips" aria-label="Filter subject">
@@ -281,13 +351,31 @@ export default function Library({ saved = false, paths = false }) {
             </>
           )}
         </span>
-        {hasFilters ? (
-          <button className="text-button" onClick={() => setParams({}, { replace: true })}>
-            <Icon name="reset" size={14} /> Reset filters
-          </button>
-        ) : (
-          <span>Course order</span>
-        )}
+        <div className="results-actions">
+          {!paths && (
+            <label className="collection-sort">
+              <span>Sort</span>
+              <select
+                aria-label="Sort chapters"
+                value={sort}
+                onChange={(event) =>
+                  update('sort', event.target.value === 'course' ? '' : event.target.value)
+                }
+              >
+                <option value="course">Course order</option>
+                <option value="shortest">Shortest first</option>
+                <option value="title">Title A–Z</option>
+              </select>
+            </label>
+          )}
+          {hasFilters ? (
+            <button className="text-button" onClick={() => setParams({}, { replace: true })}>
+              <Icon name="reset" size={14} /> Reset filters
+            </button>
+          ) : paths ? (
+            <span>Course order</span>
+          ) : null}
+        </div>
       </div>
       {filtered.length === 0 ? (
         <div className="empty-state">
@@ -323,6 +411,33 @@ export default function Library({ saved = false, paths = false }) {
                 visibleNotes={chapters}
                 renderNote={(note, index) => <NoteRow key={note.id} note={note} index={index} />}
               />
+            );
+          })}
+        </div>
+      ) : track === 'all' && sort === 'course' ? (
+        <div className="subject-collections">
+          {TRACKS.map((item) => {
+            const chapters = filtered.filter((note) => note.track === item.id);
+            if (!chapters.length) return null;
+            return (
+              <section
+                className="subject-collection"
+                key={item.id}
+                aria-label={`${item.name} chapters`}
+              >
+                <div className="collection-section-heading">
+                  <h2>
+                    <span className="subject-dot" style={{ background: item.color }} />
+                    {item.name}
+                  </h2>
+                  <span>{chapters.length} chapters</span>
+                </div>
+                <div className="note-list">
+                  {chapters.map((note, index) => (
+                    <NoteRow key={note.id} note={note} index={index} />
+                  ))}
+                </div>
+              </section>
             );
           })}
         </div>

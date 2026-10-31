@@ -11,6 +11,8 @@ tags: arrays, objects, map, set, destructuring, immutability
 
 ## Quick revision
 
+> Revision target — Transform, select, aggregate aur lookup ke liye sahi collection operation choose karo.
+
 - `map` — har item transform karke naya array.
 - `filter` — matching items ka naya array.
 - `reduce` — items se ek accumulated result; initial value dena clear rehta hai.
@@ -68,11 +70,123 @@ tags: arrays, objects, map, set, destructuring, immutability
 - Destructure safely — missing/null object ko seedha destructure karna fail; boundary par fallback aur field validation alag karo.
 - Sort comparator — negative/zero/positive ordering consistent rakho; boolean comparator total order define nahi karta.
 
+## Example se samjho
+
+```js
+const orders = [{ paid: true, total: 80 }, { paid: false, total: 50 }];
+const paidTotal = orders
+  .filter((order) => order.paid)
+  .map((order) => order.total)
+  .reduce((sum, total) => sum + total, 0);
+console.log(paidTotal); // 80
+```
+
+- Trace — `filter` eligible records, `map` amounts, `reduce` final total banata hai; har stage ka output shape alag hai.
+- Catch — empty selection par initial `0` safe result deta hai; initial value bina empty `reduce` throw karta hai.
+- Trade-off — intermediate arrays banti hain; readability se start karo, measured hot path mein single pass consider karo.
+
 ## Recall aur practice
 
 - Sawal — new Set([NaN, NaN, {}, {}]).size kitna hai?
 - Jawaab — 3; NaN values merge, dono independently created objects alag references hain.
 - Khud try karo — Orders ko customer ID se group karo; empty data, repeated customer aur missing ID policy verify karo; original orders mutate mat karo.
+
+## Practice questions
+
+### Easy · Default `sort` ka trap
+
+```js
+const nums = [10, 1, 5, 100];
+console.log(nums.sort());
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `[1, 10, 100, 5]`; default sort values ko strings ki tarah compare karta hai.
+- Fix — `nums.sort((a, b) => a - b)`.
+- Catch — `sort` original array mutate karta hai; copy chahiye toh `nums.toSorted(...)` ya `[...nums].sort(...)`.
+
+</details>
+
+### Easy · `map(parseInt)`
+
+```js
+console.log(['1', '7', '11'].map(parseInt));
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `[1, NaN, 3]`.
+- Kyun — `map` callback ko `(value, index)` deta hai; `parseInt('7', 1)` invalid radix → `NaN`, `parseInt('11', 2)` → `3`.
+- Fix — `.map(Number)` ya `.map((s) => parseInt(s, 10))`.
+
+</details>
+
+### Medium · `reduce` se grouping
+
+`orders` ko status ke hisaab se group karo: `{ paid: [...], pending: [...] }`. Empty array par kya hoga?
+
+<details>
+<summary>Answer</summary>
+
+```js
+const byStatus = orders.reduce((groups, order) => {
+  (groups[order.status] ??= []).push(order);
+  return groups;
+}, {});
+```
+
+- Initial value `{}` — empty array par bhi `{}` milta hai; bina initial value ke empty `reduce` `TypeError` deta hai.
+- Modern — `Object.groupBy(orders, (o) => o.status)` (ES2024) same kaam karta hai, null-prototype object return karta hai.
+- Order — har group mein original order preserve rehta hai.
+
+</details>
+
+### Medium · `Set` aur `Map` keys
+
+```js
+const s = new Set([1, '1', NaN, NaN, {}, {}]);
+console.log(s.size);
+const m = new Map([[{}, 'a']]);
+console.log(m.get({}));
+```
+
+<details>
+<summary>Answer</summary>
+
+- `s.size` — `5`: `1`, `'1'`, ek `NaN`, aur do alag objects.
+- `m.get({})` — `undefined`; object keys reference se match hoti hain, naya `{}` alag key hai.
+- Rule — `Set`/`Map` SameValueZero use karte hain: `NaN` equal, `1` aur `'1'` alag.
+
+</details>
+
+### Hard · Iterable `range` banao
+
+`range(start, end, step = 1)` banao jo `for...of` aur spread mein chale, negative step support kare, `step = 0` reject kare, aur har loop fresh iteration de.
+
+<details>
+<summary>Answer</summary>
+
+```js
+function range(start, end, step = 1) {
+  if (step === 0) throw new RangeError('step cannot be 0');
+  return {
+    *[Symbol.iterator]() {
+      for (let i = start; step > 0 ? i < end : i > end; i += step) yield i;
+    },
+  };
+}
+const r = range(5, 0, -2);
+console.log([...r], [...r]); // [5, 3, 1] [5, 3, 1]
+```
+
+- Iterable vs iterator — object har `Symbol.iterator` call par naya generator deta hai, isliye do spreads independent.
+- Direction — step ka sign comparison decide karta hai; galat sign par empty range, infinite loop nahi.
+- Lazy — values on demand banti hain; bade ranges ke liye array allocate nahi hota.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

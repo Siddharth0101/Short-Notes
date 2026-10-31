@@ -11,6 +11,8 @@ tags: numbers, dates, intl, regex, strings, timers
 
 ## Quick revision
 
+> Revision target — Numeric precision, accepted text format aur date interpretation ko separate validation decisions banao.
+
 - Numbers — JS `number` floating point hai; `0.1 + 0.2` exactly `0.3` nahi.
 - Safe integer — exact integer range ke liye `Number.isSafeInteger` check karo.
 - `BigInt` — bade integers; `number` ke saath direct arithmetic mix nahi.
@@ -69,11 +71,122 @@ tags: numbers, dates, intl, regex, strings, timers
 - Calendar versus instant — local date aur UTC timestamp ka purpose alag; DST ke around ek calendar day hamesha 24 hours nahi.
 - Tolerance — floating-point comparison ka tolerance domain/scale se choose; Number.EPSILON har magnitude ke liye enough nahi.
 
+## Example se samjho
+
+```js
+function readQuantity(raw) {
+  if (!/^[0-9]+$/.test(raw)) return null;
+  const quantity = Number(raw);
+  return Number.isSafeInteger(quantity) ? quantity : null;
+}
+console.log(readQuantity("12"), readQuantity("12px")); // 12 null
+```
+
+- Contract — input string mein digits only allowed; negative, decimal aur whitespace intentionally reject hote hain.
+- Catch — regex format check karta hai; safe-integer check numeric range verify karta hai. Ek check doosre ka replacement nahi.
+- Check — `"0"`, `"01"`, `""` aur unsafe large integer try karo; leading zeros accept karne ka rule yahan explicit hai.
+
 ## Recall aur practice
 
 - Sawal — parseInt("12px", 10) successful hone se full numeric input valid prove hota hai?
 - Jawaab — Nahi; prefix 12 parse hota hai. Poore accepted format aur finite result ki separate validation chahiye.
 - Khud try karo — Countdown ko deadline se calculate karo; delayed callback ke baad remaining time correct aur zero par timer cleanup verify karo.
+
+## Practice questions
+
+### Easy · Floating point comparison
+
+```js
+console.log(0.1 + 0.2 === 0.3);
+console.log((0.1 + 0.2).toFixed(2));
+console.log(Math.abs(0.1 + 0.2 - 0.3) < Number.EPSILON);
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `false`, `'0.30'` (string), `true`.
+- Kyun — `0.1` aur `0.2` binary mein exact store nahi hote; sum `0.30000000000000004` banta hai.
+- Money — paise/cents mein integer rakho; display par hi format karo.
+
+</details>
+
+### Easy · Rounding ke edge cases
+
+```js
+console.log(Math.round(2.5), Math.round(-2.5), Math.trunc(-4.7), (1.005).toFixed(2));
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `3 -2 -4 '1.00'`.
+- `Math.round` — `.5` ko `+∞` ki taraf le jaata hai, isliye `-2.5` → `-2`.
+- `trunc` — decimal part kaat deta hai; `floor(-4.7)` hota toh `-5`.
+- `1.005` — actually `1.00499...` store hota hai, isliye `'1.00'`.
+
+</details>
+
+### Medium · Global regex ka `lastIndex`
+
+```js
+const re = /a/g;
+console.log(re.test('a'), re.test('a'), re.test('a'));
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `true false true`.
+- Kyun — `g`/`y` flag wala regex `lastIndex` yaad rakhta hai; doosri call index 1 se search karti hai, fail hokar `lastIndex` 0 reset hota hai.
+- Fix — sirf check karna ho toh `g` mat lagao; reuse karna ho toh `re.lastIndex = 0`; saare matches ke liye `matchAll`.
+
+</details>
+
+### Medium · Date overflow
+
+```js
+const d = new Date(2026, 0, 31); // 31 Jan 2026, local time
+d.setMonth(1);
+console.log(d.getMonth(), d.getDate());
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `2 3`; "31 February" overflow hokar 3 March ban gaya (2026 leap year nahi).
+- Month index — `0` = January; `getMonth()` bhi 0-based hai.
+- Fix — month badalne se pehle date ko `1` par set karo, phir month ke last day se clamp karo.
+- Parsing catch — `new Date('2026-03-01')` UTC midnight hai, `new Date(2026, 2, 1)` local midnight.
+
+</details>
+
+### Hard · Real calendar date validate karo
+
+`parseISODate('YYYY-MM-DD')` likho: format named groups se pakdo aur `2026-02-30` jaisi impossible date reject karo (`null`).
+
+<details>
+<summary>Answer</summary>
+
+```js
+function parseISODate(text) {
+  const match = /^(?<y>\d{4})-(?<m>\d{2})-(?<d>\d{2})$/.exec(text);
+  if (!match) return null;
+  const y = Number(match.groups.y);
+  const m = Number(match.groups.m);
+  const d = Number(match.groups.d);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  const valid =
+    date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
+  return valid ? date : null;
+}
+```
+
+- Round-trip check — `Date` overflow karta hai (30 Feb → 2 Mar), isliye parts wapas compare kiye.
+- UTC — local timezone/DST se date shift nahi hoti.
+- Regex safety — anchors aur fixed-length groups; `/(a+)+$/` jaise nested quantifiers ReDoS (catastrophic backtracking) de sakte hain.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

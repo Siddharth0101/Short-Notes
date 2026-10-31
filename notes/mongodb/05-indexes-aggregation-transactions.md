@@ -12,6 +12,8 @@ visual: aggregation-pipeline
 
 ## Quick revision
 
+> Revision target — Pipeline cardinality, index cost aur multi-document transaction scope reason karo.
+
 - Index — query fast kar sakta hai; storage aur write cost badhta hai.
 - Compound index — field order filters/sort/range se match karo.
 - Unique index — duplicate key ko database par reject karta hai.
@@ -49,11 +51,103 @@ visual: aggregation-pipeline
 
 - Atomic update separate read-then-replace workflow ko race-free nahi banati.
 
+## Example se samjho
+
+- Scenario — Order mein items `[tea,book]` hain; aggregation order count chahiye, par pipeline pehle items unwind karti hai.
+- Reasoning — Unwind ke baad same order se two rows hain. Rows count karoge toh2, distinct order identity count karoge toh1; intended grain ke hisaab se group karo.
+- Catch — Index ya transaction logical counting mistake fix nahi karte; each stage ka document count/shape trace karo aur arrays ki growth bounded rakho.
+
 ## Recall aur practice
 
 - Sawal — Transaction callback retry par payment request dobara kyun dangerous hai?
 - Jawaab — Database attempt rollback/retry external provider effect undo nahi karta; payment identity aur durable workflow alag enforce karo.
 - Khud try karo — Two-document transfer plan banao; transient retry, unknown commit, duplicate external notification aur delayed TTL deletion ka correct outcome verify karo.
+
+## Practice questions
+
+### Easy · Compound index kin queries ko help karta hai?
+
+Index `{ status: 1, createdAt: -1 }`. Kaunsi queries efficiently use karengi?
+
+<details>
+<summary>Answer</summary>
+
+- Haan — `find({ status: 'paid' })`, `find({ status: 'paid' }).sort({ createdAt: -1 })`.
+- Nahi (efficiently) — `find({ createdAt: { $gte: d } })` akela; index prefix `status` se shuru hota hai.
+- ESR rule — Equality fields pehle, Sort fields beech mein, Range fields last.
+
+</details>
+
+### Easy · TTL index pe business logic
+
+Session `expiresAt` par TTL index hai. Kya expire session turant gayab ho jaayega?
+
+<details>
+<summary>Answer</summary>
+
+- Nahi — TTL monitor periodically (~60s) chalta hai; delete delay ho sakta hai.
+- Rule — read par bhi `expiresAt > now` check karo; TTL sirf cleanup hai.
+- Field — `Date` type honi chahiye.
+
+</details>
+
+### Medium · Last 30 days ke top 5 products by revenue
+
+Orders: `{ createdAt, status, items: [{ productId, qty, price }] }`.
+
+<details>
+<summary>Answer</summary>
+
+```js
+db.orders.aggregate([
+  { $match: { status: 'paid', createdAt: { $gte: since } } },
+  { $unwind: '$items' },
+  { $group: { _id: '$items.productId', revenue: { $sum: { $multiply: ['$items.qty', '$items.price'] } } } },
+  { $sort: { revenue: -1 } },
+  { $limit: 5 },
+]);
+```
+
+- `$match` pehle — index use hota hai aur kam documents aage jaate hain.
+- `$unwind` — har item alag document; `$group` productId par.
+- Money — prices integer paise mein ya `Decimal128`, double nahi.
+
+</details>
+
+### Medium · Post ke andar saare comments
+
+Viral post mein comments array lakhon tak jaa sakta hai. Problems?
+
+<details>
+<summary>Answer</summary>
+
+- 16 MB document limit — unbounded array eventually fail.
+- Performance — har read/update bada document; multikey index bahut bada.
+- Fix — `comments` alag collection (`postId` + `createdAt` index), paging; post mein sirf `commentCount` aur shayad latest 3 (subset pattern).
+
+</details>
+
+### Hard · Transaction retry aur side effects
+
+```js
+await session.withTransaction(async () => {
+  await orders.insertOne(order, { session });
+  await inventory.updateOne({ sku }, { $inc: { stock: -1 } }, { session });
+  await sendEmail(order); // !
+});
+```
+
+Kya galat ho sakta hai?
+
+<details>
+<summary>Answer</summary>
+
+- Retry — `withTransaction` `TransientTransactionError`/unknown commit par callback dobara chala sakta hai → email do baar.
+- Rollback — email bhej diya par transaction abort hua → customer ko non-existent order ka mail.
+- Fix — side effects commit ke baad: transaction ke andar `outbox` document likho, worker baad mein email bheje (idempotent).
+- Requirements — transactions replica set/sharded cluster par; write concern `majority` durability ke liye.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

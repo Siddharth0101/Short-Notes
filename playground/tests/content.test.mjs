@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,6 +10,7 @@ import {
   extractHeadings,
   legacyToMarkdown,
   normalizeProgress,
+  splitPractice,
   TRACKS,
 } from '../src/lib/content.js';
 import { binarySearchTrace, bubbleSortTrace, bfsTrace, fibonacciTrace } from '../src/lib/traces.js';
@@ -55,9 +57,15 @@ test('Every study chapter has valid metadata, unique identity, readable content,
     orderKeys.add(orderKey);
     assert(note.minutes > 0 && note.minutes < 120, `${file}: read time`);
     assert.match(note.body, /^## Quick revision\b/, file);
-    const points = note.body.split('\n## ')[0].split('\n').filter((line) => line.startsWith('- '));
+    const points = note.body
+      .split('\n## ')[0]
+      .split('\n')
+      .filter((line) => line.startsWith('- '));
     assert(points.length >= 5, `${file}: missing revision concepts`);
-    assert(points.every((line) => line.includes(' — ') && line.split(/\s+/).length <= 40), `${file}: keep each concept a short one-liner`);
+    assert(
+      points.every((line) => line.includes(' — ') && line.split(/\s+/).length <= 40),
+      `${file}: keep each concept a short one-liner`,
+    );
     assert.equal((note.body.match(/^```/gm) || []).length % 2, 0, `${file}: unclosed code fence`);
     assert.match(note.body, /https:\/\//, `${file}: missing source`);
     if (note.visual)
@@ -205,11 +213,91 @@ test('Hinglish section titles preserve existing reader deep links', () => {
   );
 });
 
+test('Practice sections split into levelled questions with hidden answers, ignoring fenced headings', () => {
+  const body = [
+    '## Quick revision',
+    '',
+    '- Scope — kahan accessible.',
+    '',
+    '## Practice questions',
+    '',
+    '### Easy · `let` loop output',
+    '',
+    '```js',
+    '### not a heading inside code',
+    '```',
+    '',
+    'Output batao.',
+    '',
+    '<details>',
+    '<summary>Answer</summary>',
+    '',
+    '- Output — `0 1 2`.',
+    '',
+    '</details>',
+    '',
+    '### Hard · Leak fix',
+    '',
+    'Kyun?',
+    '',
+    '<details>',
+    '<summary>Answer</summary>',
+    '',
+    'Listener remove karo.',
+    '',
+    '</details>',
+    '',
+    '## Sources — aur padhne ke liye',
+    '',
+    '- [MDN](https://developer.mozilla.org/)',
+  ].join('\n');
+  const { before, questions, after } = splitPractice(body);
+  assert.match(before, /^## Quick revision/);
+  assert.doesNotMatch(before, /Practice questions/);
+  assert.match(after, /^## Sources/);
+  assert.deepEqual(
+    questions.map(({ level, title, slug }) => ({ level, title, slug })),
+    [
+      { level: 'Easy', title: '`let` loop output', slug: 'let-loop-output' },
+      { level: 'Hard', title: 'Leak fix', slug: 'leak-fix' },
+    ],
+  );
+  assert.match(questions[0].prompt, /### not a heading inside code/);
+  assert.match(questions[0].prompt, /Output batao/);
+  assert.doesNotMatch(questions[0].prompt, /details|0 1 2/);
+  assert.equal(questions[0].answer, '- Output — `0 1 2`.');
+  assert.equal(questions[1].answer, 'Listener remove karo.');
+  assert.deepEqual(splitPractice('## Only notes'), {
+    before: '## Only notes',
+    questions: [],
+    after: '',
+  });
+});
+
+test('Every chapter practice question has a level, a prompt and an answer', () => {
+  for (const file of files) {
+    const { questions } = splitPractice(parseFrontmatter(readFileSync(file, 'utf8')).body);
+    const slugs = new Set();
+    for (const question of questions) {
+      assert(question.prompt || question.title, `${file}: empty practice question`);
+      assert(question.answer.length > 20, `${file}: ${question.title} needs an answer`);
+      assert(!slugs.has(question.slug), `${file}: duplicate practice title ${question.title}`);
+      slugs.add(question.slug);
+    }
+  }
+});
+
 test('Malformed persisted progress is normalized without losing valid unique entries', () => {
-  assert.deepEqual(normalizeProgress(null), { saved: [], completed: [], known: [], recent: [] });
+  assert.deepEqual(normalizeProgress(null), {
+    saved: [],
+    completed: [],
+    known: [],
+    practiced: [],
+    recent: [],
+  });
   assert.deepEqual(
     normalizeProgress({ saved: ['a', 'a', 2], completed: {}, known: ['q'], recent: ['a'] }),
-    { saved: ['a'], completed: [], known: ['q'], recent: ['a'] },
+    { saved: ['a'], completed: [], known: ['q'], practiced: [], recent: ['a'] },
   );
   assert.equal(
     normalizeProgress({ recent: Array.from({ length: 15 }, (_, i) => String(i)) }).recent.length,
@@ -273,7 +361,10 @@ test('Interview bank and visual catalog remain complete and internally consisten
   for (const item of interviewQuestions) {
     assert(item.answer.length > 70 && item.followUp.length > 20 && item.tags.length > 0, item.id);
     for (const source of item.sources || []) {
-      assert(source.title && new URL(source.url).protocol === 'https:', `${item.id}: invalid source link`);
+      assert(
+        source.title && new URL(source.url).protocol === 'https:',
+        `${item.id}: invalid source link`,
+      );
     }
     assert(['Foundation', 'Intermediate', 'Advanced'].includes(item.level), item.id);
     if (item.noteId)

@@ -11,6 +11,8 @@ tags: frontend, react, system-design, accessibility, caching
 
 ## Quick revision
 
+> Revision target — Feature ko state ownership, interaction contracts aur recoverable failure paths ke saath design karo.
+
 - Frontend round — requirements → components/state → data flow → performance → failures.
 - API contract — request shape, pagination, errors aur cancellation clear karo.
 - Search — debounce + request identity + empty/loading/error states.
@@ -61,11 +63,84 @@ tags: frontend, react, system-design, accessibility, caching
 - Recoverable draft — autosave loading ko empty draft mat samjho; initial restoration gate aur write version se saved text overwrite prevent karo.
 - UI failure matrix — each boundary ke loading, partial failure, timeout, permission denial aur retry outcome explicitly define karo.
 
+## Example se samjho
+
+- Scenario — Autocomplete mein query "rea" par three suggestions visible hain; keyboard user ArrowDown, phir Escape press karta hai.
+- Reasoning — Active option clear rules se move ho; Escape popup close kare aur typed query preserve rahe. Loading, empty aur error states ko selectable results se distinguish karo.
+- Catch — Mouse demo pass hone se keyboard flow prove nahi; IME composition, stale results aur focus return ko acceptance walkthrough mein include karo.
+
 ## Recall aur practice
 
 - Sawal — Email send timeout par Send button retry new operation ID banaye toh kya risk?
 - Jawaab — First send already accepted ho sakta; stable operation ID/status reconciliation se duplicate mail prevent karo.
 - Khud try karo — Email client design defend karo; draft restore, upload retry, failed send, keyboard shortcut aur reconnect mailbox conflict ka flow dikhao.
+
+## Practice questions
+
+### Easy · UI failure matrix
+
+Ek data-driven screen ke liye kaun-kaun se states design karoge?
+
+<details>
+<summary>Answer</summary>
+
+- Loading (skeleton, layout shift nahi), Empty (helpful action), Error (retry + message), Partial (kuch data, kuch fail), Offline, Permission denied, Stale data (refreshing indicator).
+- Har state ka copy, focus behaviour aur analytics event.
+
+</details>
+
+### Medium · Typeahead/autocomplete design
+
+<details>
+<summary>Answer</summary>
+
+- Requests — debounce (~200ms), stale requests abort, recent queries cache.
+- Ranking — server; client highlight matching text.
+- A11y — combobox pattern: `role="combobox"`, `aria-expanded`, `aria-activedescendant`, arrow keys, Enter, Esc.
+- IME — composition events ke dauran search mat chalao (Hindi/Japanese input).
+- States — loading, no results, error; min query length.
+
+</details>
+
+### Medium · News feed
+
+<details>
+<summary>Answer</summary>
+
+- Pagination — cursor-based; duplicates dedupe by id.
+- New posts — top par "N new posts" banner; scroll position achanak jump na ho.
+- Reactions — optimistic with rollback; counts server se reconcile.
+- Media — lazy load, offscreen videos pause, reserved dimensions.
+- Performance — virtualization, image sizes; prefetch next page carefully.
+
+</details>
+
+### Medium · Email client compose
+
+<details>
+<summary>Answer</summary>
+
+- Draft — autosave (debounced) server + local recovery; `draftId` stable.
+- Send — outbox state: queued → sending → sent/failed; undo-send window.
+- Attachments — resumable/chunked upload, progress, retry per file; send tab tak block jab tak upload done.
+- Offline — compose allowed, send queue; online par flush.
+
+</details>
+
+### Hard · Comment composer with mentions
+
+`@` mentions, paste, draft recovery aur double-post prevention ke saath composer design.
+
+<details>
+<summary>Answer</summary>
+
+- Mentions — `@` par user search (debounced, permission-filtered); model mein text + mention entities (ids), sirf display names nahi.
+- Paste — HTML sanitize ya plain text; rendering par server-side bhi sanitize.
+- Draft — per-thread local draft, submit success par clear.
+- Submit — client-generated id + idempotent API; pending state disable.
+- A11y — mention list combobox semantics, keyboard shortcuts documented.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

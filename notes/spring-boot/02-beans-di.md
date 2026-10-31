@@ -11,6 +11,8 @@ tags: spring, beans, dependency-injection
 
 ## Quick revision
 
+> Revision target — Dependency ownership aur proxy boundary ko request isolation se connect karo.
+
 - Bean — Spring container ka managed object.
 - DI — dependencies bahar se milti hain; khud har jagah `new` nahi karte.
 - Constructor injection — required dependencies explicit aur testable.
@@ -42,11 +44,107 @@ tags: spring, beans, dependency-injection
 - Singleton mutable state — request-specific field concurrent requests mix kar sakta hai; stateless service/local variables prefer karo.
 - Proxy entry — this.method() usual proxy AOP bypass; collaborator bean boundary ya supported weaving model se interception intentional banao.
 
+## Example se samjho
+
+- Scenario — Singleton CheckoutService mein `currentCustomer` field har request overwrite karti hai; A aur B requests overlap hoti hain.
+- Reasoning — A field set kare, B overwrite kare, A later read kare toh B ka customer mil sakta hai. Request data method parameter/local variable mein rakho.
+- Catch — Spring-managed singleton automatically thread-safe nahi; shared reusable dependency aur per-request mutable state ka ownership alag rakho.
+
 ## Recall aur practice
 
 - Sawal — Singleton mein injected prototype field har HTTP request par new instance banega?
 - Jawaab — Nahi; injection time ka instance stored hai. Per-use lookup/provider aur cleanup ownership define karo.
 - Khud try karo — Two implementations with qualifier wire karo; singleton request isolation aur externally invoked versus self-invoked advice trace verify karo.
+
+## Practice questions
+
+### Easy · Constructor injection kyun?
+
+```java
+@Service
+class OrderService {
+    @Autowired private PaymentClient client;
+}
+```
+
+<details>
+<summary>Answer</summary>
+
+- Problems — field `final` nahi ho sakta, dependency hidden, unit test mein `new OrderService()` ke baad `null`.
+- Better:
+
+```java
+@Service
+class OrderService {
+    private final PaymentClient client;
+    OrderService(PaymentClient client) { this.client = client; }
+}
+```
+
+- Single constructor — `@Autowired` likhne ki zaroorat nahi; required dependencies compile time par clear.
+
+</details>
+
+### Easy · Same type ke do beans
+
+`EmailSender` interface ke do beans hain: `SmtpSender`, `SesSender`. Startup `NoUniqueBeanDefinitionException` deta hai. Fix?
+
+<details>
+<summary>Answer</summary>
+
+- `@Primary` — default choice ek bean par.
+- `@Qualifier("sesSender")` — injection point par specific bean.
+- Sab chahiye — `List<EmailSender>` ya `Map<String, EmailSender>` inject karo (strategy selection).
+
+</details>
+
+### Medium · Singleton mein request data
+
+```java
+@RestController
+class CartController {
+    private final List<String> items = new ArrayList<>();
+    @PostMapping("/cart") void add(@RequestBody String item) { items.add(item); }
+}
+```
+
+Production mein kya hoga?
+
+<details>
+<summary>Answer</summary>
+
+- Singleton — ek hi controller instance saare users aur threads share karte hain.
+- Bugs — ek user ka cart doosre ko dikhta hai, aur `ArrayList` concurrent writes par corrupt ho sakti hai.
+- Fix — beans stateless rakho; cart DB/session/cache mein user key ke saath.
+
+</details>
+
+### Medium · Aspect internal call par nahi chala
+
+`@Timed` custom aspect `OrderService.place()` par laga hai. `controller → service.place()` par log aata hai, par `service.placeAll()` andar se `this.place()` call kare toh nahi. Kyun?
+
+<details>
+<summary>Answer</summary>
+
+- Proxy — Spring AOP bean ke bahar ek proxy banata hai; advice sirf proxy se guzarne wali calls par chalti hai.
+- `this.place()` — target object ka direct call, proxy bypass.
+- Fix — logic doosre bean mein move karo (best), ya design badlo. Same rule `@Transactional`, `@Async`, `@Cacheable` par lagta hai.
+
+</details>
+
+### Hard · Circular dependency
+
+`OrderService` constructor mein `InventoryService` leta hai aur `InventoryService` `OrderService`. Startup fail hota hai. Kyun, aur sahi fix?
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — constructor injection mein dono ko pehle doosra chahiye; Boot 2.6+ circular references by default allow nahi karta.
+- Design fix — shared logic teesre component mein nikalo (e.g. `StockPolicy`) jise dono use karein; ya one direction mein event publish karo (`ApplicationEventPublisher`).
+- Last resort — `@Lazy` ek side par; cycle chhupa deta hai, khatam nahi karta.
+- Signal — cycle aksar batata hai ki responsibilities mix hain.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

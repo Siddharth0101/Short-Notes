@@ -65,7 +65,7 @@ export default function Shell({ children }) {
     document.documentElement.style.colorScheme = theme;
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', theme === 'dark' ? '#10121b' : '#f7f7fb');
+      ?.setAttribute('content', theme === 'dark' ? '#0e1014' : '#f7f7f4');
     try {
       localStorage.setItem(THEME_KEY, preference);
     } catch {
@@ -111,11 +111,11 @@ export default function Shell({ children }) {
     ['/paths', 'path', 'Learning paths'],
     ['/visuals', 'play', 'Visual lab'],
     ['/interview', 'messages', 'Interview prep'],
-    ['/interview/live', 'play', 'AI interview'],
+    ['/interview/live', 'sparkles', 'AI interview'],
     ['/saved', 'bookmark', 'Bookmarks'],
   ];
   const pageName = location.pathname.startsWith('/notes')
-    ? 'Tumhari notebook'
+    ? TRACKS.find((track) => track.id === selectedTrack)?.name || 'Chapter'
     : navItems.find(([to]) => to === location.pathname)?.[2] || 'Original playground';
   return (
     <div className="workspace">
@@ -152,7 +152,7 @@ export default function Shell({ children }) {
         >
           <Icon name="close" />
         </button>
-        <div className="workspace-label">REVISION WORKSPACE</div>
+        <div className="workspace-label">HINGLISH REVISION NOTEBOOK</div>
         <nav aria-label="Main navigation" className="main-nav">
           {navItems.map(([to, icon, label]) => (
             <NavLink
@@ -164,7 +164,7 @@ export default function Shell({ children }) {
             >
               <Icon name={icon} size={18} />
               <span>{label}</span>
-              {to === '/visuals' && <span className="tiny-badge">PLAY</span>}
+              {to === '/interview/live' && <span className="tiny-badge">AI</span>}
               {to === '/saved' && progress.saved.length > 0 && (
                 <span className="nav-count">{progress.saved.length}</span>
               )}
@@ -175,19 +175,27 @@ export default function Shell({ children }) {
           SUBJECTS <span>{TRACKS.length - 1}</span>
         </div>
         <nav aria-label="Subject navigation" className="subject-nav">
-          {TRACKS.filter((t) => t.id !== 'interview').map((track) => (
-            <Link
-              key={track.id}
-              to={`/library?track=${track.id}`}
-              onClick={() => setMobile(false)}
-              className={`subject-link ${selectedTrack === track.id ? 'selected' : ''}`}
-              aria-current={selectedTrack === track.id ? 'true' : undefined}
-            >
-              <span className="subject-dot" style={{ background: track.color }} />
-              {track.shortName || track.name}
-              <span>{notes.filter((note) => note.track === track.id).length}</span>
-            </Link>
-          ))}
+          {TRACKS.filter((t) => t.id !== 'interview').map((track) => {
+            const chapters = notes.filter((note) => note.track === track.id);
+            const revised = chapters.filter((note) => progress.completed.includes(note.id)).length;
+            return (
+              <Link
+                key={track.id}
+                to={`/library?track=${track.id}`}
+                onClick={() => setMobile(false)}
+                className={`subject-link ${selectedTrack === track.id ? 'selected' : ''}`}
+                aria-current={selectedTrack === track.id ? 'true' : undefined}
+                style={{
+                  '--track-color': track.color,
+                  '--done': chapters.length ? revised / chapters.length : 0,
+                }}
+              >
+                <span className="subject-dot" style={{ background: track.color }} />
+                {track.shortName || track.name}
+                <span>{chapters.length}</span>
+              </Link>
+            );
+          })}
         </nav>
         <div className="sidebar-bottom">
           <div className="progress-widget">
@@ -208,8 +216,8 @@ export default function Shell({ children }) {
           <div className="profile">
             <span className="avatar">S</span>
             <div>
-              <strong>Meri notebook</strong>
-              <span>Seekho, samjho, yaad rakho.</span>
+              <strong>Apni pace. Apni progress.</strong>
+              <span>Saved in this browser</span>
             </div>
             <button
               className="icon-button theme-toggle"
@@ -234,7 +242,7 @@ export default function Shell({ children }) {
             >
               <Icon name="menu" />
             </button>
-            <span>Workspace</span>
+            <span>Shortnotes</span>
             <Icon name="chevron" size={13} />
             <strong>{pageName}</strong>
           </div>
@@ -286,6 +294,19 @@ export default function Shell({ children }) {
         <main id="main-content" className="page-content" tabIndex={-1}>
           {children}
         </main>
+        <nav className="mobile-bottom-nav" aria-label="Quick navigation">
+          {[
+            ['/', 'dashboard', 'Home'],
+            ['/library', 'book', 'Notes'],
+            ['/interview', 'messages', 'Practice'],
+            ['/saved', 'bookmark', 'Saved'],
+          ].map(([to, icon, label]) => (
+            <NavLink key={to} to={to} end className={({ isActive }) => (isActive ? 'active' : '')}>
+              <Icon name={icon} size={20} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </nav>
         <footer className="app-footer">
           <span>Samajhne aur practice karne ke liye.</span>
           <span>

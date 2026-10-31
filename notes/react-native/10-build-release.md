@@ -11,6 +11,8 @@ tags: react-native, mobile, expo, build-release
 
 ## Quick revision
 
+> Revision target — JS update aur native binary compatibility ka contract samjho; rollout ke saath data rollback bhi rehearse karo.
+
 ### Shipping
 
 - Development/production — debug tools aur release configuration alag; release build ka smoke test karo.
@@ -44,11 +46,82 @@ tags: react-native, mobile, expo, build-release
 - Rollback data compatibility — old JS update newer persisted schema read kare toh fail; forward/backward storage migration contract rehearse karo.
 - Crash diagnostics — deployed build/update ID aur matching source maps/symbols retain; local source stack unrelated release ko misdiagnose kar sakta.
 
+## Example se samjho
+
+- Scenario — release B naya native module use karti hai, lekin device par release A ki old binary installed hai.
+- Trace — JS update missing native implementation create nahi kar sakti; compatible build/runtime boundary enforce karni hogi.
+- Decision — required native build distribute karo; update channel ke saath runtime compatibility policy verify karo.
+- Catch — code rollback se storage schema ya server side effects automatically reverse nahi hote.
+- Check — old install se upgrade, persisted draft read, wrong API config aur rollback par recoverable behavior verify karo.
+
 ## Recall aur practice
 
 - Sawal — Native module add karke same runtimeVersion par OTA publish karna compatible kyun nahi?
 - Jawaab — Old binary mein native implementation missing; rebuild aur correct compatibility/runtime policy required, channel alone fix nahi.
 - Khud try karo — Preview release checklist run karo; installed old binary, native module change, wrong backend, persisted schema upgrade aur rollback data-read verify karo.
+
+## Practice questions
+
+### Easy · OTA update se kya ship nahi hota?
+
+<details>
+<summary>Answer</summary>
+
+- OTA — JS bundle aur assets badal sakta hai.
+- Nahi — native code, naye native modules, permissions/`Info.plist`/`AndroidManifest` changes; inke liye store build.
+- `runtimeVersion` — update sirf compatible native build ko milta hai; mismatch par crash se bachata hai.
+
+</details>
+
+### Easy · `EXPO_PUBLIC_API_KEY` mein secret
+
+<details>
+<summary>Answer</summary>
+
+- `EXPO_PUBLIC_` variables build time par JS bundle mein inline hote hain; app download karne wala padh sakta hai.
+- Secret — server par rakho; app server se short-lived token le.
+- Public values (API base URL, public analytics key) ke liye hi `EXPO_PUBLIC_`.
+
+</details>
+
+### Medium · Store upload reject: "build number already used"
+
+<details>
+<summary>Answer</summary>
+
+- `version` — user ko dikhne wala (1.4.0).
+- Build number — iOS `buildNumber` / Android `versionCode`; har upload par badhna chahiye.
+- Fix — EAS `autoIncrement` ya remote app versioning, taaki manually bhoolna na pade.
+
+</details>
+
+### Medium · Bad OTA update ka rollback
+
+Naye OTA update ke baad crash rate badh gaya. Kya karoge, aur rollback ki limit kya hai?
+
+<details>
+<summary>Answer</summary>
+
+- Turant — rollout pause karo, previous update republish/rollback karo.
+- Future — staged rollout (e.g. 10% → 50% → 100%) crash monitoring ke saath.
+- Limit — rollback code wapas laata hai, data nahi. Naye version ne local DB schema/storage format badla toh purana code use padh nahi payega — migrations backward-compatible rakho.
+
+</details>
+
+### Hard · Release checklist
+
+Production release se pehle kya verify karoge?
+
+<details>
+<summary>Answer</summary>
+
+- Build — `production` profile, sahi bundle id/package, signing credentials, incremented build number.
+- Config — production env values, no dev menus/logs, `runtimeVersion` policy.
+- Quality — real devices (low-end Android bhi), offline/permission-denied flows, accessibility checks.
+- Observability — crash reporting with source maps uploaded, release tag.
+- Rollout — staged release, monitoring dashboard, rollback plan likha hua.
+
+</details>
 
 ## Sources — aur padhne ke liye
 
@@ -58,6 +131,5 @@ tags: react-native, mobile, expo, build-release
 - [Expo — app versions](https://docs.expo.dev/build-reference/app-versions/)
 
 - [Expo store builds](https://docs.expo.dev/deploy/build-project/)
-- [Runtime versions](https://docs.expo.dev/eas-update/runtime-versions/)
 - [Build configuration](https://docs.expo.dev/build/eas-json/)
 - [Development builds](https://docs.expo.dev/develop/development-builds/introduction/)

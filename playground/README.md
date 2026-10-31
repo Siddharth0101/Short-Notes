@@ -43,7 +43,7 @@ Backend Gemini Interactions API use karta hai. Local hub four specialists ko sep
 | `src/data/interviewQuestions.js` | Main bank; extra question files ko bhi combine karta hai |
 | `src/data/visuals.js` | Visual metadata aur explanations |
 | `src/data/advancedVisuals.js` | React identity, transaction race aur monotonic stack |
-| `src/lib/content.js` | Frontmatter, search, heading anchors aur progress normalization |
+| `src/lib/content.js` | Frontmatter, practice parsing, search, heading anchors aur progress normalization |
 | `src/lib/traces.js` | Binary search, sorting, BFS aur DP ke deterministic steps |
 | `src/lib/progress.jsx` | Progress provider; hook `progressContext.js` mein hai |
 | `src/components/`, `src/registry/` | Existing playgrounds aur compatible old routes |
@@ -54,7 +54,8 @@ Backend Gemini Interactions API use karta hai. Local hub four specialists ko sep
 | Route | Kya khulta hai? |
 | --- | --- |
 | `/` | Overview aur padhai continue karne ka link |
-| `/library?track=react&q=effects` | Search aur filtered chapters |
+| `/library?track=react&q=effects` | Search aur subject-wise grouped chapters |
+| `/library?minutes=10&sort=shortest&status=pending` | Short revision sessions; duration, sort aur progress filters |
 | `/library?view=original` | Library ka compatible original-reference entry |
 | `/paths` | Ordered course stages aur completion |
 | `/notes/:id` | Chapter; purana source ID owning chapter par resolve hota hai |
@@ -72,7 +73,11 @@ Backend Gemini Interactions API use karta hai. Local hub four specialists ko sep
 
 Chapter IDs permanent hain: URLs, bookmarks aur progress unhe use karte hain. Title rename kar sakte ho, lekin ID badalne se old links toot sakte hain. Standard bilingual headings ke old section anchors `headingId` mein preserve kiye hain. New chapters `notes/*/*.md` se discover hote hain. Duration short revision ka approximate reading time hai.
 
-Bookmarks, completed chapters, confident answers aur recent reads `shortnotes.progress.v1` local storage mein rehte hain. Import versioned JSON ko current progress se merge karta hai. Invalid import state badalne se pehle reject hota hai. Storage unavailable ho toh session memory mein app chal sakta hai; backup export karo.
+Bookmarks, completed chapters, confident answers, clear practice questions (`practiced`, ids `chapterId#question-slug`) aur recent reads `shortnotes.progress.v1` local storage mein rehte hain. Purane saves aur backups bina `practiced` ke bhi valid hain; load par empty list add hoti hai. Import versioned JSON ko current progress se merge karta hai. Invalid import state badalne se pehle reject hota hai. Storage unavailable ho toh session memory mein app chal sakta hai; backup export karo.
+
+Overview ka subject selector us subject ka recent unfinished chapter ya pehla pending chapter kholta hai. Saare chapters revised hon toh first chapter dobara revise kar sakte ho. Counts actual catalog/progress se aate hain. Library mein duration approximate revision time hai; sorting learning-path prerequisite order ko nahi badalti.
+
+Reader mein reading-progress bar, chapter at-a-glance chips, glossary-style `term — meaning` rows, numbered sections aur **Bada text**, **Focus**, **Recall karo** controls hain. `## Practice questions` section `splitPractice` (`src/lib/content.js`) se parse hokar `PracticeSet.jsx` cards banta hai: level filter, hidden answer aur "clear" mark. Focus desktop sidebar/outline hide karta hai; Escape se wapas aao. Chapter ke `Recall aur practice` section ka Jawaab pehle hidden hai; reveal karke apne answer se compare karo. Interviewer messages aur optional example files ka Markdown unchanged visible rehta hai. Reading controls current chapter tak hain; completion, confidence ya progress automatically mark nahi hoti. Print mein recall answers visible rehte hain.
 
 Mock session filtered pool se five questions leta hai. 15-minute wall-clock timer pause/resume hota hai; time khatam hone par answer discard nahi hota. Drafts aur mock self-review temporary hain, confidence toggle persistent hai.
 
@@ -82,7 +87,7 @@ Visual lab teaching simulation hai. Browser, JVM, database ya Spring runtime act
 
 ## Theme aur deployment
 
-Top bar se System, Light aur Dark theme choose hoti hai. Preference local save hoti hai aur tabs mein sync hoti hai. System mode OS changes follow karta hai. `public/theme-init.js` React se pehle theme apply karta hai; shared styles `src/theme.css` mein hain.
+Top bar se System, Light aur Dark theme choose hoti hai. Design tokens `src/theme.css` mein, shared layout `src/design.css` mein aur reader styles `src/library/reader.css` mein hain. Preference local save hoti hai aur tabs mein sync hoti hai. System mode OS changes follow karta hai. `public/theme-init.js` React se pehle theme apply karta hai.
 
 Root `netlify.toml` app build karke `playground/dist/` publish karta hai. Doosre hosts par SPA routes ke liye `index.html` fallback aur actual assets ke liye normal serving rakho. PDFs static assets hain aur open karne par load hote hain. Google Fonts ke saath local font fallbacks hain. Reading aur self-review features ko API key/backend nahi chahiye. Live interviewer ke liye separately running Node API aur Gemini key chahiye; static Netlify deployment us backend ko deploy nahi karti. Offline service-worker cache aur automatic cross-device sync implemented nahi hain.
 

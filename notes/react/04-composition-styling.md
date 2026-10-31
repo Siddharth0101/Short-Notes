@@ -11,6 +11,8 @@ tags: composition, patterns, css, accessibility, components
 
 ## Quick revision
 
+> Revision target — Reusable component ka behavior contract chhota rakho; semantics aur responsive layout ko styling ke saath preserve karo.
+
 - Composition — small components ko `children`/props se jodo.
 - Container — data/control sambhalo; presentational component UI dikhaye.
 - Compound components — related parts shared contract/state ke saath kaam karein.
@@ -76,11 +78,153 @@ tags: composition, patterns, css, accessibility, components
 - Disabled contract — disabled, busy aur read-only alag behaviors; reusable API mein focus/submit effect clearly define karo.
 - Reduced motion — prefers-reduced-motion par nonessential motion reduce; meaning sirf animation/color par depend na kare.
 
+## Example se samjho
+
+```jsx
+function ActionButton({ children, type = "button", ...props }) {
+  return <button type={type} {...props}>{children}</button>;
+}
+// <ActionButton onClick={openHelp}>Help</ActionButton>
+// <ActionButton type="submit">Save</ActionButton>
+```
+
+- Trace — default helper action form submit nahi karti; caller submit intent explicitly choose karta hai.
+- Catch — reusable wrapper ko native `disabled`, accessible name aur focus behavior preserve karna chahiye.
+- Check — keyboard activation, long label, dark theme aur narrow container mein same component verify karo.
+
 ## Recall aur practice
 
 - Sawal — Reusable button form ke andar unwanted submit kaise rokega?
 - Jawaab — Action button ka explicit type="button"; actual submit button type="submit" rakho aur caller contract document karo.
 - Khud try karo — Button aur dialog compose karo; disabled action, keyboard open/close, focus restoration, reduced motion aur light/dark contrast verify karo.
+
+## Practice questions
+
+### Easy · `em` compounding
+
+```css
+html { font-size: 16px; }
+.box { font-size: 1.25em; }
+```
+
+Teen nested `.box` ke andar text ka size kya hoga? `rem` hota toh?
+
+<details>
+<summary>Answer</summary>
+
+- `em` — har level parent par multiply: `16 × 1.25³ = 31.25px`.
+- `rem` — hamesha root se: `1.25rem = 20px` har level par.
+- Use — typography/spacing ke liye `rem`; component-relative padding (e.g. button) ke liye `em`.
+
+</details>
+
+### Easy · Div ko dono axis mein center karo
+
+<details>
+<summary>Answer</summary>
+
+```css
+.parent {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+}
+```
+
+- Flex alternative — `display: flex; justify-content: center; align-items: center;`.
+- Catch — vertical centering ke liye parent ki height honi chahiye.
+
+</details>
+
+### Medium · `z-index: 9999` kaam kyun nahi kar raha?
+
+Dropdown ko `z-index: 9999` diya, phir bhi woh neeche wale card ke peeche chhupta hai. Do common causes?
+
+<details>
+<summary>Answer</summary>
+
+- Stacking context — kisi ancestor par `transform`, `opacity < 1`, `filter`, ya `position` + `z-index` hai; dropdown usi context ke andar compare hota hai, bahar ke card se nahi.
+- Not positioned — normal block par `z-index` effect nahi karta (positioned, flex ya grid item chahiye).
+- Fix — portal se dropdown ko `body` level par render karo, ya ancestor ka stacking context hatao.
+
+</details>
+
+### Medium · Mobile par `100vh` overflow
+
+Full-screen section `height: 100vh` hai, mobile par neeche cut ho jaata hai. Kyun aur fix?
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — mobile browsers `vh` ko address bar chhupne wali (largest) viewport height se calculate karte hain.
+- Fix — `min-height: 100dvh` (dynamic) ya stable layout ke liye `100svh` (smallest).
+- Fallback — `min-height: 100vh; min-height: 100dvh;` purane browsers ke liye.
+
+</details>
+
+### Medium · Compound `Tabs` component
+
+`<Tabs><Tabs.List /><Tabs.Panel /></Tabs>` jaisa API banao jahan children shared active tab jaanein bina prop drilling ke.
+
+<details>
+<summary>Answer</summary>
+
+```jsx
+const TabsContext = createContext(null);
+function Tabs({ defaultValue, children }) {
+  const [value, setValue] = useState(defaultValue);
+  return <TabsContext.Provider value={{ value, setValue }}>{children}</TabsContext.Provider>;
+}
+function Tab({ value, children }) {
+  const tabs = useContext(TabsContext);
+  return (
+    <button role="tab" aria-selected={tabs.value === value} onClick={() => tabs.setValue(value)}>
+      {children}
+    </button>
+  );
+}
+function Panel({ value, children }) {
+  const tabs = useContext(TabsContext);
+  return tabs.value === value ? <div role="tabpanel">{children}</div> : null;
+}
+Tabs.Tab = Tab;
+Tabs.Panel = Panel;
+```
+
+- Compound pattern — parent state own karta hai, children context se padhte hain.
+- Controlled API — `value` + `onValueChange` props bhi accept karo taaki parent URL ya form se control kar sake.
+- A11y — real tabs ke liye `role="tablist"`, arrow-key navigation aur `aria-controls` bhi chahiye.
+
+</details>
+
+### Hard · Accessible `Button` wrapper
+
+`Button` likho jo default `type="button"` de, `variant` class lagaye, caller ka `className` merge kare, baaki props forward kare, aur `loading` ke dauran double submit roke.
+
+<details>
+<summary>Answer</summary>
+
+```jsx
+function Button({ variant = 'primary', loading = false, className = '', type = 'button', disabled, children, ...rest }) {
+  return (
+    <button
+      {...rest}
+      type={type}
+      className={`btn btn--${variant} ${className}`.trim()}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+    >
+      {loading ? 'Saving…' : children}
+    </button>
+  );
+}
+```
+
+- `type="button"` — form ke andar accidental submit nahi.
+- Merge order — `rest` pehle, controlled props baad mein; caller `onClick`, `aria-label` waise hi pass hote hain.
+- Disabled vs `aria-disabled` — `disabled` focus aur click dono hata deta hai; tooltip/explanation dikhana ho toh `aria-disabled="true"` + handler mein guard.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

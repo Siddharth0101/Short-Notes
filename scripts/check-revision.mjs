@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseFrontmatter, TRACKS } from '../playground/src/lib/content.js';
+import { parseFrontmatter, splitPractice, TRACKS } from '../playground/src/lib/content.js';
 import { interviewQuestions } from '../playground/src/data/interviewQuestions.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -18,6 +18,7 @@ const sourceTopics = new Map();
 const aliases = JSON.parse(await readFile(path.join(root, 'scripts/revision-topic-aliases.json'), 'utf8'));
 let pointCount = 0;
 let recallCount = 0;
+const practiceLevels = { Easy: 0, Medium: 0, Hard: 0 };
 function checkPoints(lines, file, minimum = 5) {
   assert(lines.length >= minimum, `${file}: missing revision concepts`);
   for (const line of lines) {
@@ -47,6 +48,23 @@ for (const track of TRACKS) {
       `${name}: include a recall question, answer and concrete practice checks`,
     );
     recallCount++;
+    // Graded practice: every chapter keeps an Easy → Hard set with hidden answers.
+    const practiceSections = note.body.split(/^## /m).filter((section) => section.startsWith('Practice questions\n'));
+    assert.equal(practiceSections.length, 1, `${name}: include one Practice questions section`);
+    const { questions } = splitPractice(note.body);
+    assert(questions.length >= 5, `${name}: practice needs at least 5 questions`);
+    for (const level of ['Easy', 'Hard'])
+      assert(questions.some((question) => question.level === level), `${name}: practice needs a ${level} question`);
+    let fenced = false;
+    for (const line of practiceSections[0].split('\n')) {
+      if (line.startsWith('```')) fenced = !fenced;
+      if (!fenced && line.startsWith('### '))
+        assert(/^### (Easy|Medium|Hard) · \S/.test(line), `${name}: use "### Level · Title": ${line}`);
+    }
+    for (const question of questions) {
+      assert(question.answer.length > 20, `${name}: "${question.title}" needs an answer inside <details>`);
+      practiceLevels[question.level]++;
+    }
     localTopics.forEach((topic) => chapterTopics.add(topic));
     pointCount += points.length;
     chapterIds.add(note.id);
@@ -108,3 +126,6 @@ console.log('Chapter coverage:', totals);
 console.log(`Verified ${chapterIds.size} chapters, ${found.length} source files and ${interviewQuestions.length} interview answers.`);
 console.log(`Checked ${pointCount} revision bullets and ${sourceTopics.size} distinct source-topic labels (including reviewed aliases).`);
 console.log(`Verified ${recallCount} chapter-specific recall questions, answers and practice exercises.`);
+console.log(
+  `Verified ${practiceLevels.Easy + practiceLevels.Medium + practiceLevels.Hard} graded practice questions (Easy ${practiceLevels.Easy}, Medium ${practiceLevels.Medium}, Hard ${practiceLevels.Hard}).`,
+);

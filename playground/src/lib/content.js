@@ -161,6 +161,65 @@ export function extractHeadings(markdown) {
   return headings;
 }
 
+export const PRACTICE_HEADING = 'Practice questions';
+export const PRACTICE_LEVELS = ['Easy', 'Medium', 'Hard'];
+
+// Split a chapter around its `## Practice questions` section so the reader can
+// render questions as interactive cards while the rest stays plain Markdown.
+export function splitPractice(markdown) {
+  const lines = markdown.split('\n');
+  let fenced = false;
+  let start = -1;
+  let end = lines.length;
+  for (let index = 0; index < lines.length; index++) {
+    if (/^```/.test(lines[index])) fenced = !fenced;
+    if (fenced || !/^## /.test(lines[index])) continue;
+    if (start >= 0) {
+      end = index;
+      break;
+    }
+    if (lines[index].slice(3).trim() === PRACTICE_HEADING) start = index;
+  }
+  if (start < 0) return { before: markdown, questions: [], after: '' };
+  return {
+    before: lines.slice(0, start).join('\n').trim(),
+    questions: parsePracticeQuestions(lines.slice(start + 1, end).join('\n')),
+    after: lines.slice(end).join('\n').trim(),
+  };
+}
+
+// `### Level · Title`, prompt Markdown, then the answer inside <details>.
+export function parsePracticeQuestions(section) {
+  const chunks = [];
+  let fenced = false;
+  for (const line of section.split('\n')) {
+    if (/^```/.test(line)) fenced = !fenced;
+    if (!fenced && /^### /.test(line)) chunks.push([line]);
+    else chunks.at(-1)?.push(line);
+  }
+  return chunks.map(([heading, ...rest]) => {
+    const match = heading
+      .slice(4)
+      .trim()
+      .match(/^(Easy|Medium|Hard)\s*·\s*(.+)$/);
+    const level = match?.[1] || 'Medium';
+    const title = (match?.[2] || heading.slice(4)).trim();
+    const open = rest.findIndex((line) => line.trim() === '<details>');
+    const close = rest.findLastIndex((line) => line.trim() === '</details>');
+    const answerLines = open >= 0 ? rest.slice(open + 1, close > open ? close : undefined) : [];
+    return {
+      level,
+      title,
+      slug: headingId(title.replace(/[`*]/g, '')),
+      prompt: (open >= 0 ? rest.slice(0, open) : rest).join('\n').trim(),
+      answer: answerLines
+        .filter((line) => !/^\s*<\/?summary>|^\s*<summary>.*<\/summary>\s*$/.test(line))
+        .join('\n')
+        .trim(),
+    };
+  });
+}
+
 export function legacyToMarkdown(raw, language = 'javascript') {
   const cleaned = raw.replace(/^\s*['"]use strict['"];?\s*/i, '');
   const blocks = [];
@@ -208,6 +267,7 @@ export function normalizeProgress(value) {
     saved: clean(value?.saved),
     completed: clean(value?.completed),
     known: clean(value?.known),
+    practiced: clean(value?.practiced),
     recent: clean(value?.recent).slice(0, 8),
   };
 }

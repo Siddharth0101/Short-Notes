@@ -11,6 +11,8 @@ tags: this, prototype, classes, oop, inheritance
 
 ## Quick revision
 
+> Revision target — Function definition se pehle call site dekho; receiver aur lexical capture ka difference explain karo.
+
 - Regular `this` — function kaise call hua usse decide hota hai.
 - Arrow `this` — surrounding scope se aata hai; `call`/`bind` se change nahi hota.
 - Detached method — `const f = obj.method` receiver kho deta hai.
@@ -61,11 +63,139 @@ tags: this, prototype, classes, oop, inheritance
 - Private brand — proxy/wrong receiver se private-field method fail ho sakta hai; private access ordinary property forwarding nahi.
 - Bound constructor — constructable target ka bound function new se call ho sakta hai; bound this constructor receiver ko force nahi karta.
 
+## Example se samjho
+
+```js
+"use strict";
+const person = {
+  name: "Asha",
+  greet() { return this.name; },
+};
+const greet = person.greet.bind(person);
+console.log(greet()); // Asha
+```
+
+- Trace — `bind` naya function deta hai jiska receiver `person` hai; detached invocation bhi intended object read karti hai.
+- Catch — `const loose = person.greet; loose()` strict mode mein `this` undefined hone se property access par throw karega.
+- Check — arrow se method replace karna universal fix nahi; arrow surrounding scope ka `this` leti hai.
+
 ## Recall aur practice
 
 - Sawal — obj.method ko timer callback directly dene par receiver kaise kho sakta hai?
 - Jawaab — Callback invocation obj.method() nahi hoti; stored bind ya wrapper se intended receiver preserve karo.
 - Khud try karo — Account method detach karo, phir bind aur wrapper compare karo; do instances ka balance independent aur cleanup callback identity stable verify karo.
+
+## Practice questions
+
+### Easy · Detached method
+
+```js
+'use strict';
+const counter = {
+  count: 0,
+  inc() { this.count++; return this.count; },
+};
+const inc = counter.inc;
+console.log(counter.inc());
+console.log(inc());
+```
+
+<details>
+<summary>Answer</summary>
+
+- Pehla — `1`; call site `counter.inc()` hai, `this = counter`.
+- Doosra — `TypeError` (`this` is `undefined` in strict mode).
+- Fix — `const inc = counter.inc.bind(counter)` ya wrapper `() => counter.inc()`.
+
+</details>
+
+### Easy · Arrow function ka `this`
+
+```js
+// ES module
+const user = {
+  name: 'Asha',
+  regular() { return this.name; },
+  arrow: () => this?.name,
+};
+console.log(user.regular(), user.arrow());
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `Asha undefined`.
+- Arrow — apna `this` nahi banata; outer (module top-level) ka `this` leta hai jo `undefined` hai.
+- Rule — object methods ke liye regular method syntax; callbacks ke andar outer `this` chahiye toh arrow.
+
+</details>
+
+### Medium · Prototype shadowing
+
+```js
+function Dog(name) { this.name = name; }
+Dog.prototype.sound = 'woof';
+const a = new Dog('a');
+const b = new Dog('b');
+a.sound = 'grr';
+Dog.prototype.sound = 'bark';
+console.log(a.sound, b.sound, Object.hasOwn(b, 'sound'));
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `grr bark false`.
+- `a.sound = ...` — `a` par own property banti hai jo prototype value ko shadow karti hai.
+- `b` — own property nahi, isliye lookup prototype tak jaata hai aur latest `bark` milta hai.
+
+</details>
+
+### Medium · Static, private aur getters
+
+```js
+class Account {
+  static count = 0;
+  #balance = 0;
+  constructor() { Account.count++; }
+  deposit(n) { this.#balance += n; return this; }
+  get balance() { return this.#balance; }
+}
+const acc = new Account().deposit(50).deposit(25);
+console.log(acc.balance, Account.count, acc.count, acc['#balance']);
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `75 1 undefined undefined`.
+- Chaining — `deposit` `this` return karta hai.
+- `static` — class par rehta hai, instance par nahi.
+- `#balance` — real private field; string key `'#balance'` se access nahi hota, bahar se `acc.#balance` likhna SyntaxError hai.
+
+</details>
+
+### Hard · `new` operator khud implement karo
+
+`myNew(Ctor, ...args)` likho jo `new Ctor(...args)` jaisa behave kare, constructor ke object return karne wala case bhi.
+
+<details>
+<summary>Answer</summary>
+
+```js
+function myNew(Ctor, ...args) {
+  const obj = Object.create(Ctor.prototype);
+  const result = Ctor.apply(obj, args);
+  const isObject = result !== null && (typeof result === 'object' || typeof result === 'function');
+  return isObject ? result : obj;
+}
+```
+
+- Steps — naya object, prototype link, constructor ko `this = obj` ke saath call, phir return rule.
+- Return rule — constructor object return kare toh wahi milta hai; primitive return ignore hota hai.
+- Limit — `class` constructors ko `apply` se call nahi kar sakte (TypeError); real code mein `Reflect.construct(Ctor, args)` use hota hai.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

@@ -1,38 +1,71 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { notes, noteById, trackById } from '../data/catalog.js';
-import { extractHeadings } from '../lib/content.js';
+import { extractHeadings, splitPractice } from '../lib/content.js';
 import { useProgress } from '../lib/progressContext.js';
 import Markdown from './Markdown.jsx';
 import Icon from './Icons.jsx';
 import { QuestionCard } from './Interviews.jsx';
 import SourceExamples from './SourceExamples.jsx';
+import PracticeSet from './PracticeSet.jsx';
 import { NoteLink } from './Navigation.jsx';
+import './reader.css';
 const VisualLab = lazy(() => import('./VisualLab.jsx'));
 
-// Reading position ko section list mein highlight karo.
-function useActiveHeading(headings) {
+// Reading position ko section list mein highlight karo: last heading above the fold.
+function useActiveHeading(headings, enabled) {
   const [activeId, setActiveId] = useState('');
   useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined' || !headings.length) return;
-    const elements = headings.map((heading) => document.getElementById(heading.id)).filter(Boolean);
-    if (!elements.length) return;
-    const onScreen = new Set();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) onScreen.add(entry.target.id);
-          else onScreen.delete(entry.target.id);
+    if (!enabled || !headings.length) return;
+    let frame = 0;
+    const update = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        let current = '';
+        for (const heading of headings) {
+          const element = document.getElementById(heading.id);
+          if (element && element.getBoundingClientRect().top < window.innerHeight * 0.35)
+            current = heading.id;
         }
-        const current = elements.find((element) => onScreen.has(element.id));
-        if (current) setActiveId(current.id);
-      },
-      { rootMargin: '-88px 0px -65% 0px' },
-    );
-    for (const element of elements) observer.observe(element);
-    return () => observer.disconnect();
-  }, [headings]);
+        setActiveId(current || headings[0].id);
+      });
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', update);
+    };
+  }, [headings, enabled]);
   return activeId;
+}
+
+// Thin bar at the top that shows how far the chapter has been read.
+function ReadingProgress() {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        setValue(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
+      });
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
+  return (
+    <div className="reading-progress" aria-hidden="true">
+      <span style={{ transform: `scaleX(${value})` }} />
+    </div>
+  );
 }
 
 function Chapter({ note }) {
@@ -42,6 +75,16 @@ function Chapter({ note }) {
   const body = note.body;
   const { progress, toggle, visit } = useProgress();
   const tab = params.get('tab') === 'visual' && note.visual ? 'visual' : 'notes';
+  const [largeText, setLargeText] = useState(false);
+  const [focused, setFocused] = useState(false);
+  useEffect(() => {
+    if (!focused) return;
+    const exitFocus = (event) => {
+      if (event.key === 'Escape') setFocused(false);
+    };
+    window.addEventListener('keydown', exitFocus);
+    return () => window.removeEventListener('keydown', exitFocus);
+  }, [focused]);
   useEffect(() => {
     visit(note.id);
   }, [note, visit]);
@@ -50,6 +93,15 @@ function Chapter({ note }) {
   const index = sequence.findIndex((item) => item.id === note.id);
   const next = sequence[index + 1];
   const previous = sequence[index - 1];
+  const parts = useMemo(() => splitPractice(body), [body]);
+  const conceptCount = useMemo(
+    () =>
+      body
+        .split('\n## ')[0]
+        .split('\n')
+        .filter((line) => line.startsWith('- ')).length,
+    [body],
+  );
   const headings = useMemo(
     () => [
       ...extractHeadings(body),
@@ -58,43 +110,69 @@ function Chapter({ note }) {
     ],
     [body, note],
   );
-  const activeHeading = useActiveHeading(headings);
+  const activeHeading = useActiveHeading(headings, tab === 'notes');
+  const recallHeading = headings.find((heading) => /recall/i.test(heading.title));
   const complete = progress.completed.includes(note.id);
   return (
-    <div className="reader page-enter">
+    <div
+      className={`reader page-enter${largeText ? ' reader--large-text' : ''}${focused && tab === 'notes' ? ' reader--focused' : ''}`}
+    >
+      {tab === 'notes' && <ReadingProgress />}
       {from?.url?.startsWith('/') && !from.url.startsWith('//') && (
         <Link className="text-button reader-return" to={from.url} state={{ restoreKey: from.key }}>
-          <Icon name="previous" size={16} /> {from.label || 'Wapas jao'}
+          <Icon name="back" size={16} /> {from.label || 'Wapas jao'}
         </Link>
       )}
-      <div className="reader-breadcrumb">
-        <Link to={`/library?track=${note.track}`}>{track.name}</Link>
-        <Icon name="chevron" size={14} />
-        <span>{`Chapter ${String(index + 1).padStart(2, '0')}`}</span>
-      </div>
-      <div className="reader-heading">
-        <div>
-          <div className="note-meta">
-            <span className="level-pill">{note.level}</span>
-            {note.minutes > 0 && (
-              <span>
-                <Icon name="clock" size={14} /> {note.minutes} min revision
-              </span>
-            )}
-            <span>Hinglish + code</span>
-          </div>
-          <h1>{note.title}</h1>
-          <p>{note.summary}</p>
+      <header
+        className="reader-hero"
+        style={{ '--track-color': track.color, '--track-tint': track.tint }}
+      >
+        <div className="reader-breadcrumb">
+          <Link to={`/library?track=${note.track}`}>
+            <span className="subject-dot" style={{ background: track.color }} />
+            {track.shortName || track.name}
+          </Link>
+          <Icon name="chevron" size={14} />
+          <span>{`Chapter ${String(index + 1).padStart(2, '0')} of ${sequence.length}`}</span>
         </div>
-        <button
-          className={`subtle-button ${progress.saved.includes(note.id) ? 'is-saved' : ''}`}
-          aria-pressed={progress.saved.includes(note.id)}
-          onClick={() => toggle('saved', note.id)}
-        >
-          <Icon name="bookmark" size={17} />
-          {progress.saved.includes(note.id) ? 'Saved' : 'Note save karo'}
-        </button>
-      </div>
+        <div className="reader-heading">
+          <div>
+            <h1>{note.title}</h1>
+            <p>{note.summary}</p>
+          </div>
+          <button
+            className={`subtle-button save-toggle ${progress.saved.includes(note.id) ? 'is-saved' : ''}`}
+            aria-pressed={progress.saved.includes(note.id)}
+            onClick={() => toggle('saved', note.id)}
+          >
+            <Icon name="bookmark" size={17} />
+            {progress.saved.includes(note.id) ? 'Saved' : 'Note save karo'}
+          </button>
+        </div>
+        <ul className="reader-glance" aria-label="Chapter at a glance">
+          <li>
+            <span className="level-pill">{note.level}</span>
+          </li>
+          {note.minutes > 0 && (
+            <li>
+              <Icon name="clock" size={15} /> {note.minutes} min
+            </li>
+          )}
+          <li>
+            <Icon name="checklist" size={15} /> {conceptCount} concepts
+          </li>
+          {parts.questions.length > 0 && (
+            <li>
+              <Icon name="target" size={15} /> {parts.questions.length} practice questions
+            </li>
+          )}
+          {note.visual && (
+            <li>
+              <Icon name="play" size={15} /> Visual
+            </li>
+          )}
+        </ul>
+      </header>
       <div className="reader-quick-actions">
         <Link className="text-button" to={`/paths?track=${note.track}`}>
           <Icon name="path" size={16} /> {note.stage && `Stage ${note.stageNumber} · `}Lesson{' '}
@@ -133,6 +211,52 @@ function Chapter({ note }) {
         </Suspense>
       ) : (
         <>
+          <div className="reader-tools" role="group" aria-label="Reading controls">
+            <div className="reader-tools-hint">
+              <Icon name="book" size={17} />
+              <span>Samjho. Phir khud samjhao.</span>
+            </div>
+            <div className="reader-tools-actions">
+              <button
+                type="button"
+                aria-label="Bada text — larger reading text"
+                aria-pressed={largeText}
+                onClick={() => setLargeText(!largeText)}
+              >
+                <span className="reader-type-icon" aria-hidden="true">
+                  Aa
+                </span>{' '}
+                Bada text
+              </button>
+              <button
+                type="button"
+                aria-label="Focus reading mode"
+                aria-pressed={focused}
+                onClick={() => setFocused(!focused)}
+              >
+                <Icon name={focused ? 'check' : 'book'} size={15} /> Focus
+              </button>
+              {recallHeading && (
+                <a
+                  href={`#${recallHeading.id}`}
+                  onClick={() => {
+                    const target = document.getElementById(recallHeading.id);
+                    if (target) {
+                      target.tabIndex = -1;
+                      target.focus({ preventScroll: true });
+                    }
+                  }}
+                >
+                  Recall karo <Icon name="arrow" size={15} />
+                </a>
+              )}
+            </div>
+          </div>
+          {focused && (
+            <p className="reader-focus-hint" role="status">
+              Focus mode on · Outline wapas laane ke liye Focus ya Esc dabao.
+            </p>
+          )}
           <details className="mobile-toc">
             <summary>
               <Icon name="book" size={16} /> Is chapter mein · {headings.length} sections{' '}
@@ -159,12 +283,14 @@ function Chapter({ note }) {
           </details>
           <div className="reader-layout">
             <article className="reader-article">
-              <Markdown>{body}</Markdown>
+              <Markdown recallAnswers>{parts.before}</Markdown>
+              <PracticeSet noteId={note.id} questions={parts.questions} />
+              {parts.after && <Markdown recallAnswers>{parts.after}</Markdown>}
               <SourceExamples references={note.references || []} />
               {!!note.questions?.length && (
                 <section className="chapter-practice" aria-labelledby="chapter-practice">
                   <h2 id="chapter-practice">Interview practice</h2>
-                  <p>Pehle khud answer do, phir check karo.</p>
+                  <p>Question bank ke related sawaal. Pehle khud answer do, phir check karo.</p>
                   {note.questions.map((item, index) => (
                     <QuestionCard key={item.id} item={item} number={index + 1} />
                   ))}
@@ -179,7 +305,10 @@ function Chapter({ note }) {
                         ? 'Ek aur concept clear hua.'
                         : 'Aage badhne se pehle khud samjhao.'}
                     </h3>
-                    <p>Notes band karo. Concept samjhao. Exercise attempt karo.</p>
+                    <p>
+                      Recall answer aur practice checks compare karo. Completion tumhara self-check
+                      hai.
+                    </p>
                   </div>
                 </div>
                 <button
@@ -226,7 +355,9 @@ function Chapter({ note }) {
             </article>
             <aside className="reader-toc">
               <div className="toc-sticky">
-                <span className="card-overline">ON THIS PAGE</span>
+                <span className="card-overline">
+                  CHAPTER MAP <span className="reader-section-count">{headings.length}</span>
+                </span>
                 <nav aria-label="Table of contents">
                   {headings.map((heading, i) => (
                     <a
@@ -235,14 +366,19 @@ function Chapter({ note }) {
                       className={activeHeading === heading.id ? 'active' : ''}
                       aria-current={activeHeading === heading.id ? 'location' : undefined}
                     >
-                      {heading.title}
+                      <span className="reader-section-number" aria-hidden="true">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span>{heading.title}</span>
                     </a>
                   ))}
                 </nav>
                 <div className="toc-tip">
                   <Icon name="sparkles" size={18} />
-                  <strong>A quick learning tip</strong>
-                  <p>Samajh aaya? Ab ek example khud banao. That’s where it sticks.</p>
+                  <strong>Sirf padhna kaafi nahi.</strong>
+                  <p>
+                    Recall ka sawaal bina notes dekhe bolo. Phir answer kholkar missing point pakdo.
+                  </p>
                 </div>
                 <Link
                   to={`/interview?track=${note.track === 'interview' ? 'all' : note.track}`}

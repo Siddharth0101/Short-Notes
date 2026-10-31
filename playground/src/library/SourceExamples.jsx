@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { legacyToMarkdown } from '../lib/content.js';
 import Markdown from './Markdown.jsx';
+import Icon from './Icons.jsx';
 
 function Example({ reference }) {
   const { hash } = useLocation();
@@ -39,7 +40,12 @@ function Example({ reference }) {
       onToggle={(event) => setOpen(event.currentTarget.open)}
       className="source-example"
     >
-      <summary>{reference.title}</summary>
+      <summary>
+        <Icon name="code" size={17} />
+        <span>{reference.title}</span>
+        <span className="source-example-language">{reference.language}</span>
+        <Icon name="down" size={16} />
+      </summary>
       {open && (
         <div className="source-example-body">
           <p className="source-caption">

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
   font-family: 'DM Sans', sans-serif;
@@ -845,28 +845,6 @@ html {
   color: var(--track-color);
   font-weight: 500;
 }
-.dashboard-bottom {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 16px;
-  margin-top: 27px;
-}
-.feature-card {
-  padding: 23px 23px 21px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  transition: border-color 0.2s;
-  background: var(--surface);
-}
-.feature-card:hover {
-  border-color: var(--border-strong);
-}
-.visual-feature {
-  display: flex;
-  background: #f1f4ed;
-  gap: 15px;
-  justify-content: space-between;
-}
 .card-overline {
   font-size: 7px;
   letter-spacing: 1.1px;
@@ -875,38 +853,6 @@ html {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-.feature-card h3 {
-  font-size: 16px;
-  letter-spacing: -0.4px;
-  margin-top: 12px;
-}
-.feature-card p {
-  font-size: 9px;
-  color: var(--muted);
-  line-height: 1.8;
-  margin-top: 7px;
-}
-.feature-card .text-button {
-  font-size: 9px;
-  margin-top: 12px;
-}
-.mini-bars {
-  height: 85px;
-  display: flex;
-  gap: 5px;
-  align-items: flex-end;
-  align-self: center;
-  width: 95px;
-  margin: 10px 0 0;
-}
-.mini-bars span {
-  width: 9px;
-  border-radius: 3px 3px 0 0;
-  background: #b1c39a;
-}
-.mini-bars span:nth-child(even) {
-  background: #d7e1c9;
 }
 .recent-section {
   margin-top: 30px;
@@ -2274,12 +2220,6 @@ input[type='range'] {
   .stat > div > span {
     font-size: 10px;
   }
-  .feature-card p {
-    font-size: 11px;
-  }
-  .feature-card h3 {
-    font-size: 18px;
-  }
   .topbar-title,
   .global-search input {
     font-size: 12px;
@@ -2378,10 +2318,6 @@ input[type='range'] {
   }
   .reader-heading h1 {
     font-size: 28px;
-  }
-  .mini-bars {
-    width: 65px;
-    gap: 3px;
   }
   .visual-picker {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2537,13 +2473,6 @@ input[type='range'] {
   }
   .track-card-footer > span {
     font-size: 9px;
-  }
-  .dashboard-bottom {
-    grid-template-columns: 1fr;
-  }
-  .mini-bars {
-    width: 110px;
-    gap: 6px;
   }
   .reader-layout {
     display: block;
@@ -2752,15 +2681,6 @@ input[type='range'] {
   }
   .track-card-footer > span {
     font-size: 8px;
-  }
-  .feature-card h3 {
-    font-size: 17px;
-  }
-  .feature-card p {
-    font-size: 10px;
-  }
-  .feature-card .text-button {
-    font-size: 10px;
   }
   .app-footer {
     padding: 17px 20px;
@@ -3109,16 +3029,6 @@ input[type='range'] {
   .section-heading > .text-button {
     font-size: 8px;
   }
-  .feature-card {
-    padding: 21px 18px;
-  }
-  .mini-bars {
-    width: 65px;
-    gap: 4px;
-  }
-  .feature-card p br {
-    display: none;
-  }
   .app-footer > span:last-child {
     display: none;
   }
@@ -3354,33 +3264,6 @@ input[type='range'] {
 }
 
 /* Practical learning routes and focused interview workspace. */
-.practice-paths {
-  margin: 36px 0;
-}
-.practice-path-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-.practice-path-card {
-  padding: 25px;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--surface);
-}
-.practice-path-card h3 {
-  margin: 15px 0 10px;
-  font-size: 20px;
-}
-.practice-path-card p {
-  color: var(--muted);
-  line-height: 1.7;
-  min-height: 54px;
-}
-.practice-path-card .text-button {
-  display: flex;
-  margin-top: 16px;
-}
 .answer-reading {
   margin-top: 20px;
   flex-wrap: wrap;
@@ -3494,12 +3377,6 @@ input[type='range'] {
   max-width: 100%;
 }
 @media (max-width: 720px) {
-  .practice-path-grid {
-    grid-template-columns: 1fr;
-  }
-  .practice-path-card p {
-    min-height: 0;
-  }
   .mock-header {
     align-items: flex-start;
     flex-direction: column;

@@ -12,6 +12,8 @@ visual: request-flow
 
 ## Quick revision
 
+> Revision target — Middleware ke control flow aur each failure ke response owner ko trace karo.
+
 - Express — routing aur middleware ka HTTP framework.
 - Middleware — order matters; response bhejo ya `next()` se control do.
 - Route — method + path + handler; input ki type/range validate karo.
@@ -50,15 +52,133 @@ visual: request-flow
 
 - Express 5 returned handler promise ki rejection forward karta hai.
 
+## Example se samjho
+
+- Scenario — Auth middleware unauthorized response send karta hai, lekin uske baad route continuation bhi chal jaati hai.
+- Reasoning — Response path ko return/branch se terminate karo; authorized path hi next() kare. Route ke returned async operation ka failure central handler tak pahunchao.
+- Catch — next() current JavaScript function ko return nahi karta; response send hone ke baad second send headers error de sakta hai.
+
 ## Recall aur practice
 
 - Sawal — Returned async route aur detached setTimeout callback error Express 5 mein same way handle honge?
 - Jawaab — Nahi; returned handler Promise reject forward hota, detached callback ko explicit error ownership/forwarding chahiye.
 - Khud try karo — API pipeline test karo; invalid body, rejected route Promise, unknown route aur headers-sent failure par one response/cleanup verify karo.
 
+## Practice questions
+
+### Easy · `req.body` undefined
+
+```js
+app.post('/users', createUser);
+app.use(express.json());
+```
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — middleware order mein chalta hai; route body parser se pehle register hua, isliye body parse hi nahi hui.
+- Fix — `app.use(express.json({ limit: '100kb' }))` routes se pehle.
+- Limit — body size limit DoS se bachata hai.
+
+</details>
+
+### Easy · "Cannot set headers after they are sent"
+
+```js
+app.get('/users/:id', async (req, res) => {
+  const user = await findUser(req.params.id);
+  if (!user) res.status(404).json({ error: 'not found' });
+  res.json(user);
+});
+```
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — 404 bhejne ke baad function chalta raha aur doosra response bhejne ki koshish ki.
+- Fix — `if (!user) return res.status(404).json(...)`.
+- Rule — har response ke baad `return`; ek request, ek response.
+
+</details>
+
+### Medium · Async errors aur Express
+
+Express 4 aur Express 5 mein async handler ka rejected promise kaise handle hota hai? Central error handler likho.
+
+<details>
+<summary>Answer</summary>
+
+```js
+app.get('/orders/:id', async (req, res) => {
+  const order = await orders.get(req.params.id); // reject ho sakta hai
+  res.json(order);
+});
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  const status = err.status ?? 500;
+  if (status >= 500) req.log?.error(err);
+  res.status(status).json({ error: status >= 500 ? 'Internal error' : err.message });
+});
+```
+
+- Express 4 — rejected promise error handler tak nahi jaata (request hang/unhandled rejection); `try/catch` + `next(err)` ya wrapper chahiye.
+- Express 5 — handler/middleware ka rejected promise automatically `next(err)` ko jaata hai.
+- Error handler — 4 arguments zaroori; routes ke baad register.
+
+</details>
+
+### Medium · 404 aur error mapping
+
+Unknown route, validation error, aur DB duplicate key — teeno consistent JSON mein kaise?
+
+<details>
+<summary>Answer</summary>
+
+- 404 — saare routes ke baad: `app.use((req, res) => res.status(404).json({ code: 'NOT_FOUND' }))`.
+- App errors — `class AppError extends Error { constructor(status, code, message) {...} }`; validation → `400 VALIDATION_FAILED`.
+- DB mapping — Mongo `E11000` / Postgres `23505` → `409 CONFLICT`, error handler mein ek jagah.
+- Unknown — `500` generic message; details logs mein request id ke saath.
+
+</details>
+
+### Hard · `pg` pool ke saath transaction
+
+```js
+await pool.query('BEGIN');
+await pool.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2', [amt, from]);
+await pool.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2', [amt, to]);
+await pool.query('COMMIT');
+```
+
+Bug kya hai? Sahi version likho.
+
+<details>
+<summary>Answer</summary>
+
+```js
+const client = await pool.connect();
+try {
+  await client.query('BEGIN');
+  await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2', [amt, from]);
+  await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2', [amt, to]);
+  await client.query('COMMIT');
+} catch (error) {
+  await client.query('ROLLBACK');
+  throw error;
+} finally {
+  client.release();
+}
+```
+
+- Bug — `pool.query` har call par alag connection le sakta hai; `BEGIN` ek connection par, updates doosre par → transaction hi nahi bana.
+- `release` finally mein — warna pool leak aur timeouts.
+- Parameters `$1` — SQL injection safe.
+
+</details>
+
 ## Sources — aur padhne ke liye
 
-- [Source yahan padho — Express](https://expressjs.com/en/guide/error-handling/)
 - [Express error handling](https://expressjs.com/en/guide/error-handling/)
 - [Express middleware guide](https://expressjs.com/en/guide/using-middleware.html)
 

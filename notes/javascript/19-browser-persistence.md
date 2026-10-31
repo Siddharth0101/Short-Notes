@@ -11,6 +11,8 @@ tags: storage, indexeddb, offline, versioning
 
 ## Quick revision
 
+> Revision target — Storage read/write failure, schema aur browser scope samjho; saved state ko trusted input mat maano.
+
 - `localStorage` — origin-scoped string storage; synchronous aur browser mein persistent.
 - `sessionStorage` — tab session tak data; reload par rehta hai.
 - JSON storage — serialize/parse karo; malformed ya old data validate karo.
@@ -41,11 +43,116 @@ tags: storage, indexeddb, offline, versioning
 - Private cache partition — user/tenant identity cache keys mein rakho; logout par previous private entries clear karo.
 - Durability limit — browser data eviction/user clearing possible; important unsynced work ke liye export aur recovery contract do.
 
+## Example se samjho
+
+```js
+function readTheme(storage) {
+  try {
+    const value = storage.getItem("theme");
+    return value === "light" || value === "dark" ? value : "system";
+  } catch {
+    return "system";
+  }
+}
+```
+
+- Contract — storage dependency explicit hai; missing, invalid aur read failure ke liye usable default milta hai.
+- Catch — actual `window.localStorage` property access bhi throw kar sakta hai; storage acquire karne wali boundary ko bhi guard karo.
+- Check — mock storage se `null`, `"dark"`, invalid text aur thrown error test karo; write failure par user ka current choice memory mein preserve karo.
+
 ## Recall aur practice
 
 - Sawal — Do tabs same counter read karke +1 save karein toh dono increments guaranteed hain?
 - Jawaab — Nahi; dono same previous value likh sakte hain. Transactional storage ya explicit coordination/merge strategy chahiye.
 - Khud try karo — Versioned draft loader banao; malformed JSON, old schema, quota error aur two-tab conflict par current typed answer preserve karo.
+
+## Practice questions
+
+### Easy · `localStorage` sirf strings rakhta hai
+
+```js
+localStorage.setItem('prefs', { dark: true });
+console.log(localStorage.getItem('prefs'));
+localStorage.setItem('count', 5);
+console.log(localStorage.getItem('count') + 1);
+```
+
+<details>
+<summary>Answer</summary>
+
+- Output — `'[object Object]'` aur `'51'`.
+- Kyun — values string mein convert hoti hain.
+- Fix — `JSON.stringify` se save, `JSON.parse` se read; numbers ke liye `Number(...)`.
+
+</details>
+
+### Easy · Kaunsa storage kab?
+
+`localStorage`, `sessionStorage`, cookie aur IndexedDB — lifetime, scope aur use case ek-ek line mein batao.
+
+<details>
+<summary>Answer</summary>
+
+- `localStorage` — origin-wide, tabs mein shared, close ke baad bhi; small sync string data (theme).
+- `sessionStorage` — ek tab ka session; tab close par clear (draft step).
+- Cookie — har matching request ke saath server ko jaati hai; `HttpOnly` session ke liye.
+- IndexedDB — async, bada structured data, transactions; offline data/caches.
+
+</details>
+
+### Medium · Corrupt ya purana data safely load karo
+
+`loadPrefs()` likho jo missing value, invalid JSON, purana `version: 1` schema aur blocked storage (throw) — sab handle kare.
+
+<details>
+<summary>Answer</summary>
+
+```js
+const DEFAULTS = { version: 2, theme: 'system', fontSize: 16 };
+function loadPrefs() {
+  try {
+    const raw = localStorage.getItem('prefs');
+    if (!raw) return DEFAULTS;
+    const data = JSON.parse(raw);
+    if (data?.version === 1) return { ...DEFAULTS, theme: data.dark ? 'dark' : 'light' };
+    if (data?.version === 2) return { ...DEFAULTS, ...data };
+    return DEFAULTS;
+  } catch {
+    return DEFAULTS; // storage blocked ya JSON kharab
+  }
+}
+```
+
+- Versioning — migration explicit rakho, purane users ka data na toote.
+- Access bhi throw kar sakta hai — privacy mode/blocked cookies mein `localStorage` getter hi fail ho sakta hai.
+
+</details>
+
+### Medium · Token `localStorage` mein kyun nahi?
+
+<details>
+<summary>Answer</summary>
+
+- XSS — page par chala koi bhi script `localStorage` padh kar token chura sakta hai.
+- Better — session `HttpOnly; Secure; SameSite=Lax` cookie mein; JS use padh hi nahi sakta.
+- Trade-off — cookies automatically jaati hain, isliye state-changing requests par CSRF protection (SameSite + CSRF token) chahiye.
+- Dono case mein XSS fix karna hi asli defence hai.
+
+</details>
+
+### Hard · Do tabs, ek cart — lost update
+
+Dono tabs `cart` padhte hain, item add karte hain aur `localStorage` mein likhte hain. Ek tab ka item gayab ho jaata hai. Kyun, aur fix?
+
+<details>
+<summary>Answer</summary>
+
+- Cause — read-modify-write race: dono ne same purana cart padha, doosra write pehle ko overwrite kar deta hai.
+- Sync — doosre tabs ko `storage` event (ya `BroadcastChannel`) se naya cart batao aur UI refresh karo.
+- Atomic update — `navigator.locks.request('cart', async () => { read; modify; write; })` se ek time par ek tab; ya IndexedDB transaction.
+- Server cart — logged-in users ke liye source of truth server par, versioned updates ke saath.
+
+</details>
 
 ## Sources — aur padhne ke liye
 

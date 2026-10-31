@@ -11,6 +11,8 @@ tags: react-native, mobile, expo, navigation-links
 
 ## Quick revision
 
+> Revision target — Deep link, authentication aur navigation history ka complete cold-start path reason karo.
+
 ### Routes
 
 - Navigation — stack detail-flow ke liye, tabs main sections ke liye; history behavior pehle decide karo.
@@ -44,11 +46,91 @@ tags: react-native, mobile, expo, navigation-links
 - Deep-link replay — same initial URL/event duplicate processing possible; route/action identity se unintended repeated side effects avoid karo.
 - Screen lifetime authority — mounted screen background/blur par camera/polling active rakhna waste; focus plus app visibility ka combined ownership define karo.
 
+## Example se samjho
+
+- Scenario — logged-out user notification se `/orders/42` open karta hai.
+- Trace — app boot/auth restore complete hone tak pending destination preserve; login ke baad current user ke access se order fetch karo.
+- Decision — allowed resource par detail screen; deleted/forbidden resource par useful recovery aur safe back destination do.
+- Catch — route parameter milna resource access ka proof nahi; notification payload ko authorization instruction mat samjho.
+- Check — cold launch, existing app, login cancel aur expired session mein duplicate screens ya bypass na ho.
+
 ## Recall aur practice
 
 - Sawal — Logged-out protected deep link ke baad login success par user ko kahan bhejoge?
 - Jawaab — Validated intended destination preserve karo, authorization recheck karke route resolve; missing/forbidden resource ka recovery do.
 - Khud try karo — Cold/warm deep links test karo; auth load delay, malformed ID, deleted resource, duplicate event aur Android back history verify karo.
+
+## Practice questions
+
+### Easy · `push` vs `replace` vs `back`
+
+Login success ke baad home par jaana hai aur Back se login screen par nahi lautna. Kaunsa method?
+
+<details>
+<summary>Answer</summary>
+
+- `router.replace('/home')` — current screen stack mein replace; Back login par nahi jaata.
+- `router.push` — naya screen stack par (Back possible).
+- `router.back()` — pichli screen; stack khaali ho toh check karo (`router.canGoBack()`).
+
+</details>
+
+### Easy · Dynamic route param
+
+File `app/user/[id].tsx` hai. `id` kaise padhoge aur type kya hogi?
+
+<details>
+<summary>Answer</summary>
+
+```tsx
+const { id } = useLocalSearchParams<{ id: string }>();
+```
+
+- Type — URL se aaya string (repeated param ho toh `string[]` bhi ho sakta hai).
+- Validate — number chahiye toh parse + invalid par not-found UI; deep link se kuch bhi aa sakta hai.
+
+</details>
+
+### Medium · Wapas aane par data refresh
+
+Stack mein Orders list → Order detail; detail par status badla. Back aane par list purani dikhti hai. Kyun aur fix?
+
+<details>
+<summary>Answer</summary>
+
+- Kyun — stack ki pichli screen unmount nahi hoti; uska `useEffect([], ...)` dobara nahi chalta.
+- Fix — `useFocusEffect(useCallback(() => { refetch(); }, [refetch]))` focus par chalta hai aur blur par cleanup.
+- Better — shared server cache (TanStack Query) mein mutation ke baad invalidate; list automatically fresh.
+
+</details>
+
+### Medium · Deep link ko trust mat karo
+
+`myapp://orders/123?coupon=FREE100` link aaya. Kya checks chahiye?
+
+<details>
+<summary>Answer</summary>
+
+- Params validate — `123` valid id format? `coupon` allowlist/server validate; client par discount apply mat karo.
+- Auth — logged out ho toh login ke baad target par jao; order user ka hai ya nahi, server check kare.
+- Unknown route — not-found screen, crash nahi.
+- Verified links — HTTPS Universal/App Links domain verification ke saath; custom schemes koi bhi app claim kar sakti hai.
+
+</details>
+
+### Hard · Auth restore aur deep link replay
+
+App cold start par SecureStore se session restore karti hai. Deep link protected screen par aaya. Login flash aur lost target dono kaise avoid karoge?
+
+<details>
+<summary>Answer</summary>
+
+- Gate — `authState: 'restoring' | 'signedIn' | 'signedOut'`; `restoring` mein splash rakho, redirect mat karo.
+- Pending target — signed out ho toh incoming URL yaad rakho (memory/state), login screen par `replace`.
+- Replay — login success par validated pending target par `replace`; nahi toh home.
+- Edge — restore fail (token expired) → signed out; target ek hi baar replay ho, phir clear.
+
+</details>
 
 ## Sources — aur padhne ke liye
 
