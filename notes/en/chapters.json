@@ -1,0 +1,474 @@
+{
+  "dsa-complexity": {
+    "title": "Complexity and problem solving",
+    "summary": "Big-O — an upper bound on growth as the input grows; not exact milliseconds."
+  },
+  "dsa-linear-structures": {
+    "title": "Linked lists stacks and queues",
+    "summary": "Linked list — nodes linked by references; random access is O(n)."
+  },
+  "dsa-hashing": {
+    "title": "Hash tables maps and sets",
+    "summary": "Hash table — maps a key to a bucket; collision handling is required."
+  },
+  "dsa-patterns": {
+    "title": "Frequency counters and pointer patterns",
+    "summary": "Frequency counter — a map for repeated counts; it can avoid nested scans."
+  },
+  "dsa-searching": {
+    "title": "Searching and binary search boundaries",
+    "summary": "Linear search — scan unsorted data; O(n)."
+  },
+  "dsa-recursion": {
+    "title": "Recursion and backtracking",
+    "summary": "Recursion — a function calls itself on a smaller subproblem."
+  },
+  "dsa-sorting": {
+    "title": "Sorting from elementary methods to divide and conquer",
+    "summary": "Bubble sort — adjacent swaps; O(n²), and O(n) at best with the early-exit variant."
+  },
+  "dsa-monotonic-stack-lab": {
+    "title": "Monotonic stacks and amortized reasoning",
+    "summary": "Monotonic stack — keep the candidates in increasing or decreasing order."
+  },
+  "dsa-trees": {
+    "title": "Trees and binary search trees",
+    "summary": "Tree — hierarchical nodes; root, child and leaf."
+  },
+  "dsa-heaps": {
+    "title": "Heaps and priority queues",
+    "summary": "Heap — a complete binary tree with a parent-child priority rule."
+  },
+  "dsa-graphs": {
+    "title": "Graph traversal and shortest paths",
+    "summary": "Graph — vertices + edges; clarify direction and weights."
+  },
+  "dsa-dynamic-programming": {
+    "title": "Dynamic programming from state to recurrence",
+    "summary": "DP — reuse the results of overlapping subproblems."
+  },
+  "dsa-greedy-intervals": {
+    "title": "Greedy and intervals — proving the choice and the boundary contract",
+    "summary": "Greedy — a local choice at every step; global correctness needs a proof."
+  },
+  "dsa-tries-range-bits": {
+    "title": "Tries, bitmasks and range queries — a practical bridge to advanced structures",
+    "summary": "Trie — a tree of characters/prefixes; lookup is O(word length)."
+  },
+  "interview-javascript": {
+    "title": "JavaScript interview playbook",
+    "summary": "Answer — a definition plus one key catch; give the exact result when code or output is asked."
+  },
+  "interview-java": {
+    "title": "Java backend interview playbook",
+    "summary": "Java equality — `==` compares references; `.equals()` compares logical value and depends on how the contract is implemented."
+  },
+  "interview-react": {
+    "title": "React interview playbook",
+    "summary": "State — it is a snapshot; use the functional setter when updating from the previous value."
+  },
+  "interview-mongodb": {
+    "title": "MongoDB interview playbook",
+    "summary": "Model — choose embedding or references from the reads, writes and growth."
+  },
+  "interview-dsa": {
+    "title": "DSA problem solving interview playbook",
+    "summary": "Start — clarify the input/output, constraints and edge cases."
+  },
+  "interview-system-design": {
+    "title": "React and Java system design interview playbook",
+    "summary": "Design round — requirements → estimate → APIs/data → architecture → bottlenecks → failure."
+  },
+  "java-first-program": {
+    "title": "First Java program variables and primitive types",
+    "summary": "JDK — the tools for developing Java; JVM — the runtime that executes bytecode."
+  },
+  "java-decisions-loops": {
+    "title": "Java operators decisions and loops",
+    "summary": "`if/else` — choose a branch according to a condition."
+  },
+  "java-methods-arrays": {
+    "title": "Java methods arrays and strings",
+    "summary": "Method — take typed parameters and return a result of the declared type."
+  },
+  "java-classes-constructors": {
+    "title": "Classes objects constructors and encapsulation",
+    "summary": "Class — an object’s type and behaviour; object — an actual instance."
+  },
+  "java-language-foundations": {
+    "title": "Java foundations review and conversion edge cases",
+    "summary": "Primitive types — byte, short, int, long, float, double, char, boolean."
+  },
+  "java-packages-interfaces": {
+    "title": "Packages access control and interface boundaries",
+    "summary": "Package — a namespace for related classes."
+  },
+  "java-object-model": {
+    "title": "Objects OOP records and equality",
+    "summary": "Inheritance — a subclass extends the behaviour of its superclass."
+  },
+  "java-collections-generics": {
+    "title": "Collections generics and choosing data structures",
+    "summary": "List — ordered, duplicates allowed; Set — unique; Map — key/value pairs."
+  },
+  "java-exceptions-io-time": {
+    "title": "Exceptions resources files and time",
+    "summary": "Checked exception — catch or declare it; unchecked — may signal a runtime contract failure."
+  },
+  "java-streams-lambdas": {
+    "title": "Lambdas streams and Optional",
+    "summary": "Lambda — an implementation of a functional interface."
+  },
+  "java-jvm-memory": {
+    "title": "JVM memory garbage collection and diagnosis",
+    "summary": "JVM stack — per-thread frames and local state; heap — the managed area for objects."
+  },
+  "java-maven-testing": {
+    "title": "Maven builds and useful Java tests",
+    "summary": "Maven — manages dependencies, the build lifecycle and plugins."
+  },
+  "java-jdbc-sql": {
+    "title": "JDBC SQL and transaction boundaries",
+    "summary": "JDBC — database connections, statements and result handling from Java."
+  },
+  "java-sql-interview-lab": {
+    "title": "SQL joins windows and transaction races",
+    "summary": "WHERE — filters rows before grouping; HAVING — filters groups."
+  },
+  "java-concurrency": {
+    "title": "Concurrency synchronization and virtual threads",
+    "summary": "Thread — concurrent execution; shared mutable state needs coordination."
+  },
+  "java-concurrency-production": {
+    "title": "Java concurrency under real resource limits",
+    "summary": "Bounded pool — a limit on workers and the queue; rejection or backpressure under overload."
+  },
+  "java-type-metadata": {
+    "title": "Java type modeling — enums, sealed types and annotations",
+    "summary": "Enum — fixed named values with associated behaviour."
+  },
+  "java-schema-migrations": {
+    "title": "SQL schema design and safe migrations — evolving the data contract",
+    "summary": "Migration — track a schema change in a versioned file."
+  },
+  "java-low-level-design": {
+    "title": "Low-level design — from requirements to classes and invariants",
+    "summary": "LLD — turn requirements into objects, responsibilities and contracts."
+  },
+  "js-variables": {
+    "title": "Variables and assignment with let and const",
+    "summary": "Variable — a name given to a value."
+  },
+  "js-types-operators": {
+    "title": "Value types operators and explicit conversion",
+    "summary": "Primitive types — string, number, boolean, undefined, null, bigint and symbol."
+  },
+  "js-conditionals": {
+    "title": "Decisions with if else and boolean logic",
+    "summary": "`if` — the block runs when the condition is truthy."
+  },
+  "js-loops": {
+    "title": "Loops counters and accumulators",
+    "summary": "`for` — initialization → condition → body → update, repeated."
+  },
+  "js-functions": {
+    "title": "Functions parameters arguments and return values",
+    "summary": "Function — reusable work; take inputs and return a result."
+  },
+  "js-arrays-objects": {
+    "title": "Arrays objects and simple data modeling",
+    "summary": "Array — ordered values; the index starts at zero."
+  },
+  "js-modern-data-collections": {
+    "title": "Objects arrays and modern data transformations",
+    "summary": "`map` — transform every item into a new array."
+  },
+  "js-language-foundations": {
+    "title": "Foundations checkpoint and reliable input handling",
+    "summary": "Expression — produces a value; statement — carries out an instruction."
+  },
+  "js-scope-closures": {
+    "title": "Execution contexts scope and closures",
+    "summary": "Scope — where a variable is accessible; lexical scope is decided by where the code is written."
+  },
+  "js-numbers-dates-regex": {
+    "title": "Numbers dates strings and regular expressions",
+    "summary": "Numbers — a JS `number` is floating point; `0.1 + 0.2` is not exactly `0.3`."
+  },
+  "javascript-browser-foundations": {
+    "title": "HTML CSS and browser rendering essentials",
+    "summary": "HTML — structure; CSS — styling and layout; JS — behaviour."
+  },
+  "js-dom-events-browser": {
+    "title": "DOM events and browser interaction",
+    "summary": "DOM — the browser’s document tree; grab a node with a selector."
+  },
+  "js-this-prototypes-classes": {
+    "title": "This binding prototypes and classes",
+    "summary": "Regular `this` — decided by how the function is called."
+  },
+  "js-oop-mini-project": {
+    "title": "OOP pillars and a banking mini-project",
+    "summary": "Encapsulation — keep data and rules together; stop invalid state at the point of entry."
+  },
+  "js-async-event-loop": {
+    "title": "Event loop promises and resilient fetching",
+    "summary": "Call stack — synchronous functions execute here."
+  },
+  "javascript-async-patterns": {
+    "title": "Async patterns and bounded concurrency",
+    "summary": "Sequential await — for when the next task depends on the previous result."
+  },
+  "js-modules-tooling-debugging": {
+    "title": "Modules web delivery and debugging",
+    "summary": "ES module — `import`/`export`; imports are live bindings."
+  },
+  "javascript-testing-workflow": {
+    "title": "Testing and debugging — turn a bug into repeatable proof",
+    "summary": "Unit test — check one small, isolated behaviour."
+  },
+  "javascript-browser-persistence": {
+    "title": "Browser persistence and offline behaviour — be clear what \"saved\" means",
+    "summary": "`localStorage` — origin-scoped string storage; synchronous and persistent in the browser."
+  },
+  "javascript-git-workflow": {
+    "title": "Git workflow — from the working tree to a reviewed commit",
+    "summary": "Working tree — the current edits; staging — the selected snapshot for the next commit."
+  },
+  "mongo-node-runtime-http": {
+    "title": "Node runtime HTTP modules and streams",
+    "summary": "Node.js — a JavaScript runtime; I/O can be async, but heavy JS blocks the event loop."
+  },
+  "mongo-express-rest-errors": {
+    "title": "Express REST APIs middleware and errors",
+    "summary": "Express — an HTTP framework of routing and middleware."
+  },
+  "mongo-documents-crud-modeling": {
+    "title": "Documents CRUD and access-driven modeling",
+    "summary": "Document — a record of BSON fields; a collection holds related documents."
+  },
+  "mongo-mongoose-validation-relations": {
+    "title": "Mongoose schemas validation and relationships",
+    "summary": "Mongoose — a schema/model layer for MongoDB."
+  },
+  "mongo-indexes-aggregation-transactions": {
+    "title": "Indexes aggregation geospatial queries and transactions",
+    "summary": "Index — can make a query fast; it adds storage and write cost."
+  },
+  "mongodb-query-production-lab": {
+    "title": "MongoDB query plans and Node streaming lab",
+    "summary": "`explain` — look at the chosen plan, the keys/docs examined and the returned count."
+  },
+  "mongo-auth-security": {
+    "title": "Authentication authorization and secure boundaries",
+    "summary": "Authentication — verify identity; authorization — verify access to an action or resource."
+  },
+  "mongo-production-integrations": {
+    "title": "SSR uploads payments email and deployment",
+    "summary": "SSR/Pug — the server builds the HTML; escape untrusted output."
+  },
+  "mongodb-testing-shutdown": {
+    "title": "Node API testing and graceful shutdown — from a request to resource cleanup",
+    "summary": "HTTP test — verify the actual status, headers and response body."
+  },
+  "rn-foundations-expo": {
+    "title": "React Native basics and the Expo workflow",
+    "summary": "React Native — build Android/iOS native UI from React components; no browser DOM is used."
+  },
+  "rn-components-layout": {
+    "title": "Native components, styling and safe areas",
+    "summary": "View — a layout container; keep visible text inside Text."
+  },
+  "rn-lists-images": {
+    "title": "Lists, images and pagination",
+    "summary": "ScrollView — renders its children all at once; useful for short static content."
+  },
+  "rn-navigation-links": {
+    "title": "Navigation, Expo Router and deep links",
+    "summary": "Navigation — a stack for detail flows, tabs for main sections; decide the history behaviour first."
+  },
+  "rn-forms-state": {
+    "title": "Forms, the keyboard and shared state",
+    "summary": "TextInput — update the draft state through a controlled value and onChangeText."
+  },
+  "rn-network-storage": {
+    "title": "Networking, offline storage and auth",
+    "summary": "Fetch — check response.ok; HTTP 4xx/5xx is not automatically a network exception."
+  },
+  "rn-device-permissions": {
+    "title": "Permissions, device APIs and the app lifecycle",
+    "summary": "Permission request — give the reason in the context of using the feature; do not ask for every permission at startup."
+  },
+  "rn-performance-native": {
+    "title": "Performance, animations and native architecture",
+    "summary": "JS thread — expensive JS work can delay event handling and renders."
+  },
+  "rn-testing-accessibility": {
+    "title": "Testing, debugging and mobile accessibility",
+    "summary": "Unit test — a fast check for pure logic such as validation or a reducer; not a replacement for device integration."
+  },
+  "rn-build-release": {
+    "title": "Builds, signing, OTA updates and revision traps",
+    "summary": "Development/production — debug tools and release configuration differ; smoke-test the release build."
+  },
+  "react-jsx-props": {
+    "title": "First React component JSX and props",
+    "summary": "Component — a function that returns UI from props."
+  },
+  "react-state-forms": {
+    "title": "State snapshots forms and immutable updates",
+    "summary": "`useState` — a component’s memory; the setter schedules the next render."
+  },
+  "react-components-rendering": {
+    "title": "Components JSX and the render cycle",
+    "summary": "Render — calculate the next UI; commit — apply the DOM updates."
+  },
+  "react-composition-styling": {
+    "title": "Composition reusable patterns and styling",
+    "summary": "Composition — connect small components through `children` and props."
+  },
+  "react-effects-custom-hooks": {
+    "title": "Effects refs and reusable synchronization",
+    "summary": "`useEffect` — sync with an external system; not for render calculations."
+  },
+  "react-routing-url-state": {
+    "title": "Routing nested layouts and URL state",
+    "summary": "Router — maps a URL to a screen and layout."
+  },
+  "react-context-reducer-redux": {
+    "title": "Context reducers and Redux Toolkit",
+    "summary": "Local state — keep it close when only one component uses it."
+  },
+  "react-query-supabase": {
+    "title": "Server state caching and Supabase integration",
+    "summary": "Server state — remote data; you must handle loading, freshness, retries and invalidation."
+  },
+  "react-typescript-contracts": {
+    "title": "TypeScript contracts for React applications",
+    "summary": "TypeScript — compile-time checks; runtime input validation is separate."
+  },
+  "react-performance-production": {
+    "title": "Performance suspense and production quality",
+    "summary": "Profiler — first measure the slow render or interaction."
+  },
+  "react-machine-coding": {
+    "title": "React machine coding and identity bugs",
+    "summary": "Machine coding — requirements → state → components → edge cases → verification."
+  },
+  "react-testing-accessibility": {
+    "title": "React testing — verify user behaviour and accessibility",
+    "summary": "Testing Library — write tests from the behaviour the user can see."
+  },
+  "spring-boot-first-application": {
+    "title": "Spring Boot first application and project structure",
+    "summary": "Spring — manages objects and their dependencies; Boot simplifies setup and configuration."
+  },
+  "spring-beans-di": {
+    "title": "Beans constructor injection and lifecycle",
+    "summary": "Bean — an object managed by the Spring container."
+  },
+  "spring-configuration": {
+    "title": "Configuration properties profiles and startup failures",
+    "summary": "Configuration — keep values out of code, in properties or the environment."
+  },
+  "java-spring-rest": {
+    "title": "Spring dependency injection and REST APIs",
+    "summary": "`@RestController` — a controller whose return value becomes the HTTP response body."
+  },
+  "spring-validation-errors": {
+    "title": "Request DTOs validation and consistent API errors",
+    "summary": "`@Valid` — triggers validation on the bound input."
+  },
+  "java-jpa-transactions": {
+    "title": "JPA Hibernate and Spring transactions",
+    "summary": "JPA — the persistence specification; Hibernate — an implementation."
+  },
+  "java-security-microservices": {
+    "title": "Spring Security and reliable service boundaries",
+    "summary": "Authentication — who the user is; authorization — what access is allowed."
+  },
+  "spring-testing": {
+    "title": "Spring Boot unit slice and integration testing",
+    "summary": "Unit test — test a service rule without a Spring context."
+  },
+  "java-observability-actuator": {
+    "title": "Observability with Actuator, metrics and tracing",
+    "summary": "Actuator — operational endpoints such as health and metrics."
+  },
+  "spring-deployment-capstone": {
+    "title": "Package deploy and defend a Spring Boot capstone",
+    "summary": "Artifact — promote the same tested build through the environments."
+  },
+  "spring-background-cache": {
+    "title": "Spring background jobs and caching — understand lifecycle and ownership",
+    "summary": "`@Async` — work on an executor; in the default proxy mode a self-call can bypass it."
+  },
+  "spring-servlet-mvc": {
+    "title": "Servlets, JSP and Spring MVC — the runtime underneath a request",
+    "summary": "Servlet — the runtime contract for handling an HTTP request and response."
+  },
+  "spring-ai-retrieval": {
+    "title": "Spring AI and RAG — retrieval, permissions and answer evaluation",
+    "summary": "Spring AI — an abstraction over model and provider integrations."
+  },
+  "design-requirements-capacity": {
+    "title": "Requirements capacity and design interviews",
+    "summary": "Requirements — first make the users, core actions, scale and constraints clear."
+  },
+  "design-scaling-caching": {
+    "title": "Scaling caching replication and partitioning",
+    "summary": "Vertical scaling — one bigger machine; horizontal — more instances."
+  },
+  "design-react-architecture": {
+    "title": "React architecture rendering and delivery",
+    "summary": "CSR — the browser renders the UI; there is an initial JS and data cost."
+  },
+  "design-react-data-state": {
+    "title": "React state server data and cache consistency",
+    "summary": "State owner — tell apart local UI, URL, shared client and server data."
+  },
+  "design-frontend-performance": {
+    "title": "Frontend performance accessibility and resilience",
+    "summary": "LCP — when the main content appeared; INP — interaction responsiveness; CLS — layout shift."
+  },
+  "system-design-frontend-design-round": {
+    "title": "Frontend system design interview from requirements to failure",
+    "summary": "Frontend round — requirements → components/state → data flow → performance → failures."
+  },
+  "design-java-api-data": {
+    "title": "Java backend API and data architecture",
+    "summary": "Layers — the controller contract, service rules and repository persistence."
+  },
+  "design-messaging-reliability": {
+    "title": "Messaging outbox retries and distributed workflows",
+    "summary": "Dual write — a DB success plus a message failure can leave inconsistent state."
+  },
+  "design-security-operations": {
+    "title": "Security observability and production operations",
+    "summary": "Trust boundary — verify identity, input and permissions at every hop."
+  },
+  "system-design-backend-design-round": {
+    "title": "Java backend design interview and reservation correctness",
+    "summary": "Reservation — claim available stock with an atomic check-and-decrement."
+  },
+  "design-commerce-case-study": {
+    "title": "Case study React storefront and Java checkout",
+    "summary": "Catalog — cache-friendly reads; checkout demands fresh, authoritative validation."
+  },
+  "design-realtime-case-study": {
+    "title": "Case study collaborative notes and real-time chat",
+    "summary": "Realtime — choose WebSocket or SSE from the direction of interaction and the infrastructure."
+  },
+  "system-design-consistency-limits": {
+    "title": "Consistency and distributed rate limiting — write down the guarantees first",
+    "summary": "Strong consistency — the latest ordered state, according to the defined operation model."
+  },
+  "system-design-api-contracts": {
+    "title": "REST, GraphQL and gRPC — choose the contract before the protocol",
+    "summary": "REST — resources + HTTP semantics; caching, status codes and conditional requests are useful."
+  },
+  "system-design-os-network-debugging": {
+    "title": "OS and networking interviews — diagnose a slow request layer by layer",
+    "summary": "Process — an isolated address space; thread — shares the resources of its process."
+  }
+}

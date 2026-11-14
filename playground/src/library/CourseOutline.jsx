@@ -1,49 +1,48 @@
 import { NoteLink } from './Navigation.jsx';
 import { Link } from 'react-router-dom';
-import { courses } from '../data/curriculum.js';
-import { noteById } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
+import { useLang } from '../lib/langContext.js';
+import { useCatalog } from '../lib/catalogContext.js';
 import Icon from './Icons.jsx';
 
 export default function CourseOutline({ track, visibleNotes, renderNote }) {
   const { progress } = useProgress();
+  const { t } = useLang();
+  const { courses, noteById } = useCatalog();
   const course = courses[track.id];
   const sequence = course.stages.flatMap((stage) => stage.chapters.map((id) => noteById[id]));
   const visible = new Set(visibleNotes.map((note) => note.id));
   const completed = sequence.filter((note) => progress.completed.includes(note.id)).length;
   const next = sequence.find((note) => !progress.completed.includes(note.id));
   return (
-    <section className="course-outline" aria-label={`${track.name} course syllabus`}>
+    <section
+      className="course-outline"
+      aria-label={t('course.syllabusLabel', { name: track.name })}
+    >
       <header className="course-heading">
         <div>
           <span className="card-overline">
-            {course.stages.length} STAGES · {sequence.length} LESSONS
+            {t('course.overline', { stages: course.stages.length, lessons: sequence.length })}
           </span>
           <h2>{track.name}</h2>
-          <p>
-            {track.id === 'interview'
-              ? 'Completed subject ka playbook chuno, phir uske rounds practice karo.'
-              : 'Lesson 01 se start karo. Stage checkpoint complete karke aage badho.'}
-          </p>
+          <p>{track.id === 'interview' ? t('course.interviewLead') : t('course.lead')}</p>
         </div>
         <NoteLink className="primary-button" to={`/notes/${(next || sequence[0]).id}`}>
           <Icon name={next ? 'play' : 'reset'} size={16} />
-          {next ? (completed ? 'Course continue karo' : 'Course shuru karo') : 'Course revise karo'}
+          {next ? (completed ? t('course.continue') : t('course.start')) : t('course.revise')}
         </NoteLink>
       </header>
       <div className="course-readiness">
-        <span>
-          {completed} / {sequence.length} lessons complete
-        </span>
+        <span>{t('course.lessonsComplete', { done: completed, total: sequence.length })}</span>
         <progress
-          aria-label={`${track.name} course progress`}
+          aria-label={t('course.progressLabel', { name: track.name })}
           value={completed}
           max={sequence.length}
         />
         {course.prerequisites.length ? (
           <div>
             <strong>
-              {track.id === 'interview' ? 'Subject ke liye pehle padho: ' : 'Is course se pehle: '}
+              {track.id === 'interview' ? t('course.prereqInterview') : t('course.prereq')}
             </strong>
             {course.prerequisites.map((id, i) => (
               <span key={id}>
@@ -53,7 +52,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
             ))}
           </div>
         ) : (
-          <p>Pehle programming course ki need nahi. First lesson se start karo.</p>
+          <p>{t('course.noPrereq')}</p>
         )}
       </div>
       <div className="course-stages">
@@ -69,8 +68,11 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
                 <span className="stage-number">{String(stageIndex + 1).padStart(2, '0')}</span>
                 <div>
                   <span className="card-overline">
-                    STAGE {stageIndex + 1} · LESSONS {noteById[stage.chapters[0]].order}–
-                    {noteById[stage.chapters.at(-1)].order}
+                    {t('course.stageOverline', {
+                      stage: stageIndex + 1,
+                      from: noteById[stage.chapters[0]].order,
+                      to: noteById[stage.chapters.at(-1)].order,
+                    })}
                   </span>
                   <h3 id={`stage-${stage.id}`}>{stage.title}</h3>
                   <p>{stage.goal}</p>
@@ -83,7 +85,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
               <div className="stage-checkpoint">
                 <Icon name="check" size={18} />
                 <p>
-                  <strong>Next stage se pehle:</strong> {stage.checkpoint}
+                  <strong>{t('course.checkpoint')}</strong> {stage.checkpoint}
                 </p>
               </div>
             </section>
@@ -95,7 +97,7 @@ export default function CourseOutline({ track, visibleNotes, renderNote }) {
         to={`/interview?track=${track.id === 'interview' ? 'all' : track.id}`}
       >
         <Icon name="messages" size={16} />
-        Course ke baad interview questions practice karo
+        {t('course.afterCourse')}
       </Link>
     </section>
   );

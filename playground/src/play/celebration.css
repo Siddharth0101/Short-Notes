@@ -1,0 +1,104 @@
+/* Badge / level-up cheer. Loaded with the app shell because it can appear on any page. */
+.celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 84px 16px 0;
+}
+.celebration-card {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 420px;
+  padding: 16px 16px 16px 18px;
+  border: 1px solid var(--accent-border);
+  border-radius: 16px;
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-raised);
+  animation: celebration-pop 0.45s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+.celebration-card strong {
+  display: block;
+  margin: 2px 0 2px;
+  font-family: var(--display);
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--text);
+}
+.celebration-card p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.celebration-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  font-size: 28px;
+}
+.confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.confetti i {
+  position: absolute;
+  top: -16px;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0;
+  animation-name: confetti-fall;
+  animation-timing-function: cubic-bezier(0.3, 0.6, 0.6, 1);
+  animation-fill-mode: both;
+}
+.confetti i.round {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 78vh, 0) rotate(calc(var(--spin) + 540deg));
+  }
+}
+@keyframes celebration-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confetti {
+    display: none;
+  }
+  .celebration-card {
+    animation: none;
+  }
+}
+@media print {
+  .celebration {
+    display: none;
+  }
+}

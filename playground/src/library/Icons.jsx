@@ -48,6 +48,17 @@ import {
   Brain,
   Type,
   Focus,
+  Gamepad2,
+  Globe,
+  Flame,
+  Trophy,
+  Zap,
+  Timer,
+  Grid2x2,
+  SquareStack,
+  Award,
+  CalendarCheck,
+  Laugh,
 } from 'lucide-react';
 const icons = {
   book: BookOpen,
@@ -99,6 +110,17 @@ const icons = {
   brain: Brain,
   type: Type,
   focus: Focus,
+  gamepad: Gamepad2,
+  globe: Globe,
+  flame: Flame,
+  trophy: Trophy,
+  zap: Zap,
+  timer: Timer,
+  grid: Grid2x2,
+  cards: SquareStack,
+  award: Award,
+  calendar: CalendarCheck,
+  laugh: Laugh,
 };
 export default function Icon({ name, size = 20, ...props }) {
   const Element = icons[name] || BookOpen;

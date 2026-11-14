@@ -1,0 +1,315 @@
+/* Engagement layer shared by every page: language switch, streak/level chips, the dashboard
+   arcade teaser, chapter analogies and translation notices. Arcade pages have play/play.css. */
+:root,
+:root[data-theme='light'] {
+  /* Activity scale: one hue, more = darker on a light surface. */
+  --heat-0: #ececf1;
+  --heat-1: #c9cdfb;
+  --heat-2: #9ba3f4;
+  --heat-3: #6b70e4;
+  --heat-4: #4338ca;
+  --flame: #c2410c;
+  --flame-soft: #fff1e6;
+  --gold: #8a5a00;
+  --gold-soft: #fff4d6;
+}
+:root[data-theme='dark'] {
+  /* Same hue, anchored the other way: more = lighter on a dark surface. */
+  --heat-0: #232733;
+  --heat-1: #2f3566;
+  --heat-2: #4a52a8;
+  --heat-3: #7a86e8;
+  --heat-4: #c7d2fe;
+  --flame: #fdba74;
+  --flame-soft: #3a2413;
+  --gold: #fcd57a;
+  --gold-soft: #3a2c10;
+}
+
+/* ——— Shell ——— */
+.language-control + .appearance-control {
+  margin-left: 0;
+}
+.nav-item .nav-streak {
+  border-color: transparent;
+  background: var(--flame-soft);
+  color: var(--flame);
+  font-variant-numeric: tabular-nums;
+}
+.profile .avatar-level {
+  border: 2px solid var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+.profile .avatar-level:hover {
+  border-color: var(--accent);
+}
+.content-loading {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 60;
+  transform: translateX(-50%);
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-raised);
+  color: var(--body-text);
+  font-size: 13px;
+  font-weight: 550;
+  box-shadow: var(--shadow-raised);
+}
+.translation-notice {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--info);
+  border-radius: 10px;
+  background: var(--info-bg);
+  color: var(--text);
+  font-size: 13.5px;
+}
+.translation-notice svg {
+  flex: none;
+  color: var(--info);
+}
+.translation-notice--inline {
+  display: inline-flex;
+  margin: 0 0 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* ——— Shared meters ——— */
+.xp-bar {
+  height: 8px;
+  margin: 8px 0 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-soft);
+}
+.xp-bar span {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  border-radius: 999px 4px 4px 999px;
+  background: var(--accent);
+  transition: width 0.5s var(--ease);
+}
+.streak-flame {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  flex: none;
+  width: 84px;
+  height: 84px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  line-height: 1.1;
+}
+.streak-flame > span {
+  font-size: 20px;
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+.streak-flame strong {
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+.streak-flame small {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.streak-flame.is-lit {
+  border-color: transparent;
+  background: var(--flame-soft);
+  color: var(--flame);
+}
+.streak-flame.is-lit > span {
+  filter: none;
+  opacity: 1;
+}
+.level-chip {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ——— Dashboard teaser ——— */
+.play-teaser {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 28px;
+  padding: 24px 28px;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 140% at 100% 0%, var(--accent-soft), transparent 62%), var(--surface);
+  box-shadow: var(--shadow);
+}
+.play-teaser h2 {
+  margin: 8px 0 4px;
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.play-teaser-copy > p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+.play-teaser-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.play-teaser-stats {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.level-meter {
+  display: grid;
+  min-width: 190px;
+}
+.level-meter strong {
+  margin-top: 6px;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 18px;
+}
+.level-meter small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ——— Chapter: analogy and play links ——— */
+.analogy-card {
+  margin: 0 0 26px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 14px;
+  background: var(--gold-soft);
+}
+.analogy-card .section-kicker {
+  color: var(--gold);
+}
+.analogy-card > strong {
+  display: block;
+  margin: 8px 0 6px;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 19px;
+  line-height: 1.3;
+}
+.analogy-card p {
+  margin: 0;
+  color: var(--body-text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.analogy-card .analogy-catch {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-strong);
+  color: var(--body-text);
+  font-size: 13.5px;
+}
+.analogy-card code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--inline-code-text);
+  font-size: 0.9em;
+}
+.chapter-play {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 34px 0 0;
+  padding: 20px 22px;
+  border: 1px dashed var(--accent-border);
+  border-radius: 16px;
+  background: var(--accent-soft);
+}
+.chapter-play h3 {
+  margin: 6px 0 2px;
+  font-family: var(--display);
+  font-size: 20px;
+}
+.chapter-play p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+.chapter-play-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 960px) {
+  .play-teaser {
+    grid-template-columns: 1fr;
+  }
+  .level-meter {
+    flex: 1;
+    min-width: 0;
+  }
+}
+@media (max-width: 720px) {
+  /* The language name itself is the label on small screens; the globe would only take room. */
+  .language-control svg {
+    display: none;
+  }
+  .language-control {
+    padding: 0 2px 0 8px;
+  }
+  .mobile-bottom-nav a {
+    width: 19%;
+  }
+  .play-teaser {
+    padding: 20px 18px;
+  }
+  .content-loading {
+    bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .xp-bar span {
+    transition: none;
+  }
+}
+@media print {
+  .play-teaser,
+  .chapter-play,
+  .content-loading,
+  .language-control {
+    display: none;
+  }
+}

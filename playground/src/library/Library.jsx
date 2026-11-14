@@ -1,14 +1,18 @@
 import { useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { TRACKS, filterNotes } from '../lib/content.js';
-import { notes, trackById, resources } from '../data/catalog.js';
+import { trackById, resources } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
+import { useLang } from '../lib/langContext.js';
+import { useCatalog } from '../lib/catalogContext.js';
+import { usePlay } from '../lib/playContext.js';
 import Icon from './Icons.jsx';
 import CourseOutline from './CourseOutline.jsx';
 import { NoteLink } from './Navigation.jsx';
 
 export function NoteRow({ note, index }) {
   const { progress, toggle } = useProgress();
+  const { t } = useLang();
   const track = trackById[note.track];
   return (
     <article
@@ -27,7 +31,7 @@ export function NoteRow({ note, index }) {
           <h3>{note.title}</h3>
           {note.visual && (
             <span className="visual-tag">
-              <Icon name="play" size={11} /> Animated example
+              <Icon name="play" size={11} /> {t('row.animated')}
             </span>
           )}
         </div>
@@ -39,20 +43,22 @@ export function NoteRow({ note, index }) {
           {note.minutes > 0 && (
             <>
               <span>·</span>
-              <span>{note.minutes} min revision</span>
+              <span>{t('row.minRevision', { minutes: note.minutes })}</span>
             </>
           )}
           {note.practiceCount > 0 && (
             <>
               <span>·</span>
-              <span>{note.practiceCount} practice Qs</span>
+              <span>{t('row.practiceQs', { count: note.practiceCount })}</span>
             </>
           )}
         </div>
       </NoteLink>
       <button
         className={`icon-button save-button ${progress.saved.includes(note.id) ? 'is-saved' : ''}`}
-        aria-label={`${progress.saved.includes(note.id) ? 'Remove bookmark for' : 'Bookmark'} ${note.title}`}
+        aria-label={t(progress.saved.includes(note.id) ? 'row.removeBookmark' : 'row.bookmark', {
+          title: note.title,
+        })}
         aria-pressed={progress.saved.includes(note.id)}
         onClick={() => toggle('saved', note.id)}
       >
@@ -61,7 +67,7 @@ export function NoteRow({ note, index }) {
       <NoteLink
         to={`/notes/${note.id}`}
         className="icon-button row-open"
-        aria-label={`Read ${note.title}`}
+        aria-label={t('row.read', { title: note.title })}
       >
         <Icon name="arrow" size={18} />
       </NoteLink>
@@ -71,11 +77,14 @@ export function NoteRow({ note, index }) {
 
 function ProgressBackup() {
   const { progress, importProgress } = useProgress();
+  const { play, importPlay } = usePlay();
+  const { t } = useLang();
   const input = useRef(null);
   const [message, setMessage] = useState('');
   function exportData() {
+    // `play` (arcade stats) is optional in the backup format; version 1 readers ignore it.
     const url = URL.createObjectURL(
-      new Blob([JSON.stringify({ version: 1, ...progress }, null, 2)], {
+      new Blob([JSON.stringify({ version: 1, ...progress, play }, null, 2)], {
         type: 'application/json',
       }),
     );
@@ -84,13 +93,13 @@ function ProgressBackup() {
     anchor.download = 'shortnotes-progress.json';
     anchor.click();
     URL.revokeObjectURL(url);
-    setMessage('Progress backup download ho gaya.');
+    setMessage('backup.downloaded');
   }
   async function importData(event) {
     const file = event.target.files[0];
     if (!file) return;
     try {
-      if (file.size > 1000000) throw new Error('1 MB se chhota progress backup use karo.');
+      if (file.size > 1000000) throw new Error('backup.tooLarge');
       const value = JSON.parse(await file.text());
       const list = (key) =>
         Array.isArray(value[key]) && value[key].every((item) => typeof item === 'string');
@@ -100,7 +109,7 @@ function ProgressBackup() {
         !['saved', 'completed', 'known', 'recent'].every(list) ||
         (value.practiced !== undefined && !list('practiced'))
       )
-        throw new Error('Yeh valid Shortnotes progress backup nahi hai.');
+        throw new Error('backup.invalid');
       importProgress(
         Object.fromEntries(
           ['saved', 'completed', 'known', 'practiced', 'recent'].map((key) => [
@@ -109,34 +118,34 @@ function ProgressBackup() {
           ]),
         ),
       );
-      setMessage('Backup current progress ke saath merge ho gaya.');
+      // Always routed through the arcade store so imported milestones are not re-celebrated.
+      importPlay(value.play && typeof value.play === 'object' ? value.play : null);
+      setMessage('backup.merged');
     } catch (error) {
-      setMessage(error.message || 'Backup read nahi ho saka.');
+      setMessage(error.message?.startsWith('backup.') ? error.message : 'backup.unreadable');
     }
     event.target.value = '';
   }
   return (
     <div className="backup-panel">
       <div>
-        <strong>Apni progress ka backup rakho.</strong>
-        <p>
-          Progress is browser mein saved hai. Backup export karo ya doosre device ka merge karo.
-        </p>
-        <span role="status">{message}</span>
+        <strong>{t('backup.title')}</strong>
+        <p>{t('backup.body')}</p>
+        <span role="status">{message && t(message)}</span>
       </div>
       <div className="button-group">
         <button className="subtle-button" onClick={exportData}>
-          <Icon name="download" size={15} /> Export
+          <Icon name="download" size={15} /> {t('backup.export')}
         </button>
         <button className="subtle-button" onClick={() => input.current.click()}>
-          <Icon name="upload" size={15} /> Import
+          <Icon name="upload" size={15} /> {t('backup.import')}
         </button>
         <input
           ref={input}
           type="file"
           accept="application/json,.json"
           className="visually-hidden"
-          aria-label="Import progress backup"
+          aria-label={t('backup.importLabel')}
           onChange={importData}
         />
       </div>
@@ -147,6 +156,8 @@ function ProgressBackup() {
 export default function Library({ saved = false, paths = false }) {
   const [params, setParams] = useSearchParams();
   const { progress } = useProgress();
+  const { t } = useLang();
+  const { notes } = useCatalog();
   const track = trackById[params.get('track')] ? params.get('track') : 'all';
   const query = params.get('q') || '';
   const level = ['Foundation', 'Intermediate', 'Advanced'].includes(params.get('level'))
@@ -205,37 +216,35 @@ export default function Library({ saved = false, paths = false }) {
     <div className={`collection-page page-enter ${paths ? 'paths-view' : 'browse-view'}`}>
       <div className="page-eyebrow">
         <span className="small-line" />{' '}
-        {saved
-          ? 'IMPORTANT CONCEPTS SAVE RAKHO'
-          : paths
-            ? 'STEP-BY-STEP PADHO'
-            : 'TUMHARE ORDERED NOTES'}
+        {t(saved ? 'lib.eyebrow.saved' : paths ? 'lib.eyebrow.paths' : 'lib.eyebrow.browse')}
       </div>
       <div className="page-heading">
         <div>
           <h1>
             {saved
-              ? 'Tumhare bookmarks'
+              ? t('lib.title.saved')
               : paths
-                ? 'Ek step, phir agla'
-                : selected?.name || 'Poori notebook'}
+                ? t('lib.title.paths')
+                : selected?.name || t('lib.title.browse')}
             <span>.</span>
           </h1>
           <p>
             {saved
-              ? 'Jin concepts ko dobara padhna hai, yahan rakho.'
+              ? t('lib.lead.saved')
               : paths
-                ? 'Order follow karo, saath practice karo, concept khud explain karo.'
-                : selected?.description || 'Saare subjects, short notes aur code — ek jagah.'}
+                ? t('lib.lead.paths')
+                : selected
+                  ? t(`track.${selected.id}.description`)
+                  : t('lib.lead.browse')}
           </p>
         </div>
-        <span className="count-pill">{filtered.length} chapters</span>
+        <span className="count-pill">{t('lib.chaptersCount', { count: filtered.length })}</span>
       </div>
       {saved && <ProgressBackup />}
       {selected && !saved && !paths && (
         <section
           className="collection-overview"
-          aria-label={`${selected.name} progress`}
+          aria-label={t('lib.subjectProgress', { name: selected.name })}
           style={{ '--track-color': selected.color, '--track-tint': selected.tint }}
         >
           <span className="collection-icon">
@@ -243,21 +252,21 @@ export default function Library({ saved = false, paths = false }) {
           </span>
           <div>
             <strong>
-              {completed} / {trackNotes.length} chapters revised
+              {t('lib.chaptersRevised', { done: completed, total: trackNotes.length })}
             </strong>
-            <p>{selected.topics}</p>
+            <p>{t(`track.${selected.id}.topics`)}</p>
             <progress
-              aria-label="Subject revision progress"
+              aria-label={t('lib.subjectRevisionProgress')}
               value={completed}
               max={trackNotes.length}
             />
           </div>
           <NoteLink className="primary-button" to={`/notes/${nextNote.id}`}>
             {completed === trackNotes.length
-              ? 'Dobara revise karo'
+              ? t('lib.reviseAgain')
               : completed
-                ? 'Continue subject'
-                : 'Subject shuru karo'}
+                ? t('lib.continueSubject')
+                : t('lib.startSubject')}
             <Icon name="arrow" size={16} />
           </NoteLink>
         </section>
@@ -266,15 +275,15 @@ export default function Library({ saved = false, paths = false }) {
         <label className="filter-search">
           <Icon name="search" size={18} />
           <input
-            placeholder="Kya revise karna hai? Search karo…"
-            aria-label="Search this collection"
+            placeholder={t('lib.searchPlaceholder')}
+            aria-label={t('lib.searchLabel')}
             value={query}
             onChange={(event) => update('q', event.target.value)}
           />
           {query && (
             <button
               className="icon-button"
-              aria-label="Clear search"
+              aria-label={t('lib.clearSearch')}
               onClick={() => update('q', '')}
             >
               <Icon name="close" size={15} />
@@ -282,42 +291,44 @@ export default function Library({ saved = false, paths = false }) {
           )}
         </label>
         <select
-          aria-label="Filter difficulty"
+          aria-label={t('lib.filterDifficulty')}
           value={level}
           onChange={(event) => update('level', event.target.value)}
         >
-          <option value="all">All levels</option>
+          <option value="all">{t('lib.allLevels')}</option>
           <option>Foundation</option>
           <option>Intermediate</option>
           <option>Advanced</option>
         </select>
         <select
-          aria-label="Filter progress"
+          aria-label={t('lib.filterProgress')}
           value={status}
           onChange={(event) => update('status', event.target.value)}
         >
-          <option value="all">All progress</option>
-          <option value="pending">Abhi baaki hai</option>
-          <option value="completed">Revised</option>
+          <option value="all">{t('lib.allProgress')}</option>
+          <option value="pending">{t('lib.pending')}</option>
+          <option value="completed">{t('lib.revised')}</option>
         </select>
         <select
-          aria-label="Filter revision time"
+          aria-label={t('lib.filterTime')}
           value={minutes}
           onChange={(event) => update('minutes', event.target.value)}
         >
-          <option value="all">Any duration</option>
-          <option value="10">Up to 10 min</option>
-          <option value="15">Up to 15 min</option>
-          <option value="20">Up to 20 min</option>
+          <option value="all">{t('lib.anyDuration')}</option>
+          {[10, 15, 20].map((value) => (
+            <option key={value} value={value}>
+              {t('lib.upTo', { minutes: value })}
+            </option>
+          ))}
         </select>
       </div>
-      <div className="filter-chips" aria-label="Filter subject">
+      <div className="filter-chips" aria-label={t('lib.filterSubject')}>
         <button
           aria-pressed={track === 'all'}
           className={track === 'all' ? 'active' : ''}
           onClick={() => update('track', 'all')}
         >
-          Saare subjects
+          {t('lib.allSubjects')}
         </button>
         {TRACKS.map((item) => (
           <button
@@ -335,66 +346,58 @@ export default function Library({ saved = false, paths = false }) {
         <div className="learning-tip">
           <Icon name="path" />
           <p>
-            <strong>Padhne ka suggested route:</strong> JavaScript → React → frontend design. Java →
-            Spring → backend design. Mobile ke liye React → React Native. Saath mein DSA padho. Har
-            chapter ke baad bina notes dekhe concept explain karo.
+            <strong>{t('lib.routeTipTitle')}</strong> {t('lib.routeTipBody')}
           </p>
         </div>
       )}
       <div className="results-heading">
         <span role="status">
-          {filtered.length} results
+          {t('lib.results', { count: filtered.length })}
           {query && (
             <>
               {' '}
-              for <strong>“{query}”</strong>
+              {t('lib.resultsFor')} <strong>“{query}”</strong>
             </>
           )}
         </span>
         <div className="results-actions">
           {!paths && (
             <label className="collection-sort">
-              <span>Sort</span>
+              <span>{t('lib.sort')}</span>
               <select
-                aria-label="Sort chapters"
+                aria-label={t('lib.sortLabel')}
                 value={sort}
                 onChange={(event) =>
                   update('sort', event.target.value === 'course' ? '' : event.target.value)
                 }
               >
-                <option value="course">Course order</option>
-                <option value="shortest">Shortest first</option>
-                <option value="title">Title A–Z</option>
+                <option value="course">{t('lib.sort.course')}</option>
+                <option value="shortest">{t('lib.sort.shortest')}</option>
+                <option value="title">{t('lib.sort.title')}</option>
               </select>
             </label>
           )}
           {hasFilters ? (
             <button className="text-button" onClick={() => setParams({}, { replace: true })}>
-              <Icon name="reset" size={14} /> Reset filters
+              <Icon name="reset" size={14} /> {t('lib.resetFilters')}
             </button>
           ) : paths ? (
-            <span>Course order</span>
+            <span>{t('lib.sort.course')}</span>
           ) : null}
         </div>
       </div>
       {filtered.length === 0 ? (
         <div className="empty-state">
           <Icon name={saved ? 'bookmark' : 'search'} size={32} />
-          <h2>
-            {saved && !source.length ? 'Apne important chapters save karo.' : 'Koi note nahi mila.'}
-          </h2>
-          <p>
-            {saved && !source.length
-              ? 'Chapter bookmark karo, woh yahan mil jaega.'
-              : 'Search thoda broad karo ya doosra subject chuno.'}
-          </p>
+          <h2>{saved && !source.length ? t('lib.empty.savedTitle') : t('lib.empty.title')}</h2>
+          <p>{saved && !source.length ? t('lib.empty.savedBody') : t('lib.empty.body')}</p>
           {hasFilters && source.length > 0 ? (
             <button className="subtle-button" onClick={() => setParams({}, { replace: true })}>
-              Filters hatao <Icon name="reset" size={16} />
+              {t('lib.removeFilters')} <Icon name="reset" size={16} />
             </button>
           ) : (
             <Link className="subtle-button" to="/library">
-              Saare notes kholo <Icon name="arrow" size={16} />
+              {t('lib.openAll')} <Icon name="arrow" size={16} />
             </Link>
           )}
         </div>
@@ -423,14 +426,14 @@ export default function Library({ saved = false, paths = false }) {
               <section
                 className="subject-collection"
                 key={item.id}
-                aria-label={`${item.name} chapters`}
+                aria-label={t('lib.trackChapters', { name: item.name })}
               >
                 <div className="collection-section-heading">
                   <h2>
                     <span className="subject-dot" style={{ background: item.color }} />
                     {item.name}
                   </h2>
-                  <span>{chapters.length} chapters</span>
+                  <span>{t('lib.chaptersCount', { count: chapters.length })}</span>
                 </div>
                 <div className="note-list">
                   {chapters.map((note, index) => (
@@ -450,14 +453,14 @@ export default function Library({ saved = false, paths = false }) {
       )}
       {!saved && (
         <details className="reference-drawer">
-          <summary>Original PDF references</summary>
+          <summary>{t('lib.pdfReferences')}</summary>
           <div className="resource-links">
             {resources.map((resource) => (
               <a key={resource.source} href={resource.url} target="_blank" rel="noreferrer">
                 <Icon name="file" size={18} />
                 <span>
                   <strong>{resource.title}</strong>
-                  <small>Original PDF reference · new tab mein khulega</small>
+                  <small>{t('lib.pdfCaption')}</small>
                 </span>
                 <Icon name="external" size={17} />
               </a>

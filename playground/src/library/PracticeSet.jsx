@@ -1,11 +1,12 @@
 import { useId, useState } from 'react';
 import { PRACTICE_HEADING, PRACTICE_LEVELS, headingId } from '../lib/content.js';
 import { useProgress } from '../lib/progressContext.js';
+import { useLang } from '../lib/langContext.js';
 import Markdown from './Markdown.jsx';
 import Icon from './Icons.jsx';
 
 // Titles only use inline code, so keep them as plain heading text.
-function InlineTitle({ text }) {
+export function InlineTitle({ text }) {
   return text
     .split(/(`[^`]+`)/)
     .map((part, index) =>
@@ -23,6 +24,7 @@ function practiceId(noteId, question) {
 
 function PracticeCard({ noteId, question, number }) {
   const { progress, toggle } = useProgress();
+  const { t } = useLang();
   const [open, setOpen] = useState(false);
   const answerId = useId();
   const id = practiceId(noteId, question);
@@ -40,7 +42,7 @@ function PracticeCard({ noteId, question, number }) {
         </span>
         {clear && (
           <span className="practice-clear-tag">
-            <Icon name="check" size={13} /> Clear
+            <Icon name="check" size={13} /> {t('practice.clearTag')}
           </span>
         )}
       </header>
@@ -61,13 +63,13 @@ function PracticeCard({ noteId, question, number }) {
           onClick={() => setOpen(!open)}
         >
           <Icon name={open ? 'eyeOff' : 'eye'} size={16} />
-          {open ? 'Answer chhupao' : 'Answer dekho'}
+          {open ? t('practice.hide') : t('practice.show')}
         </button>
-        {!open && <span className="practice-hint">Pehle khud socho ya likho.</span>}
+        {!open && <span className="practice-hint">{t('practice.hint')}</span>}
       </div>
       <div id={answerId} className="practice-answer" hidden={!open}>
         <span className="practice-answer-label">
-          <Icon name="idea" size={15} /> Answer
+          <Icon name="idea" size={15} /> {t('practice.answer')}
         </span>
         <Markdown terms idPrefix={`practice-${number}-answer`}>
           {question.answer}
@@ -79,7 +81,7 @@ function PracticeCard({ noteId, question, number }) {
           onClick={() => toggle('practiced', id)}
         >
           <Icon name={clear ? 'complete' : 'circle'} size={16} />
-          {clear ? 'Clear mark hai' : 'Mera answer sahi tha — clear mark karo'}
+          {clear ? t('practice.marked') : t('practice.mark')}
         </button>
       </div>
     </article>
@@ -88,6 +90,7 @@ function PracticeCard({ noteId, question, number }) {
 
 export default function PracticeSet({ noteId, questions }) {
   const { progress } = useProgress();
+  const { t } = useLang();
   const [level, setLevel] = useState('All');
   if (!questions.length) return null;
   const clear = questions.filter((question) =>
@@ -105,23 +108,24 @@ export default function PracticeSet({ noteId, questions }) {
       <div className="practice-set-head">
         <div>
           <span className="section-kicker">
-            <Icon name="target" size={14} /> KHUD KO TEST KARO
+            <Icon name="target" size={14} /> {t('practice.kicker')}
           </span>
-          <h2 id={headingId(PRACTICE_HEADING)}>{PRACTICE_HEADING}</h2>
-          <p>
-            Easy se Hard tak. Answer kholne se pehle apna jawab bolo ya likho — phir compare karo.
-          </p>
+          <h2 id={headingId(PRACTICE_HEADING)}>{t('practice.heading')}</h2>
+          <p>{t('practice.lead')}</p>
         </div>
-        <div className="practice-score" aria-label={`${clear} of ${questions.length} clear`}>
+        <div
+          className="practice-score"
+          aria-label={t('practice.scoreLabel', { clear, total: questions.length })}
+        >
           <strong>
             {clear}
             <span>/{questions.length}</span>
           </strong>
-          <span>clear</span>
+          <span>{t('practice.clear')}</span>
           <progress value={clear} max={questions.length} aria-hidden="true" />
         </div>
       </div>
-      <div className="practice-filter" role="group" aria-label="Question level">
+      <div className="practice-filter" role="group" aria-label={t('practice.levelLabel')}>
         {levels.map((item) => (
           <button
             key={item}
@@ -130,7 +134,7 @@ export default function PracticeSet({ noteId, questions }) {
             className={level === item ? 'active' : ''}
             onClick={() => setLevel(item)}
           >
-            {item === 'All' ? `Sab (${questions.length})` : item}
+            {item === 'All' ? t('practice.all', { count: questions.length }) : item}
           </button>
         ))}
       </div>

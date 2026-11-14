@@ -18,5 +18,13 @@
 - Audit — `node scripts/check-revision.mjs` format, duplicate labels, source-topic presence, chapter recall, graded practice sections aur interview answer length verify karta hai.
 - Generation — root se `node scripts/sync-curriculum.mjs`, `node scripts/sync-interviews.mjs`, `node scripts/sync-priority-interviews.mjs`, `node scripts/sync-machine-coding.mjs`.
 - Verify — `cd playground` phir `npm run check`; IDs, links, examples aur app checks pass hone chahiye.
+- English chapter — `notes/en/<track>/<same-file>.md`; frontmatter IDs, code blocks, section count aur practice levels original jaise rakho. Headings `Understand it with an example`, `Recall and practice`; recall labels `Question`, `Answer`, `Try it yourself`.
+- English check — `npm run i18n:check` structure verify karta hai aur coverage print karta hai; wording ki accuracy khud review karo.
+- English helper — `node scripts/translate-chapters.mjs extract <track> [from] [to]` translatable lines `.i18n-work/seg/` mein nikalta hai; translated copy `.i18n-work/tr/` mein rakhkar `weave <track>` chalao. Code blocks aur structure automatically same rehte hain.
+- English interview answers — `node scripts/translate-questions.mjs extract <track> [from] [to]` question, answer ki prose lines aur follow-up nikalta hai; translated copy `.i18n-work/tr/q-<track>-NN-NN.txt` mein rakhkar `weave` chalao, jo `playground/src/data/i18n/questions.en.json` likhta hai. Machine-coding question ka task text (`promptCode`: build contract + acceptance checks) alag se `extract-prompts <track>` se nikalta hai aur `.i18n-work/tr/p-*.txt` se weave hota hai. `stats` har track ka coverage dikhata hai. Naya question add karo toh uska English entry bhi add karo, warna woh Hinglish notice ke saath dikhega.
+- Stage/title text — `notes/en/curriculum.json` (stages) aur `notes/en/chapters.json` (title + summary); naya chapter ya stage add karo toh dono update karo.
+- UI text — component mein direct string nahi; key ko `playground/src/i18n/hinglish.js` aur `en.js` dono mein add karke `t('key')` use karo.
+- Visual — metadata/frames `playground/src/data/visuals.js` ya `moreVisuals.js` mein, English text `visuals.en.js` mein; ID ko `src/lib/visualIds.js` mein add karo. Algorithm trace ko compute karo, haath se frames mat likho.
+- Analogy — `playground/src/data/analogies.js`; `title`, `text` aur `catch` (analogy ki limit) dono languages mein zaroori.
 
 - Topic coverage — equivalent source labels `scripts/revision-topic-aliases.json` mein map hain; naya alias sirf manually verified equivalent concept ke liye.

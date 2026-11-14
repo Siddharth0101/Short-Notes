@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 5
 summary: Regular `this` — function kaise call hua usse decide hota hai.
 tags: this, prototype, classes, oop, inheritance
+visual: prototype-chain
 ---
 
 ## Quick revision

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { normalizeProgress } from './content.js';
 import { noteById } from '../data/catalog.js';
 import { ProgressContext } from './progressContext.js';
+import { useLang } from './langContext.js';
 
 function migrateCourseProgress(value) {
   const progress = normalizeProgress(value);
@@ -13,6 +14,7 @@ function migrateCourseProgress(value) {
 }
 const KEY = 'shortnotes.progress.v1';
 export function ProgressProvider({ children }) {
+  const { t } = useLang();
   const [progress, setProgress] = useState(() => {
     try {
       return migrateCourseProgress(JSON.parse(localStorage.getItem(KEY)));
@@ -37,13 +39,8 @@ export function ProgressProvider({ children }) {
         ? previous[type].filter((value) => value !== id)
         : [...previous[type], id],
     }));
-    const messages = {
-      saved: wasSelected ? 'Bookmark hata diya.' : 'Bookmark save ho gaya.',
-      completed: wasSelected ? 'Chapter dobara revise karna hai.' : 'Chapter revised. Nice!',
-      known: wasSelected ? 'Question practice mein wapas.' : 'Concept clear mark ho gaya.',
-      practiced: wasSelected ? 'Question dobara practice list mein.' : 'Question clear mark ho gaya.',
-    };
-    setNotice({ type, id, wasSelected, message: messages[type] });
+    // Store the message key so the toast follows a language switch.
+    setNotice({ type, id, wasSelected, message: `toast.${type}.${wasSelected ? 'off' : 'on'}` });
   };
   const undo = () => {
     if (!notice) return;
@@ -74,13 +71,13 @@ export function ProgressProvider({ children }) {
       {children}
       {notice && (
         <div className="progress-toast">
-          <span role="status">{notice.message}</span>
+          <span role="status">{t(notice.message)}</span>
           <button className="text-button" onClick={undo}>
-            Undo
+            {t('toast.undo')}
           </button>
           <button
             className="icon-button"
-            aria-label="Dismiss notification"
+            aria-label={t('toast.dismiss')}
             onClick={() => setNotice(null)}
           >
             ×

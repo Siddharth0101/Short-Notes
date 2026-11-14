@@ -7,6 +7,7 @@ level: Advanced
 minutes: 3
 summary: Strong consistency — defined operation model ke hisaab se latest ordered state.
 tags: consistency, rate-limiting, token-bucket, distributed
+visual: token-bucket
 ---
 
 ## Quick revision

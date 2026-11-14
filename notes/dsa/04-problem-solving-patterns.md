@@ -7,6 +7,7 @@ level: Foundation
 minutes: 4
 summary: Frequency counter — repeated counts ke liye map; nested scans bach sakte hain.
 tags: frequency-counter, two-pointers, sliding-window, prefix-sum
+visual: two-pointers
 ---
 
 ## Quick revision

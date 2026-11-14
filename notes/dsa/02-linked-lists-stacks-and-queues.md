@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 3
 summary: Linked list — nodes references se linked; random access O(n).
 tags: linked-list, stack, queue, pointers, monotonic-stack
+visual: linked-list-reversal
 ---
 
 ## Quick revision

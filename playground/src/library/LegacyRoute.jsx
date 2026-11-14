@@ -2,17 +2,19 @@ import { Suspense, lazy } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { getNodeBySplatPath } from '../registry/index.js';
 import { archive } from '../data/catalog.js';
+import { useLang } from '../lib/langContext.js';
 const Domain = lazy(() => import('../components/pages/Domain/Domain.jsx'));
 const NoteSandbox = lazy(() => import('../components/organisms/NoteSandbox/NoteSandbox.jsx'));
 export default function LegacyRoute() {
   const { domainId, '*': splat = '' } = useParams();
+  const { t } = useLang();
   if (!splat.startsWith('file/')) return <Domain />;
   const note = getNodeBySplatPath(domainId, splat.slice(5));
   if (!note || note.type !== 'file')
     return (
       <div className="empty-state">
-        <h2>Original note not found.</h2>
-        <Link to="/library">Browse courses</Link>
+        <h2>{t('legacy.notFound')}</h2>
+        <Link to="/library">{t('legacy.browse')}</Link>
       </div>
     );
   const reference = archive.find((item) => item.source === note.source);
@@ -28,9 +30,9 @@ export default function LegacyRoute() {
           reference?.chapterId ? `/notes/${reference.chapterId}#source-${reference.id}` : '/library'
         }
       >
-        ← Back to course chapter
+        {t('legacy.back')}
       </Link>
-      <Suspense fallback={<p>Loading original playground…</p>}>
+      <Suspense fallback={<p>{t('legacy.loading')}</p>}>
         {Visualizer ? (
           <Visualizer />
         ) : (

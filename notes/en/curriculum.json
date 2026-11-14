@@ -1,0 +1,237 @@
+{
+  "javascript-1": {
+    "title": "Getting started with the language",
+    "goal": "Start with variables and understand one small concept at a time.",
+    "checkpoint": "Use a function, a loop and a condition to total the study minutes in a lessons array."
+  },
+  "javascript-2": {
+    "title": "Understand data and scope",
+    "goal": "Transform collections, validate input, and understand bindings and built-in utilities.",
+    "checkpoint": "Explain a closure and build a validated calculation with no accidental string concatenation."
+  },
+  "javascript-3": {
+    "title": "Build interactions in the browser",
+    "goal": "Learn HTML/CSS structure before you manipulate the DOM.",
+    "checkpoint": "Build a keyboard-accessible list whose actions are handled through delegation."
+  },
+  "javascript-4": {
+    "title": "Understand objects and design",
+    "goal": "Understand the this receiver and prototypes before the OOP project.",
+    "checkpoint": "Explain this at three call sites and implement a small state-machine project."
+  },
+  "javascript-5": {
+    "title": "Handle async work and delivery",
+    "goal": "Move from promises and fetch to concurrency limits and modules.",
+    "checkpoint": "Handle a failed request, cap the active work, and explain how the app is delivered to the browser."
+  },
+  "javascript-6": {
+    "title": "Verify how the code behaves",
+    "goal": "Verify your modules and async knowledge with repeatable tests and a debugging workflow.",
+    "checkpoint": "Run boundary tests and a controlled async failure case, then explain the regression."
+  },
+  "javascript-7": {
+    "title": "Understand persistence and collaboration",
+    "goal": "Practise the local data lifecycle, offline conflicts and reviewed Git changes.",
+    "checkpoint": "Explain a two-tab conflict policy and the exact meaning of a staged versus unstaged diff."
+  },
+  "react-1": {
+    "title": "Understand components first",
+    "goal": "Start with JSX and props, then learn state, rendering and identity.",
+    "checkpoint": "In an editable list, keep each draft attached to the correct item."
+  },
+  "react-2": {
+    "title": "Reuse UI and synchronize safely",
+    "goal": "After composition, learn effects, refs and custom hooks.",
+    "checkpoint": "Extract a reusable component and clean up a cancellable effect."
+  },
+  "react-3": {
+    "title": "Assemble a complete application",
+    "goal": "Add navigation, shared state, a server cache and typed boundaries.",
+    "checkpoint": "Build a routed page with a clear cache identity and validated API data."
+  },
+  "react-4": {
+    "title": "Measure, then practise",
+    "goal": "Profile production behaviour before machine coding.",
+    "checkpoint": "Show stale-request protection, keyboard behaviour and one measured improvement."
+  },
+  "react-5": {
+    "title": "Test the user journey",
+    "goal": "Check the observable contracts of forms, async screens and accessibility.",
+    "checkpoint": "Write a form test with accessible queries and separately identify the browser-only checks."
+  },
+  "react-native-1": {
+    "title": "The foundation of native UI",
+    "goal": "Understand the Expo workflow, core components and mobile layout.",
+    "checkpoint": "Inspect a safe-area-aware screen on Android and iOS."
+  },
+  "react-native-2": {
+    "title": "Lists and screen navigation",
+    "goal": "Connect virtualized data with the route lifecycle.",
+    "checkpoint": "Verify a deep link from the list to a detail screen, and the back behaviour."
+  },
+  "react-native-3": {
+    "title": "Forms, data and device features",
+    "goal": "Handle input, offline state, storage and permissions.",
+    "checkpoint": "Show a usable recovery for a denied permission and a failed request."
+  },
+  "react-native-4": {
+    "title": "Measure, test and release",
+    "goal": "Understand performance, accessibility and compatible releases.",
+    "checkpoint": "Explain the release checklist and the boundary between an OTA update and a native build."
+  },
+  "java-1": {
+    "title": "Write your first Java program",
+    "goal": "Run main, declare variables, make decisions, and create methods and instances.",
+    "checkpoint": "Compile a learner program with two independent objects and an array-processing method."
+  },
+  "java-2": {
+    "title": "Build a reliable core model",
+    "goal": "On top of basic classes, build OOP, collections, exceptions, streams and memory reasoning.",
+    "checkpoint": "Choose a suitable collection, preserve the equality contract and close an owned resource."
+  },
+  "java-3": {
+    "title": "Build, test and save data",
+    "goal": "Set up builds and tests before database and SQL concurrency.",
+    "checkpoint": "Test a JDBC operation; explain a join and an atomic inventory update."
+  },
+  "java-4": {
+    "title": "Understand concurrency and resource limits",
+    "goal": "Learn thread safety, virtual threads and bounded resources.",
+    "checkpoint": "Show a race-safe operation and explain why backpressure is needed."
+  },
+  "java-5": {
+    "title": "Evolve types, schema and object design",
+    "goal": "Practise finite variants, metadata, compatible migrations and invariant-based low-level design.",
+    "checkpoint": "Verify the contract of an immutable model, a safe migration and a concurrent loan claim."
+  },
+  "spring-boot-1": {
+    "title": "Start and configure the application",
+    "goal": "Understand Boot startup, bean wiring and typed config.",
+    "checkpoint": "Start the app and diagnose a missing bean or an invalid setting."
+  },
+  "spring-boot-2": {
+    "title": "Build a clear HTTP boundary",
+    "goal": "Build REST endpoints with DTOs, validation and controlled errors.",
+    "checkpoint": "Show the documented responses for a successful creation and for rejected input."
+  },
+  "spring-boot-3": {
+    "title": "Save and secure business operations",
+    "goal": "Apply transactions, persistence and authorization boundaries.",
+    "checkpoint": "Prove that the invariant survives concurrent requests and that unauthorized access is rejected."
+  },
+  "spring-boot-4": {
+    "title": "Verify and operate the service",
+    "goal": "Test the boundaries, inspect telemetry and complete the deployment capstone.",
+    "checkpoint": "Run the API acceptance cases and defend the recovery from a failed deployment."
+  },
+  "spring-boot-5": {
+    "title": "Operate background work and caches",
+    "goal": "Connect proxy boundaries, scheduled jobs and cache identity to failure scenarios.",
+    "checkpoint": "Give a measurable contract for recovering from a duplicate job and a stale cache."
+  },
+  "spring-boot-6": {
+    "title": "Trace the web runtime all the way down",
+    "goal": "Connect servlet concurrency, forwarding and view rendering to Spring MVC.",
+    "checkpoint": "Diagnose a shared request-field race and the loss of a redirect attribute."
+  },
+  "spring-boot-7": {
+    "title": "Optional AI retrieval extension",
+    "goal": "Understand authorized retrieval, evidence quality and the limits of model integration.",
+    "checkpoint": "Give an evaluation contract for known, unsupported and unauthorized questions."
+  },
+  "mongodb-1": {
+    "title": "Understand a server request",
+    "goal": "After Node and HTTP, learn Express routing and errors.",
+    "checkpoint": "Trace a request from the middleware to a controlled response."
+  },
+  "mongodb-2": {
+    "title": "Model the data",
+    "goal": "Understand documents and CRUD before Mongoose schemas.",
+    "checkpoint": "Choose embedding or references from the actual read pattern, and validate writes."
+  },
+  "mongodb-3": {
+    "title": "Write efficient queries",
+    "goal": "After indexes and aggregation, inspect plans and bounded streaming.",
+    "checkpoint": "Explain the winning plan of a tenant query and stream a large export."
+  },
+  "mongodb-4": {
+    "title": "Secure it, then deploy",
+    "goal": "Add authentication and authorization before payments, uploads and deployment.",
+    "checkpoint": "Reject unauthorized access and recover safely from a duplicate webhook."
+  },
+  "mongodb-5": {
+    "title": "Verify the API lifecycle",
+    "goal": "Practise real HTTP testing, database isolation and bounded shutdown.",
+    "checkpoint": "Run a parallel-safe request test and the acceptance cases for an in-flight shutdown."
+  },
+  "dsa-1": {
+    "title": "Understand cost and basic structures",
+    "goal": "Before patterns, learn complexity, lists/stacks/queues and hashing.",
+    "checkpoint": "Choose an array, a queue or a map and justify the cost of the operation."
+  },
+  "dsa-2": {
+    "title": "Learn reusable problem-solving patterns",
+    "goal": "After counters, pointers and search, study recursion and sorting.",
+    "checkpoint": "Before coding, trace the binary-search invariant and a recursive call."
+  },
+  "dsa-3": {
+    "title": "Understand ordered candidates and hierarchy",
+    "goal": "Apply the stack invariant, then learn trees and heaps, and after that graphs.",
+    "checkpoint": "Prove the complexity bound of a stack and implement a heap-based top-k."
+  },
+  "dsa-4": {
+    "title": "Solve graphs and DP",
+    "goal": "Use queues, recursion, hashing and heaps to understand dependencies and repeated subproblems.",
+    "checkpoint": "Choose between BFS and Dijkstra, then derive a DP state and recurrence."
+  },
+  "dsa-5": {
+    "title": "Prove the advanced choices",
+    "goal": "Learn greedy and interval proofs, and trie, bitmask and range-query structures.",
+    "checkpoint": "Compare a greedy solution against a brute-force oracle and trace a Fenwick update."
+  },
+  "system-design-1": {
+    "title": "The common foundation of design",
+    "goal": "Make requirements and capacity clear before you choose scaling or a cache.",
+    "checkpoint": "Write down the workload, latency, freshness and correctness assumptions."
+  },
+  "system-design-2": {
+    "title": "Understand React frontend architecture",
+    "goal": "Design rendering, state and performance before the frontend case.",
+    "checkpoint": "Build an accessible catalog with URL state, a cache and stale-request handling."
+  },
+  "system-design-3": {
+    "title": "Understand Java backend architecture",
+    "goal": "After API and data boundaries, study messaging, reliability and operations.",
+    "checkpoint": "Explain the reservation invariant, the retry identity and a failure timeline."
+  },
+  "system-design-4": {
+    "title": "Work through end-to-end case studies",
+    "goal": "Study both sides and combine frontend and backend reasoning.",
+    "checkpoint": "Trace the flow that preserves durable state through a checkout or reconnect failure."
+  },
+  "system-design-5": {
+    "title": "Defend distributed guarantees and API contracts",
+    "goal": "Compare read consistency, global limits and API styles against the workload and failure history.",
+    "checkpoint": "Define the expected outcomes for replica lag, a limiter outage and a batch lookup failure."
+  },
+  "system-design-6": {
+    "title": "Diagnose with OS and networking fundamentals",
+    "goal": "Trace request latency through the process, memory, network and shared-resource layers.",
+    "checkpoint": "Use evidence to separate a DNS/TCP/TLS failure, a pool wait and an unknown write outcome."
+  },
+  "interview-1": {
+    "title": "Practise the language interview",
+    "goal": "Take the playbook for the language course you completed.",
+    "checkpoint": "Explain the output without looking at the answer and defend a design choice."
+  },
+  "interview-2": {
+    "title": "Practise the application interview",
+    "goal": "Move from the language to frontend and database-backed scenarios.",
+    "checkpoint": "Complete one machine-coding or query-design drill, including its errors."
+  },
+  "interview-3": {
+    "title": "Practise algorithms and architecture",
+    "goal": "Do these rounds after the related DSA or design course.",
+    "checkpoint": "State the invariant in coding and a measurable requirement in design."
+  }
+}

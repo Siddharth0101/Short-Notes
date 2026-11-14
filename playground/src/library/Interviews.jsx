@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { interviewQuestions } from '../data/interviewQuestions.js';
 import { TRACKS } from '../lib/content.js';
-import { notes, trackById } from '../data/catalog.js';
+import { trackById } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
+import { useLang } from '../lib/langContext.js';
+import { useCatalog } from '../lib/catalogContext.js';
 import Icon from './Icons.jsx';
 import Markdown from './Markdown.jsx';
 import { INTERVIEW_TOPICS, questionTopic } from '../data/interviewTopics.js';
@@ -12,6 +13,8 @@ import { NoteLink } from './Navigation.jsx';
 export function QuestionCard({ item, number }) {
   const [revealed, setRevealed] = useState(false);
   const { progress, toggle } = useProgress();
+  const { lang, t } = useLang();
+  const { notes } = useCatalog();
   const known = progress.known.includes(item.id);
   const related = item.noteId
     ? notes.find((note) => note.id === item.noteId)
@@ -22,7 +25,9 @@ export function QuestionCard({ item, number }) {
   return (
     <article className={`question-card ${known ? 'known' : ''}`}>
       <div className="question-top">
-        <span className="question-number">QUESTION {String(number).padStart(2, '0')}</span>
+        <span className="question-number">
+          {t('iq.question', { number: String(number).padStart(2, '0') })}
+        </span>
         <div>
           <span style={{ color: trackById[item.track].color }}>
             {trackById[item.track].shortName || trackById[item.track].name}
@@ -32,6 +37,11 @@ export function QuestionCard({ item, number }) {
         </div>
       </div>
       <h2>{item.question}</h2>
+      {item.untranslated && lang === 'en' && (
+        <p className="translation-notice translation-notice--inline" role="note">
+          <Icon name="globe" size={14} /> {t('iq.untranslated')}
+        </p>
+      )}
       {item.promptCode && <Markdown>{item.promptCode}</Markdown>}
       <div className="question-tags">
         {item.tags.map((tag) => (
@@ -40,12 +50,12 @@ export function QuestionCard({ item, number }) {
       </div>
       {revealed && (
         <div className="question-answer" id={`answer-${item.id}`}>
-          <span className="card-overline">QUICK ANSWER</span>
+          <span className="card-overline">{t('iq.quickAnswer')}</span>
           <Markdown>{item.answer}</Markdown>
           <div className="follow-up">
             <Icon name="messages" size={18} />
             <div>
-              <strong>Thoda aur deep samjho</strong>
+              <strong>{t('iq.deeper')}</strong>
               <p>{item.followUp}</p>
             </div>
           </div>
@@ -62,7 +72,8 @@ export function QuestionCard({ item, number }) {
           ))}
           {related && (
             <NoteLink className="text-button answer-reading" to={`/notes/${related.id}`}>
-              <Icon name="book" size={16} /> Study: {related.title} <Icon name="arrow" size={16} />
+              <Icon name="book" size={16} /> {t('iq.study', { title: related.title })}{' '}
+              <Icon name="arrow" size={16} />
             </NoteLink>
           )}
         </div>
@@ -74,7 +85,7 @@ export function QuestionCard({ item, number }) {
           aria-controls={`answer-${item.id}`}
           onClick={() => setRevealed(!revealed)}
         >
-          {revealed ? 'Answer chhupao' : 'Answer dekho'}
+          {revealed ? t('iq.hide') : t('iq.show')}
           <Icon name={revealed ? 'close' : 'down'} size={16} />
         </button>
         <button
@@ -83,7 +94,7 @@ export function QuestionCard({ item, number }) {
           onClick={() => toggle('known', item.id)}
         >
           <Icon name={known ? 'check' : 'circle'} size={15} />
-          {known ? 'Concept clear hai' : 'Yeh samajh aa gaya'}
+          {known ? t('iq.known') : t('iq.markKnown')}
         </button>
       </div>
     </article>
@@ -91,6 +102,7 @@ export function QuestionCard({ item, number }) {
 }
 
 function MockSession({ questions, onClose }) {
+  const { t } = useLang();
   const [index, setIndex] = useState(0);
   const [draft, setDraft] = useState('');
   const [ratings, setRatings] = useState([]);
@@ -122,53 +134,52 @@ function MockSession({ questions, onClose }) {
     setIndex(index + 1);
   }
   return (
-    <section className="mock-session" aria-label="Mock interview session">
+    <section className="mock-session" aria-label={t('mock.label')}>
       <div className="mock-header">
         <div>
-          <span className="card-overline">FOCUSED PRACTICE KARO</span>
+          <span className="card-overline">{t('mock.overline')}</span>
           <h2 ref={heading} tabIndex={-1}>
             {finished
-              ? 'Tumhare session ka review'
-              : `Question ${index + 1} of ${questions.length}`}
+              ? t('mock.review')
+              : t('mock.questionOf', { index: index + 1, total: questions.length })}
           </h2>
         </div>
         <div className="button-group">
           {!finished && (
             <>
-              <span className="mock-timer" role="timer" aria-label="Time remaining">
+              <span className="mock-timer" role="timer" aria-label={t('mock.timeRemaining')}>
                 {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, '0')}
               </span>
               <button className="subtle-button" disabled={!remaining} onClick={toggleTimer}>
-                {running ? 'Timer pause karo' : 'Timer continue karo'}
+                {running ? t('mock.pause') : t('mock.resume')}
               </button>
             </>
           )}
           <button className="subtle-button" onClick={onClose}>
-            {finished ? 'Questions par wapas' : 'Session khatam karo'}
+            {finished ? t('mock.back') : t('mock.end')}
           </button>
         </div>
       </div>
-      <p className="mock-help">
-        15-minute practice target hai. Drafts aur self-review sirf is session mein rehte hain;
-        session chhodne par clear ho jaate hain.
-      </p>
+      <p className="mock-help">{t('mock.help')}</p>
       {!remaining && !finished && (
         <p role="status" className="learning-tip">
-          Time khatam. Answers compare karke review ab bhi complete kar sakte ho.
+          {t('mock.timeUp')}
         </p>
       )}
       {finished ? (
         <>
           <p>
-            {ratings.filter((r) => r.value === 'confident').length} of {questions.length} answers
-            tumne clear mark kiye. Neeche explanations se next revision plan karo.
+            {t('mock.summary', {
+              confident: ratings.filter((r) => r.value === 'confident').length,
+              total: questions.length,
+            })}
           </p>
           {ratings.map(({ item, value, draft: answer }) => (
             <details className="mock-review" key={item.id}>
               <summary>
-                {value === 'confident' ? 'Confident' : 'Revisit'} · {item.question}
+                {value === 'confident' ? t('mock.confident') : t('mock.revisit')} · {item.question}
               </summary>
-              <p className="mock-draft">{answer || 'Written draft nahi — bolkar answer diya.'}</p>
+              <p className="mock-draft">{answer || t('mock.noDraft')}</p>
               <QuestionCard
                 item={item}
                 number={ratings.findIndex((r) => r.item.id === item.id) + 1}
@@ -180,27 +191,27 @@ function MockSession({ questions, onClose }) {
         <>
           <QuestionCard key={questions[index].id} item={questions[index]} number={index + 1} />
           <label className="mock-answer">
-            Apna answer ya talking points likho
+            {t('mock.answerLabel')}
             <textarea
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder="Concept samjhao, example trace karo, failure aur tradeoff ka reason likho…"
+              placeholder={t('mock.placeholder')}
               rows={5}
             />
           </label>
           <div className="mock-rubric">
-            <strong>Aage badhne se pehle</strong>
-            <span>Correct concept</span>
-            <span>Apna example</span>
-            <span>Failure ka case</span>
-            <span>Tradeoff ka reason</span>
+            <strong>{t('mock.rubric')}</strong>
+            <span>{t('mock.rubric1')}</span>
+            <span>{t('mock.rubric2')}</span>
+            <span>{t('mock.rubric3')}</span>
+            <span>{t('mock.rubric4')}</span>
           </div>
           <div className="mock-actions">
             <button className="subtle-button" onClick={() => rate('revisit')}>
-              Revision chahiye · Agla
+              {t('mock.needsRevision')}
             </button>
             <button className="primary-button" onClick={() => rate('confident')}>
-              Clear hai · Agla <Icon name="arrow" size={16} />
+              {t('mock.clearNext')} <Icon name="arrow" size={16} />
             </button>
           </div>
         </>
@@ -210,6 +221,8 @@ function MockSession({ questions, onClose }) {
 }
 export default function Interviews() {
   const [params, setParams] = useSearchParams();
+  const { t } = useLang();
+  const { questions: interviewQuestions } = useCatalog();
   const query = params.get('q') || '';
   const level = ['Foundation', 'Intermediate', 'Advanced'].includes(params.get('level'))
     ? params.get('level')
@@ -287,17 +300,18 @@ export default function Interviews() {
   return (
     <div className="interview-page page-enter">
       <div className="page-eyebrow">
-        <span className="small-line" /> PREPARATION, WITH INTENTION
+        <span className="small-line" /> {t('iq.eyebrow')}
       </div>
       <div className="page-heading">
         <div>
           <h1>
-            Jo seekha, use samjhao<span>.</span>
+            {t('iq.title')}
+            <span>.</span>
           </h1>
-          <p>Pehle bolkar answer do, phir compare aur follow-up attempt karo.</p>
+          <p>{t('iq.lead')}</p>
         </div>
         <button className="subtle-button" onClick={shuffle}>
-          <Icon name="shuffle" size={16} /> Shuffle questions
+          <Icon name="shuffle" size={16} /> {t('iq.shuffle')}
         </button>
       </div>
       <div className="interview-summary">
@@ -306,8 +320,8 @@ export default function Interviews() {
             <Icon name="messages" size={27} />
           </span>
           <div>
-            <h3>Recall karo. Confidence badhao.</h3>
-            <p>Short answers · follow-ups · 5-question mock</p>
+            <h3>{t('iq.summaryTitle')}</h3>
+            <p>{t('iq.summaryBody')}</p>
           </div>
         </div>
         <div className="interview-score">
@@ -315,22 +329,22 @@ export default function Interviews() {
             {known}
             <span> / {interviewQuestions.length}</span>
           </strong>
-          <span>feeling confident</span>
+          <span>{t('iq.confident')}</span>
         </div>
       </div>
       <div className="filter-toolbar">
         <label className="filter-search">
           <Icon name="search" size={18} />
           <input
-            aria-label="Search interview questions"
-            placeholder="Search interview questions…"
+            aria-label={t('iq.searchLabel')}
+            placeholder={t('iq.searchPlaceholder')}
             value={query}
             onChange={(event) => updateFilter('q', event.target.value)}
           />
           {query && (
             <button
               className="icon-button"
-              aria-label="Clear interview search"
+              aria-label={t('iq.clearSearch')}
               onClick={() => updateFilter('q', '')}
             >
               <Icon name="close" size={16} />
@@ -338,13 +352,13 @@ export default function Interviews() {
           )}
         </label>
         <select
-          aria-label="Interview topic"
+          aria-label={t('iq.topicLabel')}
           value={topic}
           onChange={(event) => {
             updateFilter('topic', event.target.value);
           }}
         >
-          <option value="all">All topics</option>
+          <option value="all">{t('iq.allTopics')}</option>
           {INTERVIEW_TOPICS.map((item) => (
             <option key={item.id} value={item.id}>
               {item.name}
@@ -352,11 +366,11 @@ export default function Interviews() {
           ))}
         </select>
         <select
-          aria-label="Interview difficulty"
+          aria-label={t('iq.levelLabel')}
           value={level}
           onChange={(event) => updateFilter('level', event.target.value)}
         >
-          <option value="all">All levels</option>
+          <option value="all">{t('iq.allLevels')}</option>
           <option>Foundation</option>
           <option>Intermediate</option>
           <option>Advanced</option>
@@ -369,16 +383,16 @@ export default function Interviews() {
               updateFilter('status', event.target.checked ? 'practicing' : 'all')
             }
           />{' '}
-          Still practicing
+          {t('iq.stillPracticing')}
         </label>
       </div>
-      <div className="filter-chips" aria-label="Interview subjects">
+      <div className="filter-chips" aria-label={t('iq.subjectsLabel')}>
         <button
           aria-pressed={track === 'all'}
           className={track === 'all' ? 'active' : ''}
           onClick={() => updateFilter('track', 'all')}
         >
-          Saare subjects
+          {t('iq.allSubjects')}
         </button>
         {TRACKS.filter((item) => item.id !== 'interview').map((item) => (
           <button
@@ -393,11 +407,11 @@ export default function Interviews() {
       </div>
       <div className="results-heading">
         <span role="status">
-          {filtered.length} questions · {Math.min(limit, filtered.length)} dikh rahe hain
+          {t('iq.results', { count: filtered.length, shown: Math.min(limit, filtered.length) })}
         </span>
         {(query || track !== 'all' || topic !== 'all' || level !== 'all' || unreviewed) && (
           <button className="text-button" onClick={resetFilters}>
-            <Icon name="reset" size={14} /> Reset filters
+            <Icon name="reset" size={14} /> {t('iq.reset')}
           </button>
         )}
         <button
@@ -405,8 +419,8 @@ export default function Interviews() {
           disabled={!filtered.length}
           onClick={() => setMock(filtered.slice(0, 5))}
         >
-          <Icon name="clock" size={16} /> Start mock interview · {Math.min(filtered.length, 5)}{' '}
-          questions
+          <Icon name="clock" size={16} />{' '}
+          {t('iq.startMock', { count: Math.min(filtered.length, 5) })}
         </button>
       </div>
       <div className="question-list">
@@ -417,10 +431,10 @@ export default function Interviews() {
       {!filtered.length && (
         <div className="empty-state">
           <Icon name="messages" size={32} />
-          <h2>Is filter mein questions nahi mile.</h2>
-          <p>Doosra filter lo ya practiced questions revise karo.</p>
+          <h2>{t('iq.emptyTitle')}</h2>
+          <p>{t('iq.emptyBody')}</p>
           <button className="subtle-button" onClick={resetFilters}>
-            Filters hatao <Icon name="reset" size={16} />
+            {t('iq.removeFilters')} <Icon name="reset" size={16} />
           </button>
         </div>
       )}
@@ -439,7 +453,8 @@ export default function Interviews() {
             );
           }}
         >
-          Load {Math.min(12, filtered.length - limit)} more questions <Icon name="down" size={16} />
+          {t('iq.loadMore', { count: Math.min(12, filtered.length - limit) })}{' '}
+          <Icon name="down" size={16} />
         </button>
       )}
     </div>

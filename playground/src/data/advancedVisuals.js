@@ -1,7 +1,9 @@
 const lane = (name, items) => ({ name, items });
 const frame = (title, explanation, lanes) => ({ title, explanation, lanes });
 
-export function monotonicStackTrace(values) {
+const say = (lang, hinglish, english) => (lang === 'en' ? english : hinglish);
+
+export function monotonicStackTrace(values, lang) {
   const stack = [];
   const waits = Array(values.length).fill(0);
   const frames = [];
@@ -28,29 +30,53 @@ export function monotonicStackTrace(values) {
     });
   }
   snapshot(
-    'Shuru mein har day ka answer pending hai',
-    'Zero ka matlab abhi koi warmer day nahi mila. Indices store karo, taaki same temperature wale alag days ki identity bachi rahe.',
+    say(
+      lang,
+      'Shuru mein har day ka answer pending hai',
+      'At the start every day is still pending',
+    ),
+    say(
+      lang,
+      'Zero ka matlab abhi koi warmer day nahi mila. Indices store karo, taaki same temperature wale alag days ki identity bachi rahe.',
+      'Zero means no warmer day has been found yet. Store indices, so that different days with the same temperature keep their identity.',
+    ),
   );
   values.forEach((value, today) => {
     while (stack.length && value > values[stack.at(-1)]) {
       const previous = stack.pop();
       waits[previous] = today - previous;
       snapshot(
-        `Day ${today} se day ${previous} ka answer mila`,
-        `${value}° pichhle ${values[previous]}° se warmer hai. Wait ${today} − ${previous} = ${waits[previous]} din hai. Yeh index ab dobara push nahi hoga.`,
+        say(
+          lang,
+          `Day ${today} se day ${previous} ka answer mila`,
+          `Day ${today} answers day ${previous}`,
+        ),
+        say(
+          lang,
+          `${value}° pichhle ${values[previous]}° se warmer hai. Wait ${today} − ${previous} = ${waits[previous]} din hai. Yeh index ab dobara push nahi hoga.`,
+          `${value}° is warmer than the earlier ${values[previous]}°. The wait is ${today} − ${previous} = ${waits[previous]} days. This index will never be pushed again.`,
+        ),
         today,
       );
     }
     stack.push(today);
     snapshot(
-      `Day ${today} ko push karo`,
-      'Pending temperatures bottom se top tak non-increasing hain. Equal temperature warmer nahi maana jaata, isliye equality par pop nahi karte.',
+      say(lang, `Day ${today} ko push karo`, `Push day ${today}`),
+      say(
+        lang,
+        'Pending temperatures bottom se top tak non-increasing hain. Equal temperature warmer nahi maana jaata, isliye equality par pop nahi karte.',
+        'Pending temperatures are non-increasing from bottom to top. An equal temperature does not count as warmer, so we do not pop on equality.',
+      ),
       today,
     );
   });
   snapshot(
-    'Answers mil gaye; baaki zero hain',
-    'Bache indices ke baad koi warmer day nahi hai. Har index ek baar push aur maximum ek baar pop hua: time O(n), space O(n).',
+    say(lang, 'Answers mil gaye; baaki zero hain', 'Answers found; the rest stay zero'),
+    say(
+      lang,
+      'Bache indices ke baad koi warmer day nahi hai. Har index ek baar push aur maximum ek baar pop hua: time O(n), space O(n).',
+      'No warmer day follows the indices that remain. Every index was pushed once and popped at most once: O(n) time, O(n) space.',
+    ),
   );
   return frames;
 }
@@ -177,5 +203,6 @@ export const advancedVisuals = [
     takeaway:
       'Nested loop ka total kaam bhi linear ho sakta hai. Har index ek baar push aur maximum ek baar pop hota hai. Equal temperature warmer nahi hai, isliye woh pending rehta hai.',
     frames: monotonicStackTrace([73, 74, 75, 71, 69, 72, 76, 73]),
+    trace: (lang) => monotonicStackTrace([73, 74, 75, 71, 69, 72, 76, 73], lang),
   },
 ];

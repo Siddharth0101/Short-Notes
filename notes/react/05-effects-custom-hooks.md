@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 4
 summary: `useEffect` — external system ke saath sync; render calculation ke liye nahi.
 tags: effects, useEffect, useRef, custom-hooks, races
+visual: effect-lifecycle
 ---
 
 ## Quick revision

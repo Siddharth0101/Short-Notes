@@ -403,7 +403,10 @@ test('Mock deadline expires without discarding the current answer or forcing sub
 test('Visual subject selection and chapter tabs expose new explanatory traces', async () => {
   await mount('/visuals');
   await select(document.querySelector('[aria-label="Visualization subject"]'), 'react');
-  assert.equal(document.querySelectorAll('.visual-picker button').length, 3);
+  assert.equal(
+    document.querySelectorAll('.visual-picker button').length,
+    VISUALS.filter((visual) => visual.track === 'react').length,
+  );
   await click(button('React keys and draft identity'));
   assert.match(document.querySelector('.simulator h2').textContent, /React keys/);
   await mount('/notes/java-sql-interview-lab?tab=visual');

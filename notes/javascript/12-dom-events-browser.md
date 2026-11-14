@@ -7,6 +7,7 @@ level: Foundation
 minutes: 4
 summary: DOM — browser ka document tree; selector se node pakdo.
 tags: dom, events, delegation, browser, accessibility
+visual: debounce-throttle
 ---
 
 ## Quick revision

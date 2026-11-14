@@ -1,23 +1,17 @@
 import { useLayoutEffect, useRef } from 'react';
 import { Link, useLocation, useNavigationType } from 'react-router-dom';
 
-const collectionNames = {
-  '/library': 'Notes par wapas',
-  '/paths': 'Learning path par wapas',
-  '/saved': 'Bookmarks par wapas',
-  '/interview': 'Questions par wapas',
-  '/visuals': 'Visual lab par wapas',
-  '/': 'Overview par wapas',
-};
+// Collections a chapter can be opened from; the reader links back with `back.<path>` copy.
+const collections = ['/library', '/paths', '/saved', '/interview', '/visuals', '/play', '/'];
 
 // Keep the collection URL and history entry alongside a chapter link.
 export function NoteLink({ children, ...props }) {
   const location = useLocation();
-  const from = collectionNames[location.pathname]
+  const from = collections.includes(location.pathname)
     ? {
         url: location.pathname + location.search,
         key: location.key,
-        label: collectionNames[location.pathname],
+        labelKey: `back.${location.pathname}`,
       }
     : location.state?.from;
   return (

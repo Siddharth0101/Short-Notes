@@ -2,14 +2,19 @@ import { useState } from 'react';
 import { NoteLink } from './Navigation.jsx';
 import { Link } from 'react-router-dom';
 import { TRACKS } from '../lib/content.js';
-import { notes, archive, noteById, trackById, practiceTotal } from '../data/catalog.js';
+import { archive, trackById, practiceTotal } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
+import { useLang } from '../lib/langContext.js';
+import { useCatalog } from '../lib/catalogContext.js';
+import { usePlay } from '../lib/playContext.js';
+import { dayKey } from '../lib/playState.js';
 import { VISUAL_IDS } from '../lib/visualIds.js';
-import { interviewQuestions } from '../data/interviewQuestions.js';
 import Icon from './Icons.jsx';
 
 export function TrackCard({ track, index }) {
   const { progress } = useProgress();
+  const { t } = useLang();
+  const { notes } = useCatalog();
   const chapters = notes.filter((note) => note.track === track.id);
   const complete = chapters.filter((note) => progress.completed.includes(note.id)).length;
   const practice = chapters.reduce((total, note) => total + note.practiceCount, 0);
@@ -26,27 +31,80 @@ export function TrackCard({ track, index }) {
         <span className="track-number">{String(index + 1).padStart(2, '0')}</span>
       </div>
       <h3>{track.shortName || track.name}</h3>
-      <p>{track.description}</p>
-      <div className="track-topics">{track.topics}</div>
+      <p>{t(`track.${track.id}.description`)}</p>
+      <div className="track-topics">{t(`track.${track.id}.topics`)}</div>
       <div className="track-facts">
-        <span>{chapters.length} chapters</span>
-        {practice > 0 && <span>{practice} practice Qs</span>}
+        <span>{t('track.chapters', { count: chapters.length })}</span>
+        {practice > 0 && <span>{t('track.practiceQs', { count: practice })}</span>}
       </div>
       <div className="track-progress" aria-hidden="true">
         <span style={{ width: `${(complete / chapters.length) * 100}%` }} />
       </div>
       <div className="track-card-footer">
-        <span>
-          {complete} / {chapters.length} revised
-        </span>
+        <span>{t('track.revised', { done: complete, total: chapters.length })}</span>
         <Icon name="arrow" size={17} />
       </div>
     </Link>
   );
 }
 
+// Streak, level and a nudge into the arcade — the playful side of the same notes.
+function PlayTeaser() {
+  const { t } = useLang();
+  const { play, stats } = usePlay();
+  const dailyDone = play.daily.includes(dayKey());
+  return (
+    <section className="play-teaser" aria-label={t('dash.playTitle')}>
+      <div className="play-teaser-copy">
+        <span className="section-kicker">
+          <Icon name="gamepad" size={14} /> {t('dash.playKicker')}
+        </span>
+        <h2>{t('dash.playTitle')}</h2>
+        <p>{t('dash.playBody')}</p>
+        <div className="play-teaser-actions">
+          <Link className="primary-button" to="/play">
+            <Icon name={dailyDone ? 'check' : 'zap'} size={16} />
+            {dailyDone ? t('dash.playLink') : t('daily.title')}
+            <Icon name="arrow" size={16} />
+          </Link>
+          <Link className="subtle-button" to="/play/flashcards">
+            <Icon name="cards" size={16} /> {t('play.flashcards.name')}
+          </Link>
+          <Link className="subtle-button" to="/play/quiz">
+            <Icon name="timer" size={16} /> {t('play.quiz.name')}
+          </Link>
+        </div>
+      </div>
+      <div className="play-teaser-stats">
+        <div className={`streak-flame${stats.streak.activeToday ? ' is-lit' : ''}`}>
+          <span aria-hidden="true">🔥</span>
+          <strong>{stats.streak.current}</strong>
+          <small>{t('play.streak')}</small>
+        </div>
+        <div className="level-meter">
+          <span className="level-chip">{t('play.level', { level: stats.level })}</span>
+          <strong>{t(`level.${stats.level}`)}</strong>
+          <div
+            className="xp-bar"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(stats.progress * 100)}
+            aria-label={t('play.xp', { xp: stats.xp })}
+          >
+            <span style={{ width: `${Math.round(stats.progress * 100)}%` }} />
+          </div>
+          <small>{stats.next ? t('play.toNext', { xp: stats.toNext }) : t('play.maxLevel')}</small>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Dashboard() {
   const { progress } = useProgress();
+  const { t } = useLang();
+  const { notes, noteById, questions } = useCatalog();
   const recent = progress.recent
     .map((id) => noteById[id])
     .filter(Boolean)
@@ -69,23 +127,20 @@ export default function Dashboard() {
       <div className="desk-intro">
         <div>
           <div className="page-eyebrow">
-            <span className="small-line" /> TUMHARI STUDY NOTEBOOK
+            <span className="small-line" /> {t('dash.eyebrow')}
           </div>
           <h1>
-            Chhote notes.
-            <br /> <span>Clear concepts.</span>
+            {t('dash.title1')}
+            <br /> <span>{t('dash.title2')}</span>
           </h1>
-          <p>
-            Har chapter mein seedhe concept, ek worked example aur Easy → Hard practice questions.
-            Hinglish mein samjho, interview mein English mein bolo.
-          </p>
+          <p>{t('dash.lead')}</p>
         </div>
-        <div className="desk-note" aria-label="Overall progress">
+        <div className="desk-note" aria-label={t('dash.overallProgress')}>
           <div
             className="progress-ring"
             style={{ '--value': percent }}
             role="img"
-            aria-label={`${percent}% chapters revised`}
+            aria-label={t('dash.percentRevised', { percent })}
           >
             <span>{percent}%</span>
           </div>
@@ -94,10 +149,10 @@ export default function Dashboard() {
               <strong>
                 {completed} / {notes.length}
               </strong>{' '}
-              chapters revised
+              {t('dash.chaptersRevised')}
             </p>
             <p>
-              <strong>{progress.practiced.length}</strong> practice questions clear
+              <strong>{progress.practiced.length}</strong> {t('dash.practiceClear')}
             </p>
           </div>
         </div>
@@ -106,17 +161,17 @@ export default function Dashboard() {
       <div className="study-start-grid">
         <section
           className="study-session"
-          aria-label="Continue revision"
+          aria-label={t('dash.continueLabel')}
           style={{ '--track-color': track.color, '--track-tint': track.tint }}
         >
           <div className="study-session-top">
             <span className="card-overline">
-              <span className="session-dot" /> AAJ KA FOCUS
+              <span className="session-dot" /> {t('dash.todayFocus')}
             </span>
             <label className="study-subject">
-              <span className="visually-hidden">Revision subject</span>
+              <span className="visually-hidden">{t('dash.revisionSubject')}</span>
               <select
-                aria-label="Revision subject"
+                aria-label={t('dash.revisionSubject')}
                 value={activeTrack}
                 onChange={(event) => setChosenTrack(event.target.value)}
               >
@@ -130,19 +185,20 @@ export default function Dashboard() {
           </div>
           <div className="study-session-content" aria-live="polite">
             <span className="session-chapter">
-              {track.shortName || track.name} <span> / </span> CHAPTER{' '}
+              {track.shortName || track.name} <span> / </span> {t('dash.chapter')}{' '}
               {String(next.order).padStart(2, '0')}
             </span>
             <h2>{next.title}</h2>
             <p>{next.summary}</p>
             <div className="session-meta">
               <span>
-                <Icon name="clock" size={15} /> ~{next.minutes} min
+                <Icon name="clock" size={15} /> {t('dash.minutes', { minutes: next.minutes })}
               </span>
               <span>{next.level}</span>
               {next.practiceCount > 0 && (
                 <span>
-                  <Icon name="target" size={15} /> {next.practiceCount} practice Qs
+                  <Icon name="target" size={15} />{' '}
+                  {t('dash.practiceQs', { count: next.practiceCount })}
                 </span>
               )}
             </div>
@@ -151,68 +207,49 @@ export default function Dashboard() {
             <NoteLink className="primary-button" to={`/notes/${next.id}`}>
               <Icon name="play" size={16} />
               {done === chapters.length
-                ? 'Dobara revise karo'
+                ? t('dash.reviseAgain')
                 : recent[0]?.id === next.id
-                  ? 'Continue revision'
-                  : 'Revision shuru karo'}
+                  ? t('dash.continue')
+                  : t('dash.start')}
               <Icon name="arrow" size={17} />
             </NoteLink>
-            <span>
-              {done} / {chapters.length} revised
-            </span>
+            <span>{t('dash.revisedOf', { done, total: chapters.length })}</span>
           </div>
           <progress
             className="session-progress"
-            aria-label={`${track.name} revision progress`}
+            aria-label={t('dash.trackProgress', { name: track.name })}
             value={done}
             max={chapters.length}
           />
         </section>
-        <aside className="study-routine" aria-label="Revision routine">
-          <div className="card-overline">EK CHAPTER, CHAAR STEP</div>
-          <h2>Read. Recall. Practice.</h2>
+        <aside className="study-routine" aria-label={t('dash.routineLabel')}>
+          <div className="card-overline">{t('dash.routineOverline')}</div>
+          <h2>{t('dash.routineTitle')}</h2>
           <ol>
-            <li>
-              <span>01</span>
-              <div>
-                <strong>Quick revision padho</strong>
-                <p>Har bullet: term — meaning aur uska catch.</p>
-              </div>
-            </li>
-            <li>
-              <span>02</span>
-              <div>
-                <strong>Example trace karo</strong>
-                <p>Output pehle predict karo, phir trace se match karo.</p>
-              </div>
-            </li>
-            <li>
-              <span>03</span>
-              <div>
-                <strong>Recall bina dekhe</strong>
-                <p>Sawal ka jawab bolo, phir answer kholkar gap pakdo.</p>
-              </div>
-            </li>
-            <li>
-              <span>04</span>
-              <div>
-                <strong>Practice questions</strong>
-                <p>Easy → Hard. Jo sahi ho, use clear mark karo.</p>
-              </div>
-            </li>
+            {[1, 2, 3, 4].map((step) => (
+              <li key={step}>
+                <span>{String(step).padStart(2, '0')}</span>
+                <div>
+                  <strong>{t(`dash.step${step}.title`)}</strong>
+                  <p>{t(`dash.step${step}.body`)}</p>
+                </div>
+              </li>
+            ))}
           </ol>
           <Link className="text-button" to="/paths">
-            Apna learning route dekho <Icon name="arrow" size={16} />
+            {t('dash.seeRoute')} <Icon name="arrow" size={16} />
           </Link>
         </aside>
       </div>
 
-      <div className="stats-strip" aria-label="Your notebook in numbers">
+      <PlayTeaser />
+
+      <div className="stats-strip" aria-label={t('dash.numbersLabel')}>
         {[
-          [notes.length, 'revision chapters', 'book'],
-          [archive.length, 'code examples', 'code'],
-          [VISUAL_IDS.length, 'visual labs', 'play'],
-          [practiceTotal, 'chapter practice questions', 'target'],
+          [notes.length, t('dash.stat.chapters'), 'book'],
+          [archive.length, t('dash.stat.examples'), 'code'],
+          [VISUAL_IDS.length, t('dash.stat.visuals'), 'play'],
+          [practiceTotal, t('dash.stat.practice'), 'target'],
         ].map(([number, label, icon]) => (
           <div className="stat" key={label}>
             <span className="stat-icon">
@@ -230,11 +267,11 @@ export default function Dashboard() {
         <section className="recent-section">
           <div className="section-heading">
             <div>
-              <span className="section-kicker">WAHI SE SHURU KARO</span>
-              <h2>Abhi padhe hue notes</h2>
+              <span className="section-kicker">{t('dash.recentKicker')}</span>
+              <h2>{t('dash.recentTitle')}</h2>
             </div>
             <Link className="text-button" to="/saved">
-              Bookmarks <Icon name="arrow" size={16} />
+              {t('dash.bookmarks')} <Icon name="arrow" size={16} />
             </Link>
           </div>
           <div className="recent-grid">
@@ -250,7 +287,9 @@ export default function Dashboard() {
                 </span>
                 <strong>{note.title}</strong>
                 <span>
-                  {progress.completed.includes(note.id) ? 'Revised' : `${note.minutes} min`}{' '}
+                  {progress.completed.includes(note.id)
+                    ? t('dash.revised')
+                    : t('dash.min', { minutes: note.minutes })}{' '}
                   <Icon name="arrow" size={16} />
                 </span>
               </NoteLink>
@@ -262,12 +301,12 @@ export default function Dashboard() {
       <section className="subject-section">
         <div className="section-heading">
           <div>
-            <span className="section-kicker">SUBJECTS</span>
-            <h2>Kya seekhna hai aaj?</h2>
-            <p>Foundations se interview tak. Har subject ka ordered syllabus.</p>
+            <span className="section-kicker">{t('dash.subjectsKicker')}</span>
+            <h2>{t('dash.subjectsTitle')}</h2>
+            <p>{t('dash.subjectsBody')}</p>
           </div>
           <Link className="text-button" to="/library">
-            Saare notes dekho <Icon name="arrow" size={16} />
+            {t('dash.allNotes')} <Icon name="arrow" size={16} />
           </Link>
         </div>
         <div className="track-grid">
@@ -280,8 +319,8 @@ export default function Dashboard() {
       <section className="practice-section">
         <div className="section-heading">
           <div>
-            <span className="section-kicker">CONFIDENCE BANAO</span>
-            <h2>Padha? Ab practice karo.</h2>
+            <span className="section-kicker">{t('dash.practiceKicker')}</span>
+            <h2>{t('dash.practiceTitle')}</h2>
           </div>
         </div>
         <div className="practice-options">
@@ -289,11 +328,13 @@ export default function Dashboard() {
             <span className="practice-option-icon">
               <Icon name="play" size={22} />
             </span>
-            <span className="card-overline">{VISUAL_IDS.length} INTERACTIVE VISUALS</span>
-            <h3>Dekhkar samjho</h3>
-            <p>Event loop, React renders aur algorithms ko step-by-step chalao.</p>
+            <span className="card-overline">
+              {t('dash.visualsOverline', { count: VISUAL_IDS.length })}
+            </span>
+            <h3>{t('dash.visualsTitle')}</h3>
+            <p>{t('dash.visualsBody')}</p>
             <span className="text-button">
-              Visual lab kholo <Icon name="arrow" size={16} />
+              {t('dash.visualsLink')} <Icon name="arrow" size={16} />
             </span>
           </Link>
           <Link
@@ -303,22 +344,24 @@ export default function Dashboard() {
             <span className="practice-option-icon">
               <Icon name="messages" size={22} />
             </span>
-            <span className="card-overline">{interviewQuestions.length} INTERVIEW QUESTIONS</span>
-            <h3>Khud ko test karo</h3>
-            <p>Filters, mock session aur follow-ups ke saath question bank.</p>
+            <span className="card-overline">
+              {t('dash.questionsOverline', { count: questions.length })}
+            </span>
+            <h3>{t('dash.questionsTitle')}</h3>
+            <p>{t('dash.questionsBody')}</p>
             <span className="text-button">
-              Interview prep <Icon name="arrow" size={16} />
+              {t('dash.questionsLink')} <Icon name="arrow" size={16} />
             </span>
           </Link>
           <Link to="/interview/live" className="practice-option">
             <span className="practice-option-icon">
               <Icon name="sparkles" size={22} />
             </span>
-            <span className="card-overline">ONE FOCUSED HOUR</span>
-            <h3>Interview ka rehearsal</h3>
-            <p>Intro, theory aur coding rounds. Voice ya typing se apna answer do.</p>
+            <span className="card-overline">{t('dash.liveOverline')}</span>
+            <h3>{t('dash.liveTitle')}</h3>
+            <p>{t('dash.liveBody')}</p>
             <span className="text-button">
-              AI interview kholo <Icon name="arrow" size={16} />
+              {t('dash.liveLink')} <Icon name="arrow" size={16} />
             </span>
           </Link>
         </div>
@@ -326,8 +369,8 @@ export default function Dashboard() {
       <div className="desk-footnote">
         <Icon name="bookmark" size={16} />
         <p>
-          Progress isi browser mein rehti hai. <Link to="/saved">Bookmarks se backup rakho.</Link>{' '}
-          Revised aur clear marks tumhara self-check hain.
+          {t('dash.footnote1')} <Link to="/saved">{t('dash.footnoteLink')}</Link>{' '}
+          {t('dash.footnote2')}
         </p>
       </div>
     </div>

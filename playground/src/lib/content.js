@@ -166,7 +166,9 @@ export const PRACTICE_LEVELS = ['Easy', 'Medium', 'Hard'];
 
 // Split a chapter around its `## Practice questions` section so the reader can
 // render questions as interactive cards while the rest stays plain Markdown.
-export function splitPractice(markdown) {
+// `slugs` (canonical question slugs, by position) keep practice progress stable when the
+// chapter is shown in another language and its titles differ.
+export function splitPractice(markdown, slugs) {
   const lines = markdown.split('\n');
   let fenced = false;
   let start = -1;
@@ -181,11 +183,42 @@ export function splitPractice(markdown) {
     if (lines[index].slice(3).trim() === PRACTICE_HEADING) start = index;
   }
   if (start < 0) return { before: markdown, questions: [], after: '' };
+  const questions = parsePracticeQuestions(lines.slice(start + 1, end).join('\n'));
   return {
     before: lines.slice(0, start).join('\n').trim(),
-    questions: parsePracticeQuestions(lines.slice(start + 1, end).join('\n')),
+    questions: slugs
+      ? questions.map((question, index) => ({ ...question, slug: slugs[index] ?? question.slug }))
+      : questions,
     after: lines.slice(end).join('\n').trim(),
   };
+}
+
+// Recall section labels in both notebook languages (Hinglish is canonical).
+export const RECALL_HEADING = /^Recall (aur|and) practice$/i;
+export const RECALL_ANSWER = /^(Jawaab|Answer)\s*[—–-]/i;
+
+// `term — meaning` bullets from the Quick revision part of a chapter: the raw material for
+// flashcards and quizzes. Sub-headings inside Quick revision are included; later sections are not.
+export function extractTerms(markdown) {
+  const terms = [];
+  let fenced = false;
+  let section = '';
+  for (const line of markdown.split('\n')) {
+    if (/^```/.test(line)) fenced = !fenced;
+    if (fenced) continue;
+    if (/^## /.test(line)) {
+      if (terms.length || section) break;
+      section = line.slice(3).trim();
+      continue;
+    }
+    if (!line.startsWith('- ')) continue;
+    const split = line.indexOf(' — ');
+    if (split < 0) continue;
+    const term = line.slice(2, split).trim();
+    const meaning = line.slice(split + 3).trim();
+    if (term && meaning && term.length <= 60) terms.push({ term, meaning });
+  }
+  return terms;
 }
 
 // `### Level · Title`, prompt Markdown, then the answer inside <details>.

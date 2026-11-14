@@ -1,4 +1,5 @@
 import { advancedVisuals } from './advancedVisuals.js';
+import { moreVisuals } from './moreVisuals.js';
 
 const lane = (name, items) => ({ name, items });
 const frame = (title, explanation, lanes) => ({ title, explanation, lanes });
@@ -727,4 +728,5 @@ export const VISUALS = [
       'Sorted array lookup sirf samjhane ka example hai; MongoDB B-tree indexes use karta hai. Index storage leta hai aur writes par extra kaam karta hai. Real performance ke liye explain plan dekho.',
   },
   ...advancedVisuals,
+  ...moreVisuals,
 ];

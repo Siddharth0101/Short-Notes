@@ -20,8 +20,10 @@ import CodingWorkspace from './CodingWorkspace.jsx';
 import InterviewReview from './InterviewReview.jsx';
 import InterviewSetup from './InterviewSetup.jsx';
 import VoiceSettings from './VoiceSettings.jsx';
+import { useLang } from '../lib/langContext.js';
 import './interviewer.css';
 export default function InterviewAgent() {
+  const { t } = useLang();
   const controller = useInterviewController();
   const {
     subject,
@@ -234,7 +236,7 @@ export default function InterviewAgent() {
       {hintOffer && active && (
         <div className="ia-hint" role="status">
           <Lightbulb size={19} />
-          <span>Thoda stuck ho? I can give you a small hint.</span>
+          <span>{t('live.hintOffer')}</span>
           <button
             disabled={busy}
             onClick={() => {

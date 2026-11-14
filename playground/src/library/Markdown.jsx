@@ -1,7 +1,8 @@
 import { Children, isValidElement, useEffect, useId, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { headingId } from '../lib/content.js';
+import { headingId, RECALL_ANSWER, RECALL_HEADING } from '../lib/content.js';
+import { useLang } from '../lib/langContext.js';
 import Icon from './Icons.jsx';
 const exampleFiles = import.meta.glob('../../../examples/*/*.md', {
   query: '?raw',
@@ -9,11 +10,13 @@ const exampleFiles = import.meta.glob('../../../examples/*/*.md', {
 });
 
 function ExampleLink({ href, children }) {
+  const { t } = useLang();
   const [content, setContent] = useState('');
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const load = exampleFiles[`../../../${href.replace(/^\.\.\/\.\.\//, '')}`];
+  // English chapters sit one folder deeper, so their example links carry an extra `../`.
+  const load = exampleFiles[`../../../${href.replace(/^(\.\.\/)+/, '')}`];
   if (!load) return <a href={href}>{children}</a>;
   async function toggle() {
     if (content) {
@@ -40,9 +43,9 @@ function ExampleLink({ href, children }) {
         disabled={loading}
         aria-expanded={open}
       >
-        {loading ? 'Example khul raha hai…' : children}
+        {loading ? t('md.exampleLoading') : children}
       </button>
-      {error && <span role="status"> Load nahi hua; dobara try karo.</span>}
+      {error && <span role="status">{t('md.exampleError')}</span>}
       {open && <Markdown idPrefix="code-example">{content}</Markdown>}
     </>
   );
@@ -59,10 +62,11 @@ function textContent(children) {
     .join('');
 }
 function CodeBlock({ children }) {
-  const [status, setStatus] = useState('Copy');
+  const { t } = useLang();
+  const [status, setStatus] = useState('copy');
   useEffect(() => {
-    if (status === 'Copy') return;
-    const timer = setTimeout(() => setStatus('Copy'), 3000);
+    if (status === 'copy') return;
+    const timer = setTimeout(() => setStatus('copy'), 3000);
     return () => clearTimeout(timer);
   }, [status]);
   const code = textContent(children);
@@ -71,9 +75,9 @@ function CodeBlock({ children }) {
   async function copy() {
     try {
       await navigator.clipboard.writeText(code);
-      setStatus('Copied');
+      setStatus('copied');
     } catch {
-      setStatus('Select code to copy');
+      setStatus('selectToCopy');
     }
   }
   return (
@@ -83,9 +87,9 @@ function CodeBlock({ children }) {
           <Icon name="code" size={14} />
           {language}
         </span>
-        <button onClick={copy} aria-label="Copy code">
-          <Icon name={status === 'Copied' ? 'check' : 'copy'} size={13} />
-          <span role="status">{status}</span>
+        <button onClick={copy} aria-label={t('md.copyLabel')}>
+          <Icon name={status === 'copied' ? 'check' : 'copy'} size={13} />
+          <span role="status">{t(`md.${status}`)}</span>
         </button>
       </div>
       <pre>{children}</pre>
@@ -98,12 +102,12 @@ function chapterNotesPlugin({ recall = true } = {}) {
     let inRecall = false;
     for (const node of tree.children) {
       if (node.type === 'heading' && node.depth === 2) {
-        inRecall = /^Recall aur practice$/i.test(nodeText(node).trim());
+        inRecall = RECALL_HEADING.test(nodeText(node).trim());
       }
       if (node.type !== 'list') continue;
       let terms = 0;
       for (const item of node.children) {
-        if (recall && inRecall && /^Jawaab\s*[—–-]/i.test(nodeText(item).trim())) {
+        if (recall && inRecall && RECALL_ANSWER.test(nodeText(item).trim())) {
           item.data = {
             ...item.data,
             hProperties: { ...item.data?.hProperties, 'data-recall-answer': true },
@@ -152,13 +156,14 @@ function chapterNotesPlugin({ recall = true } = {}) {
   };
 }
 function RecallListItem({ children, node }) {
+  const { t } = useLang();
   const [revealed, setRevealed] = useState(false);
   const answerId = useId();
   if (!node.properties['data-recall-answer']) return <li>{children}</li>;
   return (
     <li className="recall-answer">
       <div className="recall-answer-prompt">
-        <span>Pehle apna answer bolo ya likho.</span>
+        <span>{t('md.recallPrompt')}</span>
         <button
           type="button"
           aria-expanded={revealed}
@@ -166,7 +171,7 @@ function RecallListItem({ children, node }) {
           onClick={() => setRevealed(!revealed)}
         >
           <Icon name={revealed ? 'check' : 'down'} size={15} />
-          {revealed ? 'Jawaab chhupao' : 'Jawaab dekho'}
+          {revealed ? t('md.recallHide') : t('md.recallShow')}
         </button>
       </div>
       <div id={answerId} className="recall-answer-content" hidden={!revealed}>
@@ -184,7 +189,7 @@ const components = {
     </div>
   ),
   a: ({ href, children }) =>
-    href?.startsWith('../../examples/') ? (
+    /^(\.\.\/){2,3}examples\//.test(href || '') ? (
       <ExampleLink href={href}>{children}</ExampleLink>
     ) : (
       <a href={href} target={href?.startsWith('https://') ? '_blank' : undefined} rel="noreferrer">
@@ -197,6 +202,7 @@ export default function Markdown({
   idPrefix = '',
   recallAnswers = false,
   terms = false,
+  headingIds,
 }) {
   return (
     <div className="markdown">
@@ -215,7 +221,15 @@ export default function Markdown({
                   <h2 id={`${idPrefix}-${headingId(textContent(children))}`}>{children}</h2>
                 ),
               }
-            : {}),
+            : headingIds
+              ? {
+                  // Translated chapters reuse the canonical section anchors.
+                  h2: ({ children }) => {
+                    const title = textContent(children);
+                    return <h2 id={headingIds[title] ?? headingId(title)}>{children}</h2>;
+                  },
+                }
+              : {}),
         }}
       >
         {children}

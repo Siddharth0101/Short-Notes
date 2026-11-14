@@ -7,6 +7,7 @@ level: Foundation
 minutes: 3
 summary: Variable — value ko diya hua naam.
 tags: fundamentals, js, variables
+visual: hoisting-tdz
 ---
 
 ## Quick revision

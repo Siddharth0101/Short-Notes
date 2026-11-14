@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 3
 summary: Hash table — key ko bucket mein map; collision handling zaroori.
 tags: hashing, map, set, collisions, two-sum
+visual: hash-collisions
 ---
 
 ## Quick revision

@@ -9,3 +9,6 @@
 # Local interview transcripts and assessment history
 .interviews/
 server/node_modules/
+
+# Working files of scripts/translate-chapters.mjs
+.i18n-work/

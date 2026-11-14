@@ -2,7 +2,8 @@ import { NoteLink } from './Navigation.jsx';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { VISUALS } from '../data/visuals.js';
-import { notes, trackById } from '../data/catalog.js';
+import { localizeVisual } from '../data/visuals.en.js';
+import { trackById } from '../data/catalog.js';
 import {
   binarySearchTrace,
   bubbleSortTrace,
@@ -10,41 +11,52 @@ import {
   fibonacciTrace,
   GRAPH,
 } from '../lib/traces.js';
+import { useLang } from '../lib/langContext.js';
+import { useCatalog } from '../lib/catalogContext.js';
+import { usePlay } from '../lib/playContext.js';
 import Icon from './Icons.jsx';
 import Markdown from './Markdown.jsx';
 
-function GraphView({ frame }) {
-  const points = {
+const BFS_LAYOUT = {
+  points: {
     A: [180, 45],
     B: [85, 130],
     C: [285, 130],
     D: [35, 225],
     E: [155, 225],
     F: [285, 225],
-  };
+  },
+  edges: Object.entries(GRAPH).flatMap(([from, targets]) =>
+    targets.filter((to) => from < to).map((to) => [from, to]),
+  ),
+};
+
+// Node-and-edge view shared by graph and tree traces; a frame may bring its own layout.
+function GraphView({ frame }) {
+  const { t } = useLang();
+  const { points, edges } = frame.graph === true ? BFS_LAYOUT : frame.graph;
   return (
     <div className="graph-display">
       <svg
         viewBox="0 0 360 280"
         role="img"
-        aria-label={`BFS graph. Current node ${frame.active || 'none'}. Visited ${frame.order?.join(', ') || 'none'}.`}
+        aria-label={t('visual.graphLabel', {
+          active: frame.active || t('visual.none'),
+          visited: frame.order?.join(', ') || t('visual.none'),
+        })}
       >
         <g>
-          {Object.entries(GRAPH).flatMap(([from, targets]) =>
-            targets
-              .filter((to) => from < to)
-              .map((to) => (
-                <line
-                  key={`${from}-${to}`}
-                  x1={points[from][0]}
-                  y1={points[from][1]}
-                  x2={points[to][0]}
-                  y2={points[to][1]}
-                  stroke="var(--border-strong)"
-                  strokeWidth="2"
-                />
-              )),
-          )}
+          {edges.map(([from, to]) => (
+            <line
+              key={`${from}-${to}`}
+              x1={points[from][0]}
+              y1={points[from][1]}
+              x2={points[to][0]}
+              y2={points[to][1]}
+              stroke="var(--border-strong)"
+              strokeWidth="2"
+            />
+          ))}
         </g>
         {Object.entries(points).map(([name, [x, y]]) => (
           <g key={name}>
@@ -62,19 +74,66 @@ function GraphView({ frame }) {
       </svg>
       <div className="graph-queues">
         <div>
-          <span>QUEUE · FRONT → BACK</span>
-          <strong>{frame.queue?.join(' → ') || 'empty'}</strong>
+          <span>{frame.listLabel || t('visual.queue')}</span>
+          <strong>{frame.queue?.join(' → ') || t('visual.empty')}</strong>
         </div>
         <div>
-          <span>VISITED ORDER</span>
-          <strong>{frame.order?.join(' → ') || 'not started'}</strong>
+          <span>{frame.orderLabel || t('visual.visitedOrder')}</span>
+          <strong>{frame.order?.join(' → ') || t('visual.notStarted')}</strong>
         </div>
       </div>
     </div>
   );
 }
 
+const INDEX_VALUES = [3, 8, 15, 23, 31, 42, 56, 71, 89];
+
+// Mongo index demo: an index seek modelled on a sorted array, against a collection scan.
+function mongoFrames(indexMode, lang) {
+  const say = (hinglish, english) => (lang === 'en' ? english : hinglish);
+  if (indexMode)
+    return [
+      ...binarySearchTrace(INDEX_VALUES, 42, lang),
+      {
+        title: say('Matching document fetch karo', 'Fetch the matching document'),
+        explanation: say(
+          'Index entry se document reference mila. Non-covered query us document ko fetch karti hai. Is simplified unique-SKU example mein ek match hai.',
+          'The index entry gave a reference to the document. A non-covered query then fetches that document. This simplified unique-SKU example has one match.',
+        ),
+        lanes: [
+          { name: 'Index', items: ['sku: 42 → document #6'] },
+          { name: 'Collection', items: ['{ sku: 42, name: "Notebook" }'] },
+        ],
+        metrics: ['1 matching document', 'illustrative index seek'],
+      },
+    ];
+  return INDEX_VALUES.slice(0, 6).map((value, i) => ({
+    title:
+      value === 42
+        ? say('Matching document mil gaya', 'Found the matching document')
+        : `Scan document ${i + 1}`,
+    explanation:
+      value === 42
+        ? say(
+            'findOne-style lookup pehle match par ruk sakta hai. General find query aur matches ke liye scan continue kar sakti hai.',
+            'A findOne-style lookup can stop at the first match. A general find query may keep scanning for more matches.',
+          )
+        : say(
+            'Is example mein supporting index nahi hai. Har document check karna pad raha hai.',
+            'This example has no supporting index, so every document has to be checked.',
+          ),
+    cells: INDEX_VALUES.map((v, j) => ({
+      value: v,
+      label: `doc ${j + 1}`,
+      status: j === i ? (value === 42 ? 'found' : 'active') : j < i ? 'muted' : 'idle',
+    })),
+    metrics: [`${i + 1} documents examined`, 'illustrative collection scan'],
+  }));
+}
+
 function Simulator({ visual }) {
+  const { lang, t } = useLang();
+  const { finishVisual } = usePlay();
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1200);
@@ -82,44 +141,15 @@ function Simulator({ visual }) {
   const [variant, setVariant] = useState(false);
   const [indexMode, setIndexMode] = useState(true);
   const frames = useMemo(() => {
-    if (visual.id === 'binary-search')
-      return binarySearchTrace([3, 8, 15, 23, 31, 42, 56, 71, 89], target);
+    if (visual.id === 'binary-search') return binarySearchTrace(INDEX_VALUES, target, lang);
     if (visual.id === 'sorting')
-      return bubbleSortTrace(variant ? [25, 75, 40, 90, 55, 15] : [65, 30, 85, 45, 20, 55]);
-    if (visual.id === 'bfs') return bfsTrace();
-    if (visual.id === 'dynamic-programming') return fibonacciTrace(variant ? 8 : 6);
-    if (visual.id === 'mongo-index') {
-      const values = [3, 8, 15, 23, 31, 42, 56, 71, 89];
-      if (indexMode)
-        return [
-          ...binarySearchTrace(values, 42),
-          {
-            title: 'Matching document fetch karo',
-            explanation:
-              'Index entry se document reference mila. Non-covered query us document ko fetch karti hai. Is simplified unique-SKU example mein ek match hai.',
-            lanes: [
-              { name: 'Index', items: ['sku: 42 → document #6'] },
-              { name: 'Collection', items: ['{ sku: 42, name: "Notebook" }'] },
-            ],
-            metrics: ['1 matching document', 'illustrative index seek'],
-          },
-        ];
-      return values.slice(0, 6).map((value, i) => ({
-        title: value === 42 ? 'Matching document mil gaya' : `Scan document ${i + 1}`,
-        explanation:
-          value === 42
-            ? 'findOne-style lookup pehle match par ruk sakta hai. General find query aur matches ke liye scan continue kar sakti hai.'
-            : 'Is example mein supporting index nahi hai. Har document check karna pad raha hai.',
-        cells: values.map((v, j) => ({
-          value: v,
-          label: `doc ${j + 1}`,
-          status: j === i ? (value === 42 ? 'found' : 'active') : j < i ? 'muted' : 'idle',
-        })),
-        metrics: [`${i + 1} documents examined`, 'illustrative collection scan'],
-      }));
-    }
+      return bubbleSortTrace(variant ? [25, 75, 40, 90, 55, 15] : [65, 30, 85, 45, 20, 55], lang);
+    if (visual.id === 'bfs') return bfsTrace(undefined, undefined, lang);
+    if (visual.id === 'dynamic-programming') return fibonacciTrace(variant ? 8 : 6, lang);
+    if (visual.id === 'mongo-index') return mongoFrames(indexMode, lang);
+    if (visual.trace) return visual.trace(lang, variant);
     return visual.frames;
-  }, [visual, target, variant, indexMode]);
+  }, [visual, target, variant, indexMode, lang]);
   const frame = frames[Math.min(step, frames.length - 1)];
   const end = step >= frames.length - 1;
   useEffect(() => {
@@ -130,6 +160,10 @@ function Simulator({ visual }) {
     }, speed);
     return () => clearTimeout(timer);
   }, [playing, step, frames.length, speed]);
+  // Reaching the last step of a visual counts once towards arcade progress.
+  useEffect(() => {
+    if (end) finishVisual(visual.id);
+  }, [end, visual.id, finishVisual]);
   function reset() {
     setStep(0);
     setPlaying(false);
@@ -138,37 +172,43 @@ function Simulator({ visual }) {
     if (end) setStep(0);
     setPlaying(!playing);
   }
+  const hasVariant = ['sorting', 'dynamic-programming'].includes(visual.id) || visual.variants;
   return (
     <div className="simulator">
       <div className="simulator-top">
         <div>
-          <span className="card-overline">AN INTERACTIVE MENTAL MODEL</span>
+          <span className="card-overline">{t('visual.overline')}</span>
           <h2>{visual.name}</h2>
         </div>
         <span className="simulation-pill">
-          <span /> {playing ? 'Playing' : end ? 'Complete' : 'Ready to explore'}
+          <span />{' '}
+          {playing
+            ? t('visual.status.playing')
+            : end
+              ? t('visual.status.complete')
+              : t('visual.status.ready')}
         </span>
       </div>
       <div className="simulator-options">
         {visual.id === 'binary-search' && (
           <label>
-            Find value{' '}
+            {t('visual.findValue')}{' '}
             <select
-              aria-label="Binary search target"
+              aria-label={t('visual.targetLabel')}
               value={target}
               onChange={(event) => {
                 reset();
                 setTarget(Number(event.target.value));
               }}
             >
-              <option value="42">42 · middle-right</option>
-              <option value="3">3 · first element</option>
-              <option value="89">89 · last element</option>
-              <option value="44">44 · not present</option>
+              <option value="42">{t('visual.target.middle')}</option>
+              <option value="3">{t('visual.target.first')}</option>
+              <option value="89">{t('visual.target.last')}</option>
+              <option value="44">{t('visual.target.missing')}</option>
             </select>
           </label>
         )}
-        {['sorting', 'dynamic-programming'].includes(visual.id) && (
+        {hasVariant && (
           <button
             className="subtle-button"
             onClick={() => {
@@ -177,7 +217,11 @@ function Simulator({ visual }) {
             }}
           >
             <Icon name="shuffle" size={14} />
-            {visual.id === 'sorting' ? 'Try another array' : `Try n = ${variant ? 6 : 8}`}
+            {visual.id === 'sorting'
+              ? t('visual.anotherArray')
+              : visual.id === 'dynamic-programming'
+                ? t('visual.tryN', { n: variant ? 6 : 8 })
+                : t('visual.anotherInput')}
           </button>
         )}
         {visual.id === 'mongo-index' && (
@@ -189,7 +233,7 @@ function Simulator({ visual }) {
                 setIndexMode(true);
               }}
             >
-              With index
+              {t('visual.withIndex')}
             </button>
             <button
               className={!indexMode ? 'active' : ''}
@@ -198,15 +242,26 @@ function Simulator({ visual }) {
                 setIndexMode(false);
               }}
             >
-              Collection scan
+              {t('visual.collectionScan')}
             </button>
           </div>
         )}
         <span className="simulation-legend">
-          <i /> Current <i className="legend-found" /> Resolved
+          <i /> {t('visual.legendCurrent')} <i className="legend-found" />{' '}
+          {t('visual.legendResolved')}
         </span>
       </div>
       <div className="simulation-canvas">
+        {frame.cells && (
+          <div className="simulation-cells">
+            {frame.cells.map((cell, i) => (
+              <div key={i} className={`simulation-cell ${cell.status}`}>
+                <strong>{cell.value}</strong>
+                <span>{cell.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
         {frame.lanes && (
           <div className="simulation-lanes">
             {frame.lanes.map((lane, i) => (
@@ -223,19 +278,9 @@ function Simulator({ visual }) {
                       </div>
                     ))
                   ) : (
-                    <div className="lane-empty">empty</div>
+                    <div className="lane-empty">{t('visual.empty')}</div>
                   )}
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-        {frame.cells && (
-          <div className="simulation-cells">
-            {frame.cells.map((cell, i) => (
-              <div key={i} className={`simulation-cell ${cell.status}`}>
-                <strong>{cell.value}</strong>
-                <span>{cell.label}</span>
               </div>
             ))}
           </div>
@@ -275,12 +320,12 @@ function Simulator({ visual }) {
       </div>
       <div className="simulation-controls">
         <div className="button-group">
-          <button className="icon-button" aria-label="Reset visualization" onClick={reset}>
+          <button className="icon-button" aria-label={t('visual.reset')} onClick={reset}>
             <Icon name="reset" size={18} />
           </button>
           <button
             className="icon-button"
-            aria-label="Previous step"
+            aria-label={t('visual.previous')}
             disabled={step === 0}
             onClick={() => {
               setPlaying(false);
@@ -291,11 +336,11 @@ function Simulator({ visual }) {
           </button>
           <button
             className="primary-button"
-            aria-label={playing ? 'Pause visualization' : 'Play visualization'}
+            aria-label={playing ? t('visual.pauseLabel') : t('visual.playLabel')}
             onClick={play}
           >
             <Icon name={playing ? 'pause' : 'play'} size={16} />
-            {playing ? 'Pause' : end ? 'Replay' : 'Play'}
+            {playing ? t('visual.pause') : end ? t('visual.replay') : t('visual.play')}
           </button>
           <button
             className="subtle-button"
@@ -305,7 +350,7 @@ function Simulator({ visual }) {
               setStep(step + 1);
             }}
           >
-            Agla step <Icon name="next" size={16} />
+            {t('visual.next')} <Icon name="next" size={16} />
           </button>
         </div>
         <div className="step-position">
@@ -313,7 +358,7 @@ function Simulator({ visual }) {
             {step + 1} / {frames.length}
           </span>
           <input
-            aria-label="Visualization step"
+            aria-label={t('visual.stepLabel')}
             type="range"
             min="0"
             max={frames.length - 1}
@@ -325,30 +370,30 @@ function Simulator({ visual }) {
           />
         </div>
         <select
-          aria-label="Animation speed"
+          aria-label={t('visual.speedLabel')}
           value={speed}
           onChange={(event) => setSpeed(Number(event.target.value))}
         >
-          <option value="2400">0.5× speed</option>
-          <option value="1200">1× speed</option>
-          <option value="600">2× speed</option>
+          <option value="2400">{t('visual.speed', { value: '0.5' })}</option>
+          <option value="1200">{t('visual.speed', { value: '1' })}</option>
+          <option value="600">{t('visual.speed', { value: '2' })}</option>
         </select>
       </div>
       <div className="visual-takeaway">
         <Icon name="sparkles" size={20} />
         <div>
-          <strong>Yeh main baat yaad rakho</strong>
+          <strong>{t('visual.takeaway')}</strong>
           <p>{visual.takeaway}</p>
           {visual.source && (
             <a href={visual.source} target="_blank" rel="noreferrer">
-              Official reference padho ↗
+              {t('visual.reference')}
             </a>
           )}
         </div>
       </div>
       <details className="visual-code">
         <summary>
-          <Icon name="code" size={16} /> Concept ka code dekho
+          <Icon name="code" size={16} /> {t('visual.code')}
         </summary>
         <Markdown>
           {'```' +
@@ -371,33 +416,37 @@ function Simulator({ visual }) {
 
 export default function VisualLab({ embedded = false, topic }) {
   const [params, setParams] = useSearchParams();
+  const { lang, t } = useLang();
+  const { notes } = useCatalog();
   const track = VISUALS.some((item) => item.track === params.get('track'))
     ? params.get('track')
     : 'all';
   const choices = VISUALS.filter((item) => embedded || track === 'all' || item.track === track);
   const requested = topic || params.get('topic') || 'event-loop';
-  const visual = choices.find((item) => item.id === requested) || choices[0];
+  const selected = choices.find((item) => item.id === requested) || choices[0];
+  const visual = useMemo(() => localizeVisual(selected, lang), [selected, lang]);
   const related = notes.filter((note) => note.visual === visual.id).slice(0, 3);
   return (
     <div className={`visual-lab page-enter ${embedded ? 'embedded' : ''}`}>
       {!embedded && (
         <>
           <div className="page-eyebrow">
-            <span className="small-line" /> LESS ABSTRACT. MORE AHA.
+            <span className="small-line" /> {t('visual.eyebrow')}
           </div>
           <div className="page-heading">
             <div>
               <h1>
-                See the idea come alive<span>.</span>
+                {t('visual.title')}
+                <span>.</span>
               </h1>
-              <p>Press play. Slow it down. Follow what changes, and understand why.</p>
+              <p>{t('visual.lead')}</p>
             </div>
-            <span className="count-pill">{VISUALS.length} interactive concepts</span>
+            <span className="count-pill">{t('visual.count', { count: VISUALS.length })}</span>
           </div>
           <label className="visual-track-filter">
-            Explore a subject
+            {t('visual.exploreSubject')}
             <select
-              aria-label="Visualization subject"
+              aria-label={t('visual.subjectLabel')}
               value={track}
               onChange={(event) => {
                 const nextTrack = event.target.value;
@@ -407,7 +456,7 @@ export default function VisualLab({ embedded = false, topic }) {
                 setParams({ track: nextTrack, topic: first.id });
               }}
             >
-              <option value="all">Saare subjects</option>
+              <option value="all">{t('visual.allSubjects')}</option>
               {Object.values(trackById)
                 .filter((item) => VISUALS.some((v) => v.track === item.id))
                 .map((item) => (
@@ -418,9 +467,9 @@ export default function VisualLab({ embedded = false, topic }) {
             </select>
           </label>
           <label className="mobile-visual-picker">
-            Concept chuno
+            {t('visual.chooseConcept')}
             <select
-              aria-label="Visualization concept"
+              aria-label={t('visual.conceptLabel')}
               value={visual.id}
               onChange={(event) => setParams({ topic: event.target.value, track })}
             >
@@ -450,7 +499,7 @@ export default function VisualLab({ embedded = false, topic }) {
       {!embedded && related.length > 0 && (
         <section className="related-notes">
           <div className="section-heading">
-            <h2>Connect it to your notes</h2>
+            <h2>{t('visual.connect')}</h2>
             <span className="muted">{trackById[visual.track].name}</span>
           </div>
           {related.map((note) => (

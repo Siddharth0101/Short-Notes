@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 3
 summary: Heap — complete binary tree with parent-child priority rule.
 tags: heap, priority-queue, top-k, heapify
+visual: heap-insert
 ---
 
 ## Quick revision

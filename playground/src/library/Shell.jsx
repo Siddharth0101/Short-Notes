@@ -5,7 +5,12 @@ import { notes, noteById } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import Icon from './Icons.jsx';
 import { normalizeTheme, readTheme, resolveTheme, THEME_KEY } from '../lib/theme.js';
+import { LANGUAGES } from '../lib/lang.js';
+import { useLang } from '../lib/langContext.js';
+import { usePlay } from '../lib/playContext.js';
 export default function Shell({ children }) {
+  const { lang, setLang, t } = useLang();
+  const { stats } = usePlay();
   const location = useLocation();
   const navigate = useNavigate();
   const search = useRef(null);
@@ -106,26 +111,28 @@ export default function Shell({ children }) {
     new URLSearchParams(location.search).get('track') ||
     noteById[location.pathname.split('/notes/')[1]]?.track;
   const navItems = [
-    ['/', 'dashboard', 'Overview'],
-    ['/library', 'book', 'All notes'],
-    ['/paths', 'path', 'Learning paths'],
-    ['/visuals', 'play', 'Visual lab'],
-    ['/interview', 'messages', 'Interview prep'],
-    ['/interview/live', 'sparkles', 'AI interview'],
-    ['/saved', 'bookmark', 'Bookmarks'],
+    ['/', 'dashboard', t('nav.overview')],
+    ['/library', 'book', t('nav.library')],
+    ['/paths', 'path', t('nav.paths')],
+    ['/visuals', 'play', t('nav.visuals')],
+    ['/play', 'gamepad', t('nav.play')],
+    ['/interview', 'messages', t('nav.interview')],
+    ['/interview/live', 'sparkles', t('nav.live')],
+    ['/saved', 'bookmark', t('nav.saved')],
   ];
   const pageName = location.pathname.startsWith('/notes')
-    ? TRACKS.find((track) => track.id === selectedTrack)?.name || 'Chapter'
-    : navItems.find(([to]) => to === location.pathname)?.[2] || 'Original playground';
+    ? TRACKS.find((track) => track.id === selectedTrack)?.name || t('shell.chapter')
+    : navItems.find(([to]) => to === location.pathname)?.[2] ||
+      (location.pathname.startsWith('/play') ? t('nav.play') : t('shell.originalPlayground'));
   return (
     <div className="workspace">
       <a className="skip-link" href="#main-content">
-        Seedha content par jao
+        {t('shell.skip')}
       </a>
       {mobile && (
         <button
           className="sidebar-backdrop"
-          aria-label="Close navigation"
+          aria-label={t('shell.closeNavigation')}
           onClick={() => setMobile(false)}
         />
       )}
@@ -135,7 +142,7 @@ export default function Shell({ children }) {
         role={mobile ? 'dialog' : undefined}
         aria-modal={mobile ? true : undefined}
         className={`sidebar ${mobile ? 'is-open' : ''}`}
-        aria-label="Notebook navigation"
+        aria-label={t('shell.notebookNavigation')}
       >
         <Link className="brand" to="/" onClick={() => setMobile(false)}>
           <span className="brand-mark">
@@ -147,17 +154,18 @@ export default function Shell({ children }) {
         </Link>
         <button
           className="icon-button sidebar-close"
-          aria-label="Close menu"
+          aria-label={t('shell.closeMenu')}
           onClick={() => setMobile(false)}
         >
           <Icon name="close" />
         </button>
-        <div className="workspace-label">HINGLISH REVISION NOTEBOOK</div>
-        <nav aria-label="Main navigation" className="main-nav">
+        <div className="workspace-label">{t('shell.tagline')}</div>
+        <nav aria-label={t('shell.mainNavigation')} className="main-nav">
           {navItems.map(([to, icon, label]) => (
             <NavLink
               key={to}
               end={to === '/' || to === '/interview'}
+              data-nav={to}
               to={to}
               onClick={() => setMobile(false)}
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
@@ -165,6 +173,14 @@ export default function Shell({ children }) {
               <Icon name={icon} size={18} />
               <span>{label}</span>
               {to === '/interview/live' && <span className="tiny-badge">AI</span>}
+              {to === '/play' && stats.streak.current > 0 && (
+                <span
+                  className="nav-count nav-streak"
+                  aria-label={t('shell.streakLabel', { count: stats.streak.current })}
+                >
+                  🔥 {stats.streak.current}
+                </span>
+              )}
               {to === '/saved' && progress.saved.length > 0 && (
                 <span className="nav-count">{progress.saved.length}</span>
               )}
@@ -172,9 +188,9 @@ export default function Shell({ children }) {
           ))}
         </nav>
         <div className="sidebar-section-label">
-          SUBJECTS <span>{TRACKS.length - 1}</span>
+          {t('shell.subjects')} <span>{TRACKS.length - 1}</span>
         </div>
-        <nav aria-label="Subject navigation" className="subject-nav">
+        <nav aria-label={t('shell.subjectNavigation')} className="subject-nav">
           {TRACKS.filter((t) => t.id !== 'interview').map((track) => {
             const chapters = notes.filter((note) => note.track === track.id);
             const revised = chapters.filter((note) => progress.completed.includes(note.id)).length;
@@ -200,29 +216,35 @@ export default function Shell({ children }) {
         <div className="sidebar-bottom">
           <div className="progress-widget">
             <div>
-              <span>Roz thoda sa seekho.</span>
+              <span>{t('shell.learnDaily')}</span>
               <Icon name="sparkles" size={16} />
             </div>
-            <p>
-              {done} of {notes.length} chapters completed
-            </p>
+            <p>{t('shell.chaptersCompleted', { done, total: notes.length })}</p>
             <div className="progress-track">
               <div style={{ width: `${notes.length ? (done / notes.length) * 100 : 0}%` }} />
             </div>
             <Link to="/paths" onClick={() => setMobile(false)}>
-              Padhai jaari rakho <Icon name="arrow" size={14} />
+              {t('shell.keepStudying')} <Icon name="arrow" size={14} />
             </Link>
           </div>
           <div className="profile">
-            <span className="avatar">S</span>
+            <Link
+              className="avatar avatar-level"
+              to="/play"
+              onClick={() => setMobile(false)}
+              aria-label={`${t('shell.levelLabel', { level: stats.level })} · ${t(`level.${stats.level}`)}`}
+              title={`${t('shell.levelLabel', { level: stats.level })} · ${t(`level.${stats.level}`)}`}
+            >
+              {stats.level}
+            </Link>
             <div>
-              <strong>Apni pace. Apni progress.</strong>
-              <span>Saved in this browser</span>
+              <strong>{t('shell.yourPace')}</strong>
+              <span>{t('shell.savedInBrowser')}</span>
             </div>
             <button
               className="icon-button theme-toggle"
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-              title={`Current appearance: ${preference}`}
+              aria-label={t('shell.switchTheme', { mode: theme === 'light' ? 'dark' : 'light' })}
+              title={t('shell.currentAppearance', { value: preference })}
               onClick={() => setPreference(theme === 'light' ? 'dark' : 'light')}
             >
               <Icon name={theme === 'light' ? 'moon' : 'sun'} size={18} />
@@ -235,14 +257,14 @@ export default function Shell({ children }) {
           <div className="topbar-title">
             <button
               className="icon-button mobile-menu"
-              aria-label="Open navigation"
+              aria-label={t('shell.openNavigation')}
               aria-expanded={mobile}
               aria-controls="notebook-navigation"
               onClick={() => setMobile(true)}
             >
               <Icon name="menu" />
             </button>
-            <span>Shortnotes</span>
+            <span>{t('shell.brand')}</span>
             <Icon name="chevron" size={13} />
             <strong>{pageName}</strong>
           </div>
@@ -261,45 +283,60 @@ export default function Shell({ children }) {
             <Icon name="search" size={16} />
             <input
               ref={search}
-              aria-label="Search all notes"
-              placeholder="Saare notes mein dhundo…"
+              aria-label={t('shell.searchLabel')}
+              placeholder={t('shell.searchPlaceholder')}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
             <kbd>⌘ K</kbd>
-            <button className="search-submit" type="submit" aria-label="Submit search">
+            <button className="search-submit" type="submit" aria-label={t('shell.submitSearch')}>
               <Icon name="arrow" size={16} />
             </button>
           </form>
+          <label className="appearance-control language-control">
+            <Icon name="globe" size={17} />
+            <span className="visually-hidden">{t('shell.language')}</span>
+            <select
+              aria-label={t('shell.language')}
+              value={lang}
+              onChange={(event) => setLang(event.target.value)}
+            >
+              {LANGUAGES.map((language) => (
+                <option key={language.id} value={language.id}>
+                  {language.label}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="appearance-control">
             <Icon name={theme === 'dark' ? 'moon' : 'sun'} size={17} />
-            <span className="visually-hidden">Appearance</span>
+            <span className="visually-hidden">{t('shell.appearance')}</span>
             <select
-              aria-label="Appearance"
+              aria-label={t('shell.appearance')}
               value={preference}
               onChange={(event) => setPreference(event.target.value)}
             >
-              <option value="system">System theme</option>
-              <option value="light">Light mode</option>
-              <option value="dark">Dark mode</option>
+              <option value="system">{t('shell.themeSystem')}</option>
+              <option value="light">{t('shell.themeLight')}</option>
+              <option value="dark">{t('shell.themeDark')}</option>
             </select>
           </label>
         </header>
         {storageError && (
           <div className="storage-notice" role="status">
-            Browser storage available nahi. Is session ki progress ka backup Bookmarks se export
-            karke rakho.
+            {t('shell.storageNotice')}
           </div>
         )}
         <main id="main-content" className="page-content" tabIndex={-1}>
           {children}
         </main>
-        <nav className="mobile-bottom-nav" aria-label="Quick navigation">
+        <nav className="mobile-bottom-nav" aria-label={t('shell.quickNavigation')}>
           {[
-            ['/', 'dashboard', 'Home'],
-            ['/library', 'book', 'Notes'],
-            ['/interview', 'messages', 'Practice'],
-            ['/saved', 'bookmark', 'Saved'],
+            ['/', 'dashboard', t('mobile.home')],
+            ['/library', 'book', t('mobile.notes')],
+            ['/play', 'gamepad', t('mobile.play')],
+            ['/interview', 'messages', t('mobile.practice')],
+            ['/saved', 'bookmark', t('mobile.saved')],
           ].map(([to, icon, label]) => (
             <NavLink key={to} to={to} end className={({ isActive }) => (isActive ? 'active' : '')}>
               <Icon name={icon} size={20} />
@@ -308,9 +345,9 @@ export default function Shell({ children }) {
           ))}
         </nav>
         <footer className="app-footer">
-          <span>Samajhne aur practice karne ke liye.</span>
+          <span>{t('footer.purpose')}</span>
           <span>
-            Ek waqt ek concept <span className="footer-dot">●</span>
+            {t('footer.oneConcept')} <span className="footer-dot">●</span>
           </span>
         </footer>
       </div>

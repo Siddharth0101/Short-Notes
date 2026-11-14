@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { legacyToMarkdown } from '../lib/content.js';
+import { useLang } from '../lib/langContext.js';
 import Markdown from './Markdown.jsx';
 import Icon from './Icons.jsx';
 
 function Example({ reference }) {
   const { hash } = useLocation();
+  const { t } = useLang();
   const anchor = `source-${reference.id}`;
   const [open, setOpen] = useState(hash === `#${anchor}`);
   useEffect(() => {
@@ -48,26 +50,23 @@ function Example({ reference }) {
       </summary>
       {open && (
         <div className="source-example-body">
-          <p className="source-caption">
-            Course example · {reference.language} · Snippet ko apna runtime ya project setup chahiye
-            ho sakta hai.
-          </p>
+          <p className="source-caption">{t('source.caption', { language: reference.language })}</p>
           {reference.originalUrl && (
             <Link className="text-button" to={reference.originalUrl}>
-              Interactive playground kholo →
+              {t('source.playground')}
             </Link>
           )}
           {error ? (
             <p role="alert">
-              Example load nahi hua.{' '}
+              {t('source.error')}{' '}
               <button className="text-button" onClick={() => setAttempt(attempt + 1)}>
-                Retry
+                {t('source.retry')}
               </button>
             </p>
           ) : body ? (
             <Markdown idPrefix={anchor}>{body}</Markdown>
           ) : (
-            <p role="status">Example load ho raha hai…</p>
+            <p role="status">{t('source.loading')}</p>
           )}
         </div>
       )}
@@ -75,11 +74,12 @@ function Example({ reference }) {
   );
 }
 export default function SourceExamples({ references }) {
+  const { t } = useLang();
   if (!references.length) return null;
   return (
     <section className="source-examples" aria-labelledby="source-examples">
-      <h2 id="source-examples">Source examples — step-by-step samjho</h2>
-      <p>Example kholo aur lesson ko actual code se connect karo.</p>
+      <h2 id="source-examples">{t('source.heading')}</h2>
+      <p>{t('source.lead')}</p>
       {references.map((reference) => (
         <Example key={reference.id} reference={reference} />
       ))}

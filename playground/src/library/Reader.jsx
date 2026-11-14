@@ -1,13 +1,17 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { notes, noteById, trackById } from '../data/catalog.js';
-import { extractHeadings, splitPractice } from '../lib/content.js';
+import { trackById } from '../data/catalog.js';
+import { chapterHeadings } from '../data/localized.js';
+import { splitPractice } from '../lib/content.js';
 import { useProgress } from '../lib/progressContext.js';
+import { useLang } from '../lib/langContext.js';
+import { useCatalog } from '../lib/catalogContext.js';
+import { analogyFor } from '../data/analogies.js';
 import Markdown from './Markdown.jsx';
 import Icon from './Icons.jsx';
 import { QuestionCard } from './Interviews.jsx';
 import SourceExamples from './SourceExamples.jsx';
-import PracticeSet from './PracticeSet.jsx';
+import PracticeSet, { InlineTitle } from './PracticeSet.jsx';
 import { NoteLink } from './Navigation.jsx';
 import './reader.css';
 const VisualLab = lazy(() => import('./VisualLab.jsx'));
@@ -74,6 +78,9 @@ function Chapter({ note }) {
   const [params, setParams] = useSearchParams();
   const body = note.body;
   const { progress, toggle, visit } = useProgress();
+  const { lang, t } = useLang();
+  const { notes } = useCatalog();
+  const analogy = analogyFor(note.id, lang);
   const tab = params.get('tab') === 'visual' && note.visual ? 'visual' : 'notes';
   const [largeText, setLargeText] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -87,13 +94,13 @@ function Chapter({ note }) {
   }, [focused]);
   useEffect(() => {
     visit(note.id);
-  }, [note, visit]);
+  }, [note.id, visit]);
   const track = trackById[note.track];
   const sequence = notes.filter((item) => item.track === note.track);
   const index = sequence.findIndex((item) => item.id === note.id);
   const next = sequence[index + 1];
   const previous = sequence[index - 1];
-  const parts = useMemo(() => splitPractice(body), [body]);
+  const parts = useMemo(() => splitPractice(body, note.practiceSlugs), [body, note.practiceSlugs]);
   const conceptCount = useMemo(
     () =>
       body
@@ -104,11 +111,15 @@ function Chapter({ note }) {
   );
   const headings = useMemo(
     () => [
-      ...extractHeadings(body),
-      ...(note.references?.length ? [{ id: 'source-examples', title: 'Source examples' }] : []),
-      ...(note.questions?.length ? [{ id: 'chapter-practice', title: 'Interview practice' }] : []),
+      ...chapterHeadings(note),
+      ...(note.references?.length
+        ? [{ id: 'source-examples', title: t('reader.sourceExamples') }]
+        : []),
+      ...(note.questions?.length
+        ? [{ id: 'chapter-practice', title: t('reader.interviewPractice') }]
+        : []),
     ],
-    [body, note],
+    [note, t],
   );
   const activeHeading = useActiveHeading(headings, tab === 'notes');
   const recallHeading = headings.find((heading) => /recall/i.test(heading.title));
@@ -120,7 +131,8 @@ function Chapter({ note }) {
       {tab === 'notes' && <ReadingProgress />}
       {from?.url?.startsWith('/') && !from.url.startsWith('//') && (
         <Link className="text-button reader-return" to={from.url} state={{ restoreKey: from.key }}>
-          <Icon name="back" size={16} /> {from.label || 'Wapas jao'}
+          <Icon name="back" size={16} />{' '}
+          {from.labelKey ? t(from.labelKey) : from.label || t('reader.back')}
         </Link>
       )}
       <header
@@ -133,7 +145,12 @@ function Chapter({ note }) {
             {track.shortName || track.name}
           </Link>
           <Icon name="chevron" size={14} />
-          <span>{`Chapter ${String(index + 1).padStart(2, '0')} of ${sequence.length}`}</span>
+          <span>
+            {t('reader.chapterOf', {
+              index: String(index + 1).padStart(2, '0'),
+              total: sequence.length,
+            })}
+          </span>
         </div>
         <div className="reader-heading">
           <div>
@@ -146,37 +163,39 @@ function Chapter({ note }) {
             onClick={() => toggle('saved', note.id)}
           >
             <Icon name="bookmark" size={17} />
-            {progress.saved.includes(note.id) ? 'Saved' : 'Note save karo'}
+            {progress.saved.includes(note.id) ? t('reader.saved') : t('reader.save')}
           </button>
         </div>
-        <ul className="reader-glance" aria-label="Chapter at a glance">
+        <ul className="reader-glance" aria-label={t('reader.glanceLabel')}>
           <li>
             <span className="level-pill">{note.level}</span>
           </li>
           {note.minutes > 0 && (
             <li>
-              <Icon name="clock" size={15} /> {note.minutes} min
+              <Icon name="clock" size={15} /> {t('reader.minutes', { minutes: note.minutes })}
             </li>
           )}
           <li>
-            <Icon name="checklist" size={15} /> {conceptCount} concepts
+            <Icon name="checklist" size={15} /> {t('reader.concepts', { count: conceptCount })}
           </li>
           {parts.questions.length > 0 && (
             <li>
-              <Icon name="target" size={15} /> {parts.questions.length} practice questions
+              <Icon name="target" size={15} />{' '}
+              {t('reader.practiceQuestions', { count: parts.questions.length })}
             </li>
           )}
           {note.visual && (
             <li>
-              <Icon name="play" size={15} /> Visual
+              <Icon name="play" size={15} /> {t('reader.visual')}
             </li>
           )}
         </ul>
       </header>
       <div className="reader-quick-actions">
         <Link className="text-button" to={`/paths?track=${note.track}`}>
-          <Icon name="path" size={16} /> {note.stage && `Stage ${note.stageNumber} · `}Lesson{' '}
-          {note.order} / {sequence.length} · Learning path
+          <Icon name="path" size={16} />{' '}
+          {note.stage && t('reader.stage', { stage: note.stageNumber })}
+          {t('reader.lessonPath', { order: note.order, total: sequence.length })}
         </Link>
         <button
           className={complete ? 'subtle-button' : 'primary-button'}
@@ -184,7 +203,7 @@ function Chapter({ note }) {
           onClick={() => toggle('completed', note.id)}
         >
           <Icon name={complete ? 'check' : 'circle'} size={16} />{' '}
-          {complete ? 'Completed' : 'Complete mark karo'}
+          {complete ? t('reader.completed') : t('reader.markComplete')}
         </button>
       </div>
       <div className="tab-bar">
@@ -193,7 +212,7 @@ function Chapter({ note }) {
           aria-pressed={tab === 'notes'}
           onClick={() => setParams({}, { state: location.state })}
         >
-          <Icon name="book" size={16} /> Quick notes
+          <Icon name="book" size={16} /> {t('reader.tab.notes')}
         </button>
         {note.visual && (
           <button
@@ -201,41 +220,49 @@ function Chapter({ note }) {
             aria-pressed={tab === 'visual'}
             onClick={() => setParams({ tab: 'visual' }, { state: location.state })}
           >
-            <Icon name="play" size={16} /> Visual example
+            <Icon name="play" size={16} /> {t('reader.tab.visual')}
           </button>
         )}
       </div>
       {tab === 'visual' ? (
-        <Suspense fallback={<p>Visual load ho raha hai…</p>}>
+        <Suspense fallback={<p>{t('reader.visualLoading')}</p>}>
           <VisualLab embedded topic={note.visual} />
         </Suspense>
       ) : (
         <>
-          <div className="reader-tools" role="group" aria-label="Reading controls">
+          {note.untranslated && lang === 'en' && (
+            <p className="translation-notice" role="note">
+              <Icon name="globe" size={16} /> {t('content.untranslated')}
+            </p>
+          )}
+          <div className="reader-tools" role="group" aria-label={t('reader.controlsLabel')}>
             <div className="reader-tools-hint">
               <Icon name="book" size={17} />
-              <span>Samjho. Phir khud samjhao.</span>
+              <span>{t('reader.hint')}</span>
             </div>
             <div className="reader-tools-actions">
               <button
                 type="button"
-                aria-label="Bada text — larger reading text"
+                aria-label={t('reader.largeTextLabel')}
                 aria-pressed={largeText}
                 onClick={() => setLargeText(!largeText)}
               >
                 <span className="reader-type-icon" aria-hidden="true">
                   Aa
                 </span>{' '}
-                Bada text
+                {t('reader.largeText')}
               </button>
               <button
                 type="button"
-                aria-label="Focus reading mode"
+                aria-label={t('reader.focusLabel')}
                 aria-pressed={focused}
                 onClick={() => setFocused(!focused)}
               >
-                <Icon name={focused ? 'check' : 'book'} size={15} /> Focus
+                <Icon name={focused ? 'check' : 'book'} size={15} /> {t('reader.focus')}
               </button>
+              <Link to={`/play/flashcards?chapter=${note.id}`}>
+                <Icon name="cards" size={15} /> {t('reader.flashcards')}
+              </Link>
               {recallHeading && (
                 <a
                   href={`#${recallHeading.id}`}
@@ -247,22 +274,22 @@ function Chapter({ note }) {
                     }
                   }}
                 >
-                  Recall karo <Icon name="arrow" size={15} />
+                  {t('reader.recall')} <Icon name="arrow" size={15} />
                 </a>
               )}
             </div>
           </div>
           {focused && (
             <p className="reader-focus-hint" role="status">
-              Focus mode on · Outline wapas laane ke liye Focus ya Esc dabao.
+              {t('reader.focusHint')}
             </p>
           )}
           <details className="mobile-toc">
             <summary>
-              <Icon name="book" size={16} /> Is chapter mein · {headings.length} sections{' '}
+              <Icon name="book" size={16} /> {t('reader.mobileToc', { count: headings.length })}{' '}
               <Icon name="down" size={16} />
             </summary>
-            <nav aria-label="Chapter sections">
+            <nav aria-label={t('reader.sectionsLabel')}>
               {headings.map((heading) => (
                 <a
                   key={heading.id}
@@ -283,14 +310,56 @@ function Chapter({ note }) {
           </details>
           <div className="reader-layout">
             <article className="reader-article">
-              <Markdown recallAnswers>{parts.before}</Markdown>
+              {analogy && (
+                <aside className="analogy-card" aria-label={t('analogy.reader')}>
+                  <span className="section-kicker">
+                    <Icon name="laugh" size={14} /> {t('analogy.kicker')}
+                  </span>
+                  <strong>
+                    <InlineTitle text={analogy.title} />
+                  </strong>
+                  <p>
+                    <InlineTitle text={analogy.text} />
+                  </p>
+                  <p className="analogy-catch">
+                    <b>{t('analogy.catch')}:</b> <InlineTitle text={analogy.catch} />
+                  </p>
+                </aside>
+              )}
+              <Markdown recallAnswers headingIds={note.headingIds}>
+                {parts.before}
+              </Markdown>
               <PracticeSet noteId={note.id} questions={parts.questions} />
-              {parts.after && <Markdown recallAnswers>{parts.after}</Markdown>}
+              {parts.after && (
+                <Markdown recallAnswers headingIds={note.headingIds}>
+                  {parts.after}
+                </Markdown>
+              )}
+              <section className="chapter-play" aria-label={t('reader.playTitle')}>
+                <div>
+                  <span className="section-kicker">
+                    <Icon name="gamepad" size={14} /> {t('reader.playKicker')}
+                  </span>
+                  <h3>{t('reader.playTitle')}</h3>
+                  <p>{t('reader.playBody')}</p>
+                </div>
+                <div className="chapter-play-links">
+                  <Link className="subtle-button" to={`/play/flashcards?chapter=${note.id}`}>
+                    <Icon name="cards" size={16} /> {t('play.flashcards.name')}
+                  </Link>
+                  <Link className="subtle-button" to={`/play/quiz?chapter=${note.id}`}>
+                    <Icon name="timer" size={16} /> {t('play.quiz.name')}
+                  </Link>
+                  <Link className="subtle-button" to={`/play/match?chapter=${note.id}`}>
+                    <Icon name="grid" size={16} /> {t('play.match.name')}
+                  </Link>
+                </div>
+              </section>
               <SourceExamples references={note.references || []} />
               {!!note.questions?.length && (
                 <section className="chapter-practice" aria-labelledby="chapter-practice">
-                  <h2 id="chapter-practice">Interview practice</h2>
-                  <p>Question bank ke related sawaal. Pehle khud answer do, phir check karo.</p>
+                  <h2 id="chapter-practice">{t('reader.interviewPractice')}</h2>
+                  <p>{t('reader.interviewPracticeLead')}</p>
                   {note.questions.map((item, index) => (
                     <QuestionCard key={item.id} item={item} number={index + 1} />
                   ))}
@@ -300,15 +369,8 @@ function Chapter({ note }) {
                 <div>
                   <Icon name="complete" size={27} />
                   <div>
-                    <h3>
-                      {complete
-                        ? 'Ek aur concept clear hua.'
-                        : 'Aage badhne se pehle khud samjhao.'}
-                    </h3>
-                    <p>
-                      Recall answer aur practice checks compare karo. Completion tumhara self-check
-                      hai.
-                    </p>
+                    <h3>{complete ? t('reader.doneTitle') : t('reader.notDoneTitle')}</h3>
+                    <p>{t('reader.doneBody')}</p>
                   </div>
                 </div>
                 <button
@@ -317,13 +379,13 @@ function Chapter({ note }) {
                   onClick={() => toggle('completed', note.id)}
                 >
                   <Icon name={complete ? 'check' : 'circle'} size={17} />
-                  {complete ? 'Completed' : 'Complete mark karo'}
+                  {complete ? t('reader.completed') : t('reader.markComplete')}
                 </button>
               </div>
               <div className="chapter-navigation">
                 {previous ? (
                   <NoteLink to={`/notes/${previous.id}`}>
-                    <span>← PREVIOUS CHAPTER</span>
+                    <span>{t('reader.previous')}</span>
                     <strong>{previous.title}</strong>
                   </NoteLink>
                 ) : (
@@ -331,7 +393,7 @@ function Chapter({ note }) {
                 )}
                 {next && (
                   <NoteLink to={`/notes/${next.id}`}>
-                    <span>NEXT CHAPTER →</span>
+                    <span>{t('reader.next')}</span>
                     <strong>{next.title}</strong>
                   </NoteLink>
                 )}
@@ -340,7 +402,7 @@ function Chapter({ note }) {
                 <div className="stage-checkpoint">
                   <Icon name="check" size={20} />
                   <p>
-                    <strong>Stage checkpoint:</strong> {note.stage.checkpoint}
+                    <strong>{t('reader.stageCheckpoint')}</strong> {note.stage.checkpoint}
                   </p>
                 </div>
               )}
@@ -349,16 +411,17 @@ function Chapter({ note }) {
                   className="primary-button"
                   to={`/interview?track=${note.track === 'interview' ? 'all' : note.track}`}
                 >
-                  Course complete? Try the interview questions <Icon name="arrow" size={16} />
+                  {t('reader.courseComplete')} <Icon name="arrow" size={16} />
                 </Link>
               )}
             </article>
             <aside className="reader-toc">
               <div className="toc-sticky">
                 <span className="card-overline">
-                  CHAPTER MAP <span className="reader-section-count">{headings.length}</span>
+                  {t('reader.chapterMap')}{' '}
+                  <span className="reader-section-count">{headings.length}</span>
                 </span>
-                <nav aria-label="Table of contents">
+                <nav aria-label={t('reader.tocLabel')}>
                   {headings.map((heading, i) => (
                     <a
                       key={`${heading.id}-${i}`}
@@ -375,19 +438,17 @@ function Chapter({ note }) {
                 </nav>
                 <div className="toc-tip">
                   <Icon name="sparkles" size={18} />
-                  <strong>Sirf padhna kaafi nahi.</strong>
-                  <p>
-                    Recall ka sawaal bina notes dekhe bolo. Phir answer kholkar missing point pakdo.
-                  </p>
+                  <strong>{t('reader.tipTitle')}</strong>
+                  <p>{t('reader.tipBody')}</p>
                 </div>
                 <Link
                   to={`/interview?track=${note.track === 'interview' ? 'all' : note.track}`}
                   className="text-button"
                 >
-                  Practice questions <Icon name="arrow" size={15} />
+                  {t('reader.practiceLink')} <Icon name="arrow" size={15} />
                 </Link>
                 <div className="source-path">
-                  <span>NOTE SOURCE</span>
+                  <span>{t('reader.noteSource')}</span>
                   <code>{note.source}</code>
                 </div>
               </div>
@@ -400,6 +461,8 @@ function Chapter({ note }) {
 }
 export default function Reader() {
   const { noteId } = useParams();
+  const { t } = useLang();
+  const { noteById } = useCatalog();
   const note = noteById[noteId];
   if (note?.chapterId)
     return <Navigate to={`/notes/${note.chapterId}#source-${note.id}`} replace />;
@@ -407,9 +470,9 @@ export default function Reader() {
     <Chapter key={note.id} note={note} />
   ) : (
     <div className="empty-state">
-      <h1>Note not found.</h1>
+      <h1>{t('reader.notFound')}</h1>
       <Link to="/library" className="primary-button">
-        Back to library
+        {t('reader.backToLibrary')}
       </Link>
     </div>
   );

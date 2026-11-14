@@ -2,7 +2,9 @@ import { Mic, ArrowRight, Clock3, Sparkles, RotateCcw } from 'lucide-react';
 import VoiceSettings from './VoiceSettings.jsx';
 import { TRACKS } from '../lib/content.js';
 import { PHASES, LABELS, STAGES } from './session.js';
+import { useLang } from '../lib/langContext.js';
 export default function InterviewSetup({ controller, notices }) {
+  const { t } = useLang();
   const {
     subject,
     setSubject,
@@ -32,8 +34,7 @@ export default function InterviewSetup({ controller, notices }) {
         <span>the real interview.</span>
       </h1>
       <p className="ia-lead">
-        Apni knowledge ko conversation mein test karo. Explain your thinking, write real code, and
-        get feedback grounded in your notes.
+        {t('live.lead')}
       </p>
       <div className="ia-setup-grid">
         <section className="ia-card ia-setup">

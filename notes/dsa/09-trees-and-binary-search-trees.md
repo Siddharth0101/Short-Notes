@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 3
 summary: Tree — hierarchical nodes; root, child aur leaf.
 tags: tree, bst, dfs, traversal, balancing
+visual: tree-traversal
 ---
 
 ## Quick revision
