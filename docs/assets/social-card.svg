@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Shortnotes — chhote notes, clear concepts</title>
+  <desc id="desc">Link preview card: the Shortnotes name, the tagline, what the site holds, its subjects, and a sample flashcard.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#15181d"/>
+      <stop offset="1" stop-color="#1c2040"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a5b4fc"/>
+      <stop offset="1" stop-color="#c7d2fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1110" cy="40" r="240" fill="#a5b4fc" opacity="0.07"/>
+  <circle cx="90" cy="620" r="190" fill="#fcd57a" opacity="0.05"/>
+
+  <!-- Brand -->
+  <g transform="translate(80 72)">
+    <rect width="64" height="64" rx="16" fill="#a5b4fc"/>
+    <g transform="translate(5 5) scale(1.0)">
+      <path d="M12 16h10a5 5 0 0 1 5 5v18a4 4 0 0 0-4-4H12zM42 16H32a5 5 0 0 0-5 5v18a4 4 0 0 1 4-4h11z" fill="none" stroke="#12142a" stroke-width="3" stroke-linejoin="round"/>
+    </g>
+    <text x="84" y="46" font-family="Georgia, 'Times New Roman', serif" font-size="46" font-weight="700" fill="#eceef2">shortnotes<tspan fill="#a5b4fc">.</tspan></text>
+  </g>
+
+  <!-- Tagline -->
+  <text x="80" y="262" font-family="Georgia, 'Times New Roman', serif" font-size="80" font-weight="700" fill="#eceef2">Chhote notes.</text>
+  <text x="80" y="352" font-family="Georgia, 'Times New Roman', serif" font-size="80" font-weight="700" fill="url(#glow)">Clear concepts.</text>
+  <text x="80" y="412" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="28" fill="#c9cdd5">Developer revision notes in English and Roman Hinglish</text>
+
+  <!-- What is inside -->
+  <g font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#eceef2">
+    <rect x="80" y="450" width="178" height="48" rx="24" fill="#232741" stroke="#3f4785"/>
+    <text x="169" y="482" text-anchor="middle">118 chapters</text>
+    <rect x="272" y="450" width="160" height="48" rx="24" fill="#232741" stroke="#3f4785"/>
+    <text x="352" y="482" text-anchor="middle">37 visuals</text>
+    <rect x="446" y="450" width="268" height="48" rx="24" fill="#232741" stroke="#3f4785"/>
+    <text x="580" y="482" text-anchor="middle">456 interview answers</text>
+    <rect x="728" y="450" width="222" height="48" rx="24" fill="#232741" stroke="#3f4785"/>
+    <text x="839" y="482" text-anchor="middle">2,400+ flashcards</text>
+  </g>
+  <text x="80" y="566" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" fill="#a0a6b2">JavaScript · React · React Native · Java · Spring Boot · Node &amp; MongoDB · DSA · System design</text>
+
+  <!-- Flashcard -->
+  <g transform="translate(832 96)">
+    <rect width="288" height="196" rx="22" fill="#1f2340" stroke="#3f4785" stroke-width="1.5"/>
+    <text x="144" y="56" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="2.6" fill="#a0a6b2">TERM</text>
+    <text x="144" y="114" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="700" fill="#eceef2">Event loop</text>
+    <text x="144" y="156" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" fill="#a0a6b2">Flip to check ↻</text>
+  </g>
+</svg>

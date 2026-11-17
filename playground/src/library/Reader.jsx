@@ -1,14 +1,15 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { trackById } from '../data/catalog.js';
-import { chapterHeadings } from '../data/localized.js';
-import { splitPractice } from '../lib/content.js';
+import { chapterHeadings, splitPractice } from '../lib/content.js';
 import { useProgress } from '../lib/progressContext.js';
 import { useLang } from '../lib/langContext.js';
-import { useCatalog } from '../lib/catalogContext.js';
+import { useCatalog, useContent } from '../lib/catalogContext.js';
+import { usePageDescription } from '../lib/pageMeta.js';
 import { analogyFor } from '../data/analogies.js';
 import Markdown from './Markdown.jsx';
 import Icon from './Icons.jsx';
+import ContentStatus from './ContentStatus.jsx';
 import { QuestionCard } from './Interviews.jsx';
 import SourceExamples from './SourceExamples.jsx';
 import PracticeSet, { InlineTitle } from './PracticeSet.jsx';
@@ -115,7 +116,7 @@ function Chapter({ note }) {
       ...(note.references?.length
         ? [{ id: 'source-examples', title: t('reader.sourceExamples') }]
         : []),
-      ...(note.questions?.length
+      ...(note.questionCount
         ? [{ id: 'chapter-practice', title: t('reader.interviewPractice') }]
         : []),
     ],
@@ -356,15 +357,7 @@ function Chapter({ note }) {
                 </div>
               </section>
               <SourceExamples references={note.references || []} />
-              {!!note.questions?.length && (
-                <section className="chapter-practice" aria-labelledby="chapter-practice">
-                  <h2 id="chapter-practice">{t('reader.interviewPractice')}</h2>
-                  <p>{t('reader.interviewPracticeLead')}</p>
-                  {note.questions.map((item, index) => (
-                    <QuestionCard key={item.id} item={item} number={index + 1} />
-                  ))}
-                </section>
-              )}
+              {note.questionCount > 0 && <ChapterQuestions noteId={note.id} />}
               <div className="chapter-complete">
                 <div>
                   <Icon name="complete" size={27} />
@@ -459,13 +452,104 @@ function Chapter({ note }) {
     </div>
   );
 }
+// The interview questions of a chapter sit near its end, so their answers are fetched only when
+// the reader gets close to them. Without IntersectionObserver they load with the chapter.
+function ChapterQuestions({ noteId }) {
+  const { t } = useLang();
+  const section = useRef(null);
+  const [near, setNear] = useState(typeof IntersectionObserver === 'undefined');
+  useEffect(() => {
+    if (near || !section.current) return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => entries.some((entry) => entry.isIntersecting) && setNear(true),
+      { rootMargin: '900px 0px' },
+    );
+    observer.observe(section.current);
+    return () => observer.disconnect();
+  }, [near]);
+  const { noteById, ready, failed, retry } = useContent({ questions: near });
+  const questions = near && ready ? noteById[noteId]?.questions || [] : null;
+  return (
+    <section className="chapter-practice" aria-labelledby="chapter-practice" ref={section}>
+      <h2 id="chapter-practice">{t('reader.interviewPractice')}</h2>
+      <p>{t('reader.interviewPracticeLead')}</p>
+      {questions ? (
+        questions.map((item, index) => (
+          <QuestionCard key={item.id} item={item} number={index + 1} />
+        ))
+      ) : (
+        <ContentStatus failed={failed} retry={retry} label={t('content.loadingQuestions')} />
+      )}
+    </section>
+  );
+}
+
+// The page a reader sees for the moment a chapter's text is still on its way.
+function ChapterLoading({ note, failed, retry }) {
+  const { t } = useLang();
+  const track = trackById[note.track];
+  return (
+    <div className="reader page-enter">
+      <header
+        className="reader-hero"
+        style={{ '--track-color': track.color, '--track-tint': track.tint }}
+      >
+        <div className="reader-breadcrumb">
+          <Link to={`/library?track=${note.track}`}>
+            <span className="subject-dot" style={{ background: track.color }} />
+            {track.shortName || track.name}
+          </Link>
+        </div>
+        <div className="reader-heading">
+          <div>
+            <h1>{note.title}</h1>
+            <p>{note.summary}</p>
+          </div>
+        </div>
+      </header>
+      <ContentStatus failed={failed} retry={retry} label={t('content.loadingChapter')} />
+    </div>
+  );
+}
+
 export default function Reader() {
   const { noteId } = useParams();
   const { t } = useLang();
-  const { noteById } = useCatalog();
+  const isChapter = useCatalog().noteById[noteId]?.kind === 'chapter';
+  const { noteById, ready, failed, retry } = useContent({
+    chapters: isChapter ? noteId : undefined,
+  });
   const note = noteById[noteId];
+  const shown = Boolean(note && ready && note.body !== undefined);
+  usePageDescription(note?.summary);
+  // The route settles (focus on the heading, scroll to a #section) before late text arrives.
+  // When the chapter replaces its loading page, do those two things again for the real page.
+  const { hash } = useLocation();
+  const waited = useRef(false);
+  useEffect(() => {
+    if (!shown) {
+      waited.current = true;
+      return;
+    }
+    if (!waited.current) return;
+    waited.current = false;
+    const heading = document.querySelector('#main-content h1');
+    if (heading && document.activeElement === document.body) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+    if (!hash) return;
+    let id = '';
+    try {
+      id = decodeURIComponent(hash.slice(1));
+    } catch {
+      // A malformed fragment simply does not scroll.
+    }
+    document.getElementById(id)?.scrollIntoView?.();
+  }, [shown, noteId, hash]);
   if (note?.chapterId)
     return <Navigate to={`/notes/${note.chapterId}#source-${note.id}`} replace />;
+  if (note && !shown) return <ChapterLoading note={note} failed={failed} retry={retry} />;
   return note ? (
     <Chapter key={note.id} note={note} />
   ) : (

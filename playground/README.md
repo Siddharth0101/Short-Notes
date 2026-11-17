@@ -42,9 +42,12 @@ Backend Gemini Interactions API use karta hai. Local hub four specialists ko sep
 | `src/i18n/` | UI strings: `hinglish.js`, `en.js`, `play.hinglish.js`, `play.en.js` |
 | `src/lib/lang.js`, `i18n.jsx`, `langContext.js` | Language preference, translator aur provider |
 | `src/lib/playState.js`, `play.jsx` | XP, levels, streak, flashcard boxes aur badges ke rules + provider |
-| `src/data/localized.js`, `english.js` | English catalog overlay; `english.js` on demand load hota hai |
+| `src/data/store.js` | Chapter text aur interview answers on demand fetch karta hai, aur language ka catalog banata hai |
+| `src/data/chapterIndex.json` | Generated chapter list (titles, counts; text nahi) — `node ../scripts/sync-chapter-index.mjs` |
+| `src/data/englishMeta.js` | English stage text aur chapter titles; English chunne par ek baar load hota hai |
+| `src/library/ContentStatus.jsx` | Content aate waqt loading, aur fail hone par retry |
 | `src/data/analogies.js` | Desi analogies, dono languages mein |
-| `src/data/catalog.js` | Chapters discover karke source examples aur questions attach karta hai |
+| `src/data/catalog.js` | Light chapter list (index se) + source examples; chapter text aur answers isme nahi hote |
 | `src/data/sourceChapters.json` | Har source example ka owning chapter |
 | `src/data/interviewQuestions.js` | Main bank; extra question files ko bhi combine karta hai |
 | `src/data/visuals.js` | Visual metadata aur explanations |
@@ -93,11 +96,26 @@ Reader mein reading-progress bar, chapter at-a-glance chips, glossary-style `ter
 
 Mock session filtered pool se five questions leta hai. 15-minute wall-clock timer pause/resume hota hai; time khatam hone par answer discard nahi hota. Drafts aur mock self-review temporary hain, confidence toggle persistent hai.
 
+## Content kab load hota hai
+
+Pehle download mein chapter text ya interview answers nahi hote — sirf `chapterIndex.json` ki list (titles, levels, counts). Baaki cheezein screen ke maangne par aati hain:
+
+| Screen | Kya fetch hota hai |
+| --- | --- |
+| Dashboard, library list, learning paths, visual lab | Kuch nahi (list kaafi hai) |
+| Chapter | Us subject ka text (ek file per subject per language); interview answers tab, jab reader us section ke paas pahunche |
+| Library search | Saare subjects ka text + question bank; tab tak title/summary/tag matches dikhte hain |
+| Interview prep | Question bank |
+| Flashcards, rapid fire, memory match | Chune hue chapter/subject ka text ("all" par sab) |
+| Arcade hub | Saara chapter text (flashcard counts aur daily challenge ke liye) |
+
+English mein usi chapter ka Hinglish text bhi aata hai, kyunki anchors, practice IDs aur flashcard IDs canonical text se bante hain. Screen `useContent({ chapters, questions })` se maangti hai aur `ready` hone tak `ContentStatus` dikhati hai; fetch fail ho toh wahi retry deta hai. Ek baar aaya content memory mein rehta hai, isliye wapas aane par loading nahi dikhta. `vite.config.js` chapter text ko subject-wise chunks mein group karta hai. Naya chapter ya frontmatter/practice change ke baad `node ../scripts/sync-chapter-index.mjs` chalao.
+
 ## Language aur English content
 
 Top bar ka Language select `shortnotes.lang` (`hinglish` ya `en`) save karta hai; default Hinglish hai. `<html lang>` bhi badalta hai aur tabs mein sync hota hai. UI text `t('key')` se aata hai; missing English key Hinglish par fallback karti hai, aur test dono dictionaries ke keys/placeholders match karwata hai.
 
-Content mein Hinglish canonical hai. English select karne par `src/data/english.js` ek alag chunk mein load hota hai: `notes/en/<track>/*.md` (full chapters), `notes/en/curriculum.json` (stage title/goal/checkpoint), `notes/en/chapters.json` (title/summary) aur `src/data/i18n/questions.en.json` (interview answers). Jo translate nahi hua woh Hinglish mein notice ke saath dikhta hai. Translated chapter ke section anchors aur practice question IDs original se liye jaate hain, isliye links aur progress language badalne par nahi toot-te. `npm run i18n:check` structure verify karke coverage batata hai.
+Content mein Hinglish canonical hai. English select karne par pehle sirf `src/data/englishMeta.js` load hota hai (`notes/en/curriculum.json` ke stage title/goal/checkpoint aur `notes/en/chapters.json` ke title/summary). English chapter text (`notes/en/<track>/*.md`) aur interview answers (`src/data/i18n/questions.en.json`) tabhi aate hain jab koi screen unhe maangti hai — neeche "Content kab load hota hai" dekho. Jo translate nahi hua woh Hinglish mein notice ke saath dikhta hai. Translated chapter ke section anchors aur practice question IDs original se liye jaate hain, isliye links aur progress language badalne par nahi toot-te. `npm run i18n:check` structure verify karke coverage batata hai.
 
 ## Arcade ka state
 
@@ -111,7 +129,26 @@ Visual lab teaching simulation hai. Browser, JVM, database ya Spring runtime act
 
 Top bar se System, Light aur Dark theme choose hoti hai. Design tokens `src/theme.css` mein, shared layout `src/design.css` mein aur reader styles `src/library/reader.css` mein hain. Preference local save hoti hai aur tabs mein sync hoti hai. System mode OS changes follow karta hai. `public/theme-init.js` React se pehle theme apply karta hai.
 
-Root `netlify.toml` app build karke `playground/dist/` publish karta hai. Doosre hosts par SPA routes ke liye `index.html` fallback aur actual assets ke liye normal serving rakho. PDFs static assets hain aur open karne par load hote hain. Google Fonts ke saath local font fallbacks hain. Reading aur self-review features ko API key/backend nahi chahiye. Live interviewer ke liye separately running Node API aur Gemini key chahiye; static Netlify deployment us backend ko deploy nahi karti. Offline service-worker cache aur automatic cross-device sync implemented nahi hain.
+Root `netlify.toml` app build karke `playground/dist/` publish karta hai. Doosre hosts par SPA routes ke liye `index.html` fallback aur actual assets ke liye normal serving rakho. PDFs static assets hain aur open karne par load hote hain. Google Fonts ke saath local font fallbacks hain. Reading aur self-review features ko API key/backend nahi chahiye. Live interviewer ke liye separately running Node API aur Gemini key chahiye; static Netlify deployment us backend ko deploy nahi karti. Automatic cross-device sync implemented nahi hai.
+
+### Search aur link preview
+
+Chat apps aur search engines page ka JavaScript chalaye bina `index.html` padhte hain. Isliye wahan site ki description, `og:*` tags aur `public/social-card.jpg` (1200×630) hain. Har chapter khulne par `meta description` us chapter ki summary ban jaati hai (`src/lib/pageMeta.js`), taaki search result mein sahi line dikhe.
+
+Build ke time `seo/plugin.js` site ka address `SITE_URL` se, ya Netlify ke apne `URL` variable se leta hai. Address mile toh preview image ka URL absolute ban jaata hai aur `dist/sitemap.xml` (main pages + har chapter) likha jaata hai; `dist/robots.txt` hamesha banta hai aur sitemap ki taraf point karta hai. Local build mein address nahi hota, isliye sitemap nahi banta. Ek `canonical` / `og:url` tag jaan-boojh kar nahi hai: saare routes ek hi `index.html` serve karte hain, toh har chapter home page ki copy maana jaata. Card ke counts ya design badlo toh `docs/assets/social-card.svg` edit karke root se `node scripts/make-social-card.mjs` (macOS) chalao.
+
+## Offline aur install
+
+Production build mein `offline/plugin.js` `dist/sw.js` banata hai: `offline/sw.js` ke upar us build ki file lists (`OFFLINE`). Service worker sirf built app mein register hota hai (`src/lib/offline.js`), dev server mein nahi.
+
+| Kya | Kab cache hota hai |
+| --- | --- |
+| App shell — page, scripts, styles, icons, manifest (~360 KB gzip) | Install par, taaki app bina internet ke khule |
+| Jo chapter text / answers screen ne fetch kiye | Pehli baar fetch hone par |
+| Ek language ke saare chapters + interview answers (~0.4 MB; English +0.4 MB) | Sirf jab reader Saved page par "Offline ke liye save karo" dabaye |
+| Course PDFs (15–29 MB), interviewer API, doosri sites (fonts) | Kabhi nahi |
+
+Pages network-first hain (4 s ke baad saved page); hashed files cache-first. Naya release background mein download hota hai aur "naya version ready" prompt tab tak wait karta hai jab tak reader Reload na dabaye. Release ke baad jin saved files ke naam badle, woh hat jaati hain; jisne notes save kiye the, uske liye agli baar online kholne par naye version phir se save ho jaate hain (`shortnotes.offline`). `npm run offline:check` build ke baad lists, icons aur manifest verify karta hai; `tests/offline.test.mjs` worker ke caching rules fake cache/network par chalata hai. Icons badalne ho toh `playground/public/favicon.svg` edit karke `node scripts/make-app-icons.mjs` (macOS) chalao.
 
 ## Validation ki scope
 

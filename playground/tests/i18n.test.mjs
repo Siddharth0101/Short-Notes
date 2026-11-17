@@ -25,12 +25,16 @@ const server = await createServer({
 });
 const { VISUALS } = await server.ssrLoadModule('/src/data/visuals.js');
 const { localizeVisual, VISUALS_EN } = await server.ssrLoadModule('/src/data/visuals.en.js');
-const { BASE_CATALOG, buildEnglishCatalog, chapterHeadings, loadEnglish } =
-  await server.ssrLoadModule('/src/data/localized.js');
-const { extractHeadings, extractTerms, splitPractice } =
+const store = await server.ssrLoadModule('/src/data/store.js');
+const { chapterHeadings, extractHeadings, extractTerms, splitPractice } =
   await server.ssrLoadModule('/src/lib/content.js');
-const english = await loadEnglish();
-const catalog = buildEnglishCatalog(english);
+await store.preloadAll();
+const BASE_CATALOG = store.getCatalog('hinglish');
+const catalog = store.getCatalog('en');
+const english = {
+  ...(await server.ssrLoadModule('/src/data/englishMeta.js')),
+  questions: (await server.ssrLoadModule('/src/data/i18n/questions.en.json')).default,
+};
 after(() => server.close());
 
 const placeholders = (text) => [...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort();
@@ -132,7 +136,7 @@ test('English catalog keeps ids, order, anchors and practice ids of the canonica
     assert.equal(extractTerms(note.body).length, extractTerms(original.body).length, note.id);
     assert.notEqual(note.body, original.body, note.id);
   }
-  assert.equal(translated, Object.keys(english.chapters).length);
+  assert.equal(translated, BASE_CATALOG.notes.filter((note) => note.english).length);
   assert(translated > 0, 'At least one chapter should be fully translated');
 });
 
@@ -212,4 +216,9 @@ test('Analogies belong to real chapters and state their limit in both languages'
   assert.equal(analogyFor('js-scope-closures', 'en').title, 'A closure is a lunchbox from home');
   assert.equal(analogyFor('js-scope-closures', 'xx').title, 'Closure = ghar se mila tiffin');
   assert.equal(analogyFor('no-such-chapter', 'en'), null);
+  // Every chapter has one, so the reader always gets a memory hook.
+  assert.deepEqual(
+    BASE_CATALOG.notes.filter((note) => !analogyFor(note.id, 'en')).map((note) => note.id),
+    [],
+  );
 });

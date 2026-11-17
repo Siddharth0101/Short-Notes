@@ -17,6 +17,9 @@
 - Source folders — har mapped JS/JSX/Java file mein short Quick revision bullets; code examples preserve karo.
 - Audit — `node scripts/check-revision.mjs` format, duplicate labels, source-topic presence, chapter recall, graded practice sections aur interview answer length verify karta hai.
 - Generation — root se `node scripts/sync-curriculum.mjs`, `node scripts/sync-interviews.mjs`, `node scripts/sync-priority-interviews.mjs`, `node scripts/sync-machine-coding.mjs`.
+- Offline — `npm run check` build ke baad `offline:check` chalata hai (service worker lists, manifest, icons). App icon badalna ho toh `playground/public/favicon.svg` edit karke root se `node scripts/make-app-icons.mjs` chalao (macOS: built-in renderer use karta hai) aur PNGs commit karo.
+- Link preview card — chapter, visual, answer ya flashcard counts badlein toh `docs/assets/social-card.svg` update karke root se `node scripts/make-social-card.mjs` chalao (macOS) aur `playground/public/social-card.jpg` commit karo. Script 1200×630 aur 300 KB se kam size check karta hai.
+- Chapter index — chapter add karne, ya frontmatter/tags/practice questions badalne, ya interview question add karne ke baad `node scripts/sync-chapter-index.mjs` chalao. Yeh `playground/src/data/chapterIndex.json` banata hai (app ki pehli chhoti list: titles aur counts, text nahi); haath se edit mat karo. `npm run chapters:check` stale index par fail hota hai.
 - Verify — `cd playground` phir `npm run check`; IDs, links, examples aur app checks pass hone chahiye.
 - English chapter — `notes/en/<track>/<same-file>.md`; frontmatter IDs, code blocks, section count aur practice levels original jaise rakho. Headings `Understand it with an example`, `Recall and practice`; recall labels `Question`, `Answer`, `Try it yourself`.
 - English check — `npm run i18n:check` structure verify karta hai aur coverage print karta hai; wording ki accuracy khud review karo.

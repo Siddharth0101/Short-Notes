@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NoteLink } from './Navigation.jsx';
 import { Link } from 'react-router-dom';
 import { TRACKS } from '../lib/content.js';
-import { archive, trackById, practiceTotal } from '../data/catalog.js';
+import { archive, trackById, practiceTotal, questionTotal } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import { useLang } from '../lib/langContext.js';
 import { useCatalog } from '../lib/catalogContext.js';
@@ -104,7 +104,7 @@ function PlayTeaser() {
 export default function Dashboard() {
   const { progress } = useProgress();
   const { t } = useLang();
-  const { notes, noteById, questions } = useCatalog();
+  const { notes, noteById } = useCatalog();
   const recent = progress.recent
     .map((id) => noteById[id])
     .filter(Boolean)
@@ -345,7 +345,7 @@ export default function Dashboard() {
               <Icon name="messages" size={22} />
             </span>
             <span className="card-overline">
-              {t('dash.questionsOverline', { count: questions.length })}
+              {t('dash.questionsOverline', { count: questionTotal })}
             </span>
             <h3>{t('dash.questionsTitle')}</h3>
             <p>{t('dash.questionsBody')}</p>

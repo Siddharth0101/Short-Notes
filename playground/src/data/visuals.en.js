@@ -607,6 +607,170 @@ export const VISUALS_EN = {
       },
     ],
   },
+  'navigation-stack': {
+    description:
+      'See how screen history changes on push, back, a tab switch, a deep link and replace.',
+    takeaway:
+      'A stack is a pile of plates: push puts a screen on top, back removes the top one. Each tab has its own pile, which stays as it was when you switch away. When arriving through a deep link, keep a screen below it with an initial route, and use replace where going back makes no sense (after login or payment).',
+    frames: [
+      {
+        title: 'App opens on the Home tab',
+        explanation:
+          'The root has two tabs: Home and Orders. Each tab keeps its own history. Home is showing; the Orders stack holds only the list screen.',
+      },
+      {
+        title: 'Switch to the Orders tab',
+        explanation:
+          'Switching tabs does not close Home — it waits behind, keeping its scroll position and state. The top screen of the Orders stack is now showing.',
+      },
+      {
+        explanation:
+          'The detail screen is placed on top of the stack. The list underneath is not unmounted, only covered. Back now means removing this top screen.',
+      },
+      {
+        explanation:
+          'The top screen is removed and unmounted. The list underneath shows again with the same state — it does not have to load again.',
+      },
+      {
+        explanation:
+          'The app was closed and a notification link opened the detail directly. Without the list underneath, back would close the app. An initial route puts the list below it in the stack.',
+      },
+      {
+        explanation:
+          'The session expired. replace swaps the top screen instead of adding a history entry — after logging in, back does not return to the expired detail.',
+      },
+    ],
+  },
+  'spring-proxy': {
+    description:
+      'See how a @Transactional call goes through the proxy — and why this.method() does not.',
+    takeaway:
+      'Spring implements @Transactional, @Async and @Cacheable with a proxy standing in front of the bean. A call from outside passes through the proxy; this.method() inside the class calls the real object directly and the advice is skipped. Put the transaction boundary on the method that is called from outside, or move the logic into a separate bean.',
+    frames: [
+      {
+        title: 'Startup: the container creates a proxy',
+        explanation:
+          'Seeing a @Transactional method, Spring places a proxy in front of the real OrderService. What gets injected into the controller is the proxy, not the real object.',
+      },
+      {
+        explanation:
+          'The call passes through the proxy. The proxy first opens a transaction, then runs the real place().',
+      },
+      {
+        title: 'A RuntimeException inside place()',
+        explanation:
+          'The exception travels back to the proxy. By default a runtime exception causes a rollback, so both the order and the stock change are undone.',
+      },
+      {
+        explanation:
+          'placeAll has no @Transactional, so the proxy forwards the call without a transaction.',
+      },
+      {
+        title: 'this.place(order): a self-call',
+        explanation:
+          'From inside, this.place() calls the real object directly — the proxy never sees it, so @Transactional does nothing here. Each repository call commits on its own; if the third order fails, the first two are not undone.',
+      },
+      {
+        title: 'Fix: put the boundary on the outer method',
+        explanation:
+          'Make placeAll @Transactional (or move place into a separate bean) so the call goes through the proxy. Now all the orders share one transaction: all commit or all roll back.',
+      },
+    ],
+  },
+  'stream-pipeline': {
+    description: 'filter → map → findFirst: see elements pass one by one, and when the work stops.',
+    takeaway:
+      'A stream is lazy: intermediate operations only build the pipeline, and the terminal operation runs it. Each element goes through the whole pipeline one at a time, and a short-circuiting operation such as findFirst stops as soon as it has an answer. A stream can be consumed only once.',
+    frames: [
+      {
+        title: 'The pipeline is built; nothing has run',
+        explanation:
+          'filter and map only add steps. Without a terminal operation (findFirst), not a single element is processed.',
+      },
+      {
+        title: 'findFirst(): 5 comes in',
+        explanation:
+          'Elements go through the whole pipeline one by one, not stage by stage in a batch. 5 stops at the filter, because 5 > 10 is false.',
+      },
+      {
+        title: '12 passes; map makes it 24',
+        explanation:
+          '12 > 10, so it moves on and map turns it into 24. findFirst has its first result.',
+      },
+      {
+        title: 'Short-circuit: the rest are never touched',
+        explanation:
+          '8, 21 and 30 never reach the filter. On a large or infinite stream, this is the work that is saved.',
+      },
+      {
+        title: 'Reuse the same stream? IllegalStateException',
+        explanation:
+          'A stream can be consumed only once; to run again, create a new stream from the source. The result is an Optional — handle the empty case with orElse or orElseThrow instead of get().',
+      },
+    ],
+  },
+  'reference-copy': {
+    description:
+      'See which of b = a, spread and structuredClone creates a new object and which shares an address.',
+    takeaway:
+      'A variable holds not the object but its address. b = a copies the address, spread copies only the outer level (inner arrays and objects stay shared), and structuredClone creates new objects at every level — it throws on functions and turns a class instance into a plain object.',
+    frames: [
+      {
+        explanation:
+          'Object #1 is created on the heap, and its tags array is a separate object #2. The variable a holds not the object but the address (reference) of #1.',
+      },
+      {
+        explanation:
+          'No new object is created. b gets the same address — a and b look at the same object.',
+      },
+      {
+        explanation:
+          'Spread creates a new outer object #3, but only the address of tags is copied — #2 is now shared by both objects. This is called a shallow copy.',
+      },
+      {
+        explanation:
+          'b and a are the same object #1, so a.name has become "Ravi" too. c is the separate object #3, so its name stays "Asha".',
+      },
+      {
+        explanation:
+          'c.tags is the same array #2 as a.tags — the shallow-copy trap. a.tags is now ["js", "react"] as well.',
+      },
+      {
+        explanation:
+          'A deep copy creates new objects at every level: #4 and its own array #5. Change anything in d now and a is not affected.',
+      },
+    ],
+  },
+  'sql-query-order': {
+    description:
+      'You write SELECT first, but the query starts at FROM — see the rows after each clause.',
+    takeaway:
+      'You write SELECT first, but the logical order is FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT. Row filters go in WHERE, group filters in HAVING; a SELECT alias works in ORDER BY but not in WHERE. The optimizer may reorder the actual work, but the result is always as if this logical order ran.',
+    frames: [
+      {
+        explanation:
+          'The query is written starting with SELECT, but the database first takes all the rows from FROM.',
+      },
+      {
+        explanation:
+          'Each row is checked on its own, before any grouping. o3 is cancelled, so it is removed. That is why an aggregate such as SUM cannot go in WHERE — the groups do not exist yet.',
+      },
+      {
+        explanation: 'The remaining rows are grouped by customer, with a SUM for each group.',
+      },
+      {
+        explanation: 'Now whole groups are filtered: B totals 200, so B is removed.',
+      },
+      {
+        explanation:
+          'The columns and the alias are created here. So the total alias does not work in WHERE (it did not exist yet), but it does work in ORDER BY.',
+      },
+      {
+        explanation:
+          'After sorting, the first two rows. A and C have the same total, so their order relative to each other is not guaranteed — for pagination add a tie-breaker: ORDER BY total DESC, customer_id.',
+      },
+    ],
+  },
 };
 
 // A visual in the reader's language. Frame counts are fixed by the Hinglish original.

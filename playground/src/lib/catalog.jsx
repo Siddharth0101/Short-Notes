@@ -1,31 +1,29 @@
-import { useEffect, useMemo, useState } from 'react';
-import { getCatalog, loadEnglish } from '../data/localized.js';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { getCatalog, getVersion, isReady, loadEnglishMeta, subscribe } from '../data/store.js';
 import { CatalogContext } from './catalogContext.js';
 import { useLang } from './langContext.js';
 
 export function CatalogProvider({ children }) {
   const { lang, t } = useLang();
-  const [english, setEnglish] = useState(null);
+  // The store's version moves whenever chapter text or answers arrive; consumers then re-render.
+  const version = useSyncExternalStore(subscribe, getVersion, getVersion);
   const [failed, setFailed] = useState(false);
+  const titlesReady = isReady(lang);
   useEffect(() => {
-    if (lang !== 'en' || english) return;
+    if (titlesReady) return undefined;
     let current = true;
     setFailed(false);
-    loadEnglish()
-      .then((module) => {
-        if (current) setEnglish(module);
-      })
-      .catch(() => {
-        if (current) setFailed(true);
-      });
+    loadEnglishMeta().catch(() => {
+      if (current) setFailed(true);
+    });
     return () => {
       current = false;
     };
-  }, [lang, english]);
-  const loading = lang === 'en' && !english && !failed;
+  }, [titlesReady]);
+  const loading = !titlesReady && !failed;
   const value = useMemo(
-    () => ({ ...getCatalog(lang, english), loading }),
-    [lang, english, loading],
+    () => ({ ...getCatalog(lang), version, loading }),
+    [lang, version, loading],
   );
   return (
     <CatalogContext.Provider value={value}>

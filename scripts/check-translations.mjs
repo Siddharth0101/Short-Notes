@@ -45,6 +45,7 @@ const recallLabels = (markdown, heading) =>
     .map((line) => line.slice(2).split(" — ")[0]);
 
 const chapters = new Map();
+const englishHeadings = new Map();
 const translated = {};
 let translatedChapters = 0;
 for (const track of TRACKS) {
@@ -57,6 +58,7 @@ for (const track of TRACKS) {
     const englishFile = `notes/en/${track.id}/${name}`;
     if (!existsSync(path.join(root, englishFile))) continue;
     const english = parseFrontmatter(await read(englishFile));
+    englishHeadings.set(english.id, english);
     for (const key of ["id", "track", "order", "level", "minutes", "visual"])
       assert.deepEqual(
         english[key],
@@ -147,6 +149,15 @@ for (const [id, entry] of Object.entries(meta)) {
     `chapter ${id}: needs title and summary`,
   );
 }
+// The app lists chapters from chapters.json and never reads the title in an English chapter's
+// own frontmatter, so the two must say the same thing.
+for (const [id, heading] of englishHeadings)
+  for (const key of ["title", "summary"])
+    assert.equal(
+      meta[id]?.[key],
+      heading[key],
+      `notes/en/chapters.json: ${id} ${key} differs from its English chapter`,
+    );
 const questionIds = new Set(interviewQuestions.map((question) => question.id));
 const questions = await json("playground/src/data/i18n/questions.en.json");
 for (const [id, entry] of Object.entries(questions)) {

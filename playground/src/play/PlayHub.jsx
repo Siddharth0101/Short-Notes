@@ -2,13 +2,15 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { trackById } from '../data/catalog.js';
 import { ANALOGIES } from '../data/analogies.js';
-import { BASE_CATALOG } from '../data/localized.js';
+import { notes as chapters } from '../data/catalog.js';
+import { canonicalText } from '../data/store.js';
 import { splitPractice } from '../lib/content.js';
 import { useLang } from '../lib/langContext.js';
-import { useCatalog } from '../lib/catalogContext.js';
+import { useCatalog, useContent } from '../lib/catalogContext.js';
 import { usePlay } from '../lib/playContext.js';
 import { addDays, BADGES, cardStats, dailyIndex, dayKey, XP } from '../lib/playState.js';
 import Icon from '../library/Icons.jsx';
+import ContentStatus from '../library/ContentStatus.jsx';
 import Markdown from '../library/Markdown.jsx';
 import { NoteLink } from '../library/Navigation.jsx';
 import { Inline } from './shared.jsx';
@@ -18,11 +20,16 @@ import './play.css';
 
 // Short, self-contained practice questions make good daily challenges. The pool is built from
 // the canonical chapters so every reader — in either language — gets the same question.
-const dailyPool = BASE_CATALOG.notes.flatMap((note) =>
-  splitPractice(note.body)
-    .questions.map((question, index) => ({ noteId: note.id, index, question }))
-    .filter(({ question }) => question.prompt && question.answer.length < 1400),
-);
+// It needs every chapter's text, so it is built once, after the hub has fetched that.
+let pool = null;
+function dailyPool() {
+  pool ??= chapters.flatMap((note) =>
+    splitPractice(canonicalText(note.id) ?? '')
+      .questions.map((question, index) => ({ noteId: note.id, index, question }))
+      .filter(({ question }) => question.prompt && question.answer.length < 1400),
+  );
+  return pool;
+}
 
 function DailyChallenge() {
   const { t } = useLang();
@@ -30,7 +37,8 @@ function DailyChallenge() {
   const { play, completeDaily } = usePlay();
   const [open, setOpen] = useState(false);
   const today = dayKey();
-  const pick = dailyPool[dailyIndex(dailyPool.length, today)];
+  const candidates = dailyPool();
+  const pick = candidates[dailyIndex(candidates.length, today)];
   const note = noteById[pick.noteId];
   const question =
     splitPractice(note.body, note.practiceSlugs).questions[pick.index] || pick.question;
@@ -308,16 +316,22 @@ function Badges() {
 
 export default function PlayHub() {
   const { t } = useLang();
-  const { notes } = useCatalog();
+  // The flashcard counts and the daily challenge are built from every chapter's text.
+  const { notes, ready, failed, retry } = useContent({ chapters: 'all' });
   const { play } = usePlay();
-  const cardIds = useMemo(() => deckFor(notes).map((card) => card.id), [notes]);
+  const cardIds = useMemo(
+    () => (ready ? deckFor(notes).map((card) => card.id) : []),
+    [notes, ready],
+  );
   const cards = cardStats(play, cardIds);
   const games = [
     {
       id: 'flashcards',
       to: '/play/flashcards',
       icon: 'cards',
-      stat: t('play.flashcards.stat', { due: cards.due, fresh: cards.fresh }),
+      stat: ready
+        ? t('play.flashcards.stat', { due: cards.due, fresh: cards.fresh })
+        : t('content.loading'),
     },
     {
       id: 'quiz',
@@ -351,7 +365,11 @@ export default function PlayHub() {
         </div>
       </div>
       <Scorecard />
-      <DailyChallenge />
+      {ready ? (
+        <DailyChallenge />
+      ) : (
+        <ContentStatus failed={failed} retry={retry} label={t('content.loadingDaily')} />
+      )}
       <section aria-labelledby="games-title">
         <div className="section-heading">
           <div>

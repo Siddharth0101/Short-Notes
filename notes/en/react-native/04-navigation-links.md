@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 4
 summary: Navigation — a stack for detail flows, tabs for main sections; decide the history behaviour first.
 tags: react-native, mobile, expo, navigation-links
+visual: navigation-stack
 ---
 
 ## Quick revision

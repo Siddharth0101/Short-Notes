@@ -12,7 +12,7 @@
 
 # Shortnotes — revision notes you actually want to revise
 
-**118 chapters · 598 graded practice questions · 456 interview questions · 32 interactive visuals · 2,400+ flashcards · 3 revision games · English + Hinglish**
+**118 chapters · 598 graded practice questions · 456 interview questions · 37 interactive visuals · 2,400+ flashcards · 3 revision games · English + Hinglish**
 
 Shortnotes is a developer revision notebook for JavaScript, React, React Native, Java, Spring Boot, Node & MongoDB, DSA and system design. Every concept is one line — `term — meaning / important catch` — so you can revise a chapter in minutes, then prove you know it.
 
@@ -20,11 +20,14 @@ Shortnotes is a developer revision notebook for JavaScript, React, React Native,
 | --- | --- |
 | 📝 **Short notes** | 2,405 one-line concepts across 118 ordered chapters, each with a worked example and a recall question whose answer stays hidden until you try. |
 | 🎯 **Graded practice** | 5–6 Easy → Hard questions per chapter: output puzzles, find-the-bug, write-the-code and design scenarios. |
-| 👀 **Visual lab** | 32 step-by-step visuals — event loop, closures, React render/commit, BFS/DFS, heaps, hash collisions, token bucket and more. Play, pause, step, change the input. |
+| 👀 **Visual lab** | 37 step-by-step visuals — event loop, closures, object references, React render/commit, navigation stacks, Spring proxies, Java streams, SQL query order, BFS/DFS, heaps, hash collisions, token bucket and more. Play, pause, step, change the input. |
 | 🎮 **Arcade** | Flashcards with spaced repetition, a timed rapid-fire quiz and a memory-match game — all generated from the same notes. Daily challenge, streaks, XP, levels and 20 badges. |
-| 😄 **Desi analogies** | 43 everyday analogies ("closure = ghar se mila tiffin") that also say where the analogy breaks. |
+| 😄 **Desi analogies** | 118 everyday analogies — one for every chapter — ("closure = ghar se mila tiffin") that also say where the analogy breaks. |
 | 🎤 **Interview prep** | A 456-question bank with filters, a 15-minute mock session, and an optional one-hour AI interviewer with voice. |
 | 🌐 **Two languages** | Switch the whole site between Hinglish and English from the top bar. |
+| 📴 **Works offline** | Install it on your phone or desktop. The app opens without internet, chapters you open stay available, and one tap on the Saved page keeps every chapter and interview answer on the device (about 0.4 MB). |
+| ⚡ **Light to load** | The app opens with a small chapter list; a subject's notes are fetched when you open one of its chapters, and interview answers when you reach them. |
+| 🔗 **Easy to share** | A shared link shows a preview card, every chapter has its own search description, and the build writes a sitemap of all chapters. |
 | 🔒 **Yours** | No account. Progress lives in your browser; export and import a backup any time. |
 
 ## A quick look
@@ -87,7 +90,7 @@ Pick **Hinglish** or **English** in the top bar; the choice is saved in the brow
 | Part of the site | English | Hinglish |
 | --- | --- | --- |
 | App interface, arcade, badges, analogies | ✅ complete | ✅ complete |
-| Visual lab (32 visuals) | ✅ complete | ✅ complete |
+| Visual lab (37 visuals) | ✅ complete | ✅ complete |
 | Course stages, chapter titles and summaries | ✅ 47 stages · 118 chapters | ✅ |
 | Full chapter text | ✅ 118 | ✅ 118 |
 | Interview question bank (incl. 121 machine-coding tasks) | ✅ 456 | ✅ 456 |
@@ -112,7 +115,7 @@ XP comes from chapters, practice questions and games. Levels run from *Naya Code
 - Format — `term — short meaning / important catch`.
 - Revision — concept padho, recall karo, weak point repeat karo.
 
-**118 chapters · 598 graded practice questions · 47 course stages · 142 linked source examples · 456 interview questions · 32 interactive visuals · 2,400+ flashcards.**
+**118 chapters · 598 graded practice questions · 47 course stages · 142 linked source examples · 456 interview questions · 37 interactive visuals · 2,400+ flashcards.**
 
 Shuru karne ke liye [poora syllabus](notes/README.md) kholo. Padhai ka tareeka [study guide](notes/STUDY_GUIDE.md) mein aur difficult terms ke easy meanings [Hinglish glossary](notes/GLOSSARY_HINGLISH.md) mein milenge.
 
@@ -173,7 +176,7 @@ App mein search, numbered syllabus, learning paths, chapter ke previous/next lin
 - Memory match — 6 terms ko unke meanings se milao.
 - Daily challenge — roz ek practice question; solve karke streak bachao.
 - XP, levels aur 20 badges — sab isi browser mein save; Bookmarks ke backup mein bhi shamil.
-- Desi analogies — 43 concepts ke yaad rakhne wale examples, har ek ke saath "analogy ki limit".
+- Desi analogies — har chapter (118) ke liye yaad rakhne wala example, har ek ke saath "analogy ki limit".
 
 ### Live AI interviewer
 
@@ -198,7 +201,7 @@ Progress isi browser ke local storage mein rehti hai. **Bookmarks** se JSON expo
 
 Supplied checklist se 104 questions add hue aur 13 existing answers examples ke saath expand hue. Repeated topics same canonical question se linked hain. Workbook mein corrected premises aur supplied flexbox images ke original code solutions bhi hain. Practice scenarios kisi specific company mein poochhe jaane ka claim nahi karte.
 
-32 visuals mein event loop, closures, hoisting/TDZ, prototype chain, debounce vs throttle, React render/commit, effect lifecycle, Context, keys, Java references, synchronization, GC, request flow, caching, outbox, token bucket, binary search, two pointers, sliding window, sorting, BFS, DFS, tree traversal, linked-list reversal, heap insert, hash collisions, recursion, DP, Mongo indexes/aggregation, transaction race aur monotonic stack cover hote hain. Step controls, playback, reset aur speed se apni pace par dekho. Simplified model ki limits takeaway mein padho.
+37 visuals mein event loop, closures, hoisting/TDZ, prototype chain, object reference vs copy, debounce vs throttle, React render/commit, effect lifecycle, Context, keys, Java references, streams pipeline, synchronization, GC, Spring proxy, SQL query order, navigation stack, request flow, caching, outbox, token bucket, binary search, two pointers, sliding window, sorting, BFS, DFS, tree traversal, linked-list reversal, heap insert, hash collisions, recursion, DP, Mongo indexes/aggregation, transaction race aur monotonic stack cover hote hain. Step controls, playback, reset aur speed se apni pace par dekho. Simplified model ki limits takeaway mein padho.
 
 ### Repo ka map
 

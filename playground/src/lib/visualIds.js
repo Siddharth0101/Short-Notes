@@ -31,4 +31,9 @@ export const VISUAL_IDS = [
   'prototype-chain',
   'debounce-throttle',
   'effect-lifecycle',
+  'navigation-stack',
+  'spring-proxy',
+  'stream-pipeline',
+  'reference-copy',
+  'sql-query-order',
 ];

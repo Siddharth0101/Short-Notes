@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 6
 summary: JDBC — Java se database connection, statement aur result handling.
 tags: jdbc, sql, transactions, indexes
+visual: sql-query-order
 ---
 
 ## Quick revision

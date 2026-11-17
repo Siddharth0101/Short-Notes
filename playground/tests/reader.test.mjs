@@ -4,10 +4,14 @@ import { JSDOM } from 'jsdom';
 import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
 
-const dom = new JSDOM('<!doctype html><div id="root"></div>', {
-  url: 'http://localhost/',
-  pretendToBeVisual: true,
-});
+const SITE_DESCRIPTION = 'Site-wide description';
+const dom = new JSDOM(
+  `<!doctype html><meta name="description" content="${SITE_DESCRIPTION}"><div id="root"></div>`,
+  {
+    url: 'http://localhost/',
+    pretendToBeVisual: true,
+  },
+);
 for (const name of [
   'window',
   'document',
@@ -35,6 +39,9 @@ const { MemoryRouter, Routes, Route } = await import('react-router-dom');
 const { default: Reader } = await server.ssrLoadModule('/src/library/Reader.jsx');
 const { default: Markdown } = await server.ssrLoadModule('/src/library/Markdown.jsx');
 const { ProgressProvider } = await server.ssrLoadModule('/src/lib/progress.jsx');
+// Chapter text loads on demand; fetch it once so the reader renders the chapter straight away.
+const store = await server.ssrLoadModule('/src/data/store.js');
+await store.preloadAll();
 let root;
 async function render(element) {
   if (root) await React.act(async () => root.unmount());
@@ -137,6 +144,21 @@ test('Reading controls leave completion untouched and Escape exits focus without
   const recallLink = document.querySelector('.reader-tools a');
   await click(recallLink);
   assert.equal(document.activeElement.id, recallLink.hash.slice(1));
+});
+
+test('A chapter shows its own summary to search engines and gives the site description back after', async () => {
+  const description = () =>
+    document.querySelector('meta[name="description"]').getAttribute('content');
+  localStorage.clear();
+  await openChapter();
+  // js-variables: "Variable — value ko diya hua naam."
+  assert.match(description(), /^Variable — /);
+  await click(document.querySelector('.chapter-navigation a:last-child'));
+  assert.notEqual(description(), SITE_DESCRIPTION);
+  assert.doesNotMatch(description(), /^Variable — /);
+  await React.act(async () => root.unmount());
+  root = null;
+  assert.equal(description(), SITE_DESCRIPTION);
 });
 
 test('Revealed answers survive bookmarking and reset when moving to another chapter', async () => {

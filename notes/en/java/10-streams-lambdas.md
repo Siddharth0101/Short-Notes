@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 4
 summary: Lambda — an implementation of a functional interface.
 tags: streams, lambdas, optional, collectors
+visual: stream-pipeline
 ---
 
 ## Quick revision

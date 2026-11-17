@@ -58,6 +58,35 @@ export default {
   'app.notFoundTitle': 'That page isn’t in the notebook.',
   'app.explore': 'Explore the library',
   'content.loadingEnglish': 'English notes load ho rahe hain…',
+  'content.loading': 'Load ho raha hai…',
+  'content.loadingChapter': 'Chapter load ho raha hai…',
+  'content.loadingQuestions': 'Interview questions load ho rahe hain…',
+  'content.loadingCards': 'Cards load ho rahe hain…',
+  'content.loadingDaily': 'Aaj ka challenge load ho raha hai…',
+  'content.failed': 'Yeh load nahi ho paya. Connection check karke dobara try karo.',
+  'content.retry': 'Dobara try karo',
+  'content.searchLoading': 'Titles aur tags match ho rahe hain — poora text abhi load ho raha hai…',
+  'content.searchPartial':
+    'Poora text load nahi ho paya, isliye yeh sirf title aur tag ke matches hain.',
+  'content.offline':
+    'Tum offline ho, aur yeh hissa abhi is device par save nahi hai. Internet aane par dobara try karo.',
+  'offline.title': 'Bina internet ke padho',
+  'offline.body':
+    '{language} ke saare chapters aur interview answers is device par save karo — download lagbhag {size} MB. Jo chapters tum khol chuke ho, woh waise bhi save rehte hain.',
+  'offline.save': 'Offline ke liye save karo',
+  'offline.saving': 'Save ho raha hai… {done} / {total} files',
+  'offline.saved':
+    'Is device par save hai: {language} ke saare {chapters} chapters aur {questions} interview answers. Update ke baad naya version agli baar online app kholne par phir se save ho jaata hai.',
+  'offline.remove': 'Is device se hatao',
+  'offline.removed':
+    'Hata diya. Jo chapters tum khologe, woh offline padhne ke liye phir bhi save rahenge.',
+  'offline.failed': 'Save poora nahi hua. Connection check karke dobara try karo.',
+  'offline.checking': 'Dekh rahe hain ki is device par kya save hai…',
+  'offline.unavailable':
+    'Offline save yahan available nahi hai. Iske liye published app aur support karne wala browser chahiye.',
+  'offline.progressLabel': 'Offline ke liye save ho raha hai',
+  'update.ready': 'Shortnotes ka naya version ready hai.',
+  'update.reload': 'Reload karo',
   'content.untranslated':
     'Is chapter ka English version abhi ready nahi hai — original Hinglish notes dikh rahe hain.',
 

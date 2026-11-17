@@ -4,6 +4,7 @@ import { useLang } from '../lib/langContext.js';
 import { usePlay } from '../lib/playContext.js';
 import { quizXp } from '../lib/playState.js';
 import Icon from '../library/Icons.jsx';
+import ContentStatus from '../library/ContentStatus.jsx';
 import { DeckPicker, GameFrame, Inline } from './shared.jsx';
 import { useDeck } from './useDeck.js';
 import { buildQuiz, quizPoints } from './decks.js';
@@ -171,7 +172,13 @@ export default function RapidFire() {
               </select>
             </label>
           </div>
-          {playable ? (
+          {!deck.ready ? (
+            <ContentStatus
+              failed={deck.failed}
+              retry={deck.retry}
+              label={t('content.loadingCards')}
+            />
+          ) : playable ? (
             <button className="primary-button game-start" onClick={start}>
               <Icon name="play" size={16} /> {done ? t('game.again') : t('game.start')}
             </button>

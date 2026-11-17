@@ -4,8 +4,9 @@ import { TRACKS } from '../lib/content.js';
 import { trackById } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import { useLang } from '../lib/langContext.js';
-import { useCatalog } from '../lib/catalogContext.js';
+import { useCatalog, useContent } from '../lib/catalogContext.js';
 import Icon from './Icons.jsx';
+import ContentStatus from './ContentStatus.jsx';
 import Markdown from './Markdown.jsx';
 import { INTERVIEW_TOPICS, questionTopic } from '../data/interviewTopics.js';
 import { NoteLink } from './Navigation.jsx';
@@ -219,7 +220,20 @@ function MockSession({ questions, onClose }) {
     </section>
   );
 }
+// The question bank is a separate download; the page waits for it before building its state.
 export default function Interviews() {
+  const { t } = useLang();
+  const { ready, failed, retry } = useContent({ questions: true });
+  return ready ? (
+    <QuestionBank />
+  ) : (
+    <div className="interview-page page-enter">
+      <ContentStatus failed={failed} retry={retry} label={t('content.loadingQuestions')} />
+    </div>
+  );
+}
+
+function QuestionBank() {
   const [params, setParams] = useSearchParams();
   const { t } = useLang();
   const { questions: interviewQuestions } = useCatalog();

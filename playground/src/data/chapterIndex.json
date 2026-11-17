@@ -1,0 +1,2364 @@
+{
+  "generatedBy": "scripts/sync-chapter-index.mjs — do not edit by hand",
+  "questionCount": 456,
+  "chapters": [
+    {
+      "id": "js-variables",
+      "title": "Variables and assignment with let and const",
+      "track": "javascript",
+      "order": 1,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Variable — value ko diya hua naam.",
+      "tags": [
+        "fundamentals",
+        "js",
+        "variables"
+      ],
+      "visual": "hoisting-tdz",
+      "source": "notes/javascript/01-js-variables.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "js-types-operators",
+      "title": "Value types operators and explicit conversion",
+      "track": "javascript",
+      "order": 2,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Primitive types — string, number, boolean, undefined, null, bigint aur symbol.",
+      "tags": [
+        "fundamentals",
+        "js",
+        "types",
+        "operators"
+      ],
+      "source": "notes/javascript/02-js-types-operators.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "js-conditionals",
+      "title": "Decisions with if else and boolean logic",
+      "track": "javascript",
+      "order": 3,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "`if` — condition truthy ho toh block chalta hai.",
+      "tags": [
+        "fundamentals",
+        "js",
+        "conditionals"
+      ],
+      "source": "notes/javascript/03-js-conditionals.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "js-loops",
+      "title": "Loops counters and accumulators",
+      "track": "javascript",
+      "order": 4,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "`for` — initialization → condition → body → update repeat hota hai.",
+      "tags": [
+        "fundamentals",
+        "js",
+        "loops"
+      ],
+      "source": "notes/javascript/04-js-loops.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "js-functions",
+      "title": "Functions parameters arguments and return values",
+      "track": "javascript",
+      "order": 5,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Function — reusable kaam; inputs lo aur result return karo.",
+      "tags": [
+        "fundamentals",
+        "js",
+        "functions"
+      ],
+      "source": "notes/javascript/05-js-functions.md",
+      "practiceCount": 5,
+      "questionCount": 5,
+      "english": true
+    },
+    {
+      "id": "js-arrays-objects",
+      "title": "Arrays objects and simple data modeling",
+      "track": "javascript",
+      "order": 6,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Array — ordered values; index zero se start hota hai.",
+      "tags": [
+        "fundamentals",
+        "js",
+        "arrays",
+        "objects"
+      ],
+      "visual": "reference-copy",
+      "source": "notes/javascript/06-js-arrays-objects.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "js-modern-data-collections",
+      "title": "Objects arrays and modern data transformations",
+      "track": "javascript",
+      "order": 7,
+      "level": "Intermediate",
+      "minutes": 5,
+      "summary": "`map` — har item transform karke naya array.",
+      "tags": [
+        "arrays",
+        "objects",
+        "map",
+        "set",
+        "destructuring",
+        "immutability"
+      ],
+      "source": "notes/javascript/07-modern-data-collections.md",
+      "practiceCount": 5,
+      "questionCount": 9,
+      "english": true
+    },
+    {
+      "id": "js-language-foundations",
+      "title": "Foundations checkpoint and reliable input handling",
+      "track": "javascript",
+      "order": 8,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Expression — value banata hai; statement — instruction chalata hai.",
+      "tags": [
+        "variables",
+        "types",
+        "coercion",
+        "functions",
+        "fundamentals"
+      ],
+      "source": "notes/javascript/08-language-foundations.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "js-scope-closures",
+      "title": "Execution contexts scope and closures",
+      "track": "javascript",
+      "order": 9,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "Scope — variable kahan accessible hai; lexical scope code ki location se decide hota hai.",
+      "tags": [
+        "scope",
+        "closures",
+        "hoisting",
+        "execution-context",
+        "memory"
+      ],
+      "visual": "closures",
+      "source": "notes/javascript/09-scope-closures.md",
+      "practiceCount": 6,
+      "questionCount": 8,
+      "english": true
+    },
+    {
+      "id": "js-numbers-dates-regex",
+      "title": "Numbers dates strings and regular expressions",
+      "track": "javascript",
+      "order": 10,
+      "level": "Intermediate",
+      "minutes": 6,
+      "summary": "Numbers — JS `number` floating point hai; `0.1 + 0.2` exactly `0.3` nahi.",
+      "tags": [
+        "numbers",
+        "dates",
+        "intl",
+        "regex",
+        "strings",
+        "timers"
+      ],
+      "source": "notes/javascript/10-numbers-dates-regex.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "javascript-browser-foundations",
+      "title": "HTML CSS and browser rendering essentials",
+      "track": "javascript",
+      "order": 11,
+      "level": "Foundation",
+      "minutes": 5,
+      "summary": "HTML — structure; CSS — styling/layout; JS — behavior.",
+      "tags": [
+        "html",
+        "css",
+        "accessibility",
+        "browser",
+        "layout"
+      ],
+      "source": "notes/javascript/11-browser-foundations.md",
+      "practiceCount": 6,
+      "questionCount": 53,
+      "english": true
+    },
+    {
+      "id": "js-dom-events-browser",
+      "title": "DOM events and browser interaction",
+      "track": "javascript",
+      "order": 12,
+      "level": "Foundation",
+      "minutes": 4,
+      "summary": "DOM — browser ka document tree; selector se node pakdo.",
+      "tags": [
+        "dom",
+        "events",
+        "delegation",
+        "browser",
+        "accessibility"
+      ],
+      "visual": "debounce-throttle",
+      "source": "notes/javascript/12-dom-events-browser.md",
+      "practiceCount": 5,
+      "questionCount": 12,
+      "english": true
+    },
+    {
+      "id": "js-this-prototypes-classes",
+      "title": "This binding prototypes and classes",
+      "track": "javascript",
+      "order": 13,
+      "level": "Intermediate",
+      "minutes": 5,
+      "summary": "Regular `this` — function kaise call hua usse decide hota hai.",
+      "tags": [
+        "this",
+        "prototype",
+        "classes",
+        "oop",
+        "inheritance"
+      ],
+      "visual": "prototype-chain",
+      "source": "notes/javascript/13-this-prototypes-classes.md",
+      "practiceCount": 5,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "js-oop-mini-project",
+      "title": "OOP pillars and a banking mini-project",
+      "track": "javascript",
+      "order": 14,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Encapsulation — data aur rules saath rakho; invalid state ko entry par roko.",
+      "tags": [
+        "oop",
+        "encapsulation",
+        "inheritance",
+        "polymorphism",
+        "abstraction",
+        "classes",
+        "closures",
+        "capstone"
+      ],
+      "source": "notes/javascript/14-oop-and-mini-project.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "js-async-event-loop",
+      "title": "Event loop promises and resilient fetching",
+      "track": "javascript",
+      "order": 15,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Call stack — synchronous functions yahin execute hote hain.",
+      "tags": [
+        "async",
+        "promises",
+        "event-loop",
+        "fetch",
+        "cancellation"
+      ],
+      "visual": "event-loop",
+      "source": "notes/javascript/15-async-event-loop.md",
+      "practiceCount": 5,
+      "questionCount": 12,
+      "english": true
+    },
+    {
+      "id": "javascript-async-patterns",
+      "title": "Async patterns and bounded concurrency",
+      "track": "javascript",
+      "order": 16,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Sequential await — next kaam previous result par depend kare tab.",
+      "tags": [
+        "promises",
+        "concurrency",
+        "cancellation",
+        "machine-coding"
+      ],
+      "source": "notes/javascript/16-async-patterns.md",
+      "practiceCount": 5,
+      "questionCount": 9,
+      "english": true
+    },
+    {
+      "id": "js-modules-tooling-debugging",
+      "title": "Modules web delivery and debugging",
+      "track": "javascript",
+      "order": 17,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "ES module — `import`/`export`; imports live bindings hote hain.",
+      "tags": [
+        "modules",
+        "tooling",
+        "http",
+        "debugging",
+        "testing",
+        "npm"
+      ],
+      "source": "notes/javascript/17-modules-tooling-debugging.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "javascript-testing-workflow",
+      "title": "Testing aur debugging — bug ko repeatable proof banao",
+      "track": "javascript",
+      "order": 18,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Unit test — chhota isolated behavior check karo.",
+      "tags": [
+        "testing",
+        "assertions",
+        "debugging",
+        "async"
+      ],
+      "source": "notes/javascript/18-testing-workflow.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "javascript-browser-persistence",
+      "title": "Browser persistence aur offline behavior — save ka meaning clear karo",
+      "track": "javascript",
+      "order": 19,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "`localStorage` — origin-scoped string storage; synchronous aur browser mein persistent.",
+      "tags": [
+        "storage",
+        "indexeddb",
+        "offline",
+        "versioning"
+      ],
+      "source": "notes/javascript/19-browser-persistence.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "javascript-git-workflow",
+      "title": "Git workflow — working tree se reviewed commit tak",
+      "track": "javascript",
+      "order": 20,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Working tree — current edits; staging — next commit ka selected snapshot.",
+      "tags": [
+        "git",
+        "tooling",
+        "collaboration",
+        "debugging"
+      ],
+      "source": "notes/javascript/20-git-workflow.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "react-jsx-props",
+      "title": "First React component JSX and props",
+      "track": "react",
+      "order": 1,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Component — props se UI return karne wala function.",
+      "tags": [
+        "fundamentals",
+        "react",
+        "jsx",
+        "props"
+      ],
+      "source": "notes/react/01-react-jsx-props.md",
+      "practiceCount": 5,
+      "questionCount": 5,
+      "english": true
+    },
+    {
+      "id": "react-state-forms",
+      "title": "State snapshots forms and immutable updates",
+      "track": "react",
+      "order": 2,
+      "level": "Foundation",
+      "minutes": 4,
+      "summary": "`useState` — component ki memory; setter next render schedule karta hai.",
+      "tags": [
+        "state",
+        "forms",
+        "immutability",
+        "batching",
+        "derived-state"
+      ],
+      "visual": "react-render",
+      "source": "notes/react/02-state-forms.md",
+      "practiceCount": 5,
+      "questionCount": 11,
+      "english": true
+    },
+    {
+      "id": "react-components-rendering",
+      "title": "Components JSX and the render cycle",
+      "track": "react",
+      "order": 3,
+      "level": "Foundation",
+      "minutes": 4,
+      "summary": "Render — next UI calculate; commit — DOM updates apply.",
+      "tags": [
+        "components",
+        "jsx",
+        "props",
+        "rendering",
+        "keys"
+      ],
+      "visual": "react-render",
+      "source": "notes/react/03-components-rendering.md",
+      "practiceCount": 5,
+      "questionCount": 7,
+      "english": true
+    },
+    {
+      "id": "react-composition-styling",
+      "title": "Composition reusable patterns and styling",
+      "track": "react",
+      "order": 4,
+      "level": "Intermediate",
+      "minutes": 6,
+      "summary": "Composition — small components ko `children`/props se jodo.",
+      "tags": [
+        "composition",
+        "patterns",
+        "css",
+        "accessibility",
+        "components"
+      ],
+      "source": "notes/react/04-composition-styling.md",
+      "practiceCount": 6,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "react-effects-custom-hooks",
+      "title": "Effects refs and reusable synchronization",
+      "track": "react",
+      "order": 5,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "`useEffect` — external system ke saath sync; render calculation ke liye nahi.",
+      "tags": [
+        "effects",
+        "useEffect",
+        "useRef",
+        "custom-hooks",
+        "races"
+      ],
+      "visual": "effect-lifecycle",
+      "source": "notes/react/05-effects-custom-hooks.md",
+      "practiceCount": 5,
+      "questionCount": 10,
+      "english": true
+    },
+    {
+      "id": "react-routing-url-state",
+      "title": "Routing nested layouts and URL state",
+      "track": "react",
+      "order": 6,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Router — URL ko screen/layout se map karta hai.",
+      "tags": [
+        "router",
+        "url",
+        "loaders",
+        "navigation",
+        "routing"
+      ],
+      "source": "notes/react/06-routing-url-state.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "react-context-reducer-redux",
+      "title": "Context reducers and Redux Toolkit",
+      "track": "react",
+      "order": 7,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Local state — sirf component use kare toh paas rakho.",
+      "tags": [
+        "context",
+        "reducer",
+        "redux",
+        "redux-toolkit",
+        "state-management"
+      ],
+      "visual": "context-flow",
+      "source": "notes/react/07-context-reducer-redux.md",
+      "practiceCount": 5,
+      "questionCount": 19,
+      "english": true
+    },
+    {
+      "id": "react-query-supabase",
+      "title": "Server state caching and Supabase integration",
+      "track": "react",
+      "order": 8,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Server state — remote data; loading, freshness, retry aur invalidation sambhalni padti hai.",
+      "tags": [
+        "tanstack-query",
+        "server-state",
+        "caching",
+        "supabase",
+        "mutations"
+      ],
+      "source": "notes/react/08-query-supabase.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "react-typescript-contracts",
+      "title": "TypeScript contracts for React applications",
+      "track": "react",
+      "order": 9,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "TypeScript — compile-time checks; runtime input validation alag hai.",
+      "tags": [
+        "typescript",
+        "state",
+        "narrowing",
+        "api",
+        "testing"
+      ],
+      "source": "notes/react/09-typescript-contracts.md",
+      "practiceCount": 5,
+      "questionCount": 7,
+      "english": true
+    },
+    {
+      "id": "react-performance-production",
+      "title": "Performance suspense and production quality",
+      "track": "react",
+      "order": 10,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Profiler — pehle slow render/interaction measure karo.",
+      "tags": [
+        "performance",
+        "memoization",
+        "suspense",
+        "lazy",
+        "testing",
+        "production"
+      ],
+      "visual": "react-render",
+      "source": "notes/react/10-performance-production.md",
+      "practiceCount": 5,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "react-machine-coding",
+      "title": "React machine coding and identity bugs",
+      "track": "react",
+      "order": 11,
+      "level": "Advanced",
+      "minutes": 5,
+      "summary": "Machine coding — requirements → state → components → edge cases → verification.",
+      "tags": [
+        "machine-coding",
+        "identity",
+        "keys",
+        "requests",
+        "accessibility"
+      ],
+      "visual": "react-identity",
+      "source": "notes/react/11-machine-coding.md",
+      "practiceCount": 5,
+      "questionCount": 8,
+      "english": true
+    },
+    {
+      "id": "react-testing-accessibility",
+      "title": "React testing — user behavior aur accessibility verify karo",
+      "track": "react",
+      "order": 12,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Testing Library — user ke visible behavior se tests likho.",
+      "tags": [
+        "testing",
+        "accessibility",
+        "forms",
+        "react"
+      ],
+      "source": "notes/react/12-testing-accessibility.md",
+      "practiceCount": 5,
+      "questionCount": 5,
+      "english": true
+    },
+    {
+      "id": "rn-foundations-expo",
+      "title": "React Native basics aur Expo workflow",
+      "track": "react-native",
+      "order": 1,
+      "level": "Foundation",
+      "minutes": 4,
+      "summary": "React Native — React components se Android/iOS native UI banao; browser DOM use nahi hota.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "foundations-expo"
+      ],
+      "source": "notes/react-native/01-foundations-expo.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "rn-components-layout",
+      "title": "Native components styling aur safe areas",
+      "track": "react-native",
+      "order": 2,
+      "level": "Foundation",
+      "minutes": 5,
+      "summary": "View — layout container; visible text ko Text ke andar rakho.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "components-layout"
+      ],
+      "source": "notes/react-native/02-components-layout.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "rn-lists-images",
+      "title": "Lists images aur pagination",
+      "track": "react-native",
+      "order": 3,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "ScrollView — children ek saath render; short static content ke liye useful.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "lists-images"
+      ],
+      "source": "notes/react-native/03-lists-images.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "rn-navigation-links",
+      "title": "Navigation Expo Router aur deep links",
+      "track": "react-native",
+      "order": 4,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "Navigation — stack detail-flow ke liye, tabs main sections ke liye; history behavior pehle decide karo.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "navigation-links"
+      ],
+      "visual": "navigation-stack",
+      "source": "notes/react-native/04-navigation-links.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "rn-forms-state",
+      "title": "Forms keyboard aur shared state",
+      "track": "react-native",
+      "order": 5,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "TextInput — controlled value aur onChangeText se draft state update karo.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "forms-state"
+      ],
+      "source": "notes/react-native/05-forms-state.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "rn-network-storage",
+      "title": "Networking offline storage aur auth",
+      "track": "react-native",
+      "order": 6,
+      "level": "Intermediate",
+      "minutes": 5,
+      "summary": "Fetch — response.ok check; HTTP 4xx/5xx automatically network exception nahi.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "network-storage"
+      ],
+      "source": "notes/react-native/06-network-storage.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "rn-device-permissions",
+      "title": "Permissions device APIs aur app lifecycle",
+      "track": "react-native",
+      "order": 7,
+      "level": "Intermediate",
+      "minutes": 5,
+      "summary": "Permission request — feature use ke context mein reason batao; startup par sab permissions mat maango.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "device-permissions"
+      ],
+      "source": "notes/react-native/07-device-permissions.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "rn-performance-native",
+      "title": "Performance animations aur native architecture",
+      "track": "react-native",
+      "order": 8,
+      "level": "Advanced",
+      "minutes": 5,
+      "summary": "JS thread — expensive JS work event handling/renders delay kar sakta hai.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "performance-native"
+      ],
+      "source": "notes/react-native/08-performance-native.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "rn-testing-accessibility",
+      "title": "Testing debugging aur mobile accessibility",
+      "track": "react-native",
+      "order": 9,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "Unit test — validation/reducer jaise pure logic fast check; device integration ka replacement nahi.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "testing-accessibility"
+      ],
+      "source": "notes/react-native/09-testing-accessibility.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "rn-build-release",
+      "title": "Build signing OTA updates aur revision traps",
+      "track": "react-native",
+      "order": 10,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Development/production — debug tools aur release configuration alag; release build ka smoke test karo.",
+      "tags": [
+        "react-native",
+        "mobile",
+        "expo",
+        "build-release"
+      ],
+      "source": "notes/react-native/10-build-release.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "java-first-program",
+      "title": "First Java program variables and primitive types",
+      "track": "java",
+      "order": 1,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "JDK — Java develop karne ke tools; JVM — bytecode chalane ka runtime.",
+      "tags": [
+        "fundamentals",
+        "java",
+        "first",
+        "program"
+      ],
+      "source": "notes/java/01-java-first-program.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "java-decisions-loops",
+      "title": "Java operators decisions and loops",
+      "track": "java",
+      "order": 2,
+      "level": "Foundation",
+      "minutes": 2,
+      "summary": "`if/else` — condition ke hisaab se branch choose.",
+      "tags": [
+        "fundamentals",
+        "java",
+        "decisions",
+        "loops"
+      ],
+      "source": "notes/java/02-java-decisions-loops.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "java-methods-arrays",
+      "title": "Java methods arrays and strings",
+      "track": "java",
+      "order": 3,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Method — typed parameters lo, declared type ka result return karo.",
+      "tags": [
+        "fundamentals",
+        "java",
+        "methods",
+        "arrays"
+      ],
+      "source": "notes/java/03-java-methods-arrays.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "java-classes-constructors",
+      "title": "Classes objects constructors and encapsulation",
+      "track": "java",
+      "order": 4,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Class — object ka type/behavior; object — actual instance.",
+      "tags": [
+        "fundamentals",
+        "java",
+        "classes",
+        "constructors"
+      ],
+      "source": "notes/java/04-java-classes-constructors.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "java-language-foundations",
+      "title": "Java foundations review and conversion edge cases",
+      "track": "java",
+      "order": 5,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Primitive types — byte, short, int, long, float, double, char, boolean.",
+      "tags": [
+        "types",
+        "casting",
+        "strings",
+        "arrays"
+      ],
+      "visual": "java-memory",
+      "source": "notes/java/05-language-foundations.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "java-packages-interfaces",
+      "title": "Packages access control and interface boundaries",
+      "track": "java",
+      "order": 6,
+      "level": "Intermediate",
+      "minutes": 2,
+      "summary": "Package — related classes ka namespace.",
+      "tags": [
+        "packages",
+        "interfaces",
+        "encapsulation"
+      ],
+      "source": "notes/java/06-packages-interfaces.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "java-object-model",
+      "title": "Objects OOP records and equality",
+      "track": "java",
+      "order": 7,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Inheritance — subclass superclass ka behavior extend karti hai.",
+      "tags": [
+        "oop",
+        "records",
+        "equality",
+        "interfaces"
+      ],
+      "source": "notes/java/07-object-model.md",
+      "practiceCount": 5,
+      "questionCount": 5,
+      "english": true
+    },
+    {
+      "id": "java-collections-generics",
+      "title": "Collections generics and choosing data structures",
+      "track": "java",
+      "order": 8,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "List — ordered, duplicates allowed; Set — unique; Map — key/value pairs.",
+      "tags": [
+        "collections",
+        "generics",
+        "hashmap",
+        "pecs"
+      ],
+      "source": "notes/java/08-collections-generics.md",
+      "practiceCount": 5,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "java-exceptions-io-time",
+      "title": "Exceptions resources files and time",
+      "track": "java",
+      "order": 9,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Checked exception — catch ya declare; unchecked — runtime contract failure ho sakti hai.",
+      "tags": [
+        "exceptions",
+        "io",
+        "time",
+        "resources"
+      ],
+      "source": "notes/java/09-exceptions-io-time.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "java-streams-lambdas",
+      "title": "Lambdas streams and Optional",
+      "track": "java",
+      "order": 10,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "Lambda — functional interface ki implementation.",
+      "tags": [
+        "streams",
+        "lambdas",
+        "optional",
+        "collectors"
+      ],
+      "visual": "stream-pipeline",
+      "source": "notes/java/10-streams-lambdas.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "java-jvm-memory",
+      "title": "JVM memory garbage collection and diagnosis",
+      "track": "java",
+      "order": 11,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "JVM stack — per-thread frames/local state; heap — objects ka managed area.",
+      "tags": [
+        "jvm",
+        "memory",
+        "garbage-collection",
+        "profiling"
+      ],
+      "visual": "gc-sweep",
+      "source": "notes/java/11-jvm-memory.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "java-maven-testing",
+      "title": "Maven builds and useful Java tests",
+      "track": "java",
+      "order": 12,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Maven — dependencies, build lifecycle aur plugins manage karta hai.",
+      "tags": [
+        "maven",
+        "junit",
+        "testing",
+        "build"
+      ],
+      "source": "notes/java/12-maven-testing.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "java-jdbc-sql",
+      "title": "JDBC SQL and transaction boundaries",
+      "track": "java",
+      "order": 13,
+      "level": "Intermediate",
+      "minutes": 6,
+      "summary": "JDBC — Java se database connection, statement aur result handling.",
+      "tags": [
+        "jdbc",
+        "sql",
+        "transactions",
+        "indexes"
+      ],
+      "visual": "sql-query-order",
+      "source": "notes/java/13-jdbc-sql.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "java-sql-interview-lab",
+      "title": "SQL joins windows and transaction races",
+      "track": "java",
+      "order": 14,
+      "level": "Advanced",
+      "minutes": 5,
+      "summary": "WHERE — grouping se pehle rows filter; HAVING — groups filter.",
+      "tags": [
+        "sql",
+        "postgres",
+        "joins",
+        "windows",
+        "transactions"
+      ],
+      "visual": "transaction-race",
+      "source": "notes/java/14-sql-interview-lab.md",
+      "practiceCount": 6,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "java-concurrency",
+      "title": "Concurrency synchronization and virtual threads",
+      "track": "java",
+      "order": 15,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Thread — concurrent execution; shared mutable state par coordination chahiye.",
+      "tags": [
+        "concurrency",
+        "threads",
+        "virtual-threads",
+        "locks"
+      ],
+      "visual": "thread-sync",
+      "source": "notes/java/15-concurrency.md",
+      "practiceCount": 5,
+      "questionCount": 7,
+      "english": true
+    },
+    {
+      "id": "java-concurrency-production",
+      "title": "Java concurrency under real resource limits",
+      "track": "java",
+      "order": 16,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Bounded pool — workers aur queue ki limit; overload par rejection/backpressure.",
+      "tags": [
+        "java",
+        "concurrency",
+        "virtual-threads",
+        "executors",
+        "backpressure"
+      ],
+      "source": "notes/java/16-concurrency-production.md",
+      "practiceCount": 5,
+      "questionCount": 8,
+      "english": true
+    },
+    {
+      "id": "java-type-metadata",
+      "title": "Java type modeling — enums, sealed types aur annotations",
+      "track": "java",
+      "order": 17,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Enum — fixed named values aur associated behavior.",
+      "tags": [
+        "enums",
+        "sealed",
+        "records",
+        "annotations",
+        "reflection"
+      ],
+      "source": "notes/java/17-type-metadata.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "java-schema-migrations",
+      "title": "SQL schema design aur safe migrations — data ka contract evolve karo",
+      "track": "java",
+      "order": 18,
+      "level": "Intermediate",
+      "minutes": 6,
+      "summary": "Migration — schema change ko versioned file mein track karo.",
+      "tags": [
+        "sql",
+        "normalization",
+        "constraints",
+        "migrations"
+      ],
+      "source": "notes/java/18-schema-migrations.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "java-low-level-design",
+      "title": "Low-level design — requirements se classes aur invariants tak",
+      "track": "java",
+      "order": 19,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "LLD — requirements ko objects, responsibilities aur contracts mein badlo.",
+      "tags": [
+        "lld",
+        "oop",
+        "design",
+        "concurrency",
+        "contracts"
+      ],
+      "source": "notes/java/19-low-level-design.md",
+      "practiceCount": 5,
+      "questionCount": 12,
+      "english": true
+    },
+    {
+      "id": "spring-boot-first-application",
+      "title": "Spring Boot first application and project structure",
+      "track": "spring-boot",
+      "order": 1,
+      "level": "Intermediate",
+      "minutes": 2,
+      "summary": "Spring — objects aur dependencies manage karta hai; Boot setup/configuration simplify karta hai.",
+      "tags": [
+        "spring",
+        "boot",
+        "startup"
+      ],
+      "source": "notes/spring-boot/01-first-application.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "spring-beans-di",
+      "title": "Beans constructor injection and lifecycle",
+      "track": "spring-boot",
+      "order": 2,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "Bean — Spring container ka managed object.",
+      "tags": [
+        "spring",
+        "beans",
+        "dependency-injection"
+      ],
+      "visual": "spring-proxy",
+      "source": "notes/spring-boot/02-beans-di.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "spring-configuration",
+      "title": "Configuration properties profiles and startup failures",
+      "track": "spring-boot",
+      "order": 3,
+      "level": "Intermediate",
+      "minutes": 2,
+      "summary": "Configuration — values code se alag properties/environment mein rakho.",
+      "tags": [
+        "spring",
+        "configuration",
+        "profiles"
+      ],
+      "source": "notes/spring-boot/03-configuration.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "java-spring-rest",
+      "title": "Spring dependency injection and REST APIs",
+      "track": "spring-boot",
+      "order": 4,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "`@RestController` — HTTP response body return karne wala controller.",
+      "tags": [
+        "spring",
+        "rest",
+        "dependency-injection",
+        "validation"
+      ],
+      "visual": "request-flow",
+      "source": "notes/spring-boot/04-spring-rest.md",
+      "practiceCount": 5,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "spring-validation-errors",
+      "title": "Request DTOs validation and consistent API errors",
+      "track": "spring-boot",
+      "order": 5,
+      "level": "Intermediate",
+      "minutes": 2,
+      "summary": "`@Valid` — bound input par validation trigger karta hai.",
+      "tags": [
+        "spring",
+        "validation",
+        "errors"
+      ],
+      "source": "notes/spring-boot/05-validation-errors.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "java-jpa-transactions",
+      "title": "JPA Hibernate and Spring transactions",
+      "track": "spring-boot",
+      "order": 6,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "JPA — persistence specification; Hibernate — implementation.",
+      "tags": [
+        "jpa",
+        "hibernate",
+        "transactions",
+        "n-plus-one"
+      ],
+      "visual": "spring-proxy",
+      "source": "notes/spring-boot/06-jpa-transactions.md",
+      "practiceCount": 6,
+      "questionCount": 9,
+      "english": true
+    },
+    {
+      "id": "java-security-microservices",
+      "title": "Spring Security and reliable service boundaries",
+      "track": "spring-boot",
+      "order": 7,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Authentication — user kaun; authorization — kya access allowed.",
+      "tags": [
+        "security",
+        "jwt",
+        "csrf",
+        "microservices"
+      ],
+      "visual": "request-flow",
+      "source": "notes/spring-boot/07-security-microservices.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "spring-testing",
+      "title": "Spring Boot unit slice and integration testing",
+      "track": "spring-boot",
+      "order": 8,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Unit test — service rule ko Spring context bina test karo.",
+      "tags": [
+        "spring",
+        "testing",
+        "integration"
+      ],
+      "source": "notes/spring-boot/08-testing.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "java-observability-actuator",
+      "title": "Observability with Actuator, metrics and tracing",
+      "track": "spring-boot",
+      "order": 9,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Actuator — health/metrics jaise operational endpoints.",
+      "tags": [
+        "actuator",
+        "observability",
+        "metrics",
+        "tracing",
+        "logging"
+      ],
+      "source": "notes/spring-boot/09-observability-actuator.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "spring-deployment-capstone",
+      "title": "Package deploy and defend a Spring Boot capstone",
+      "track": "spring-boot",
+      "order": 10,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Artifact — same tested build ko environments mein promote karo.",
+      "tags": [
+        "spring",
+        "deployment",
+        "capstone"
+      ],
+      "source": "notes/spring-boot/10-deployment-capstone.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "spring-background-cache",
+      "title": "Spring background jobs aur caching — lifecycle aur ownership samjho",
+      "track": "spring-boot",
+      "order": 11,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "`@Async` — executor par work; default proxy mode mein self-call bypass ho sakti hai.",
+      "tags": [
+        "spring",
+        "scheduling",
+        "caching",
+        "async",
+        "idempotency"
+      ],
+      "source": "notes/spring-boot/11-spring-background-cache.md",
+      "practiceCount": 5,
+      "questionCount": 7,
+      "english": true
+    },
+    {
+      "id": "spring-servlet-mvc",
+      "title": "Servlets, JSP aur Spring MVC — request ka underlying runtime",
+      "track": "spring-boot",
+      "order": 12,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Servlet — HTTP request/response handling ka runtime contract.",
+      "tags": [
+        "servlet",
+        "mvc",
+        "jsp",
+        "request-lifecycle"
+      ],
+      "source": "notes/spring-boot/12-servlet-mvc.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "spring-ai-retrieval",
+      "title": "Spring AI aur RAG — retrieval, permissions aur answer evaluation",
+      "track": "spring-boot",
+      "order": 13,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Spring AI — model/provider integrations ka abstraction.",
+      "tags": [
+        "spring-ai",
+        "rag",
+        "retrieval",
+        "evaluation"
+      ],
+      "source": "notes/spring-boot/13-ai-retrieval.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "mongo-node-runtime-http",
+      "title": "Node runtime HTTP modules and streams",
+      "track": "mongodb",
+      "order": 1,
+      "level": "Foundation",
+      "minutes": 5,
+      "summary": "Node.js — JavaScript runtime; I/O async ho sakti hai, heavy JS event loop block karta hai.",
+      "tags": [
+        "node",
+        "http",
+        "npm",
+        "streams",
+        "event-loop",
+        "modules"
+      ],
+      "visual": "request-flow",
+      "source": "notes/mongodb/01-node-runtime-http.md",
+      "practiceCount": 5,
+      "questionCount": 8,
+      "english": true
+    },
+    {
+      "id": "mongo-express-rest-errors",
+      "title": "Express REST APIs middleware and errors",
+      "track": "mongodb",
+      "order": 2,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "Express — routing aur middleware ka HTTP framework.",
+      "tags": [
+        "express",
+        "rest",
+        "middleware",
+        "errors",
+        "validation",
+        "pagination"
+      ],
+      "visual": "request-flow",
+      "source": "notes/mongodb/02-express-rest-errors.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "mongo-documents-crud-modeling",
+      "title": "Documents CRUD and access-driven modeling",
+      "track": "mongodb",
+      "order": 3,
+      "level": "Foundation",
+      "minutes": 3,
+      "summary": "Document — BSON fields ka record; collection related documents rakhti hai.",
+      "tags": [
+        "mongodb",
+        "crud",
+        "bson",
+        "modeling",
+        "embedding",
+        "references"
+      ],
+      "source": "notes/mongodb/03-documents-crud-modeling.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "mongo-mongoose-validation-relations",
+      "title": "Mongoose schemas validation and relationships",
+      "track": "mongodb",
+      "order": 4,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Mongoose — MongoDB ke liye schema/model layer.",
+      "tags": [
+        "mongoose",
+        "schemas",
+        "validation",
+        "populate",
+        "middleware",
+        "lean"
+      ],
+      "source": "notes/mongodb/04-mongoose-validation-relations.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "mongo-indexes-aggregation-transactions",
+      "title": "Indexes aggregation geospatial queries and transactions",
+      "track": "mongodb",
+      "order": 5,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Index — query fast kar sakta hai; storage aur write cost badhta hai.",
+      "tags": [
+        "indexes",
+        "aggregation",
+        "transactions",
+        "geospatial",
+        "explain",
+        "performance"
+      ],
+      "visual": "aggregation-pipeline",
+      "source": "notes/mongodb/05-indexes-aggregation-transactions.md",
+      "practiceCount": 5,
+      "questionCount": 15,
+      "english": true
+    },
+    {
+      "id": "mongodb-query-production-lab",
+      "title": "MongoDB query plans and Node streaming lab",
+      "track": "mongodb",
+      "order": 6,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "`explain` — chosen plan, keys/docs examined aur returned count dekho.",
+      "tags": [
+        "mongodb",
+        "indexes",
+        "explain",
+        "streams",
+        "backpressure"
+      ],
+      "source": "notes/mongodb/06-query-production-lab.md",
+      "practiceCount": 5,
+      "questionCount": 14,
+      "english": true
+    },
+    {
+      "id": "mongo-auth-security",
+      "title": "Authentication authorization and secure boundaries",
+      "track": "mongodb",
+      "order": 7,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Authentication — identity verify; authorization — action/resource access verify.",
+      "tags": [
+        "authentication",
+        "authorization",
+        "jwt",
+        "sessions",
+        "security",
+        "passwords"
+      ],
+      "visual": "request-flow",
+      "source": "notes/mongodb/07-auth-security.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "mongo-production-integrations",
+      "title": "SSR uploads payments email and deployment",
+      "track": "mongodb",
+      "order": 8,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "SSR/Pug — server HTML banata hai; untrusted output escape karo.",
+      "tags": [
+        "production",
+        "pug",
+        "stripe",
+        "uploads",
+        "email",
+        "deployment",
+        "observability"
+      ],
+      "visual": "request-flow",
+      "source": "notes/mongodb/08-production-integrations.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "mongodb-testing-shutdown",
+      "title": "Node API testing aur graceful shutdown — request se resource cleanup tak",
+      "track": "mongodb",
+      "order": 9,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "HTTP test — actual status, headers aur response body verify karo.",
+      "tags": [
+        "node",
+        "testing",
+        "shutdown",
+        "integration",
+        "resources"
+      ],
+      "source": "notes/mongodb/09-testing-shutdown.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "dsa-complexity",
+      "title": "Complexity and problem solving",
+      "track": "dsa",
+      "order": 1,
+      "level": "Foundation",
+      "minutes": 4,
+      "summary": "Big-O — input badhne par upper-bound growth; exact milliseconds nahi.",
+      "tags": [
+        "big-o",
+        "complexity",
+        "problem-solving",
+        "invariants"
+      ],
+      "source": "notes/dsa/01-complexity-and-problem-solving.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "dsa-linear-structures",
+      "title": "Linked lists stacks and queues",
+      "track": "dsa",
+      "order": 2,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Linked list — nodes references se linked; random access O(n).",
+      "tags": [
+        "linked-list",
+        "stack",
+        "queue",
+        "pointers",
+        "monotonic-stack"
+      ],
+      "visual": "linked-list-reversal",
+      "source": "notes/dsa/02-linked-lists-stacks-and-queues.md",
+      "practiceCount": 5,
+      "questionCount": 7,
+      "english": true
+    },
+    {
+      "id": "dsa-hashing",
+      "title": "Hash tables maps and sets",
+      "track": "dsa",
+      "order": 3,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Hash table — key ko bucket mein map; collision handling zaroori.",
+      "tags": [
+        "hashing",
+        "map",
+        "set",
+        "collisions",
+        "two-sum"
+      ],
+      "visual": "hash-collisions",
+      "source": "notes/dsa/03-hash-tables-and-sets.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "dsa-patterns",
+      "title": "Frequency counters and pointer patterns",
+      "track": "dsa",
+      "order": 4,
+      "level": "Foundation",
+      "minutes": 4,
+      "summary": "Frequency counter — repeated counts ke liye map; nested scans bach sakte hain.",
+      "tags": [
+        "frequency-counter",
+        "two-pointers",
+        "sliding-window",
+        "prefix-sum"
+      ],
+      "visual": "two-pointers",
+      "source": "notes/dsa/04-problem-solving-patterns.md",
+      "practiceCount": 6,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "dsa-searching",
+      "title": "Searching and binary search boundaries",
+      "track": "dsa",
+      "order": 5,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Linear search — unsorted data scan; O(n).",
+      "tags": [
+        "linear-search",
+        "binary-search",
+        "lower-bound",
+        "strings"
+      ],
+      "visual": "binary-search",
+      "source": "notes/dsa/05-searching-and-binary-search.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "dsa-recursion",
+      "title": "Recursion and backtracking",
+      "track": "dsa",
+      "order": 6,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Recursion — function smaller subproblem ko call karta hai.",
+      "tags": [
+        "recursion",
+        "backtracking",
+        "call-stack",
+        "subsets"
+      ],
+      "visual": "recursion-stack",
+      "source": "notes/dsa/06-recursion-and-backtracking.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "dsa-sorting",
+      "title": "Sorting from elementary methods to divide and conquer",
+      "track": "dsa",
+      "order": 7,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Bubble sort — adjacent swaps; O(n²), early-exit variant best O(n).",
+      "tags": [
+        "sorting",
+        "merge-sort",
+        "quick-sort",
+        "radix-sort",
+        "stability"
+      ],
+      "visual": "sorting",
+      "source": "notes/dsa/07-sorting-algorithms.md",
+      "practiceCount": 6,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "dsa-monotonic-stack-lab",
+      "title": "Monotonic stacks and amortized reasoning",
+      "track": "dsa",
+      "order": 8,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Monotonic stack — candidates ko increasing/decreasing order mein rakho.",
+      "tags": [
+        "dsa",
+        "monotonic-stack",
+        "amortized",
+        "arrays"
+      ],
+      "visual": "monotonic-stack",
+      "source": "notes/dsa/08-monotonic-stack-lab.md",
+      "practiceCount": 5,
+      "questionCount": 8,
+      "english": true
+    },
+    {
+      "id": "dsa-trees",
+      "title": "Trees and binary search trees",
+      "track": "dsa",
+      "order": 9,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Tree — hierarchical nodes; root, child aur leaf.",
+      "tags": [
+        "tree",
+        "bst",
+        "dfs",
+        "traversal",
+        "balancing"
+      ],
+      "visual": "tree-traversal",
+      "source": "notes/dsa/09-trees-and-binary-search-trees.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "dsa-heaps",
+      "title": "Heaps and priority queues",
+      "track": "dsa",
+      "order": 10,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Heap — complete binary tree with parent-child priority rule.",
+      "tags": [
+        "heap",
+        "priority-queue",
+        "top-k",
+        "heapify"
+      ],
+      "visual": "heap-insert",
+      "source": "notes/dsa/10-heaps-and-priority-queues.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "dsa-graphs",
+      "title": "Graph traversal and shortest paths",
+      "track": "dsa",
+      "order": 11,
+      "level": "Advanced",
+      "minutes": 5,
+      "summary": "Graph — vertices + edges; direction/weights clarify karo.",
+      "tags": [
+        "graph",
+        "bfs",
+        "dfs",
+        "dijkstra",
+        "topological-sort"
+      ],
+      "visual": "bfs",
+      "source": "notes/dsa/11-graphs-and-shortest-paths.md",
+      "practiceCount": 5,
+      "questionCount": 7,
+      "english": true
+    },
+    {
+      "id": "dsa-dynamic-programming",
+      "title": "Dynamic programming from state to recurrence",
+      "track": "dsa",
+      "order": 12,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "DP — overlapping subproblems ke results reuse karo.",
+      "tags": [
+        "dynamic-programming",
+        "memoization",
+        "tabulation",
+        "coin-change",
+        "knapsack"
+      ],
+      "visual": "dynamic-programming",
+      "source": "notes/dsa/12-dynamic-programming.md",
+      "practiceCount": 6,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "dsa-greedy-intervals",
+      "title": "Greedy aur intervals — choice ka proof aur boundary ka contract",
+      "track": "dsa",
+      "order": 13,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Greedy — har step local choice; global correctness ka proof chahiye.",
+      "tags": [
+        "greedy",
+        "intervals",
+        "sweep-line",
+        "proofs"
+      ],
+      "source": "notes/dsa/13-greedy-intervals.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "dsa-tries-range-bits",
+      "title": "Tries, bitmasks aur range queries — advanced structures ka practical bridge",
+      "track": "dsa",
+      "order": 14,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Trie — characters/prefixes ka tree; lookup O(word length).",
+      "tags": [
+        "trie",
+        "bitmask",
+        "fenwick",
+        "segment-tree"
+      ],
+      "source": "notes/dsa/14-tries-range-bits.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "design-requirements-capacity",
+      "title": "Requirements capacity and design interviews",
+      "track": "system-design",
+      "order": 1,
+      "level": "Foundation",
+      "minutes": 4,
+      "summary": "Requirements — users, core actions, scale aur constraints pehle clear karo.",
+      "tags": [
+        "requirements",
+        "capacity",
+        "interviews",
+        "tradeoffs"
+      ],
+      "visual": "request-flow",
+      "source": "notes/system-design/01-requirements-capacity.md",
+      "practiceCount": 5,
+      "questionCount": 5,
+      "english": true
+    },
+    {
+      "id": "design-scaling-caching",
+      "title": "Scaling caching replication and partitioning",
+      "track": "system-design",
+      "order": 2,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Vertical scaling — ek machine bigger; horizontal — more instances.",
+      "tags": [
+        "caching",
+        "scaling",
+        "replication",
+        "sharding"
+      ],
+      "visual": "caching",
+      "source": "notes/system-design/02-scaling-caching.md",
+      "practiceCount": 5,
+      "questionCount": 9,
+      "english": true
+    },
+    {
+      "id": "design-react-architecture",
+      "title": "React architecture rendering and delivery",
+      "track": "system-design",
+      "order": 3,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "CSR — browser UI render; initial JS/data cost.",
+      "tags": [
+        "react",
+        "architecture",
+        "ssr",
+        "hydration",
+        "cdn"
+      ],
+      "visual": "react-render",
+      "source": "notes/system-design/03-react-architecture.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "design-react-data-state",
+      "title": "React state server data and cache consistency",
+      "track": "system-design",
+      "order": 4,
+      "level": "Intermediate",
+      "minutes": 4,
+      "summary": "State owner — local UI, URL, shared client aur server data alag pehchano.",
+      "tags": [
+        "react",
+        "state",
+        "caching",
+        "optimistic-ui"
+      ],
+      "visual": "caching",
+      "source": "notes/system-design/04-react-data-state.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "design-frontend-performance",
+      "title": "Frontend performance accessibility and resilience",
+      "track": "system-design",
+      "order": 5,
+      "level": "Intermediate",
+      "minutes": 6,
+      "summary": "LCP — main content kab dikha; INP — interaction responsiveness; CLS — layout shift.",
+      "tags": [
+        "performance",
+        "accessibility",
+        "web-vitals",
+        "react"
+      ],
+      "visual": "react-render",
+      "source": "notes/system-design/05-frontend-performance.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "system-design-frontend-design-round",
+      "title": "Frontend system design interview from requirements to failure",
+      "track": "system-design",
+      "order": 6,
+      "level": "Advanced",
+      "minutes": 5,
+      "summary": "Frontend round — requirements → components/state → data flow → performance → failures.",
+      "tags": [
+        "frontend",
+        "react",
+        "system-design",
+        "accessibility",
+        "caching"
+      ],
+      "source": "notes/system-design/06-frontend-design-round.md",
+      "practiceCount": 5,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "design-java-api-data",
+      "title": "Java backend API and data architecture",
+      "track": "system-design",
+      "order": 7,
+      "level": "Intermediate",
+      "minutes": 6,
+      "summary": "Layers — controller contract, service rules, repository persistence.",
+      "tags": [
+        "java",
+        "api",
+        "data-modeling",
+        "consistency"
+      ],
+      "visual": "request-flow",
+      "source": "notes/system-design/07-java-api-data.md",
+      "practiceCount": 5,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "design-messaging-reliability",
+      "title": "Messaging outbox retries and distributed workflows",
+      "track": "system-design",
+      "order": 8,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Dual write — DB success + message failure se inconsistent state ban sakti hai.",
+      "tags": [
+        "messaging",
+        "outbox",
+        "idempotency",
+        "sagas"
+      ],
+      "visual": "outbox-pattern",
+      "source": "notes/system-design/08-messaging-reliability.md",
+      "practiceCount": 5,
+      "questionCount": 5,
+      "english": true
+    },
+    {
+      "id": "design-security-operations",
+      "title": "Security observability and production operations",
+      "track": "system-design",
+      "order": 9,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Trust boundary — har hop par identity, input aur permissions verify karo.",
+      "tags": [
+        "security",
+        "observability",
+        "deployment",
+        "reliability"
+      ],
+      "visual": "request-flow",
+      "source": "notes/system-design/09-security-operations.md",
+      "practiceCount": 5,
+      "questionCount": 4,
+      "english": true
+    },
+    {
+      "id": "system-design-backend-design-round",
+      "title": "Java backend design interview and reservation correctness",
+      "track": "system-design",
+      "order": 10,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Reservation — available stock ko atomic check-and-decrement/claim karo.",
+      "tags": [
+        "backend",
+        "java",
+        "system-design",
+        "idempotency",
+        "transactions"
+      ],
+      "visual": "transaction-race",
+      "source": "notes/system-design/10-backend-design-round.md",
+      "practiceCount": 5,
+      "questionCount": 5,
+      "english": true
+    },
+    {
+      "id": "design-commerce-case-study",
+      "title": "Case study React storefront and Java checkout",
+      "track": "system-design",
+      "order": 11,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Catalog — cache-friendly reads; checkout fresh authoritative validation maangta hai.",
+      "tags": [
+        "case-study",
+        "ecommerce",
+        "react",
+        "java",
+        "payments"
+      ],
+      "visual": "request-flow",
+      "source": "notes/system-design/11-commerce-case-study.md",
+      "practiceCount": 5,
+      "questionCount": 1,
+      "english": true
+    },
+    {
+      "id": "design-realtime-case-study",
+      "title": "Case study collaborative notes and real-time chat",
+      "track": "system-design",
+      "order": 12,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Realtime — WebSocket/SSE choose interaction direction aur infra se.",
+      "tags": [
+        "case-study",
+        "websocket",
+        "sse",
+        "collaboration",
+        "java"
+      ],
+      "visual": "request-flow",
+      "source": "notes/system-design/12-realtime-case-study.md",
+      "practiceCount": 5,
+      "questionCount": 2,
+      "english": true
+    },
+    {
+      "id": "system-design-consistency-limits",
+      "title": "Consistency aur distributed rate limiting — guarantees pehle likho",
+      "track": "system-design",
+      "order": 13,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Strong consistency — defined operation model ke hisaab se latest ordered state.",
+      "tags": [
+        "consistency",
+        "rate-limiting",
+        "token-bucket",
+        "distributed"
+      ],
+      "visual": "token-bucket",
+      "source": "notes/system-design/13-consistency-limits.md",
+      "practiceCount": 5,
+      "questionCount": 8,
+      "english": true
+    },
+    {
+      "id": "system-design-api-contracts",
+      "title": "REST, GraphQL aur gRPC — protocol se pehle contract choose karo",
+      "track": "system-design",
+      "order": 14,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "REST — resources + HTTP semantics; caching/status/conditional requests useful.",
+      "tags": [
+        "api",
+        "graphql",
+        "grpc",
+        "rest",
+        "batching"
+      ],
+      "source": "notes/system-design/14-api-contracts.md",
+      "practiceCount": 5,
+      "questionCount": 3,
+      "english": true
+    },
+    {
+      "id": "system-design-os-network-debugging",
+      "title": "OS aur networking interviews — slow request ko layer-wise diagnose karo",
+      "track": "system-design",
+      "order": 15,
+      "level": "Intermediate",
+      "minutes": 5,
+      "summary": "Process — isolated address space; thread — process ke resources share karta hai.",
+      "tags": [
+        "os",
+        "networking",
+        "tcp",
+        "dns",
+        "tls",
+        "debugging"
+      ],
+      "source": "notes/system-design/15-os-network-debugging.md",
+      "practiceCount": 5,
+      "questionCount": 6,
+      "english": true
+    },
+    {
+      "id": "interview-javascript",
+      "title": "JavaScript interview playbook",
+      "track": "interview",
+      "order": 1,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Answer — definition + ek key catch; code/output poochha ho toh exact result do.",
+      "tags": [
+        "javascript",
+        "interview",
+        "closures",
+        "event-loop",
+        "coding"
+      ],
+      "visual": "event-loop",
+      "source": "notes/interview/01-javascript-playbook.md",
+      "practiceCount": 5,
+      "questionCount": 130,
+      "english": true
+    },
+    {
+      "id": "interview-java",
+      "title": "Java backend interview playbook",
+      "track": "interview",
+      "order": 2,
+      "level": "Advanced",
+      "minutes": 3,
+      "summary": "Java equality — `==` reference; `.equals()` logical value, contract implementation par depend.",
+      "tags": [
+        "java",
+        "interview",
+        "spring",
+        "concurrency",
+        "transactions"
+      ],
+      "visual": "thread-sync",
+      "source": "notes/interview/02-java-backend-playbook.md",
+      "practiceCount": 5,
+      "questionCount": 82,
+      "english": true
+    },
+    {
+      "id": "interview-react",
+      "title": "React interview playbook",
+      "track": "interview",
+      "order": 3,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "State — snapshot hai; previous value se update ho toh functional setter.",
+      "tags": [
+        "react",
+        "interview",
+        "effects",
+        "state",
+        "performance"
+      ],
+      "visual": "react-render",
+      "source": "notes/interview/03-react-playbook.md",
+      "practiceCount": 5,
+      "questionCount": 75,
+      "english": true
+    },
+    {
+      "id": "interview-mongodb",
+      "title": "MongoDB interview playbook",
+      "track": "interview",
+      "order": 4,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Model — reads/writes aur growth se embedding/reference choose karo.",
+      "tags": [
+        "mongodb",
+        "interview",
+        "indexes",
+        "schema",
+        "transactions"
+      ],
+      "visual": "mongo-index",
+      "source": "notes/interview/04-mongodb-playbook.md",
+      "practiceCount": 5,
+      "questionCount": 54,
+      "english": true
+    },
+    {
+      "id": "interview-dsa",
+      "title": "DSA problem solving interview playbook",
+      "track": "interview",
+      "order": 5,
+      "level": "Intermediate",
+      "minutes": 3,
+      "summary": "Start — input/output, constraints aur edge cases clarify karo.",
+      "tags": [
+        "dsa",
+        "interview",
+        "problem-solving",
+        "complexity",
+        "practice"
+      ],
+      "visual": "dynamic-programming",
+      "source": "notes/interview/05-dsa-playbook.md",
+      "practiceCount": 5,
+      "questionCount": 49,
+      "english": true
+    },
+    {
+      "id": "interview-system-design",
+      "title": "React and Java system design interview playbook",
+      "track": "interview",
+      "order": 6,
+      "level": "Advanced",
+      "minutes": 4,
+      "summary": "Design round — requirements → estimate → APIs/data → architecture → bottlenecks → failure.",
+      "tags": [
+        "system-design",
+        "interview",
+        "react",
+        "java",
+        "architecture"
+      ],
+      "visual": "outbox-pattern",
+      "source": "notes/interview/06-system-design-playbook.md",
+      "practiceCount": 5,
+      "questionCount": 54,
+      "english": true
+    }
+  ]
+}

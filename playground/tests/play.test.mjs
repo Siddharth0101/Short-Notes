@@ -57,8 +57,10 @@ const React = await import('react');
 const { createRoot } = await import('react-dom/client');
 const { MemoryRouter } = await import('react-router-dom');
 const { default: App } = await server.ssrLoadModule('/src/App.jsx');
-const { notes } = await server.ssrLoadModule('/src/data/catalog.js');
-const { loadEnglish } = await server.ssrLoadModule('/src/data/localized.js');
+// Chapter text loads on demand in the app; fetch it all once so screens render without waiting.
+const store = await server.ssrLoadModule('/src/data/store.js');
+await store.preloadAll();
+const { notes } = store.getCatalog('hinglish');
 const { buildMatch, buildQuiz, chapterCards, deckFor, quizPoints } =
   await server.ssrLoadModule('/src/play/decks.js');
 await Promise.all([
@@ -66,7 +68,6 @@ await Promise.all([
     server.ssrLoadModule(`/src/play/${name}.jsx`),
   ),
   ...['Reader', 'VisualLab'].map((name) => server.ssrLoadModule(`/src/library/${name}.jsx`)),
-  loadEnglish(),
 ]);
 let root;
 async function settle(ms = 30) {
@@ -350,8 +351,7 @@ test('Language switch persists, translates the shell and chapters, and keeps pro
 test('A chapter without an English body falls back to Hinglish with a clear notice', async () => {
   localStorage.clear();
   localStorage.setItem('shortnotes.lang', 'en');
-  const { chapters } = await loadEnglish();
-  const pending = notes.find((note) => !chapters[note.id]);
+  const pending = notes.find((note) => !note.english);
   if (!pending) return; // every chapter is translated
   await mount(`/notes/${pending.id}`);
   await settle(60);

@@ -4,6 +4,7 @@ import { TRACKS } from '../lib/content.js';
 import { notes, noteById } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import Icon from './Icons.jsx';
+import UpdatePrompt from './UpdatePrompt.jsx';
 import { normalizeTheme, readTheme, resolveTheme, THEME_KEY } from '../lib/theme.js';
 import { LANGUAGES } from '../lib/lang.js';
 import { useLang } from '../lib/langContext.js';
@@ -330,6 +331,7 @@ export default function Shell({ children }) {
         <main id="main-content" className="page-content" tabIndex={-1}>
           {children}
         </main>
+        <UpdatePrompt />
         <nav className="mobile-bottom-nav" aria-label={t('shell.quickNavigation')}>
           {[
             ['/', 'dashboard', t('mobile.home')],

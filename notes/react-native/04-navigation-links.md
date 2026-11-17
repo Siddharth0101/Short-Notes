@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 4
 summary: Navigation — stack detail-flow ke liye, tabs main sections ke liye; history behavior pehle decide karo.
 tags: react-native, mobile, expo, navigation-links
+visual: navigation-stack
 ---
 
 ## Quick revision

@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 4
 summary: Lambda — functional interface ki implementation.
 tags: streams, lambdas, optional, collectors
+visual: stream-pipeline
 ---
 
 ## Quick revision

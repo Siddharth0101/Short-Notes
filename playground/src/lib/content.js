@@ -161,6 +161,28 @@ export function extractHeadings(markdown) {
   return headings;
 }
 
+// Headings for a chapter's table of contents. A translated chapter carries `headingIds` so its
+// anchors stay the canonical (Hinglish) ones in every language.
+export function chapterHeadings(note) {
+  return extractHeadings(note.body || '').map((heading) => ({
+    ...heading,
+    id: note.headingIds?.[heading.title] ?? heading.id,
+  }));
+}
+
+// The interview questions that belong under a chapter. An interview playbook takes its whole
+// subject; other chapters take the questions pinned to them, or those sharing a tag.
+export function chapterQuestions(note, questions) {
+  const subject = note.track === 'interview' ? note.id.replace('interview-', '') : note.track;
+  return questions.filter((item) => {
+    if (note.track === 'interview')
+      return item.track === subject || (subject === 'java' && item.track === 'spring-boot');
+    if (item.noteId) return item.noteId === note.id;
+    if (item.track !== note.track) return false;
+    return item.tags.some((tag) => note.tags.includes(tag));
+  });
+}
+
 export const PRACTICE_HEADING = 'Practice questions';
 export const PRACTICE_LEVELS = ['Easy', 'Medium', 'Hard'];
 

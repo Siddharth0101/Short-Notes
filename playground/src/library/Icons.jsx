@@ -59,8 +59,14 @@ import {
   Award,
   CalendarCheck,
   Laugh,
+  CloudDownload,
+  Trash2,
+  RefreshCw,
 } from 'lucide-react';
 const icons = {
+  offline: CloudDownload,
+  trash: Trash2,
+  refresh: RefreshCw,
   book: BookOpen,
   dashboard: LayoutDashboard,
   path: Route,

@@ -25,17 +25,20 @@ Read `docs/INTERVIEWER_ARCHITECTURE.md` for the module boundaries, limits, and d
 - `notes/en/`: English chapters (same file names), `curriculum.json` stage text and `chapters.json` titles/summaries.
 - `notes/`: structured revision chapters; `examples/`: linked code snippets.
 - `notes/curriculum.json`: canonical course stages and chapter ordering.
-- `playground/src/data/catalog.js`: chapter discovery and content associations.
+- `playground/src/data/catalog.js`: the light chapter list the app starts with (metadata and counts from the generated `chapterIndex.json`; no chapter text, no answers).
+- `playground/src/data/store.js`: fetches chapter text and interview answers on demand and builds the catalog for a language; screens ask through `useContent()` in `src/lib/catalogContext.js`.
 - `playground/src/data/*Questions.js`: interview question data.
 - `playground/src/lib/progress.jsx` and `content.js`: browser progress storage and normalization.
 - `playground/src/lib/play.jsx` and `playState.js`: arcade state (XP, streak, flashcard boxes, badges) and its pure rules.
-- `playground/src/data/localized.js`: English catalog overlay; Hinglish stays canonical for IDs, anchors and progress.
+- English is an overlay built in `store.js` (`englishMeta.js` for titles, `notes/en` text and `i18n/questions.en.json` loaded on demand); Hinglish stays canonical for IDs, anchors and progress.
+- `playground/offline/`: the service worker (`sw.js`) and the Vite plugin that writes `dist/sw.js` with each build's file lists; `src/lib/offline.js` registers it, offers updates and saves or removes the offline copy (Saved page).
+- `playground/seo/`: build plugin for link previews and search — absolute `og:image` URL, `robots.txt` and `sitemap.xml` from `SITE_URL` or Netlify's `URL`; `src/lib/pageMeta.js` gives each chapter its own description. Regenerate `public/social-card.jpg` with `node scripts/make-social-card.mjs` when the counts on it change.
 - `playground/src/interviewer/`: interview UI, microphone capture and server-generated audio playback, session controller, and drafts.
 - `server/`: hub/runtime, specialists, provider adapter, scoped tools, local API, and storage.
 - `scripts/`: content validation and generated documentation tools.
 - Numbered subject folders: original reference material and examples.
 
-The app currently stores bookmarks, completed chapters, known questions, cleared chapter practice questions, and recent reads in local storage (`shortnotes.progress.v1`). Arcade stats live in `shortnotes.play.v1` and the language choice in `shortnotes.lang`; the backup export includes the arcade stats. The original mock interview drafts and self-review are temporary. AI interview sessions and specialist memories persist in MongoDB when `MONGODB_URI` is configured, otherwise in the ignored `.interviews/` directory. Install locked server dependencies with `npm ci --prefix server` from the repository root. Keep migration insert-only and retain JSON backups. The hub retrieves bounded same-subject topic assessments across interviews for reminders and improvement tracking; unsent AI interview drafts remain in browser storage. The Node backend uses Gemini Interactions with a server-only key. There is no account system or automatic cross-device sync.
+The app currently stores bookmarks, completed chapters, known questions, cleared chapter practice questions, and recent reads in local storage (`shortnotes.progress.v1`). Arcade stats live in `shortnotes.play.v1` and the language choice in `shortnotes.lang`; the backup export includes the arcade stats. The original mock interview drafts and self-review are temporary. AI interview sessions and specialist memories persist in MongoDB when `MONGODB_URI` is configured, otherwise in the ignored `.interviews/` directory. Install locked server dependencies with `npm ci --prefix server` from the repository root. Keep migration insert-only and retain JSON backups. The hub retrieves bounded same-subject topic assessments across interviews for reminders and improvement tracking; unsent AI interview drafts remain in browser storage. The Node backend uses Gemini Interactions with a server-only key. There is no account system or automatic cross-device sync; offline copies live only in that browser.
 
 ## Implementation guidance
 
@@ -44,6 +47,8 @@ The app currently stores bookmarks, completed chapters, known questions, cleared
 - Preserve chapter/question IDs, URLs, section anchors, and existing saved progress. Add migration handling when changing persisted data.
 - Never hard-code visible UI text in components: add the key to both `src/i18n/hinglish.js` and `src/i18n/en.js` (or the `play.*` pair) and read it with `t()`. Tests fail when the two languages differ or a key is missing.
 - English content is an overlay. An English chapter must mirror its Hinglish original (same frontmatter, code, section count and practice set); a missing translation falls back to Hinglish with a notice. Do not describe untranslated content as translated — `npm run i18n:check` prints the real coverage.
+- Keep the first download small. Do not import chapter text, `interviewQuestions.js` or `questions.en.json` statically from code that the shell loads; ask for them with `useContent({ chapters, questions })` and render `ContentStatus` (loading, failure, retry) until `ready`. After changing a chapter's frontmatter, tags or practice questions, or adding a chapter or question, run `node scripts/sync-chapter-index.mjs` (`npm run chapters:check` fails when the index is stale).
+- Offline: the service worker caches the app shell on install, files a screen fetched, and a language's notes only when the reader saves them. Never cache the course PDFs or `/api/`. New releases wait for the reader's Reload; do not add `skipWaiting` on install for updates. `npm run offline:check` must pass after a build.
 - Keep model calls and credentials on the server. Never place secret API keys in browser code or `VITE_*` variables.
 - Retrieve relevant chapters/questions for a coaching turn rather than sending the entire repository each time.
 - Treat retrieved content and learner answers as data, not instructions that can override the coach's rules.

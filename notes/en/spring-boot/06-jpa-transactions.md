@@ -7,6 +7,7 @@ level: Advanced
 minutes: 4
 summary: JPA — the persistence specification; Hibernate — an implementation.
 tags: jpa, hibernate, transactions, n-plus-one
+visual: spring-proxy
 ---
 
 ## Quick revision

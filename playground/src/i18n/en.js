@@ -58,6 +58,34 @@ export default {
   'app.notFoundTitle': 'That page isn’t in the notebook.',
   'app.explore': 'Explore the library',
   'content.loadingEnglish': 'Loading the English notes…',
+  'content.loading': 'Loading…',
+  'content.loadingChapter': 'Loading this chapter…',
+  'content.loadingQuestions': 'Loading the interview questions…',
+  'content.loadingCards': 'Loading the cards…',
+  'content.loadingDaily': 'Loading today’s challenge…',
+  'content.failed': 'This could not be loaded. Check your connection and try again.',
+  'content.retry': 'Try again',
+  'content.searchLoading': 'Matching titles and tags — the full text is still loading…',
+  'content.searchPartial':
+    'The full text could not be loaded, so these are title and tag matches only.',
+  'content.offline':
+    'You’re offline, and this part isn’t saved on this device yet. Try again once you’re connected.',
+  'offline.title': 'Read without internet',
+  'offline.body':
+    'Save every chapter and interview answer in {language} on this device — about {size} MB to download. Chapters you have already opened are kept anyway.',
+  'offline.save': 'Save for offline',
+  'offline.saving': 'Saving… {done} / {total} files',
+  'offline.saved':
+    'Saved on this device: all {chapters} chapters and {questions} interview answers in {language}. After an update, the new version is saved again the next time you open the app online.',
+  'offline.remove': 'Remove from this device',
+  'offline.removed': 'Removed. Chapters you open are still kept for offline reading.',
+  'offline.failed': 'Saving did not finish. Check your connection and try again.',
+  'offline.checking': 'Checking what is saved on this device…',
+  'offline.unavailable':
+    'Offline saving is not available here. It needs the published app in a browser that supports it.',
+  'offline.progressLabel': 'Saving for offline',
+  'update.ready': 'A new version of Shortnotes is ready.',
+  'update.reload': 'Reload',
   'content.untranslated':
     'This chapter has no English version yet — showing the original Hinglish notes.',
 

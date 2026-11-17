@@ -85,15 +85,15 @@
   },
   "java-decisions-loops": {
     "title": "Java operators decisions and loops",
-    "summary": "`if/else` — choose a branch according to a condition."
+    "summary": "`if/else` — chooses a branch according to a condition."
   },
   "java-methods-arrays": {
     "title": "Java methods arrays and strings",
-    "summary": "Method — take typed parameters and return a result of the declared type."
+    "summary": "Method — takes typed parameters and returns a result of the declared type."
   },
   "java-classes-constructors": {
     "title": "Classes objects constructors and encapsulation",
-    "summary": "Class — an object’s type and behaviour; object — an actual instance."
+    "summary": "Class — the type and behaviour of an object; object — an actual instance."
   },
   "java-language-foundations": {
     "title": "Java foundations review and conversion edge cases",
@@ -113,7 +113,7 @@
   },
   "java-exceptions-io-time": {
     "title": "Exceptions resources files and time",
-    "summary": "Checked exception — catch or declare it; unchecked — may signal a runtime contract failure."
+    "summary": "Checked exception — catch it or declare it; unchecked — can be a runtime contract failure."
   },
   "java-streams-lambdas": {
     "title": "Lambdas streams and Optional",
@@ -129,7 +129,7 @@
   },
   "java-jdbc-sql": {
     "title": "JDBC SQL and transaction boundaries",
-    "summary": "JDBC — database connections, statements and result handling from Java."
+    "summary": "JDBC — database connection, statement and result handling from Java."
   },
   "java-sql-interview-lab": {
     "title": "SQL joins windows and transaction races",
@@ -141,14 +141,14 @@
   },
   "java-concurrency-production": {
     "title": "Java concurrency under real resource limits",
-    "summary": "Bounded pool — a limit on workers and the queue; rejection or backpressure under overload."
+    "summary": "Bounded pool — a limit on workers and the queue; rejection or backpressure on overload."
   },
   "java-type-metadata": {
     "title": "Java type modeling — enums, sealed types and annotations",
-    "summary": "Enum — fixed named values with associated behaviour."
+    "summary": "Enum — fixed named values and their associated behaviour."
   },
   "java-schema-migrations": {
-    "title": "SQL schema design and safe migrations — evolving the data contract",
+    "title": "SQL schema design and safe migrations — evolve the data contract",
     "summary": "Migration — track a schema change in a versioned file."
   },
   "java-low-level-design": {
@@ -201,7 +201,7 @@
   },
   "js-dom-events-browser": {
     "title": "DOM events and browser interaction",
-    "summary": "DOM — the browser’s document tree; grab a node with a selector."
+    "summary": "DOM — the browser's document tree; grab a node with a selector."
   },
   "js-this-prototypes-classes": {
     "title": "This binding prototypes and classes",
@@ -317,7 +317,7 @@
   },
   "react-state-forms": {
     "title": "State snapshots forms and immutable updates",
-    "summary": "`useState` — a component’s memory; the setter schedules the next render."
+    "summary": "`useState` — a component's memory; the setter schedules the next render."
   },
   "react-components-rendering": {
     "title": "Components JSX and the render cycle",
@@ -369,11 +369,11 @@
   },
   "spring-configuration": {
     "title": "Configuration properties profiles and startup failures",
-    "summary": "Configuration — keep values out of code, in properties or the environment."
+    "summary": "Configuration — keep values out of the code, in properties or the environment."
   },
   "java-spring-rest": {
     "title": "Spring dependency injection and REST APIs",
-    "summary": "`@RestController` — a controller whose return value becomes the HTTP response body."
+    "summary": "`@RestController` — a controller that returns the HTTP response body."
   },
   "spring-validation-errors": {
     "title": "Request DTOs validation and consistent API errors",
@@ -397,7 +397,7 @@
   },
   "spring-deployment-capstone": {
     "title": "Package deploy and defend a Spring Boot capstone",
-    "summary": "Artifact — promote the same tested build through the environments."
+    "summary": "Artifact — promote the same tested build across environments."
   },
   "spring-background-cache": {
     "title": "Spring background jobs and caching — understand lifecycle and ownership",
@@ -425,7 +425,7 @@
   },
   "design-react-data-state": {
     "title": "React state server data and cache consistency",
-    "summary": "State owner — tell apart local UI, URL, shared client and server data."
+    "summary": "State owner — tell local UI, URL, shared client and server data apart."
   },
   "design-frontend-performance": {
     "title": "Frontend performance accessibility and resilience",
@@ -437,7 +437,7 @@
   },
   "design-java-api-data": {
     "title": "Java backend API and data architecture",
-    "summary": "Layers — the controller contract, service rules and repository persistence."
+    "summary": "Layers — controller contract, service rules, repository persistence."
   },
   "design-messaging-reliability": {
     "title": "Messaging outbox retries and distributed workflows",
@@ -453,11 +453,11 @@
   },
   "design-commerce-case-study": {
     "title": "Case study React storefront and Java checkout",
-    "summary": "Catalog — cache-friendly reads; checkout demands fresh, authoritative validation."
+    "summary": "Catalog — cache-friendly reads; checkout demands fresh authoritative validation."
   },
   "design-realtime-case-study": {
     "title": "Case study collaborative notes and real-time chat",
-    "summary": "Realtime — choose WebSocket or SSE from the direction of interaction and the infrastructure."
+    "summary": "Realtime — choose WebSocket or SSE from the interaction direction and the infrastructure."
   },
   "system-design-consistency-limits": {
     "title": "Consistency and distributed rate limiting — write down the guarantees first",

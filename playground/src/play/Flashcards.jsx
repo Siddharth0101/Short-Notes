@@ -4,6 +4,7 @@ import { useLang } from '../lib/langContext.js';
 import { usePlay } from '../lib/playContext.js';
 import { cardStats, dayKey, shuffled, XP } from '../lib/playState.js';
 import Icon from '../library/Icons.jsx';
+import ContentStatus from '../library/ContentStatus.jsx';
 import { DeckPicker, GameFrame, Inline } from './shared.jsx';
 import { useDeck } from './useDeck.js';
 import './play.css';
@@ -98,7 +99,9 @@ export default function Flashcards() {
       <p className="deck-stats" role="status">
         {t('cards.deckStats', stats)}
       </p>
-      {!deck.cards.length ? (
+      {!deck.ready ? (
+        <ContentStatus failed={deck.failed} retry={deck.retry} label={t('content.loadingCards')} />
+      ) : !deck.cards.length ? (
         <div className="empty-state">
           <Icon name="cards" size={30} />
           <p>{t('game.empty')}</p>

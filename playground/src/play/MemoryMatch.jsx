@@ -4,6 +4,7 @@ import { useLang } from '../lib/langContext.js';
 import { usePlay } from '../lib/playContext.js';
 import { XP } from '../lib/playState.js';
 import Icon from '../library/Icons.jsx';
+import ContentStatus from '../library/ContentStatus.jsx';
 import { DeckPicker, GameFrame, Inline } from './shared.jsx';
 import { useDeck } from './useDeck.js';
 import { buildMatch } from './decks.js';
@@ -86,7 +87,9 @@ export default function MemoryMatch() {
           <Icon name="shuffle" size={16} /> {t('game.again')}
         </button>
       </div>
-      {!board ? (
+      {!deck.ready ? (
+        <ContentStatus failed={deck.failed} retry={deck.retry} label={t('content.loadingCards')} />
+      ) : !board ? (
         <div className="empty-state">
           <Icon name="grid" size={30} />
           <p>{t('game.empty')}</p>

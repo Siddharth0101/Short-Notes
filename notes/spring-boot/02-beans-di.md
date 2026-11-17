@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 4
 summary: Bean — Spring container ka managed object.
 tags: spring, beans, dependency-injection
+visual: spring-proxy
 ---
 
 ## Quick revision

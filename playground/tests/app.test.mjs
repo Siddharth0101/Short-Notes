@@ -43,7 +43,12 @@ function HistoryProbe() {
 }
 const { default: App } = await server.ssrLoadModule('/src/App.jsx');
 const { courses } = await server.ssrLoadModule('/src/data/curriculum.js');
-const { notes, archive } = await server.ssrLoadModule('/src/data/catalog.js');
+const { archive } = await server.ssrLoadModule('/src/data/catalog.js');
+// Chapter text and answers load on demand in the app; fetch them all once so that every screen
+// renders complete on its first paint, as it does for a returning reader.
+const store = await server.ssrLoadModule('/src/data/store.js');
+await store.preloadAll();
+const { notes } = store.getCatalog('hinglish');
 const { VISUAL_IDS } = await server.ssrLoadModule('/src/lib/visualIds.js');
 const { VISUALS } = await server.ssrLoadModule('/src/data/visuals.js');
 const { interviewQuestions } = await server.ssrLoadModule('/src/data/interviewQuestions.js');

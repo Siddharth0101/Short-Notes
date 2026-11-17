@@ -987,4 +987,362 @@ export const moreVisuals = [
       ),
     ],
   },
+  {
+    id: 'navigation-stack',
+    name: 'Navigation: stack, tabs and deep links',
+    track: 'react-native',
+    icon: 'phone',
+    language: 'jsx',
+    source: 'https://docs.expo.dev/router/basics/navigation/',
+    description:
+      'Push, back, tab switch, deep link aur replace par screen history kaise badalti hai, dekho.',
+    code: "// Tabs at the root; the Orders tab has its own stack.\nrouter.push('/orders/42'); // open a detail screen on top\nrouter.back(); // remove the top screen\nrouter.replace('/login'); // swap the top screen, no new history entry\n// Deep link: shortnotes://orders/42 can open the detail directly",
+    takeaway:
+      'Stack plates ka dher hai: push upar rakhta hai, back upar wali hatata hai. Har tab ka apna dher hai jo switch karne par wahin ruka rehta hai. Deep link se aao toh initial route se neeche wali screen rakho, aur jahan wapas nahi aana (login, payment ke baad) wahan replace karo.',
+    frames: [
+      frame(
+        'App khula: Home tab',
+        'Root par do tabs hain: Home aur Orders. Har tab ka apna history hota hai. Abhi Home dikh raha hai; Orders ke stack mein sirf list screen hai.',
+        [
+          lane('Tabs', ['Home (active)', 'Orders']),
+          lane('Orders stack', ['/orders']),
+          lane('On screen', ['Home']),
+        ],
+      ),
+      frame(
+        'Orders tab par switch',
+        'Tab badalne se Home band nahi hota — woh apni scroll position aur state ke saath peeche ruka rehta hai. Ab Orders stack ki top screen dikhti hai.',
+        [
+          lane('Tabs', ['Home', 'Orders (active)']),
+          lane('Orders stack', ['/orders']),
+          lane('On screen', ['/orders']),
+        ],
+      ),
+      frame(
+        "router.push('/orders/42')",
+        'Detail screen stack ke upar rakhi gayi. Neeche wali list unmount nahi hui, bas dhak gayi. Back ka matlab ab yahi upar wali screen hatana hai.',
+        [
+          lane('Tabs', ['Home', 'Orders (active)']),
+          lane('Orders stack', ['/orders', '/orders/42']),
+          lane('On screen', ['/orders/42']),
+        ],
+      ),
+      frame(
+        'router.back()',
+        'Upar wali screen hat gayi aur unmount hui. Neeche wali list usi state ke saath wapas dikhti hai — dobara load nahi karni padti.',
+        [
+          lane('Tabs', ['Home', 'Orders (active)']),
+          lane('Orders stack', ['/orders']),
+          lane('On screen', ['/orders']),
+        ],
+      ),
+      frame(
+        'Deep link: shortnotes://orders/42',
+        'App band thi aur notification ke link se seedha detail khuli. Agar neeche list na rakhi hoti toh back dabane par app hi band ho jaati. Initial route list ko stack ke neeche rakh deta hai.',
+        [
+          lane('Tabs', ['Home', 'Orders (active)']),
+          lane('Orders stack', ['/orders (initial route)', '/orders/42']),
+          lane('On screen', ['/orders/42']),
+        ],
+      ),
+      frame(
+        "router.replace('/login')",
+        'Session expire hua. replace upar wali screen ko badal deta hai, naya history entry nahi jodta — login ke baad back dabane par expired detail wapas nahi aata.',
+        [
+          lane('Tabs', ['Home', 'Orders (active)']),
+          lane('Orders stack', ['/orders', '/login']),
+          lane('On screen', ['/login']),
+        ],
+      ),
+    ],
+  },
+  {
+    id: 'spring-proxy',
+    name: 'Spring proxies and the self-call trap',
+    track: 'spring-boot',
+    icon: 'layers',
+    language: 'java',
+    source:
+      'https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html',
+    description:
+      '@Transactional call proxy se guzarti hai — aur this.method() par kyun nahi, dekho.',
+    code: '@Service\nclass OrderService {\n  @Transactional\n  public void place(Order order) { /* insert order, reserve stock */ }\n\n  public void placeAll(List<Order> orders) {\n    orders.forEach(this::place); // self-call: skips the proxy\n  }\n}\n// OrderController calls orderService.place(order) through the proxy',
+    takeaway:
+      'Spring @Transactional, @Async aur @Cacheable ka kaam bean ke aage khade proxy se karta hai. Bahar se aayi call proxy se guzarti hai; class ke andar this.method() asli object ko seedha call karta hai aur advice skip ho jaati hai. Transaction ki boundary us method par rakho jise bahar se bulaya jaata hai, ya logic alag bean mein le jao.',
+    frames: [
+      frame(
+        'Startup: container proxy banata hai',
+        '@Transactional method dekh kar Spring asli OrderService ke aage ek proxy rakhta hai. Controller ko jo inject hota hai, woh proxy hai, asli object nahi.',
+        [
+          lane('Call', ['OrderController → orderService (proxy)']),
+          lane('Proxy', ['OrderService proxy → target OrderService']),
+          lane('Transaction', []),
+        ],
+      ),
+      frame(
+        'controller → orderService.place(order)',
+        'Call proxy se guzarti hai. Proxy pehle transaction kholta hai, phir asli place() chalata hai.',
+        [
+          lane('Call', ['controller → proxy.place()']),
+          lane('Proxy', ['begin transaction', 'target.place()']),
+          lane('Transaction', ['open']),
+        ],
+      ),
+      frame(
+        'place() mein RuntimeException',
+        'Exception proxy tak wapas aati hai. Default rule mein runtime exception par rollback hota hai, toh order aur stock dono wapas.',
+        [
+          lane('Call', ['controller → proxy.place()']),
+          lane('Proxy', ['exception seen → rollback']),
+          lane('Transaction', ['rolled back']),
+        ],
+      ),
+      frame(
+        'controller → orderService.placeAll(orders)',
+        'placeAll par @Transactional nahi hai, toh proxy bina transaction ke call aage bhej deta hai.',
+        [
+          lane('Call', ['controller → proxy.placeAll()']),
+          lane('Proxy', ['no advice → target.placeAll()']),
+          lane('Transaction', ['none']),
+        ],
+      ),
+      frame(
+        'this.place(order): self-call',
+        'Andar se this.place() asli object ka seedha call hai — proxy ko pata hi nahi chalta, isliye @Transactional yahan kaam nahi karta. Har repository call apne aap commit hoti hai; teesra order fail ho toh pehle do wapas nahi aate.',
+        [
+          lane('Call', ['target.placeAll() → this.place()']),
+          lane('Proxy', ['bypassed']),
+          lane('Transaction', ['none — each repository call commits on its own']),
+        ],
+      ),
+      frame(
+        'Fix: boundary bahar wale method par',
+        'placeAll ko @Transactional banao (ya place ko alag bean mein rakho) taaki call proxy se guzre. Ab saare orders ek transaction mein: sab commit ya sab rollback.',
+        [
+          lane('Call', ['controller → proxy.placeAll()']),
+          lane('Proxy', ['begin transaction', 'target.placeAll()']),
+          lane('Transaction', ['open → commit all or roll back all']),
+        ],
+      ),
+    ],
+  },
+  {
+    id: 'stream-pipeline',
+    name: 'A lazy Java stream, element by element',
+    track: 'java',
+    icon: 'coffee',
+    language: 'java',
+    source: 'https://dev.java/learn/api/streams/',
+    description:
+      'filter → map → findFirst: element ek-ek karke kaise chalte hain aur kab ruk jaate hain, dekho.',
+    code: 'Optional<Integer> first = List.of(5, 12, 8, 21, 30).stream()\n    .filter(n -> n > 10) // keep the big ones\n    .map(n -> n * 2) // double them\n    .findFirst(); // Optional[24]',
+    takeaway:
+      'Stream lazy hai: intermediate operations sirf pipeline jodte hain, terminal operation chalaata hai. Har element poori pipeline se ek-ek karke guzarta hai, aur findFirst jaisa short-circuit operation jawab milte hi ruk jaata hai. Ek stream ek hi baar consume hoti hai.',
+    frames: [
+      frame(
+        'Pipeline bani, kuch chala nahi',
+        'filter aur map sirf steps jodte hain. Terminal operation (findFirst) ke bina ek bhi element process nahi hota.',
+        [
+          lane('Source', ['5', '12', '8', '21', '30']),
+          lane('filter(n > 10)', []),
+          lane('map(n * 2)', []),
+          lane('Result', []),
+        ],
+      ),
+      frame(
+        'findFirst(): 5 aata hai',
+        'Elements ek-ek karke poori pipeline se guzarte hain, stage-by-stage batch mein nahi. 5 filter par ruk gaya, kyunki 5 > 10 false hai.',
+        [
+          lane('Source', ['12', '8', '21', '30']),
+          lane('filter(n > 10)', ['5 ✗']),
+          lane('map(n * 2)', []),
+          lane('Result', []),
+        ],
+      ),
+      frame(
+        '12 pass, map ne 24 banaya',
+        '12 > 10, isliye aage gaya aur map ne use 24 banaya. findFirst ko pehla result mil gaya.',
+        [
+          lane('Source', ['8', '21', '30']),
+          lane('filter(n > 10)', ['5 ✗', '12 ✓']),
+          lane('map(n * 2)', ['12 → 24']),
+          lane('Result', ['Optional[24]']),
+        ],
+      ),
+      frame(
+        'Short-circuit: baaki chhue bhi nahi',
+        '8, 21 aur 30 kabhi filter tak pahunche hi nahi. Bade ya infinite stream mein yahi kaam bachata hai.',
+        [
+          lane('Source', ['8 (never read)', '21 (never read)', '30 (never read)']),
+          lane('filter(n > 10)', ['5 ✗', '12 ✓']),
+          lane('map(n * 2)', ['12 → 24']),
+          lane('Result', ['Optional[24]']),
+        ],
+      ),
+      frame(
+        'Same stream dobara? IllegalStateException',
+        'Ek stream ek hi baar consume hoti hai; dobara chahiye toh source se nayi stream banao. Result Optional hai — get() ki jagah orElse ya orElseThrow se khaali case sambhalo.',
+        [
+          lane('Source', ['stream already consumed']),
+          lane('filter(n > 10)', []),
+          lane('map(n * 2)', []),
+          lane('Result', ['Optional[24]', 'reuse → IllegalStateException']),
+        ],
+      ),
+    ],
+  },
+  {
+    id: 'reference-copy',
+    name: 'References, shallow copies and deep copies',
+    track: 'javascript',
+    icon: 'code',
+    source: 'https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone',
+    description:
+      'b = a, spread aur structuredClone mein kaun naya object banata hai aur kaun address share karta hai, dekho.',
+    code: "const a = { name: 'Asha', tags: ['js'] };\nconst b = a; // same object\nconst c = { ...a }; // shallow copy\nb.name = 'Ravi';\nc.tags.push('react');\nconst d = structuredClone(a); // deep copy",
+    takeaway:
+      'Variable mein object nahi, uska address hota hai. b = a address copy karta hai, spread sirf bahar wala level copy karta hai (andar ke arrays/objects share), aur structuredClone har level par naye objects banata hai — functions par error deta hai aur class instance ko plain object bana deta hai.',
+    frames: [
+      frame(
+        "const a = { name: 'Asha', tags: ['js'] }",
+        'Heap mein object #1 bana, aur uski tags array alag object #2 hai. Variable a mein object nahi, #1 ka address (reference) hai.',
+        [
+          lane('Variables', ['a → #1']),
+          lane('Heap', ['#1 { name: "Asha", tags: → #2 }', '#2 ["js"]']),
+        ],
+      ),
+      frame(
+        'const b = a',
+        'Koi naya object nahi bana. b ko wahi address mila — a aur b ek hi object dekhte hain.',
+        [
+          lane('Variables', ['a → #1', 'b → #1']),
+          lane('Heap', ['#1 { name: "Asha", tags: → #2 }', '#2 ["js"]']),
+        ],
+      ),
+      frame(
+        'const c = { ...a }',
+        'Spread naya bahar wala object #3 banata hai, par tags ka address hi copy hota hai — #2 ab dono objects share karte hain. Isi ko shallow copy kehte hain.',
+        [
+          lane('Variables', ['a → #1', 'b → #1', 'c → #3']),
+          lane('Heap', [
+            '#1 { name: "Asha", tags: → #2 }',
+            '#2 ["js"]',
+            '#3 { name: "Asha", tags: → #2 }',
+          ]),
+        ],
+      ),
+      frame(
+        "b.name = 'Ravi'",
+        'b aur a ek hi object #1 hain, isliye a.name bhi "Ravi" ho gaya. c alag object #3 hai, uska name "Asha" hi rahega.',
+        [
+          lane('Variables', ['a → #1', 'b → #1', 'c → #3']),
+          lane('Heap', [
+            '#1 { name: "Ravi", tags: → #2 }',
+            '#2 ["js"]',
+            '#3 { name: "Asha", tags: → #2 }',
+          ]),
+        ],
+      ),
+      frame(
+        "c.tags.push('react')",
+        'c.tags wahi array #2 hai jo a.tags — shallow copy ka jaal. a.tags bhi ab ["js", "react"] hai.',
+        [
+          lane('Variables', ['a → #1', 'b → #1', 'c → #3']),
+          lane('Heap', [
+            '#1 { name: "Ravi", tags: → #2 }',
+            '#2 ["js", "react"]',
+            '#3 { name: "Asha", tags: → #2 }',
+          ]),
+        ],
+      ),
+      frame(
+        'const d = structuredClone(a)',
+        'Deep copy har level par naye objects banata hai: #4 aur uski apni array #5. Ab d mein kuch bhi badlo, a par asar nahi.',
+        [
+          lane('Variables', ['a → #1', 'b → #1', 'c → #3', 'd → #4']),
+          lane('Heap', [
+            '#1 { name: "Ravi", tags: → #2 }',
+            '#2 ["js", "react"]',
+            '#3 { name: "Asha", tags: → #2 }',
+            '#4 { name: "Ravi", tags: → #5 }',
+            '#5 ["js", "react"]',
+          ]),
+        ],
+      ),
+    ],
+  },
+  {
+    id: 'sql-query-order',
+    name: 'The order a SQL query runs in',
+    track: 'java',
+    icon: 'database',
+    language: 'sql',
+    source: 'https://www.postgresql.org/docs/current/sql-select.html',
+    description: 'SELECT pehle likhte ho, par chalta FROM se hai — har clause ke baad rows dekho.',
+    code: "SELECT customer_id, SUM(amount) AS total\nFROM orders\nWHERE status = 'paid'\nGROUP BY customer_id\nHAVING SUM(amount) > 500\nORDER BY total DESC\nLIMIT 2;",
+    takeaway:
+      'Likhte SELECT se hain, par logical order FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT hai. Row ka filter WHERE mein, group ka filter HAVING mein; SELECT ka alias ORDER BY mein chalta hai, WHERE mein nahi. Optimizer andar se kaam ka order badal sakta hai, par result isi logical order jaisa hota hai.',
+    frames: [
+      frame(
+        'FROM orders',
+        'Query SELECT se likhi hai, par database pehle FROM se saari rows uthata hai.',
+        [
+          lane('Clause', ['FROM orders']),
+          lane('Rows', [
+            'o1 · A · 300 · paid',
+            'o2 · A · 400 · paid',
+            'o3 · B · 900 · cancelled',
+            'o4 · B · 200 · paid',
+            'o5 · C · 700 · paid',
+            'o6 · D · 600 · paid',
+            'o7 · D · 50 · paid',
+          ]),
+        ],
+      ),
+      frame(
+        "WHERE status = 'paid'",
+        'Grouping se pehle har row alag se check hoti hai. o3 cancelled hai, hat gayi. Isliye SUM jaisa aggregate WHERE mein nahi likh sakte — groups abhi bane hi nahi.',
+        [
+          lane('Clause', ["WHERE status = 'paid'"]),
+          lane('Rows', [
+            'o1 · A · 300 · paid',
+            'o2 · A · 400 · paid',
+            'o4 · B · 200 · paid',
+            'o5 · C · 700 · paid',
+            'o6 · D · 600 · paid',
+            'o7 · D · 50 · paid',
+          ]),
+        ],
+      ),
+      frame(
+        'GROUP BY customer_id',
+        'Bachi rows customer ke hisaab se groups mein, aur har group ka SUM.',
+        [
+          lane('Clause', ['GROUP BY customer_id']),
+          lane('Rows', ['A: o1 + o2 → 700', 'B: o4 → 200', 'C: o5 → 700', 'D: o6 + o7 → 650']),
+        ],
+      ),
+      frame(
+        'HAVING SUM(amount) > 500',
+        'Ab poora group dekh kar filter: B ka total 200 hai, isliye B hat gaya.',
+        [
+          lane('Clause', ['HAVING SUM(amount) > 500']),
+          lane('Rows', ['A → 700', 'C → 700', 'D → 650']),
+        ],
+      ),
+      frame(
+        'SELECT customer_id, SUM(amount) AS total',
+        'Columns aur alias yahan bante hain. Isliye total alias WHERE mein nahi chalta (tab tak bana hi nahi tha), par ORDER BY mein chalta hai.',
+        [lane('Clause', ['SELECT … AS total']), lane('Rows', ['(A, 700)', '(C, 700)', '(D, 650)'])],
+      ),
+      frame(
+        'ORDER BY total DESC · LIMIT 2',
+        'Sort ke baad pehli do rows. A aur C ka total barabar hai, isliye un dono ka aapas ka order guaranteed nahi — pagination mein tie-breaker do: ORDER BY total DESC, customer_id.',
+        [
+          lane('Clause', ['ORDER BY total DESC', 'LIMIT 2']),
+          lane('Rows', ['(A, 700)', '(C, 700)']),
+        ],
+      ),
+    ],
+  },
 ];

@@ -4,9 +4,10 @@ import { TRACKS, filterNotes } from '../lib/content.js';
 import { trackById, resources } from '../data/catalog.js';
 import { useProgress } from '../lib/progressContext.js';
 import { useLang } from '../lib/langContext.js';
-import { useCatalog } from '../lib/catalogContext.js';
+import { useContent } from '../lib/catalogContext.js';
 import { usePlay } from '../lib/playContext.js';
 import Icon from './Icons.jsx';
+import OfflinePanel from './OfflinePanel.jsx';
 import CourseOutline from './CourseOutline.jsx';
 import { NoteLink } from './Navigation.jsx';
 
@@ -157,9 +158,11 @@ export default function Library({ saved = false, paths = false }) {
   const [params, setParams] = useSearchParams();
   const { progress } = useProgress();
   const { t } = useLang();
-  const { notes } = useCatalog();
   const track = trackById[params.get('track')] ? params.get('track') : 'all';
   const query = params.get('q') || '';
+  // A search reads every chapter's text and the interview answers; without a query the list
+  // needs neither. Until they arrive, the search already matches titles, summaries and tags.
+  const { notes, ready, failed } = useContent(query ? { chapters: 'all', questions: true } : {});
   const level = ['Foundation', 'Intermediate', 'Advanced'].includes(params.get('level'))
     ? params.get('level')
     : 'all';
@@ -241,6 +244,7 @@ export default function Library({ saved = false, paths = false }) {
         <span className="count-pill">{t('lib.chaptersCount', { count: filtered.length })}</span>
       </div>
       {saved && <ProgressBackup />}
+      {saved && <OfflinePanel />}
       {selected && !saved && !paths && (
         <section
           className="collection-overview"
@@ -358,6 +362,12 @@ export default function Library({ saved = false, paths = false }) {
               {' '}
               {t('lib.resultsFor')} <strong>“{query}”</strong>
             </>
+          )}
+          {query && !ready && (
+            <em className="results-note">
+              {' '}
+              {failed ? t('content.searchPartial') : t('content.searchLoading')}
+            </em>
           )}
         </span>
         <div className="results-actions">

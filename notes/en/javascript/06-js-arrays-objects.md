@@ -7,6 +7,7 @@ level: Foundation
 minutes: 3
 summary: Array — ordered values; the index starts at zero.
 tags: fundamentals, js, arrays, objects
+visual: reference-copy
 ---
 
 ## Quick revision

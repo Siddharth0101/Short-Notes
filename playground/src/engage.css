@@ -47,6 +47,92 @@
 .profile .avatar-level:hover {
   border-color: var(--accent);
 }
+/* Offline copy of the notes (Saved page) and the "new version" prompt. */
+.offline-panel strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.offline-panel progress {
+  display: block;
+  width: min(320px, 100%);
+  height: 6px;
+  margin-top: 8px;
+  accent-color: var(--accent);
+}
+.update-prompt {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  transform: translateX(-50%);
+  padding: 8px 8px 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-raised);
+  color: var(--text);
+  font-size: 14px;
+  box-shadow: var(--shadow-raised);
+}
+/* The bottom navigation bar appears at this width (design.css). */
+@media (max-width: 720px) {
+  .update-prompt {
+    bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+}
+@media print {
+  .update-prompt {
+    display: none;
+  }
+}
+/* A screen waiting for its chapter text or answers, and the retry when they did not arrive. */
+.content-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: 120px;
+  margin: 18px 0;
+  padding: 22px 18px;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  color: var(--muted);
+  text-align: center;
+}
+.content-status p {
+  margin: 0;
+  flex-basis: 100%;
+  color: var(--text);
+}
+.content-spinner {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: content-spin 0.8s linear infinite;
+}
+.results-note {
+  color: var(--muted);
+  font-style: normal;
+}
+@keyframes content-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .content-spinner {
+    animation: none;
+  }
+}
 .content-loading {
   position: fixed;
   left: 50%;

@@ -7,6 +7,7 @@ level: Intermediate
 minutes: 4
 summary: Bean — an object managed by the Spring container.
 tags: spring, beans, dependency-injection
+visual: spring-proxy
 ---
 
 ## Quick revision

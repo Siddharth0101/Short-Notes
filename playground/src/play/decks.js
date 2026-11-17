@@ -1,6 +1,6 @@
 // Turns chapters into game material. Every `term — meaning` revision bullet becomes one card.
 import { extractTerms, headingId } from '../lib/content.js';
-import { BASE_CATALOG } from '../data/localized.js';
+import { canonicalText } from '../data/store.js';
 import { shuffled } from '../lib/playState.js';
 
 const plain = (text) => text.replace(/[`*_]/g, '');
@@ -9,8 +9,8 @@ const cache = new WeakMap();
 // Card ids come from the canonical (Hinglish) chapter so review history survives a language switch.
 export function chapterCards(note) {
   if (cache.has(note)) return cache.get(note);
-  const canonical = extractTerms(BASE_CATALOG.noteById[note.id]?.body || note.body);
-  const local = extractTerms(note.body);
+  const canonical = extractTerms(canonicalText(note.id) ?? note.body ?? '');
+  const local = extractTerms(note.body ?? '');
   const source = local.length === canonical.length ? local : canonical;
   const seen = new Set();
   const cards = [];

@@ -7,6 +7,7 @@ import './workspace.css';
 import './design.css';
 import './engage.css';
 import App from './App.jsx';
+import { registerServiceWorker } from './lib/offline.js';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,3 +16,6 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </StrictMode>,
 );
+
+// Works offline once installed; a no-op in development and in browsers without support.
+registerServiceWorker();
